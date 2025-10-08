@@ -9,21 +9,22 @@ interface QuickTasting {
   id: string;
   user_id: string;
   category: string;
-  session_name: string | null;
-  notes: string | null;
+  custom_category_name?: string | null;
+  session_name?: string;
+  notes?: string;
   total_items: number;
   completed_items: number;
-  average_score: number | null;
+  average_score?: number;
   created_at: string;
   updated_at: string;
-  completed_at: string | null;
-  mode: 'study' | 'competition' | 'quick';
-  study_approach?: 'predefined' | 'collaborative' | null;
+  completed_at?: string;
+  mode: string;
+  study_approach?: string | null;
   rank_participants?: boolean;
+  ranking_type?: string | null;
   is_blind_participants?: boolean;
   is_blind_items?: boolean;
   is_blind_attributes?: boolean;
-  custom_category_name?: string | null;
 }
 
 const StudyTastingPage: React.FC = () => {
