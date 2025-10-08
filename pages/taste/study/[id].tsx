@@ -15,6 +15,7 @@ interface QuickTasting {
   completed_items: number;
   average_score: number | null;
   created_at: string;
+  updated_at: string;
   completed_at: string | null;
   mode: 'study' | 'competition' | 'quick';
   study_approach?: 'predefined' | 'collaborative' | null;
