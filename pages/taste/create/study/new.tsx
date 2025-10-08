@@ -127,7 +127,7 @@ const NewStudyTastingPage: React.FC = () => {
       hasScale: true,
       hasBoolean: false,
       scaleMax: 100,
-      rankInSummary: false
+      rankInSummary: true  // Auto-enable ranking when scale is enabled by default
     };
 
     setForm(prev => ({
