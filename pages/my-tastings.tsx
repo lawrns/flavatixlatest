@@ -86,7 +86,7 @@ export default function MyTastingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background-light font-display text-zinc-900 pb-32">
+    <div className="min-h-screen bg-background-light font-display text-zinc-900 pb-40">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-6">
           <button
@@ -224,6 +224,13 @@ export default function MyTastingsPage() {
                         </button>
                       )}
                     </>
+                  ) : tasting.mode === 'study' ? (
+                    <button
+                      onClick={() => router.push(`/taste/study/${tasting.id}`)}
+                      className="flex-1 px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                    >
+                      {tasting.completed_at ? 'View Study' : 'Continue Study'}
+                    </button>
                   ) : (
                     <button
                       onClick={() => router.push(`/quick-tasting?session=${tasting.id}`)}

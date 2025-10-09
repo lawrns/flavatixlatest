@@ -298,24 +298,13 @@ const NewStudyTastingPage: React.FC = () => {
 
             {/* Categories */}
             <div className="card p-md">
-              <div className="flex items-center justify-between mb-md">
-                <div>
-                  <h2 className="text-h3 font-heading font-semibold text-text-primary">
-                    Categories
-                  </h2>
-                  <p className="text-small text-text-secondary">
-                    Define up to 20 evaluation categories
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={addCategory}
-                  disabled={form.categories.length >= 20}
-                  className="btn-secondary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <Plus size={16} className="mr-xs" />
-                  Add Category
-                </button>
+              <div className="mb-md">
+                <h2 className="text-h3 font-heading font-semibold text-text-primary">
+                  Categories
+                </h2>
+                <p className="text-small text-text-secondary">
+                  Define up to 20 evaluation categories
+                </p>
               </div>
 
               {errors.categories && (
@@ -450,6 +439,19 @@ const NewStudyTastingPage: React.FC = () => {
                   ))}
                 </div>
               )}
+
+              {/* Add Category Button at Bottom */}
+              <div className="mt-md flex justify-center">
+                <button
+                  type="button"
+                  onClick={addCategory}
+                  disabled={form.categories.length >= 20}
+                  className="btn-secondary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Plus size={16} className="mr-xs" />
+                  Add Category
+                </button>
+              </div>
             </div>
 
             {/* Action Buttons */}

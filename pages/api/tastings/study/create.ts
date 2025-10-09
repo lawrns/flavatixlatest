@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createClient } from '@supabase/supabase-js';
-import { nanoid } from 'nanoid';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -70,67 +69,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    // Generate unique session code
-    const sessionCode = nanoid(8).toUpperCase();
+    // Normalize base category to lowercase for consistency
+    const normalizedCategory = baseCategory.toLowerCase().replace(/\s+/g, '_');
 
-    // Create study session
+    // Store categories as structured data in notes field
+    const studyMetadata = {
+      baseCategory,
+      categories: categories.map((cat, index) => ({
+        name: cat.name,
+        hasText: cat.hasText,
+        hasScale: cat.hasScale,
+        hasBoolean: cat.hasBoolean,
+        scaleMax: cat.hasScale ? (cat.scaleMax || 100) : null,
+        rankInSummary: cat.rankInSummary,
+        sortOrder: index
+      })),
+      studyMode: true
+    };
+
+    // Create study session in quick_tastings table
     const { data: session, error: sessionError } = await supabase
-      .from('study_sessions')
+      .from('quick_tastings')
       .insert({
-        name,
-        base_category: baseCategory,
-        host_id: user.id,
-        status: 'draft',
-        session_code: sessionCode
+        user_id: user.id,
+        session_name: name,
+        category: normalizedCategory === 'other' ? 'other' : normalizedCategory,
+        custom_category_name: normalizedCategory === 'other' ? baseCategory : null,
+        mode: 'study',
+        study_approach: 'predefined',
+        notes: JSON.stringify(studyMetadata),
+        total_items: 0,
+        completed_items: 0
       })
       .select()
       .single();
 
     if (sessionError) {
       console.error('Error creating study session:', sessionError);
-      return res.status(500).json({ error: 'Failed to create study session' });
-    }
-
-    // Create categories
-    const categoriesData = categories.map((cat, index) => ({
-      session_id: session.id,
-      name: cat.name,
-      has_text: cat.hasText,
-      has_scale: cat.hasScale,
-      has_boolean: cat.hasBoolean,
-      scale_max: cat.hasScale ? (cat.scaleMax || 100) : null,
-      rank_in_summary: cat.rankInSummary,
-      sort_order: index
-    }));
-
-    const { error: categoriesError } = await supabase
-      .from('study_categories')
-      .insert(categoriesData);
-
-    if (categoriesError) {
-      console.error('Error creating categories:', categoriesError);
-      // Rollback: delete the session
-      await supabase.from('study_sessions').delete().eq('id', session.id);
-      return res.status(500).json({ error: 'Failed to create categories' });
-    }
-
-    // Create host as a participant
-    const { error: participantError } = await supabase
-      .from('study_participants')
-      .insert({
-        session_id: session.id,
-        user_id: user.id,
-        role: 'host'
-      });
-
-    if (participantError) {
-      console.error('Error creating host participant:', participantError);
-      // Continue anyway - this is not critical
+      return res.status(500).json({ error: 'Failed to create study session', details: sessionError.message });
     }
 
     res.status(201).json({
       sessionId: session.id,
-      sessionCode: sessionCode,
       session
     });
 
