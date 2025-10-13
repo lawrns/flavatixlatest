@@ -43,7 +43,7 @@ const CharacteristicSlider: React.FC<CharacteristicSliderProps> = ({
           max={max}
           value={value}
           onChange={(e) => onChange(parseInt(e.target.value))}
-          className="w-full h-5 bg-neutral-200 rounded-full appearance-none cursor-pointer slider-ultra-thin shadow-none border-0"
+          className="w-full h-5 rounded-full appearance-none cursor-pointer slider-ultra-thin shadow-none border-0"
           style={{
             background: `linear-gradient(to right, 
               #ec7813 0%, 

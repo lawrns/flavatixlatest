@@ -170,9 +170,19 @@ const StructuredReviewPage: React.FC = () => {
         }
       };
 
+      // Get current session for auth token
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        console.warn('No active session for descriptor extraction');
+        return;
+      }
+
       const response = await fetch('/api/flavor-wheels/extract-descriptors', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
         body: JSON.stringify(extractionPayload),
       });
 

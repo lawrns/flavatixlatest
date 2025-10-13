@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { getSupabaseClient } from '@/lib/supabase';
+import { getSupabaseClient, supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/lib/toast';
 import { Trophy, Clock, Target, ChevronLeft, ChevronRight, Eye, EyeOff } from 'lucide-react';
@@ -256,9 +256,19 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
         // Extract flavor descriptors
         if (item && (answer.aroma || answer.flavor || answer.notes)) {
           try {
+            // Get current session for auth token
+            const { data: { session: authSession } } = await supabase.auth.getSession();
+            if (!authSession) {
+              console.warn('No active session for descriptor extraction');
+              return;
+            }
+
             await fetch('/api/flavor-wheels/extract-descriptors', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authSession.access_token}`
+              },
               body: JSON.stringify({
                 sourceType: 'quick_tasting',
                 sourceId: itemId,

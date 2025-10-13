@@ -88,10 +88,17 @@ const ProseReviewPage: React.FC = () => {
 
   const extractDescriptors = async (reviewId: string, reviewData: any) => {
     try {
+      // Get current session for auth token
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        console.warn('No active session for descriptor extraction');
+        return;
+      }
+
       const extractionPayload = {
         sourceType: 'prose_review',
         sourceId: reviewId,
-        freeformText: reviewData.review_content || '',
+        text: reviewData.review_content || '',
         itemContext: {
           itemName: reviewData.item_name,
           itemCategory: reviewData.category,
@@ -103,7 +110,10 @@ const ProseReviewPage: React.FC = () => {
 
       const response = await fetch('/api/flavor-wheels/extract-descriptors', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
         body: JSON.stringify(extractionPayload),
       });
 
@@ -120,23 +130,14 @@ const ProseReviewPage: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      // Generate Review ID
-      const reviewId = generateReviewId(
-        data.category,
-        data.item_name,
-        data.batch_id || '',
-        new Date()
-      );
-
       // Determine status based on action
       const status = action === 'done' ? 'completed' : 'in_progress';
 
       let review;
       let error;
 
-      const reviewData = {
+      const reviewData: any = {
         user_id: user.id,
-        review_id: reviewId,
         item_name: data.item_name,
         picture_url: data.picture_url,
         brand: data.brand,
@@ -150,6 +151,16 @@ const ProseReviewPage: React.FC = () => {
         review_content: data.review_content,
         status: status
       };
+
+      // Generate Review ID for new reviews only
+      if (!reviewId) {
+        reviewData.review_id = generateReviewId(
+          data.category,
+          data.item_name,
+          data.batch_id || '',
+          new Date()
+        );
+      }
 
       if (reviewId) {
         // Update existing review

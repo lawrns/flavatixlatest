@@ -39,13 +39,20 @@ export default async function handler(
   }
 
   try {
+    // Get auth token from Authorization header (like other APIs)
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ success: false, error: 'Unauthorized - missing Bearer token' });
+    }
+
+    const token = authHeader.replace('Bearer ', '');
     const supabase = getSupabaseClient(req, res);
 
-    // Get authenticated user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    // Get authenticated user using the token
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      return res.status(401).json({ success: false, error: 'Unauthorized - invalid token' });
     }
 
     const {

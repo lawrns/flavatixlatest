@@ -200,12 +200,12 @@ export function extractDescriptorsKeywordBased(text: string): ExtractedDescripto
   // Check against taxonomy
   Object.entries(FLAVOR_TAXONOMY).forEach(([type, categories]) => {
     Object.entries(categories).forEach(([category, data]) => {
-      Object.entries(data.keywords).forEach(([subcategory, keywords]) => {
-        (keywords as string[]).forEach((keyword: string) => {
-          // Check if keyword appears in text
+      // Handle both structures: nested keywords object or direct keywords array
+      if (Array.isArray(data.keywords)) {
+        // Direct array of keywords
+        (data.keywords as string[]).forEach((keyword: string) => {
           const regex = new RegExp(`\\b${keyword}\\b`, 'i');
           if (regex.test(lowerText)) {
-            // Check if already added
             const exists = descriptors.some(d =>
               d.text.toLowerCase() === keyword.toLowerCase()
             );
@@ -215,13 +215,35 @@ export function extractDescriptorsKeywordBased(text: string): ExtractedDescripto
                 text: keyword,
                 type: type as 'aroma' | 'flavor' | 'texture' | 'metaphor',
                 category,
-                subcategory,
-                confidence: 0.85, // High confidence for exact keyword matches
+                subcategory: null,
+                confidence: 0.85,
               });
             }
           }
         });
-      });
+      } else if (typeof data.keywords === 'object') {
+        // Nested keywords object with subcategories
+        Object.entries(data.keywords).forEach(([subcategory, keywords]) => {
+          (keywords as string[]).forEach((keyword: string) => {
+            const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+            if (regex.test(lowerText)) {
+              const exists = descriptors.some(d =>
+                d.text.toLowerCase() === keyword.toLowerCase()
+              );
+
+              if (!exists) {
+                descriptors.push({
+                  text: keyword,
+                  type: type as 'aroma' | 'flavor' | 'texture' | 'metaphor',
+                  category,
+                  subcategory,
+                  confidence: 0.85,
+                });
+              }
+            }
+          });
+        });
+      }
     });
   });
 

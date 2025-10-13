@@ -292,10 +292,18 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         }
       };
 
+      // Get current session for auth token
+      const { data: { session: authSession } } = await supabase.auth.getSession();
+      if (!authSession) {
+        console.warn('No active session for descriptor extraction');
+        return;
+      }
+
       const response = await fetch('/api/flavor-wheels/extract-descriptors', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authSession.access_token}`
         },
         body: JSON.stringify(extractionPayload),
       });
