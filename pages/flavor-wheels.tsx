@@ -118,8 +118,8 @@ export default function FlavorWheelsPage() {
     const shareUrl = `${window.location.origin}/flavor-wheels`;
 
     // Get top descriptors from wheel data
-    const topDescriptors = wheelData.children
-      ?.flatMap(cat => cat.children?.flatMap(sub => sub.children?.map(d => d.name) || []) || [])
+    const topDescriptors = wheelData.categories
+      ?.flatMap(cat => cat.subcategories?.flatMap(sub => sub.descriptors?.map(d => d.name) || []) || [])
       .slice(0, 5)
       .join(', ') || 'amazing flavors';
 
