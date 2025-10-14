@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import ProfileService, { UserProfile } from '../lib/profileService';
 import ProfileDisplay from '../components/profile/ProfileDisplay';
 import ProfileEditForm from '../components/profile/ProfileEditForm';
-import { getUserTastingStats, getLatestTasting } from '../lib/historyService';
+import { getUserTastingStats, getLatestTasting, getRecentTastings } from '../lib/historyService';
 import SocialFeedWidget from '../components/social/SocialFeedWidget';
 
 export default function Dashboard() {
@@ -14,6 +14,7 @@ export default function Dashboard() {
    const [activeTab, setActiveTab] = useState<'home' | 'edit'>('home');
    const [tastingStats, setTastingStats] = useState<any>(null);
    const [latestTasting, setLatestTasting] = useState<any>(null);
+   const [recentTastings, setRecentTastings] = useState<any[]>([]);
    const router = useRouter();
 
   useEffect(() => {
@@ -35,13 +36,15 @@ export default function Dashboard() {
       const userProfile = await ProfileService.getProfile(user.id);
       setProfile(userProfile);
       
-      // Fetch tasting stats and latest tasting
-      const [stats, latest] = await Promise.all([
+      // Fetch tasting stats, latest tasting, and recent tastings
+      const [stats, latest, recent] = await Promise.all([
         getUserTastingStats(user.id),
-        getLatestTasting(user.id)
+        getLatestTasting(user.id),
+        getRecentTastings(user.id, 5)
       ]);
       setTastingStats(stats.data);
       setLatestTasting(latest.data);
+      setRecentTastings(recent.data || []);
       
     } catch (error) {
       console.error('Error initializing dashboard:', error);
@@ -203,15 +206,21 @@ export default function Dashboard() {
                     <div className="text-sm text-zinc-600">Reviews</div>
                   </div>
 
-                  <div className="bg-zinc-50 p-4 text-center rounded-lg">
+                  <button
+                    onClick={() => router.push(`/profile/${profile.username}/followers`)}
+                    className="bg-zinc-50 p-4 text-center rounded-lg hover:bg-zinc-100 transition-colors cursor-pointer"
+                  >
                     <div className="text-2xl font-bold text-primary">{profile.followers_count || 0}</div>
                     <div className="text-sm text-zinc-600">Followers</div>
-                  </div>
+                  </button>
 
-                  <div className="bg-zinc-50 p-4 text-center rounded-lg">
+                  <button
+                    onClick={() => router.push(`/profile/${profile.username}/following`)}
+                    className="bg-zinc-50 p-4 text-center rounded-lg hover:bg-zinc-100 transition-colors cursor-pointer"
+                  >
                     <div className="text-2xl font-bold text-primary">{profile.following_count || 0}</div>
                     <div className="text-sm text-zinc-600">Following</div>
-                  </div>
+                  </button>
                 </div>
 
                 {/* Additional Info */}
@@ -277,12 +286,12 @@ export default function Dashboard() {
                 </div>
               </button>
 
-              {/* Recent Tasting Summary */}
-              {latestTasting && (
+              {/* Recent Tastings */}
+              {recentTastings.length > 0 ? (
                 <div className="bg-white p-4 rounded-lg">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-lg font-bold text-zinc-900">
-                      Latest Tasting
+                      Recent Tastings
                     </h3>
                     <button
                       onClick={() => router.push('/history')}
@@ -291,29 +300,54 @@ export default function Dashboard() {
                       View All
                     </button>
                   </div>
-                  <div className="bg-zinc-50 p-3 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-zinc-900 font-medium">
-                        {latestTasting.category?.replace('_', ' ') || 'Tasting'}
-                      </span>
-                      <span className="text-zinc-500 text-sm">
-                        {latestTasting.created_at && !isNaN(new Date(latestTasting.created_at).getTime())
-                          ? new Date(latestTasting.created_at).toLocaleDateString()
-                          : 'Date unavailable'
-                        }
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="text-zinc-600">Score:</span>
-                      <span className="text-primary font-semibold">
-                        {latestTasting.average_score ? latestTasting.average_score.toFixed(1) : 'N/A'}/5
-                      </span>
-                      <span className="text-zinc-400">•</span>
-                      <span className="text-zinc-600">
-                        {latestTasting.items?.length || 0} items
-                      </span>
-                    </div>
+                  <div className="space-y-2">
+                    {recentTastings.map((tasting) => (
+                      <button
+                        key={tasting.id}
+                        onClick={() => router.push(`/history`)}
+                        className="w-full bg-zinc-50 p-3 rounded-lg hover:bg-zinc-100 transition-colors text-left"
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-zinc-900 font-medium capitalize">
+                            {tasting.category?.replace('_', ' ') || 'Tasting'}
+                          </span>
+                          <span className="text-zinc-500 text-xs">
+                            {tasting.created_at && !isNaN(new Date(tasting.created_at).getTime())
+                              ? new Date(tasting.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                              : 'N/A'
+                            }
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-zinc-600">
+                          {tasting.average_score && (
+                            <>
+                              <span className="text-primary font-semibold">
+                                {tasting.average_score.toFixed(1)}/5
+                              </span>
+                              <span className="text-zinc-400">•</span>
+                            </>
+                          )}
+                          <span>{tasting.items?.length || 0} items</span>
+                        </div>
+                      </button>
+                    ))}
                   </div>
+                </div>
+              ) : (
+                <div className="bg-white p-6 rounded-lg text-center">
+                  <div className="text-zinc-400 mb-3">
+                    <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-zinc-900 mb-2">No Tastings Yet</h3>
+                  <p className="text-sm text-zinc-600 mb-4">Start your flavor journey today!</p>
+                  <button
+                    onClick={() => router.push('/taste')}
+                    className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+                  >
+                    Create Your First Tasting
+                  </button>
                 </div>
               )}
 
@@ -378,4 +412,8 @@ export default function Dashboard() {
       </div>
     </div>
   );
+}
+// Disable static generation for this page
+export async function getServerSideProps() {
+  return { props: {} };
 }

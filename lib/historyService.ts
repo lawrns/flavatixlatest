@@ -357,6 +357,42 @@ export async function getUserCategories(
 /**
  * Get the most recent tasting session for a user
  */
+export async function getRecentTastings(
+  userId: string,
+  limit: number = 5
+): Promise<{ data: TastingHistory[] | null; error: any }> {
+  try {
+    const { data, error } = await supabase
+      .from('quick_tastings')
+      .select(`
+        *,
+        quick_tasting_items (
+          id,
+          item_name,
+          notes,
+          flavor_scores,
+          overall_score,
+          photo_url,
+          created_at
+        )
+      `)
+      .eq('user_id', userId)
+      .not('completed_at', 'is', null)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.error('Error fetching recent tastings:', error);
+      return { data: null, error };
+    }
+
+    return { data: data as TastingHistory[], error: null };
+  } catch (error) {
+    console.error('Unexpected error in getRecentTastings:', error);
+    return { data: null, error };
+  }
+}
+
 export async function getLatestTasting(
   userId: string
 ): Promise<{ data: TastingHistory | null; error: any }> {

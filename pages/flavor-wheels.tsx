@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import * as d3 from 'd3';
 import { FlavorWheelData } from '@/lib/flavorWheelGenerator';
 import { Download, RefreshCw, Info } from 'lucide-react';
+import ShareButton from '../components/sharing/ShareButton';
 
 // Dynamically import to avoid SSR issues
 const InspirationBox = dynamic(() => import('../components/ui/inspiration-box'), {
@@ -108,6 +109,28 @@ export default function FlavorWheelsPage() {
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
     linkElement.click();
+  };
+
+  const handleShareWheel = async () => {
+    if (!wheelData) throw new Error('No wheel data available');
+
+    // Generate a shareable image URL (for now, use the current page)
+    const shareUrl = `${window.location.origin}/flavor-wheels`;
+
+    // Get top descriptors from wheel data
+    const topDescriptors = wheelData.children
+      ?.flatMap(cat => cat.children?.flatMap(sub => sub.children?.map(d => d.name) || []) || [])
+      .slice(0, 5)
+      .join(', ') || 'amazing flavors';
+
+    const shareText = `Check out my ${wheelType} taste profile on Flavatix! Top notes: ${topDescriptors} 🎨✨`;
+
+    return {
+      text: shareText,
+      url: shareUrl,
+      // In a real implementation, we'd generate an actual image of the wheel
+      imageUrl: undefined
+    };
   };
 
   const handleSegmentClick = (category: string, subcategory?: string, descriptor?: string) => {
@@ -214,6 +237,10 @@ export default function FlavorWheelsPage() {
                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                 Regenerate
               </button>
+              <ShareButton
+                disabled={!wheelData || loading}
+                onShare={handleShareWheel}
+              />
               <button
                 onClick={handleExportWheel}
                 disabled={!wheelData || loading}
@@ -350,4 +377,8 @@ export default function FlavorWheelsPage() {
       </footer>
     </div>
   );
+}
+// Disable static generation for this page
+export async function getServerSideProps() {
+  return { props: {} };
 }
