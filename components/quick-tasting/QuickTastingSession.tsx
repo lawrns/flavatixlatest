@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getSupabaseClient } from '../../lib/supabase';
 import { roleService } from '../../lib/roleService';
 import { studyModeService } from '../../lib/studyModeService';
@@ -10,8 +10,9 @@ import { EditTastingDashboard } from './EditTastingDashboard';
 import { ItemSuggestions } from './ItemSuggestions';
 import { CategoryDropdown, CATEGORIES } from './CategoryDropdown';
 import { ItemNavigationDropdown } from './ItemNavigationDropdown';
+import { useRealtimeCollaboration, CollaboratorPresence } from '../../hooks/useRealtimeCollaboration';
 import { toast } from '../../lib/toast';
-import { Utensils, Settings, Play, Edit } from 'lucide-react';
+import { Utensils, Settings, Play, Edit, Users } from 'lucide-react';
 
 interface QuickTasting {
   id: string;
@@ -81,6 +82,38 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   const [editingSessionName, setEditingSessionName] = useState(session?.session_name || '');
   const [isChangingCategory, setIsChangingCategory] = useState(false);
   const supabase = getSupabaseClient() as any;
+
+  // Realtime collaboration hook (only for study mode)
+  const handleRemoteUpdate = useCallback((update: any) => {
+    // Handle remote updates from collaborators
+    if (update.type === 'item_update' && update.itemId) {
+      setItems(prevItems => prevItems.map(item =>
+        item.id === update.itemId
+          ? { ...item, [update.field]: update.value, updated_at: new Date().toISOString() }
+          : item
+      ));
+    }
+  }, []);
+
+  const {
+    isConnected,
+    activeUsers,
+    collaborators,
+    sendCursor,
+    sendTypingIndicator,
+    broadcastItemUpdate,
+    broadcastScoreUpdate,
+    updatePresence
+  } = useRealtimeCollaboration({
+    sessionId: session?.id || '',
+    onRemoteUpdate: handleRemoteUpdate,
+    onUserJoined: (user) => {
+      console.log(`👥 ${user.userName} joined the tasting`);
+    },
+    onUserLeft: (user) => {
+      console.log(`👤 ${user.userName} left the tasting`);
+    }
+  });
 
   // Helper function to get the display category name
   const getDisplayCategoryName = (category: string, customName?: string | null): string => {
@@ -234,6 +267,17 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     if (!session) return;
 
     console.log('🔄 QuickTastingSession: Updating item:', itemId, 'with:', updates);
+
+    // Broadcast updates to collaborators in study mode
+    if (session.mode === 'study' && isConnected) {
+      Object.entries(updates).forEach(([field, value]) => {
+        if (field === 'overall_score' || field === 'flavor_scores') {
+          broadcastScoreUpdate(itemId, field, value as number);
+        } else {
+          broadcastItemUpdate(itemId, field, value);
+        }
+      });
+    }
 
     try {
       const { data, error } = await supabase
@@ -594,6 +638,13 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
 
   return (
     <div className="max-w-6xl mx-auto" data-testid="quick-tasting-session">
+      {/* Collaborator Presence for Study Mode */}
+      {session?.mode === 'study' && collaborators.length > 0 && (
+        <div className="mb-4">
+          <CollaboratorPresence users={collaborators} />
+        </div>
+      )}
+
       {/* Session Header */}
       <div className="card p-md mb-lg">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
