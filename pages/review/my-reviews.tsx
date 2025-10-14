@@ -304,3 +304,8 @@ const MyReviewsPage: React.FC = () => {
 
 export default MyReviewsPage;
 
+
+// Disable static generation for this page
+export async function getServerSideProps() {
+  return { props: {} };
+}

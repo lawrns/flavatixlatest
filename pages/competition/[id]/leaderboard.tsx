@@ -34,3 +34,8 @@ const LeaderboardPage: React.FC = () => {
 
 export default LeaderboardPage;
 
+
+// Disable static generation for this page
+export async function getServerSideProps() {
+  return { props: {} };
+}

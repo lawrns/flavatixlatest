@@ -150,3 +150,8 @@ const ReviewPage: React.FC = () => {
 
 export default ReviewPage;
 
+
+// Disable static generation for this page
+export async function getServerSideProps() {
+  return { props: {} };
+}

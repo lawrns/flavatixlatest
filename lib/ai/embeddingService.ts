@@ -169,7 +169,7 @@ export class EmbeddingService {
       // Format embedding for PostgreSQL
       const embeddingStr = `[${embedding.join(',')}]`;
 
-      const { data, error } = await this.supabase.rpc('find_similar_tastings', {
+      const { data, error } = await (this.supabase.rpc as any)('find_similar_tastings', {
         query_embedding: embeddingStr,
         match_category: category,
         exclude_user: userId,
@@ -204,7 +204,7 @@ export class EmbeddingService {
         .eq('user_id', userId)
         .eq('category', category)
         .order('created_at', { ascending: false })
-        .limit(5);
+        .limit(5) as { data: Array<{ id: string; category: string; session_name?: string; notes?: string }> | null; error: any };
 
       if (tastingsError || !userTastings?.length) {
         return [];
@@ -216,7 +216,7 @@ export class EmbeddingService {
         .from('flavor_descriptors')
         .select('descriptor_text, descriptor_type')
         .in('source_id', tastingIds)
-        .eq('source_type', 'quick_tasting');
+        .eq('source_type', 'quick_tasting') as { data: Array<{ descriptor_text: string; descriptor_type: string }> | null; error: any };
 
       if (descriptorsError || !descriptors?.length) {
         return [];
@@ -337,7 +337,7 @@ export class EmbeddingService {
         .from('quick_tastings')
         .select('*')
         .eq('id', tastingId)
-        .single();
+        .single() as { data: any; error: any };
 
       if (tastingError || !tasting) {
         return false;
@@ -348,7 +348,7 @@ export class EmbeddingService {
         .from('flavor_descriptors')
         .select('descriptor_text')
         .eq('source_id', tastingId)
-        .eq('source_type', 'quick_tasting');
+        .eq('source_type', 'quick_tasting') as { data: Array<{ descriptor_text: string }> | null; error: any };
 
       if (descriptorsError) {
         return false;
@@ -367,9 +367,9 @@ export class EmbeddingService {
       const embedding = await this.generateProfileEmbedding(profile);
 
       // Update in database
-      const { error: updateError } = await this.supabase
+      const { error: updateError } = await (this.supabase
         .from('quick_tastings')
-        .update({
+        .update as any)({
           embedding: `[${embedding.join(',')}]`,
           embedding_updated_at: new Date().toISOString()
         })

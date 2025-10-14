@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/AuthContext';
@@ -391,22 +392,22 @@ export default function Dashboard() {
         {/* Bottom Navigation */}
         <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 bg-background-light">
           <nav className="flex justify-around p-2">
-            <a className="flex flex-col items-center gap-1 p-2 text-primary" href="/dashboard">
+            <Link className="flex flex-col items-center gap-1 p-2 text-primary" href="/dashboard">
               <span className="material-symbols-outlined">home</span>
               <span className="text-xs font-bold">Home</span>
-            </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/taste">
+            </Link>
+            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/taste">
               <span className="material-symbols-outlined">restaurant</span>
               <span className="text-xs font-medium">Taste</span>
-            </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/review">
+            </Link>
+            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/review">
               <span className="material-symbols-outlined">reviews</span>
               <span className="text-xs font-medium">Review</span>
-            </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/flavor-wheels">
+            </Link>
+            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/flavor-wheels">
               <span className="material-symbols-outlined">donut_small</span>
               <span className="text-xs font-medium">Wheels</span>
-            </a>
+            </Link>
           </nav>
         </footer>
       </div>

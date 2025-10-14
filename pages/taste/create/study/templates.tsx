@@ -58,3 +58,8 @@ const TemplatesPage: React.FC = () => {
 };
 
 export default TemplatesPage;
+
+// Disable static generation for this page
+export async function getServerSideProps() {
+  return { props: {} };
+}

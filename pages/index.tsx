@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import { Inter, Crimson_Text } from 'next/font/google'
 import styles from './HeroSection.module.css'
 
@@ -102,9 +103,9 @@ export default function Home() {
             
             {/* Call to Action */}
             <div className="space-y-sm">
-              <a href="/auth" className="btn-primary mx-auto block tablet:inline-block">
+              <Link href="/auth" className="btn-primary mx-auto block tablet:inline-block">
                 Get Started
-              </a>
+              </Link>
 
               <p className="text-caption text-text-muted">
                 Join thousands of tasters discovering new flavors every day
@@ -173,9 +174,9 @@ export default function Home() {
             <p className="text-body mb-lg opacity-90">
               Join the Flavatix community and discover the world of flavor like never before.
             </p>
-            <a href="/auth" className="btn-secondary">
+            <Link href="/auth" className="btn-secondary">
               Start Tasting Today
-            </a>
+            </Link>
             
             <div className="mt-xl pt-lg border-t border-white/20">
               <p className="text-small opacity-70">

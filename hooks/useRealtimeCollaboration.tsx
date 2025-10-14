@@ -52,7 +52,7 @@ export function useRealtimeCollaboration({
           .from('profiles')
           .select('username, full_name')
           .eq('id', user.id)
-          .single();
+          .single() as { data: { username?: string; full_name?: string } | null };
 
         const displayName = profile?.full_name || profile?.username || user.email?.split('@')[0] || 'Anonymous';
 

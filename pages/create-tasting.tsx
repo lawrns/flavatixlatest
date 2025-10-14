@@ -545,3 +545,10 @@ const CreateTastingPage: React.FC = () => {
 };
 
 export default CreateTastingPage;
+
+// Disable static generation for this page
+export async function getServerSideProps() {
+  return {
+    props: {}
+  };
+}

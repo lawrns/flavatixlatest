@@ -58,11 +58,11 @@ export default async function handler(
 
     // Filter items with content
     const itemsWithContent = (items || []).filter(
-      item => item.notes?.trim() || item.aroma?.trim() || item.flavor?.trim()
+      (item: any) => item.notes?.trim() || item.aroma?.trim() || item.flavor?.trim()
     );
 
     // Get extracted descriptors for these items
-    const itemIds = itemsWithContent.map(item => item.id);
+    const itemIds = itemsWithContent.map((item: any) => item.id);
     const { data: descriptors, error: descriptorsError } = await (supabase as any)
       .from('flavor_descriptors')
       .select('source_id, created_at')
@@ -78,7 +78,7 @@ export default async function handler(
       (descriptors || []).map((d: any) => d.source_id)
     );
 
-    const itemsExtracted = itemsWithContent.filter(item =>
+    const itemsExtracted = itemsWithContent.filter((item: any) =>
       extractedItemIds.has(item.id)
     ).length;
 
@@ -98,7 +98,7 @@ export default async function handler(
       .sort((a, b) => a.date.localeCompare(b.date));
 
     // Get tastings to group by category
-    const tastingIds = [...new Set(itemsWithContent.map(item => item.tasting_id))];
+    const tastingIds = Array.from(new Set(itemsWithContent.map((item: any) => item.tasting_id)));
     const { data: tastings, error: tastingsError } = await (supabase as any)
       .from('quick_tastings')
       .select('id, category')
@@ -115,8 +115,8 @@ export default async function handler(
     // Group by category
     const categoryStats = new Map<string, { total: number; extracted: number }>();
 
-    itemsWithContent.forEach(item => {
-      const category = tastingCategoryMap.get(item.tasting_id) || 'unknown';
+    itemsWithContent.forEach((item: any) => {
+      const category = (tastingCategoryMap.get(item.tasting_id) as string) || 'unknown';
       const stats = categoryStats.get(category) || { total: 0, extracted: 0 };
       stats.total++;
       if (extractedItemIds.has(item.id)) {

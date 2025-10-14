@@ -193,3 +193,10 @@ export default function JoinTastingPage() {
     </div>
   );
 }
+
+// Disable static generation for this page
+export async function getServerSideProps() {
+  return {
+    props: {}
+  };
+}

@@ -205,7 +205,7 @@ export function usePWA() {
         position: 'bottom-center'
       });
     } else if (successful > 0 && failed > 0) {
-      toast.warning(`${successful} changes synced, ${failed} failed. Will retry later.`, {
+      toast.warn(`${successful} changes synced, ${failed} failed. Will retry later.`, {
         duration: 7000,
         position: 'bottom-center'
       });

@@ -178,3 +178,6 @@ temp/
 
 
 .kluster
+
+# Local Netlify folder
+.netlify

@@ -250,7 +250,7 @@ export class RealtimeManager {
     this.presenceState.clear();
     Object.entries(state).forEach(([key, presence]) => {
       if (Array.isArray(presence) && presence.length > 0) {
-        const userPresence = presence[0] as PresenceState;
+        const userPresence = presence[0] as any as PresenceState;
         this.presenceState.set(key, userPresence);
       }
     });
