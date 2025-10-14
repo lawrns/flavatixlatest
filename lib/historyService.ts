@@ -365,7 +365,18 @@ export async function getRecentTastings(
     const { data, error } = await supabase
       .from('quick_tastings')
       .select(`
-        *,
+        id,
+        user_id,
+        category,
+        created_at,
+        notes,
+        session_name,
+        total_items,
+        completed_items,
+        average_score,
+        completed_at,
+        mode,
+        rank_participants,
         quick_tasting_items (
           id,
           item_name,
@@ -400,7 +411,18 @@ export async function getLatestTasting(
     const { data, error } = await supabase
       .from('quick_tastings')
       .select(`
-        *,
+        id,
+        user_id,
+        category,
+        created_at,
+        notes,
+        session_name,
+        total_items,
+        completed_items,
+        average_score,
+        completed_at,
+        mode,
+        rank_participants,
         quick_tasting_items!inner (
           id,
           item_name,
