@@ -275,14 +275,25 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     if (!session) return;
 
     try {
-      console.log('🔍 Extracting flavor descriptors from item:', itemId);
+      // Only extract if there's meaningful content
+      const hasContent = itemData.notes?.trim() || itemData.aroma?.trim() || itemData.flavor?.trim();
+      if (!hasContent) {
+        console.log('⏭️ Skipping extraction - no content to extract from');
+        return;
+      }
 
-      // Prepare extraction data
+      console.log('🔍 Extracting flavor descriptors from item:', itemId, {
+        hasNotes: !!itemData.notes,
+        hasAroma: !!itemData.aroma,
+        hasFlavor: !!itemData.flavor
+      });
+
+      // Prepare extraction data - use aroma field for aroma_notes
       const extractionPayload = {
         sourceType: 'quick_tasting',
         sourceId: itemId,
         structuredData: {
-          aroma_notes: itemData.notes || '', // Use notes field which contains aroma
+          aroma_notes: itemData.aroma || itemData.notes || '', // Use aroma field first, fallback to notes
           flavor_notes: itemData.flavor || '',
           other_notes: itemData.notes || ''
         },
@@ -295,7 +306,19 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
       // Get current session for auth token
       const { data: { session: authSession } } = await supabase.auth.getSession();
       if (!authSession) {
-        console.warn('No active session for descriptor extraction');
+        console.error('❌ No active auth session for descriptor extraction');
+        // Try to refresh the session
+        const { data: { session: refreshedSession } } = await supabase.auth.refreshSession();
+        if (!refreshedSession) {
+          console.error('❌ Failed to refresh auth session');
+          return;
+        }
+        console.log('✅ Auth session refreshed successfully');
+      }
+
+      const token = authSession?.access_token || (await supabase.auth.getSession()).data.session?.access_token;
+      if (!token) {
+        console.error('❌ No auth token available for extraction');
         return;
       }
 
@@ -303,26 +326,45 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authSession.access_token}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(extractionPayload),
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        console.warn('⚠️ Descriptor extraction failed:', error);
+      const responseText = await response.text();
+      let result;
+
+      try {
+        result = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('❌ Failed to parse extraction response:', responseText);
         return;
       }
 
-      const result = await response.json();
+      if (!response.ok) {
+        console.error('❌ Descriptor extraction failed:', {
+          status: response.status,
+          error: result,
+          payload: extractionPayload
+        });
+        return;
+      }
 
       if (result.success && result.savedCount > 0) {
-        console.log(`✅ Extracted ${result.savedCount} flavor descriptors`);
-        // Silently extract - don't show toast for every update to avoid notification spam
+        console.log(`✅ Successfully extracted ${result.savedCount} flavor descriptors from item ${itemId}`);
+        // Show a subtle success indicator (consider adding a visual cue in the UI)
+      } else if (result.success && result.savedCount === 0) {
+        console.log('ℹ️ No descriptors found in the content');
       }
     } catch (error) {
-      console.error('Error extracting descriptors:', error);
-      // Silently fail - don't block user from continuing tasting
+      console.error('❌ Error extracting descriptors:', error);
+      // Log the full error for debugging
+      if (error instanceof Error) {
+        console.error('Error details:', {
+          message: error.message,
+          stack: error.stack
+        });
+      }
     }
   };
 
@@ -482,6 +524,16 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
 
     setIsLoading(true);
     try {
+      // First, ensure all items with content have their descriptors extracted
+      console.log('🔄 Extracting descriptors for all items before completing session...');
+      const extractionPromises = items
+        .filter(item => item.notes?.trim() || item.aroma?.trim() || item.flavor?.trim())
+        .map(item => extractDescriptors(item.id, item));
+
+      // Wait for all extractions to complete (but don't fail the session if extraction fails)
+      await Promise.allSettled(extractionPromises);
+      console.log('✅ Descriptor extraction batch completed');
+
       const { data, error } = await supabase
         .from('quick_tastings')
         .update({
