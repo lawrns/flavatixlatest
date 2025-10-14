@@ -48,7 +48,7 @@ export default async function handler(
     // Get items with content created in period
     const { data: items, error: itemsError } = await (supabase as any)
       .from('quick_tasting_items')
-      .select('id, tasting_id, category, notes, aroma, flavor, created_at')
+      .select('id, tasting_id, notes, aroma, flavor, created_at')
       .gte('created_at', startDate.toISOString());
 
     if (itemsError) {
