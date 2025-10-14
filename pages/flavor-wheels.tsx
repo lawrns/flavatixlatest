@@ -119,7 +119,7 @@ export default function FlavorWheelsPage() {
 
     // Get top descriptors from wheel data
     const topDescriptors = wheelData.categories
-      ?.flatMap(cat => cat.subcategories?.flatMap(sub => sub.descriptors?.map(d => d.name) || []) || [])
+      ?.flatMap(cat => cat.subcategories?.flatMap(sub => sub.descriptors?.map(d => d.text) || []) || [])
       .slice(0, 5)
       .join(', ') || 'amazing flavors';
 
