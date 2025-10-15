@@ -5,6 +5,7 @@ import {
   extractFromStructuredReview,
   ExtractedDescriptor
 } from '@/lib/flavorDescriptorExtractor';
+import { extractDescriptorsWithAI } from '@/lib/ai/descriptorExtractionService';
 
 interface ExtractRequest {
   sourceType: 'quick_tasting' | 'quick_review' | 'prose_review';
@@ -22,12 +23,17 @@ interface ExtractRequest {
     itemName?: string;
     itemCategory?: string;
   };
+  category?: string;
+  useAI?: boolean; // Flag to enable AI extraction
 }
 
 interface ExtractResponse {
   success: boolean;
   descriptors?: ExtractedDescriptor[];
   savedCount?: number;
+  tokensUsed?: number;
+  processingTimeMs?: number;
+  extractionMethod?: 'keyword' | 'ai';
   error?: string;
 }
 
@@ -65,7 +71,9 @@ export default async function handler(
       sourceId,
       text,
       structuredData,
-      itemContext
+      itemContext,
+      category,
+      useAI = true // Default to AI extraction
     } = req.body as ExtractRequest;
 
     // Validate request
@@ -83,18 +91,89 @@ export default async function handler(
       });
     }
 
-    // Extract descriptors
-    let descriptors: ExtractedDescriptor[];
+    // Combine text from all fields
+    let combinedText = text || '';
+    if (structuredData && !text) {
+      combinedText = [
+        structuredData.aroma_notes || '',
+        structuredData.flavor_notes || '',
+        structuredData.texture_notes || '',
+        structuredData.other_notes || ''
+      ].filter(Boolean).join('. ');
+    }
 
-    if (structuredData) {
-      descriptors = extractFromStructuredReview(structuredData);
-    } else if (text) {
-      descriptors = extractDescriptorsWithIntensity(text);
+    // Extract descriptors using AI or keyword-based
+    let descriptors: ExtractedDescriptor[];
+    let tokensUsed = 0;
+    let processingTimeMs = 0;
+    let extractionMethod: 'keyword' | 'ai' = 'keyword';
+
+    if (useAI && process.env.ANTHROPIC_API_KEY && combinedText.trim()) {
+      try {
+        // Get category taxonomy for context
+        let taxonomyContext = null;
+        if (category) {
+          const { data: taxonomy } = await supabase
+            .from('category_taxonomies')
+            .select('taxonomy_data')
+            .eq('normalized_name', category.toLowerCase())
+            .single();
+
+          taxonomyContext = taxonomy?.taxonomy_data;
+        }
+
+        // Use AI extraction
+        const aiResult = await extractDescriptorsWithAI(
+          combinedText,
+          category,
+          taxonomyContext
+        );
+
+        descriptors = aiResult.descriptors.map(d => ({
+          text: d.text,
+          type: d.type,
+          category: d.category || null,
+          subcategory: d.subcategory || null,
+          confidence: d.confidence
+        }));
+
+        tokensUsed = aiResult.tokensUsed;
+        processingTimeMs = aiResult.processingTimeMs;
+        extractionMethod = 'ai';
+
+        // Log AI extraction
+        await supabase.from('ai_extraction_logs').insert({
+          user_id: user.id,
+          tasting_id: sourceId,
+          source_type: sourceType,
+          input_text: combinedText.substring(0, 1000),
+          input_category: category,
+          model_used: 'claude-haiku-3-20240307',
+          tokens_used: tokensUsed,
+          processing_time_ms: processingTimeMs,
+          descriptors_extracted: descriptors.length,
+          extraction_successful: true,
+          raw_ai_response: { descriptors }
+        });
+
+      } catch (aiError) {
+        console.error('AI extraction failed, falling back to keyword:', aiError);
+        // Fall back to keyword-based extraction
+        if (structuredData) {
+          descriptors = extractFromStructuredReview(structuredData);
+        } else {
+          descriptors = extractDescriptorsWithIntensity(combinedText);
+        }
+        extractionMethod = 'keyword';
+      }
     } else {
-      return res.status(400).json({
-        success: false,
-        error: 'No content provided for extraction'
-      });
+      // Use keyword-based extraction
+      if (structuredData) {
+        descriptors = extractFromStructuredReview(structuredData);
+      } else {
+        descriptors = extractDescriptorsWithIntensity(combinedText);
+      }
+      extractionMethod = 'keyword';
     }
 
     if (descriptors.length === 0) {
@@ -117,7 +196,9 @@ export default async function handler(
       confidence_score: descriptor.confidence,
       intensity: descriptor.intensity,
       item_name: itemContext?.itemName || null,
-      item_category: itemContext?.itemCategory || null
+      item_category: itemContext?.itemCategory || null,
+      ai_extracted: extractionMethod === 'ai',
+      extraction_model: extractionMethod === 'ai' ? 'claude-haiku-3-20240307' : null
     }));
 
     // Use upsert to handle duplicates
@@ -140,7 +221,10 @@ export default async function handler(
     return res.status(200).json({
       success: true,
       descriptors,
-      savedCount: savedDescriptors?.length || 0
+      savedCount: savedDescriptors?.length || 0,
+      tokensUsed: extractionMethod === 'ai' ? tokensUsed : undefined,
+      processingTimeMs: extractionMethod === 'ai' ? processingTimeMs : undefined,
+      extractionMethod
     });
 
   } catch (error) {

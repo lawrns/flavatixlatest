@@ -17,6 +17,7 @@
     "test:all": "npm run test:unit && npm run test:e2e"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.66.0",
     "@supabase/supabase-js": "^2.57.4",
     "@types/d3": "^7.4.3",
     "d3": "^7.9.0",
