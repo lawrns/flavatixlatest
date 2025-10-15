@@ -58,10 +58,10 @@ export default async function handler(
       await supabase
         .from('category_taxonomies')
         .update({
-          usage_count: existingTaxonomy.usage_count + 1,
+          usage_count: (existingTaxonomy as any).usage_count + 1,
           updated_at: new Date().toISOString(),
-        })
-        .eq('id', existingTaxonomy.id);
+        } as any)
+        .eq('id', (existingTaxonomy as any).id);
 
       return res.status(200).json({
         success: true,
