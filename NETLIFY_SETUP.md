@@ -52,7 +52,7 @@ netlify env:set NEXT_PUBLIC_SUPABASE_URL "https://your-project.supabase.co"
 netlify env:set NEXT_PUBLIC_SUPABASE_ANON_KEY "your-anon-key"
 
 # Database URL for server-side operations
-netlify env:set DATABASE_URL "postgresql://postgres:Hennie@@12Hennie@@12@db.kobuclkvlacdwvxmakvq.supabase.co:5432/postgres"
+netlify env:set DATABASE_URL "your-database-connection-string"
 ```
 
 ## Step 6: Redeploy
