@@ -82,9 +82,9 @@ export default async function handler(
       });
     }
 
-    const totalTokens = data.reduce((sum, log) => sum + (log.tokens_used || 0), 0);
-    const totalProcessingTime = data.reduce((sum, log) => sum + (log.processing_time_ms || 0), 0);
-    const successfulRequests = data.filter(log => log.extraction_successful).length;
+    const totalTokens = data.reduce((sum, log) => sum + ((log as any).tokens_used || 0), 0);
+    const totalProcessingTime = data.reduce((sum, log) => sum + ((log as any).processing_time_ms || 0), 0);
+    const successfulRequests = data.filter(log => (log as any).extraction_successful).length;
 
     // Cost calculation (Claude Haiku: $0.25/MTok input, $1.25/MTok output)
     // Assume 60/40 input/output split
