@@ -106,6 +106,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (sessionError) {
       console.error('Error creating study session:', sessionError);
+
+      // Check if it's a column not found error (migration not applied)
+      if (sessionError.message?.includes('column') && (sessionError.message?.includes('mode') || sessionError.message?.includes('study_approach'))) {
+        return res.status(500).json({
+          error: 'Database migration required. Please run flavorwheel_upgrade_migration.sql on your database.',
+          details: sessionError.message
+        });
+      }
+
       return res.status(500).json({ error: 'Failed to create study session', details: sessionError.message });
     }
 

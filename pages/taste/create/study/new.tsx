@@ -393,7 +393,17 @@ const NewStudyTastingPage: React.FC = () => {
                                 <input
                                   type="number"
                                   value={category.scaleMax}
-                                  onChange={(e) => updateCategory(category.id, { scaleMax: parseInt(e.target.value) || 100 })}
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '') {
+                                      updateCategory(category.id, { scaleMax: 5 });
+                                    } else {
+                                      const numVal = parseInt(val);
+                                      if (!isNaN(numVal)) {
+                                        updateCategory(category.id, { scaleMax: numVal });
+                                      }
+                                    }
+                                  }}
                                   min={5}
                                   max={100}
                                   className={`form-input w-32 ${errors[`category-${index}-scale`] ? 'border-error' : ''}`}
@@ -423,17 +433,13 @@ const NewStudyTastingPage: React.FC = () => {
                           )}
                         </div>
 
-                        <div>
-                          <label className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={category.rankInSummary}
-                              onChange={(e) => updateCategory(category.id, { rankInSummary: e.target.checked })}
-                              className="form-checkbox mr-sm"
-                            />
-                            <span className="text-body font-body">Include in ranking summary</span>
-                          </label>
-                        </div>
+                        {category.hasScale && (
+                          <div className="p-sm bg-blue-50 border border-blue-200 rounded-lg">
+                            <p className="text-small text-blue-800">
+                              ✓ This category will be included in ranking summary automatically
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
