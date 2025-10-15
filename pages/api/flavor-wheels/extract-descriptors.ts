@@ -119,7 +119,7 @@ export default async function handler(
             .eq('normalized_name', category.toLowerCase())
             .single();
 
-          taxonomyContext = taxonomy?.taxonomy_data;
+          taxonomyContext = (taxonomy as any)?.taxonomy_data;
         }
 
         // Use AI extraction
