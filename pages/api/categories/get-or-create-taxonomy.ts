@@ -87,6 +87,7 @@ export default async function handler(
     // Save to database
     const { data: savedTaxonomy, error: saveError } = await supabase
       .from('category_taxonomies')
+      // @ts-ignore - Supabase type inference issue
       .insert({
         category_name: taxonomy.categoryName,
         normalized_name: taxonomy.normalizedName,
