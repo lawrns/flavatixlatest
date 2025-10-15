@@ -142,13 +142,14 @@ export default async function handler(
         extractionMethod = 'ai';
 
         // Log AI extraction
+        // @ts-ignore - Supabase type inference issue
         await supabase.from('ai_extraction_logs').insert({
           user_id: user.id,
           tasting_id: sourceId,
           source_type: sourceType,
           input_text: combinedText.substring(0, 1000),
           input_category: category,
-          model_used: 'claude-haiku-3-20240307',
+          model_used: 'claude-3-haiku-20240307',
           tokens_used: tokensUsed,
           processing_time_ms: processingTimeMs,
           descriptors_extracted: descriptors.length,
