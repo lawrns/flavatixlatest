@@ -318,7 +318,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   const extractDescriptors = async (itemId: string, itemData: TastingItemData) => {
     if (!session) return;
 
-    let aiToastId: string | number | undefined;
+    let aiToastId: number | undefined;
 
     try {
       // Only extract if there's meaningful content
@@ -408,13 +408,9 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         // Show success message with AI indicator
         const extractionMethod = result.extractionMethod || 'keyword';
         if (extractionMethod === 'ai') {
-          toast.success(`✨ AI found ${result.savedCount} flavor descriptors`, {
-            duration: 3000
-          });
+          toast.success(`✨ AI found ${result.savedCount} flavor descriptors`, 3000);
         } else {
-          toast.success(`✓ Found ${result.savedCount} flavor descriptors`, {
-            duration: 2000
-          });
+          toast.success(`✓ Found ${result.savedCount} flavor descriptors`, 2000);
         }
       } else if (result.success && result.savedCount === 0) {
         console.log('ℹ️ No descriptors found in the content');

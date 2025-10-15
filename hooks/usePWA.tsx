@@ -50,18 +50,12 @@ export function usePWA() {
   useEffect(() => {
     const handleOnline = () => {
       setState(prev => ({ ...prev, isOffline: false }));
-      toast.success('Back online! Syncing data...', {
-        duration: 3000,
-        position: 'bottom-center'
-      });
+      toast.success('Back online! Syncing data...', 3000);
     };
 
     const handleOffline = () => {
       setState(prev => ({ ...prev, isOffline: true }));
-      toast.info('You are offline. Changes will sync when reconnected.', {
-        duration: 5000,
-        position: 'bottom-center'
-      });
+      toast.info('You are offline. Changes will sync when reconnected.', 5000);
     };
 
     window.addEventListener('online', handleOnline);
@@ -104,14 +98,8 @@ export function usePWA() {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
             setState(prev => ({ ...prev, isUpdateAvailable: true }));
 
-            toast.info('A new version is available!', {
-              duration: 0,
-              position: 'bottom-center',
-              action: {
-                label: 'Update',
-                onClick: () => updateApp()
-              }
-            });
+            // Duration 0 means no auto-dismiss, use a long duration instead
+            toast.info('A new version is available!', 30000);
           }
         });
       });
@@ -138,14 +126,7 @@ export function usePWA() {
       // Show install banner after 30 seconds
       setTimeout(() => {
         if (!state.isInstalled && deferredPrompt) {
-          toast.info('Add Flavatix to your home screen for offline access!', {
-            duration: 10000,
-            position: 'bottom-center',
-            action: {
-              label: 'Install',
-              onClick: () => installApp()
-            }
-          });
+          toast.info('Add Flavatix to your home screen for offline access!', 10000);
         }
       }, 30000);
     };
@@ -171,10 +152,7 @@ export function usePWA() {
       if (outcome === 'accepted') {
         console.log('User accepted the install prompt');
         setState(prev => ({ ...prev, isInstalled: true, canInstall: false }));
-        toast.success('Flavatix installed successfully!', {
-          duration: 5000,
-          position: 'bottom-center'
-        });
+        toast.success('Flavatix installed successfully!', 5000);
       } else {
         console.log('User dismissed the install prompt');
       }
@@ -200,20 +178,11 @@ export function usePWA() {
     const failed = results.filter(r => r.status !== 'success').length;
 
     if (successful > 0 && failed === 0) {
-      toast.success(`${successful} offline changes synced successfully!`, {
-        duration: 5000,
-        position: 'bottom-center'
-      });
+      toast.success(`${successful} offline changes synced successfully!`, 5000);
     } else if (successful > 0 && failed > 0) {
-      toast.warn(`${successful} changes synced, ${failed} failed. Will retry later.`, {
-        duration: 7000,
-        position: 'bottom-center'
-      });
+      toast.warn(`${successful} changes synced, ${failed} failed. Will retry later.`, 7000);
     } else if (failed > 0) {
-      toast.error(`Failed to sync ${failed} changes. Will retry when connection improves.`, {
-        duration: 7000,
-        position: 'bottom-center'
-      });
+      toast.error(`Failed to sync ${failed} changes. Will retry when connection improves.`, 7000);
     }
   };
 

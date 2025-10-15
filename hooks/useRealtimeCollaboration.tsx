@@ -76,10 +76,7 @@ export function useRealtimeCollaboration({
             activeUsers: [...prev.activeUsers.filter(u => u.userId !== user.userId), user]
           }));
           onUserJoined?.(user);
-          toast.success(`${user.userName} joined the tasting`, {
-            duration: 2000,
-            position: 'bottom-right'
-          });
+          toast.success(`${user.userName} joined the tasting`, 2000);
         });
 
         manager.on('user_left', (user: PresenceState) => {
@@ -122,10 +119,7 @@ export function useRealtimeCollaboration({
 
           // Batch notifications to avoid spam
           const timeout = setTimeout(() => {
-            toast.info(`Item updated by collaborator`, {
-              duration: 1000,
-              position: 'bottom-right'
-            });
+            toast.info(`Item updated by collaborator`, 1000);
           }, 500);
 
           updateTimeoutRef.current.set(update.itemId || '', timeout);
@@ -134,10 +128,7 @@ export function useRealtimeCollaboration({
         manager.on('database_update', ({ type, data }: any) => {
           // Handle database updates as source of truth
           if (type === 'item_added') {
-            toast.info('New item added to tasting', {
-              duration: 2000,
-              position: 'bottom-right'
-            });
+            toast.info('New item added to tasting', 2000);
           }
         });
 
