@@ -63,7 +63,7 @@ Extract ALL descriptors, even if confidence is medium. Be thorough.`;
 
   try {
     const response = await anthropic.messages.create({
-      model: 'claude-haiku-3-20240307', // Fast and cheap
+      model: 'claude-3-haiku-20240307', // Fast and cheap
       max_tokens: 2048,
       system: systemPrompt,
       messages: [

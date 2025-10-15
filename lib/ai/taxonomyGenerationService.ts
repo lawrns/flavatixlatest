@@ -50,7 +50,7 @@ Be creative and accurate. Consider the item's cultural context, production metho
 
   try {
     const response = await anthropic.messages.create({
-      model: 'claude-haiku-3-20240307',
+      model: 'claude-3-haiku-20240307',
       max_tokens: 1024,
       system: systemPrompt,
       messages: [
