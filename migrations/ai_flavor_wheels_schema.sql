@@ -139,15 +139,26 @@ CREATE POLICY "Users can insert their own extraction logs"
     ON ai_extraction_logs FOR INSERT
     WITH CHECK (auth.uid() = user_id);
 
--- Admin users can see all logs
-CREATE POLICY "Admins can view all extraction logs"
-    ON ai_extraction_logs FOR SELECT
-    USING (
-        EXISTS (
-            SELECT 1 FROM user_roles
-            WHERE user_id = auth.uid() AND role = 'admin'
-        )
-    );
+-- Admin users can see all logs (if user_roles table exists)
+-- Note: This policy will be skipped if user_roles doesn't exist yet
+-- You can add it later once user_roles table is created
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT FROM information_schema.tables
+        WHERE table_schema = 'public'
+        AND table_name = 'user_roles'
+    ) THEN
+        EXECUTE 'CREATE POLICY "Admins can view all extraction logs"
+            ON ai_extraction_logs FOR SELECT
+            USING (
+                EXISTS (
+                    SELECT 1 FROM user_roles
+                    WHERE user_id = auth.uid() AND role = ''admin''
+                )
+            )';
+    END IF;
+END $$;
 
 -- ============================================================================
 -- GRANTS
