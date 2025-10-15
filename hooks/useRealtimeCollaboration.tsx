@@ -40,6 +40,18 @@ export function useRealtimeCollaboration({
   const managerRef = useRef<RealtimeManager | null>(null);
   const updateTimeoutRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
+  // Store callback refs to avoid re-running effect when callbacks change
+  const onRemoteUpdateRef = useRef(onRemoteUpdate);
+  const onUserJoinedRef = useRef(onUserJoined);
+  const onUserLeftRef = useRef(onUserLeft);
+
+  // Update refs when callbacks change
+  useEffect(() => {
+    onRemoteUpdateRef.current = onRemoteUpdate;
+    onUserJoinedRef.current = onUserJoined;
+    onUserLeftRef.current = onUserLeft;
+  }, [onRemoteUpdate, onUserJoined, onUserLeft]);
+
   // Initialize realtime connection
   useEffect(() => {
     if (!user || !sessionId) return;
@@ -75,7 +87,7 @@ export function useRealtimeCollaboration({
             ...prev,
             activeUsers: [...prev.activeUsers.filter(u => u.userId !== user.userId), user]
           }));
-          onUserJoined?.(user);
+          onUserJoinedRef.current?.(user);
           toast.success(`${user.userName} joined the tasting`, 2000);
         });
 
@@ -86,7 +98,7 @@ export function useRealtimeCollaboration({
             cursors: new Map(Array.from(prev.cursors).filter(([id]) => id !== user.userId)),
             typingIndicators: new Map(Array.from(prev.typingIndicators).filter(([id]) => id !== user.userId))
           }));
-          onUserLeft?.(user);
+          onUserLeftRef.current?.(user);
         });
 
         manager.on('cursor_update', (cursor: Cursor) => {
@@ -109,7 +121,7 @@ export function useRealtimeCollaboration({
         });
 
         manager.on('remote_item_update', (update: RealtimeUpdate) => {
-          onRemoteUpdate?.(update);
+          onRemoteUpdateRef.current?.(update);
 
           // Show subtle notification for remote updates
           const existingTimeout = updateTimeoutRef.current.get(update.itemId || '');
@@ -154,7 +166,7 @@ export function useRealtimeCollaboration({
       updateTimeoutRef.current.forEach(timeout => clearTimeout(timeout));
       updateTimeoutRef.current.clear();
     };
-  }, [user, sessionId, onRemoteUpdate, onUserJoined, onUserLeft]);
+  }, [user, sessionId]); // Only depend on user and sessionId, not callbacks
 
   // Send cursor position
   const sendCursor = useCallback((itemId: string, field: string, position?: number) => {
