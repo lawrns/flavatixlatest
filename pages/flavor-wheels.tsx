@@ -301,6 +301,21 @@ export default function FlavorWheelsPage() {
                 onSegmentClick={handleSegmentClick}
               />
 
+              {/* AI Badge */}
+              {wheelData.aiMetadata?.hasAIDescriptors && (
+                <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-blue-100 border border-purple-200 rounded-full">
+                  <span className="text-2xl">✨</span>
+                  <div className="text-left">
+                    <div className="text-sm font-semibold text-purple-900">
+                      AI-Enhanced Flavor Wheel
+                    </div>
+                    <div className="text-xs text-purple-700">
+                      {wheelData.aiMetadata.aiExtractedCount} AI-extracted descriptors ({Math.round(wheelData.aiMetadata.percentageAI)}%)
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Stats */}
               <div className="mt-8 grid grid-cols-3 gap-6 text-center">
                 <div>

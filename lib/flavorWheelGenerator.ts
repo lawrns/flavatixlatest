@@ -39,6 +39,12 @@ export interface FlavorWheelData {
   generatedAt: Date;
   wheelType: 'aroma' | 'flavor' | 'combined' | 'metaphor';
   scopeType: 'personal' | 'universal' | 'item' | 'category' | 'tasting';
+  aiMetadata?: {
+    aiExtractedCount: number;
+    keywordExtractedCount: number;
+    percentageAI: number;
+    hasAIDescriptors: boolean;
+  };
 }
 
 export interface WheelGenerationOptions {
@@ -211,6 +217,11 @@ export async function generateFlavorWheel(
     descriptors.map(d => `${d.source_type}:${d.source_id}`)
   );
 
+  // Calculate AI metadata
+  const aiExtractedCount = descriptors.filter(d => (d as any).ai_extracted === true).length;
+  const keywordExtractedCount = totalDescriptors - aiExtractedCount;
+  const percentageAI = totalDescriptors > 0 ? (aiExtractedCount / totalDescriptors) * 100 : 0;
+
   return {
     categories,
     totalDescriptors,
@@ -220,7 +231,13 @@ export async function generateFlavorWheel(
     },
     generatedAt: new Date(),
     wheelType,
-    scopeType
+    scopeType,
+    aiMetadata: {
+      aiExtractedCount,
+      keywordExtractedCount,
+      percentageAI,
+      hasAIDescriptors: aiExtractedCount > 0
+    }
   };
 }
 

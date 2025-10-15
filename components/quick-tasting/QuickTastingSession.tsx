@@ -318,6 +318,8 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   const extractDescriptors = async (itemId: string, itemData: TastingItemData) => {
     if (!session) return;
 
+    let aiToastId: string | number | undefined;
+
     try {
       // Only extract if there's meaningful content
       const hasContent = itemData.notes?.trim() || itemData.aroma?.trim() || itemData.flavor?.trim();
@@ -331,6 +333,9 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         hasAroma: !!itemData.aroma,
         hasFlavor: !!itemData.flavor
       });
+
+      // Show AI processing indicator
+      aiToastId = toast.info('🤖 AI analyzing your notes...');
 
       // Prepare extraction data - use aroma field for aroma_notes
       const extractionPayload = {
@@ -394,14 +399,35 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         return;
       }
 
+      // Dismiss the processing toast
+      toast.dismiss(aiToastId);
+
       if (result.success && result.savedCount > 0) {
         console.log(`✅ Successfully extracted ${result.savedCount} flavor descriptors from item ${itemId}`);
-        // Show a subtle success indicator (consider adding a visual cue in the UI)
+
+        // Show success message with AI indicator
+        const extractionMethod = result.extractionMethod || 'keyword';
+        if (extractionMethod === 'ai') {
+          toast.success(`✨ AI found ${result.savedCount} flavor descriptors`, {
+            duration: 3000
+          });
+        } else {
+          toast.success(`✓ Found ${result.savedCount} flavor descriptors`, {
+            duration: 2000
+          });
+        }
       } else if (result.success && result.savedCount === 0) {
         console.log('ℹ️ No descriptors found in the content');
+        toast.dismiss(aiToastId);
       }
     } catch (error) {
       console.error('❌ Error extracting descriptors:', error);
+
+      // Dismiss the processing toast on error
+      if (aiToastId) {
+        toast.dismiss(aiToastId);
+      }
+
       // Log the full error for debugging
       if (error instanceof Error) {
         console.error('Error details:', {
