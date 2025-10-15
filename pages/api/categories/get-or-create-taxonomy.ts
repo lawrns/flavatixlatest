@@ -55,9 +55,9 @@ export default async function handler(
 
     if (existingTaxonomy) {
       // Increment usage count
-      // @ts-ignore - Supabase type inference issue
       await supabase
         .from('category_taxonomies')
+        // @ts-ignore - Supabase type inference issue
         .update({
           usage_count: (existingTaxonomy as any).usage_count + 1,
           updated_at: new Date().toISOString(),
