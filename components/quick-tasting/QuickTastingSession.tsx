@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { getSupabaseClient } from '../../lib/supabase';
 import { roleService } from '../../lib/roleService';
 import { studyModeService } from '../../lib/studyModeService';
@@ -83,6 +83,9 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   const [isChangingCategory, setIsChangingCategory] = useState(false);
   const supabase = getSupabaseClient() as any;
 
+  // Ref for debouncing AI extraction
+  const aiExtractionTimeoutRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
+
   // Realtime collaboration hook (only for study mode)
   const handleRemoteUpdate = useCallback((update: any) => {
     // Handle remote updates from collaborators
@@ -93,6 +96,14 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
           : item
       ));
     }
+  }, []);
+
+  const handleUserJoined = useCallback((user: any) => {
+    console.log(`👥 ${user.userName} joined the tasting`);
+  }, []);
+
+  const handleUserLeft = useCallback((user: any) => {
+    console.log(`👤 ${user.userName} left the tasting`);
   }, []);
 
   const {
@@ -107,12 +118,8 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   } = useRealtimeCollaboration({
     sessionId: session?.id || '',
     onRemoteUpdate: handleRemoteUpdate,
-    onUserJoined: (user) => {
-      console.log(`👥 ${user.userName} joined the tasting`);
-    },
-    onUserLeft: (user) => {
-      console.log(`👤 ${user.userName} left the tasting`);
-    }
+    onUserJoined: handleUserJoined,
+    onUserLeft: handleUserLeft
   });
 
   // Helper function to get the display category name
@@ -304,10 +311,22 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         onSessionUpdate({ ...session, completed_items: newCompleted });
       }
 
-      // Extract flavor descriptors if notes, aroma, or flavor were updated
+      // Debounce AI extraction - only run after user stops typing for 2 seconds
       const shouldExtract = updates.notes || updates.aroma || updates.flavor;
       if (shouldExtract) {
-        extractDescriptors(itemId, data);
+        // Clear any existing timeout for this item
+        const existingTimeout = aiExtractionTimeoutRef.current.get(itemId);
+        if (existingTimeout) {
+          clearTimeout(existingTimeout);
+        }
+
+        // Set new timeout - wait 2 seconds after last keystroke
+        const timeoutId = setTimeout(() => {
+          extractDescriptors(itemId, data);
+          aiExtractionTimeoutRef.current.delete(itemId);
+        }, 2000);
+
+        aiExtractionTimeoutRef.current.set(itemId, timeoutId);
       }
     } catch (error) {
       console.error('Error updating item:', error);
