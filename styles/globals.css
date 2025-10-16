@@ -105,7 +105,7 @@ a {
 }
 
 .label {
-  @apply text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2 block;
+  @apply text-sm font-medium text-zinc-600 dark:text-zinc-200 mb-2 block;
 }
 
 /* Accessibility */
