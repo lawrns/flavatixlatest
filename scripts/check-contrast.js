@@ -71,11 +71,13 @@ console.log('\nDARK MODE:');
 console.log('----------');
 
 const darkTests = [
-  { name: 'Primary Button (Orange on Dark text)', bg: '#f59e0b', text: '#1c1917' },
-  { name: 'Secondary Button (Orange text on Dark bg)', bg: '#2a2218', text: '#f59e0b' },
-  { name: 'Primary Text on App Background', bg: '#1a1410', text: '#f5f5f4' },
-  { name: 'Secondary Text on App Background', bg: '#1a1410', text: '#d6d3d1' },
-  { name: 'Input Text', bg: '#2a2218', text: '#f5f5f4' },
+  { name: 'Primary Button (Orange on Dark text)', bg: '#f59e0b', text: '#18181b' },
+  { name: 'Secondary Button (Orange text on Dark bg)', bg: '#27272a', text: '#f59e0b' },
+  { name: 'Primary Text on App Background', bg: '#18181b', text: '#fafafa' },
+  { name: 'Secondary Text on App Background', bg: '#18181b', text: '#e4e4e7' },
+  { name: 'Input Text', bg: '#27272a', text: '#fafafa' },
+  { name: 'Card Background with Primary Text', bg: '#27272a', text: '#fafafa' },
+  { name: 'Card Background with Secondary Text', bg: '#27272a', text: '#e4e4e7' },
 ];
 
 darkTests.forEach(test => {
