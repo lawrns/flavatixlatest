@@ -188,7 +188,7 @@ export default function SocialFeedWidget({ userId, limit = 5 }: SocialFeedWidget
           <div
             key={post.id}
             onClick={() => router.push('/social')}
-            className="bg-zinc-50 p-3 rounded-lg cursor-pointer hover:bg-zinc-100 transition-colors"
+            className="bg-zinc-50 dark:bg-zinc-700 p-3 rounded-lg cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors"
           >
             <div className="flex items-start gap-2 mb-2">
               {/* Avatar */}
@@ -212,11 +212,11 @@ export default function SocialFeedWidget({ userId, limit = 5 }: SocialFeedWidget
                   <span className="font-medium text-zinc-900 dark:text-zinc-50 text-sm truncate">
                     {post.user.full_name || post.user.username || 'Anonymous'}
                   </span>
-                  <span className="text-xs text-zinc-500">
+                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
                     {new Date(post.created_at).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="text-sm text-zinc-600 dark:text-zinc-300 truncate">
+                <p className="text-sm text-zinc-600 dark:text-zinc-200 truncate">
                   {post.session_name || `${post.category} tasting`} • {post.total_items} items
                   {post.average_score && ` • ${post.average_score.toFixed(1)}⭐`}
                 </p>
@@ -233,7 +233,7 @@ export default function SocialFeedWidget({ userId, limit = 5 }: SocialFeedWidget
             </div>
 
             {/* Stats */}
-            <div className="flex items-center gap-4 text-xs text-zinc-500 ml-10">
+            <div className="flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400 ml-10">
               <button
                 onClick={(e) => handleLike(post.id, e)}
                 className={`flex items-center gap-1 ${post.isLiked ? 'text-red-500' : 'hover:text-red-500'} transition-colors`}
