@@ -121,17 +121,11 @@ const InspirationBox: React.FC<InspirationBoxProps> = ({ className = '' }) => {
       <div
         className={`
           mx-auto max-w-lg rounded-xl p-5 text-center
+          bg-white dark:bg-zinc-800
+          shadow-md
           transition-all duration-500 ease-out
           ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
         `}
-        style={{
-          background: 'var(--surface-card, #ffffff)',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-          color: 'var(--text-secondary, #333333)',
-          borderRadius: '12px',
-          padding: '1rem 1.25rem',
-          maxWidth: '600px'
-        }}
       >
 
         {/* Icon */}
@@ -144,12 +138,12 @@ const InspirationBox: React.FC<InspirationBoxProps> = ({ className = '' }) => {
         </div>
 
         {/* Content */}
-        <p className="text-sm leading-relaxed font-body">
+        <p className="text-sm leading-relaxed font-body text-zinc-700 dark:text-zinc-200">
           {currentContent.text}
         </p>
 
         {/* Category indicator */}
-        <div className="mt-3 text-xs uppercase tracking-wide font-medium opacity-75">
+        <div className="mt-3 text-xs uppercase tracking-wide font-medium text-zinc-600 dark:text-zinc-400">
           {currentContent.category.replace('_', ' ')}
         </div>
       </div>
