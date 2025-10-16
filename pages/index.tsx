@@ -36,17 +36,17 @@ export default function Home() {
               />
               
               {/* App Name */}
-              <h1 className="font-heading font-bold text-h1 text-text-primary mb-sm">
+              <h1 className="font-heading font-bold text-h1 text-white mb-sm">
                 Flavatix
               </h1>
-              
+
               {/* Tagline */}
-              <p className="text-h3 text-text-secondary font-medium mb-xs">
+              <p className="text-h3 text-white font-medium mb-xs">
                 The one place for all your tasting needs
               </p>
 
               {/* Subtitle */}
-              <p className="text-body text-text-muted max-w-2xl mx-auto leading-body">
+              <p className="text-body text-white/90 max-w-2xl mx-auto leading-body">
                 The world's most pivotal tasting app for anything with flavor or aroma.
                 Discover, analyze, and share your tasting experiences with our intuitive platform
                 designed for everyone from casual enthusiasts to industry professionals.

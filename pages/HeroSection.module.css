@@ -29,7 +29,12 @@
 }
 
 :global(.dark) .card {
-  background: rgba(39, 39, 42, 0.95);
-  color: #fafafa;
+  background: rgba(39, 39, 42, 0.95) !important;
+  color: #fafafa !important;
   box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+:global(.dark) .card h3,
+:global(.dark) .card p {
+  color: #fafafa !important;
 }
