@@ -11,18 +11,18 @@
   --primary-hover: #d66a11;
   --secondary: #ec7813;
   --accent: #ec7813;
-  --background: #f8f7f6;
-  --surface: #ffffff;
-  --text-primary: #18181b;
-  --text-secondary: #71717a;
-  --border: rgba(0,0,0,0.12);
-  
+  --background: var(--color-background-app);
+  --surface: var(--color-background-surface);
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --border: var(--color-border-default);
+
   /* Legacy Typography - mapped to new design tokens */
   --font-heading: var(--font-heading);
   --font-body: var(--font-body);
   --text-h1: var(--font-size-h1);
   --text-body: var(--font-size-base);
-  
+
   /* Legacy Spacing - mapped to new design tokens */
   --space-2: var(--spacing-2);
   --space-3: var(--spacing-3);
@@ -74,15 +74,13 @@ a {
   text-decoration: none;
 }
 
-/* Dark mode removed to prevent input field styling conflicts */
-
-/* Custom component styles */
+/* Custom component styles with dark mode support */
 .btn-primary {
   @apply bg-primary text-white rounded-lg px-5 py-3 min-h-11 font-semibold transition-all duration-200 hover:bg-orange-600 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0.5 active:scale-95;
 }
 
 .btn-secondary {
-  @apply bg-white border-2 border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-white rounded-lg px-5 py-3 min-h-11 font-medium transition-all duration-200 hover:border-primary hover:shadow-sm;
+  @apply bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-white rounded-lg px-5 py-3 min-h-11 font-medium transition-all duration-200 hover:border-primary hover:shadow-sm;
 }
 
 .btn-ghost {
@@ -98,7 +96,7 @@ a {
 }
 
 .input {
-  @apply bg-white dark:bg-zinc-700 border-2 border-zinc-300 dark:border-zinc-600 rounded-lg px-3.5 py-3 min-h-11 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-200;
+  @apply bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-white rounded-lg px-3.5 py-3 min-h-11 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-200;
 }
 
 .text-small {
@@ -194,11 +192,11 @@ textarea {
 
 /* Add any additional global styles here */
 
-/* Force light mode for form inputs */
+/* Form inputs with dark mode support */
 .form-input {
-  background: #FFFFFF !important;
-  color: #2C1810 !important;
-  border-color: rgba(0, 0, 0, 0.12) !important;
+  background: var(--color-background-input);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-input);
 }
 
 /* Slider styles for overall score */

@@ -39,6 +39,12 @@
   transform: translateY(-1px);
 }
 
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .btn-secondary {
   display: inline-flex;
   align-items: center;
@@ -51,7 +57,7 @@
   cursor: pointer;
   user-select: none;
   background: var(--color-background-surface);
-  color: var(--color-primary-600);
+  color: var(--color-primary-500);
   border: 2px solid var(--color-primary-500);
   box-shadow: var(--shadow-sm);
 }
@@ -61,6 +67,12 @@
   border-color: var(--color-primary-600);
   box-shadow: var(--shadow-md);
   transform: translateY(-1px);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* === CARD COMPONENT TOKENS === */
