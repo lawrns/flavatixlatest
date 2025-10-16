@@ -139,7 +139,7 @@ export default function FlavorWheelsPage() {
 
   if (authLoading) {
     return (
-      <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen flex items-center justify-center">
+      <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-text-secondary">Loading...</p>
@@ -153,23 +153,23 @@ export default function FlavorWheelsPage() {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen pb-20">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-orange-100">
+      <div className="bg-white dark:bg-zinc-800 shadow-sm border-b border-orange-100 dark:border-zinc-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => router.push('/dashboard')}
-                className="flex items-center text-gray-600 hover:text-orange-600 transition-colors"
+                className="flex items-center text-gray-600 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
                 Back to Dashboard
               </button>
-              <div className="h-6 w-px bg-gray-300"></div>
-              <h1 className="text-2xl font-bold text-gray-900">Flavor Wheels</h1>
+              <div className="h-6 w-px bg-gray-300 dark:bg-gray-600"></div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">Flavor Wheels</h1>
             </div>
           </div>
         </div>
@@ -178,13 +178,13 @@ export default function FlavorWheelsPage() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Info Banner */}
-        <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 dark:border-blue-500 p-4 mb-6">
           <div className="flex">
             <div className="flex-shrink-0">
-              <Info className="h-5 w-5 text-blue-400" />
+              <Info className="h-5 w-5 text-blue-400 dark:text-blue-400" />
             </div>
             <div className="ml-3">
-              <p className="text-sm text-blue-700">
+              <p className="text-sm text-blue-700 dark:text-blue-200">
                 Flavor wheels are AI-generated visualizations of your tasting notes.
                 They analyze your reviews and tastings to reveal patterns in the flavors and aromas you experience.
               </p>
@@ -193,17 +193,17 @@ export default function FlavorWheelsPage() {
         </div>
 
         {/* Controls */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+        <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Wheel Type Selector */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                 Wheel Type
               </label>
               <select
                 value={wheelType}
                 onChange={(e) => setWheelType(e.target.value as WheelType)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-zinc-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
                 <option value="aroma">Aroma Wheel</option>
                 <option value="flavor">Flavor Wheel</option>
@@ -214,13 +214,13 @@ export default function FlavorWheelsPage() {
 
             {/* Scope Selector */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                 Scope
               </label>
               <select
                 value={scopeType}
                 onChange={(e) => setScopeType(e.target.value as ScopeType)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-zinc-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
                 <option value="personal">My Flavor Wheel</option>
                 <option value="universal">Universal (All Users)</option>
@@ -244,7 +244,7 @@ export default function FlavorWheelsPage() {
               <button
                 onClick={handleExportWheel}
                 disabled={!wheelData || loading}
-                className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed transition-colors"
               >
                 <Download className="w-4 h-4" />
                 Export
@@ -254,8 +254,8 @@ export default function FlavorWheelsPage() {
 
           {/* Cache Info */}
           {cached && !loading && (
-            <div className="mt-3 text-sm text-gray-500">
-              <span className="inline-flex items-center px-2 py-1 rounded-md bg-green-100 text-green-800">
+            <div className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+              <span className="inline-flex items-center px-2 py-1 rounded-md bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200">
                 Cached - Click "Regenerate" to update with latest data
               </span>
             </div>
@@ -263,24 +263,24 @@ export default function FlavorWheelsPage() {
         </div>
 
         {/* Wheel Visualization */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
+        <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-6">
           {loading && (
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-600 mb-4"></div>
-              <p className="text-gray-600 text-lg">Generating your flavor wheel...</p>
-              <p className="text-gray-500 text-sm mt-2">This may take a moment</p>
+              <p className="text-gray-600 dark:text-gray-300 text-lg">Generating your flavor wheel...</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">This may take a moment</p>
             </div>
           )}
 
           {error && !loading && (
             <div className="text-center py-20">
               <div className="mb-4">
-                <svg className="w-16 h-16 mx-auto text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No Data Available</h3>
-              <p className="text-gray-600 max-w-md mx-auto mb-6">{error}</p>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">No Data Available</h3>
+              <p className="text-gray-600 dark:text-gray-300 max-w-md mx-auto mb-6">{error}</p>
               <button
                 onClick={() => router.push('/taste')}
                 className="px-6 py-3 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
@@ -303,13 +303,13 @@ export default function FlavorWheelsPage() {
 
               {/* AI Badge */}
               {wheelData.aiMetadata?.hasAIDescriptors && (
-                <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-blue-100 border border-purple-200 rounded-full">
+                <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 border border-purple-200 dark:border-purple-700 rounded-full">
                   <span className="text-2xl">✨</span>
                   <div className="text-left">
-                    <div className="text-sm font-semibold text-purple-900">
+                    <div className="text-sm font-semibold text-purple-900 dark:text-purple-200">
                       AI-Enhanced Flavor Wheel
                     </div>
-                    <div className="text-xs text-purple-700">
+                    <div className="text-xs text-purple-700 dark:text-purple-300">
                       {wheelData.aiMetadata.aiExtractedCount} AI-extracted descriptors ({Math.round(wheelData.aiMetadata.percentageAI)}%)
                     </div>
                   </div>
@@ -319,28 +319,28 @@ export default function FlavorWheelsPage() {
               {/* Stats */}
               <div className="mt-8 grid grid-cols-3 gap-6 text-center">
                 <div>
-                  <div className="text-3xl font-bold text-orange-600">
+                  <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">
                     {wheelData.categories.length}
                   </div>
-                  <div className="text-sm text-gray-600 mt-1">Categories</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Categories</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-orange-600">
+                  <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">
                     {wheelData.uniqueDescriptors}
                   </div>
-                  <div className="text-sm text-gray-600 mt-1">Unique Descriptors</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Unique Descriptors</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-orange-600">
+                  <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">
                     {wheelData.totalDescriptors}
                   </div>
-                  <div className="text-sm text-gray-600 mt-1">Total Notes</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Total Notes</div>
                 </div>
               </div>
 
               {/* Legend */}
               <div className="mt-8 w-full max-w-2xl">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Categories</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Categories</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {wheelData.categories.map((category, idx) => (
                     <div key={idx} className="flex items-center gap-2">
@@ -353,8 +353,8 @@ export default function FlavorWheelsPage() {
                             '#6b7280', '#ec4899'
                           ])(category.name)
                       }}></div>
-                      <span className="text-sm text-gray-700">{category.name}</span>
-                      <span className="text-xs text-gray-500">({category.count})</span>
+                      <span className="text-sm text-gray-700 dark:text-gray-200">{category.name}</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">({category.count})</span>
                     </div>
                   ))}
                 </div>
@@ -370,21 +370,21 @@ export default function FlavorWheelsPage() {
       </div>
 
       {/* Bottom Navigation */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 bg-background-light">
+      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
         <nav className="flex justify-around p-2">
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/dashboard">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300 hover:text-primary dark:hover:text-primary" href="/dashboard">
             <span className="material-symbols-outlined">home</span>
             <span className="text-xs font-medium">Home</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/taste">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300 hover:text-primary dark:hover:text-primary" href="/taste">
             <span className="material-symbols-outlined">restaurant</span>
             <span className="text-xs font-medium">Taste</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/review">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300 hover:text-primary dark:hover:text-primary" href="/review">
             <span className="material-symbols-outlined">reviews</span>
             <span className="text-xs font-medium">Review</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-primary" href="/flavor-wheels">
+          <a className="flex flex-col items-center gap-1 p-2 text-primary dark:text-primary" href="/flavor-wheels">
             <span className="material-symbols-outlined">donut_small</span>
             <span className="text-xs font-bold">Wheels</span>
           </a>

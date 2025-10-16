@@ -85,15 +85,15 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
       <div className="flex h-screen flex-col">
-        <header className="flex items-center border-b border-zinc-200 p-4">
+        <header className="flex items-center border-b border-zinc-200 dark:border-zinc-700 p-4">
            <h1 className="flex-1 text-center text-xl font-bold">
              {activeTab === 'home' ? 'Dashboard' : 'Profile'}
            </h1>
            <button
              onClick={handleLogout}
-             className="text-sm text-zinc-600 hover:text-zinc-900:text-zinc-200"
+             className="text-sm text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100"
            >
              Logout
            </button>
@@ -101,13 +101,13 @@ export default function Dashboard() {
 
         <main className="flex-1 overflow-y-auto pb-20">
            {/* Main Tab Navigation */}
-           <div className="flex border-b border-zinc-200">
+           <div className="flex border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-700">
              <button
                onClick={() => setActiveTab('home')}
                className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                  activeTab === 'home'
                    ? 'border-primary text-primary'
-                   : 'border-transparent text-zinc-500 hover:text-zinc-700:text-zinc-300'
+                   : 'border-transparent text-zinc-500 dark:text-zinc-300 hover:text-zinc-700 dark:hover:text-zinc-200'
                }`}
              >
                Home
@@ -117,7 +117,7 @@ export default function Dashboard() {
                className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                  activeTab === 'edit'
                    ? 'border-primary text-primary'
-                   : 'border-transparent text-zinc-500 hover:text-zinc-700:text-zinc-300'
+                   : 'border-transparent text-zinc-500 dark:text-zinc-300 hover:text-zinc-700 dark:hover:text-zinc-200'
                }`}
              >
                Edit Profile
@@ -130,14 +130,14 @@ export default function Dashboard() {
               <h2 className="text-2xl font-bold text-primary mb-2">
                 Welcome back, {profile?.full_name || user?.email}!
               </h2>
-              <p className="text-zinc-600">
+              <p className="text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">
                 Ready to explore new flavors?
               </p>
             </div>
 
             {/* Profile Overview */}
             {profile && (
-              <div className="bg-white p-6 rounded-lg mb-6">
+              <div className="bg-white dark:bg-zinc-800 p-6 rounded-lg mb-6">
                 {/* Header with Avatar and Basic Info */}
                 <div className="flex items-start space-x-4 mb-6">
                   <div className="flex-shrink-0 relative">
@@ -166,11 +166,11 @@ export default function Dashboard() {
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-xl font-bold text-zinc-900 truncate">
+                    <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 truncate">
                       {profile.full_name || 'No name set'}
                     </h3>
                     {profile.username && (
-                      <p className="text-zinc-600 mb-1">@{profile.username}</p>
+                      <p className="text-zinc-600 dark:text-zinc-300 mb-1">@{profile.username}</p>
                     )}
                     <p className="text-zinc-500 text-sm">{user?.email}</p>
                     {profile.preferred_category && (
@@ -190,8 +190,8 @@ export default function Dashboard() {
                 {/* Bio */}
                 {profile.bio && (
                   <div className="mb-6">
-                    <h4 className="text-sm font-medium text-zinc-700 mb-2">About</h4>
-                    <p className="text-zinc-900 leading-relaxed">{profile.bio}</p>
+                    <h4 className="text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-2">About</h4>
+                    <p className="text-zinc-900 dark:text-zinc-50 leading-relaxed">{profile.bio}</p>
                   </div>
                 )}
 
@@ -199,12 +199,12 @@ export default function Dashboard() {
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-zinc-50 p-4 text-center rounded-lg">
                     <div className="text-2xl font-bold text-primary">{tastingStats?.totalTastings || profile.tastings_count || 0}</div>
-                    <div className="text-sm text-zinc-600">Tastings</div>
+                    <div className="text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Tastings</div>
                   </div>
 
                   <div className="bg-zinc-50 p-4 text-center rounded-lg">
                     <div className="text-2xl font-bold text-primary">{profile.reviews_count || 0}</div>
-                    <div className="text-sm text-zinc-600">Reviews</div>
+                    <div className="text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Reviews</div>
                   </div>
 
                   <button
@@ -212,7 +212,7 @@ export default function Dashboard() {
                     className="bg-zinc-50 p-4 text-center rounded-lg hover:bg-zinc-100 transition-colors cursor-pointer"
                   >
                     <div className="text-2xl font-bold text-primary">{profile.followers_count || 0}</div>
-                    <div className="text-sm text-zinc-600">Followers</div>
+                    <div className="text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Followers</div>
                   </button>
 
                   <button
@@ -220,15 +220,15 @@ export default function Dashboard() {
                     className="bg-zinc-50 p-4 text-center rounded-lg hover:bg-zinc-100 transition-colors cursor-pointer"
                   >
                     <div className="text-2xl font-bold text-primary">{profile.following_count || 0}</div>
-                    <div className="text-sm text-zinc-600">Following</div>
+                    <div className="text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Following</div>
                   </button>
                 </div>
 
                 {/* Additional Info */}
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between items-center">
-                    <span className="text-zinc-600">Member since</span>
-                    <span className="text-zinc-900 font-medium">
+                    <span className="text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Member since</span>
+                    <span className="text-zinc-900 dark:text-zinc-50 font-medium">
                       {new Date(profile.created_at).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
@@ -239,8 +239,8 @@ export default function Dashboard() {
 
                   {profile.last_tasted_at && (
                     <div className="flex justify-between items-center">
-                      <span className="text-zinc-600">Last tasting</span>
-                      <span className="text-zinc-900 font-medium">
+                      <span className="text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Last tasting</span>
+                      <span className="text-zinc-900 dark:text-zinc-50 font-medium">
                         {new Date(profile.last_tasted_at).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
@@ -251,7 +251,7 @@ export default function Dashboard() {
                   )}
 
                   <div className="flex justify-between items-center">
-                    <span className="text-zinc-600">Email verified</span>
+                    <span className="text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Email verified</span>
                     <div className="flex items-center">
                       {profile.email_confirmed ? (
                         <>
@@ -278,20 +278,20 @@ export default function Dashboard() {
             <div className="space-y-4">
               <button
                 onClick={() => router.push('/history')}
-                className="w-full flex items-center gap-3 p-4 bg-white text-zinc-900 rounded-lg hover:bg-zinc-50:bg-zinc-700 transition-colors"
+                className="w-full flex items-center gap-3 p-4 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 rounded-lg hover:bg-zinc-50:bg-zinc-700 transition-colors"
               >
                 <span className="material-symbols-outlined">history</span>
                 <div className="text-left">
                   <div className="font-medium">View History</div>
-                  <div className="text-sm text-zinc-600">Your past tastings</div>
+                  <div className="text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Your past tastings</div>
                 </div>
               </button>
 
               {/* Recent Tastings */}
               {recentTastings.length > 0 ? (
-                <div className="bg-white p-4 rounded-lg">
+                <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 dark:text-zinc-50">
                       Recent Tastings
                     </h3>
                     <button
@@ -309,7 +309,7 @@ export default function Dashboard() {
                         className="w-full bg-zinc-50 p-3 rounded-lg hover:bg-zinc-100 transition-colors text-left"
                       >
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-zinc-900 font-medium capitalize">
+                          <span className="text-zinc-900 dark:text-zinc-50 font-medium capitalize">
                             {tasting.category?.replace('_', ' ') || 'Tasting'}
                           </span>
                           <span className="text-zinc-500 text-xs">
@@ -319,7 +319,7 @@ export default function Dashboard() {
                             }
                           </span>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-zinc-600">
+                        <div className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">
                           {tasting.average_score && (
                             <>
                               <span className="text-primary font-semibold">
@@ -335,14 +335,14 @@ export default function Dashboard() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-white p-6 rounded-lg text-center">
+                <div className="bg-white dark:bg-zinc-800 p-6 rounded-lg text-center">
                   <div className="text-zinc-400 mb-3">
                     <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-semibold text-zinc-900 mb-2">No Tastings Yet</h3>
-                  <p className="text-sm text-zinc-600 mb-4">Start your flavor journey today!</p>
+                  <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-2">No Tastings Yet</h3>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-300 mb-4">Start your flavor journey today!</p>
                   <button
                     onClick={() => router.push('/taste')}
                     className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
@@ -354,18 +354,18 @@ export default function Dashboard() {
 
               {/* Stats Card */}
               {tastingStats && (
-                <div className="bg-white p-4 rounded-lg">
-                  <h3 className="text-lg font-bold text-zinc-900 mb-3">Your Stats</h3>
+                <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg">
+                  <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-3">Your Stats</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-primary">{tastingStats.totalTastings}</div>
-                      <div className="text-sm text-zinc-600">Total Tastings</div>
+                      <div className="text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Total Tastings</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-primary">
                         {tastingStats.averageScore ? tastingStats.averageScore.toFixed(1) : '0.0'}
                       </div>
-                      <div className="text-sm text-zinc-600">Avg Score</div>
+                      <div className="text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Avg Score</div>
                     </div>
                   </div>
                 </div>
@@ -390,7 +390,7 @@ export default function Dashboard() {
         </main>
 
         {/* Bottom Navigation */}
-        <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 bg-background-light">
+        <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light">
           <nav className="flex justify-around p-2">
             <Link className="flex flex-col items-center gap-1 p-2 text-primary" href="/dashboard">
               <span className="material-symbols-outlined">home</span>
