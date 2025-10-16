@@ -296,7 +296,7 @@ const StructuredReviewPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-background-light font-display text-zinc-900 min-h-screen pb-20">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen pb-20">
       <div className="flex flex-col min-h-screen">
         {/* Header */}
         <header className="flex items-center justify-between border-b border-zinc-200 p-4 bg-background-light sticky top-0 z-10">

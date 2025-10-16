@@ -139,7 +139,7 @@ export default function FlavorWheelsPage() {
 
   if (authLoading) {
     return (
-      <div className="bg-background-light font-display text-zinc-900 min-h-screen flex items-center justify-center">
+      <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-text-secondary">Loading...</p>
@@ -153,7 +153,7 @@ export default function FlavorWheelsPage() {
   }
 
   return (
-    <div className="bg-background-light font-display text-zinc-900 min-h-screen pb-20">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen pb-20">
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-orange-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

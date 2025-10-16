@@ -110,14 +110,14 @@ const AuthSection = () => {
 
   if (!mounted) {
     return (
-      <div className="bg-background-light font-display text-zinc-900 min-h-screen p-4 flex items-center justify-center">
+      <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen p-4 flex items-center justify-center">
         <div className="text-text-primary text-body font-body">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="bg-background-light font-display text-zinc-900">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50">
       <div className="flex h-screen flex-col">
         <div className="flex-1">
           <div className="relative h-64 w-full">
@@ -132,7 +132,7 @@ const AuthSection = () => {
             </div>
           </div>
           <div className="px-6 py-8 text-center">
-            <h1 className="text-3xl font-bold text-zinc-900">Flavatix</h1>
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">Flavatix</h1>
             <p className="mt-2 text-zinc-600">The one place for all your tasting needs</p>
           </div>
 

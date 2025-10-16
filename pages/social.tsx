@@ -547,7 +547,7 @@ export default function SocialPage() {
 
   if (loading || loadingPosts) {
     return (
-      <div className="bg-background-light font-display text-zinc-900 min-h-screen pb-20">
+      <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen pb-20">
         <div className="flex h-screen flex-col">
           <header className="border-b border-zinc-200 bg-background-light p-4">
             <div className="flex items-center justify-between mb-4">
@@ -569,7 +569,7 @@ export default function SocialPage() {
   const categories = ['all', 'coffee', 'wine', 'beer', 'spirits', 'tea', 'chocolate'];
 
   return (
-    <div className="bg-background-light font-display text-zinc-900 min-h-screen pb-20">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen pb-20">
       <div className="flex h-screen flex-col">
         {/* Header */}
         <header className="border-b border-zinc-200 bg-background-light sticky top-0 z-40">

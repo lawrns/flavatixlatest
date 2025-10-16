@@ -85,7 +85,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="bg-background-light font-display text-zinc-900 min-h-screen">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen">
       <div className="flex h-screen flex-col">
         <header className="flex items-center border-b border-zinc-200 p-4">
            <h1 className="flex-1 text-center text-xl font-bold">
@@ -291,7 +291,7 @@ export default function Dashboard() {
               {recentTastings.length > 0 ? (
                 <div className="bg-white p-4 rounded-lg">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-lg font-bold text-zinc-900">
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">
                       Recent Tastings
                     </h3>
                     <button

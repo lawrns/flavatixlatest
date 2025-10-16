@@ -12,7 +12,7 @@ const crimsonText = Crimson_Text({
 
 export default function Home() {
   return (
-    <div className="bg-background-light font-display text-zinc-900">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50">
       <Head>
         <title>Flavatix - The one place for all your tasting needs</title>
         <meta name="description" content="The world's most pivotal tasting app for anything with flavor or aroma. Discover, analyze, and share your tasting experiences with our user-friendly platform." />

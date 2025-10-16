@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function SamplePage() {
   return (
-    <div className="bg-background-light font-display text-zinc-900 min-h-screen pb-20">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen pb-20">
       <div className="flex h-screen flex-col">
         {/* Header */}
         <header className="flex items-center border-b border-zinc-200 p-4">
@@ -120,7 +120,7 @@ export default function SamplePage() {
                   </label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-zinc-300 rounded-lg bg-white text-zinc-900"
+                    className="w-full px-3 py-2 border border-zinc-300 rounded-lg bg-white text-zinc-900 dark:text-zinc-50"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -131,7 +131,7 @@ export default function SamplePage() {
                   </label>
                   <input
                     type="email"
-                    className="w-full px-3 py-2 border border-zinc-300 rounded-lg bg-white text-zinc-900"
+                    className="w-full px-3 py-2 border border-zinc-300 rounded-lg bg-white text-zinc-900 dark:text-zinc-50"
                     placeholder="Enter your email"
                   />
                 </div>
@@ -142,7 +142,7 @@ export default function SamplePage() {
                   </label>
                   <input
                     type="password"
-                    className="w-full px-3 py-2 border border-zinc-300 rounded-lg bg-white text-zinc-900"
+                    className="w-full px-3 py-2 border border-zinc-300 rounded-lg bg-white text-zinc-900 dark:text-zinc-50"
                     placeholder="Enter your password"
                   />
                 </div>
@@ -220,19 +220,19 @@ export default function SamplePage() {
               <h2 className="text-2xl font-bold mb-4">Typography</h2>
               <div className="bg-white p-4 rounded-lg space-y-4">
                 <div>
-                  <h1 className="text-4xl font-bold text-zinc-900">Heading 1</h1>
+                  <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-50">Heading 1</h1>
                   <p className="text-zinc-600">Large display text for main headings</p>
                 </div>
                 <div>
-                  <h2 className="text-3xl font-bold text-zinc-900">Heading 2</h2>
+                  <h2 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">Heading 2</h2>
                   <p className="text-zinc-600">Section headings</p>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-zinc-900">Heading 3</h3>
+                  <h3 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Heading 3</h3>
                   <p className="text-zinc-600">Card titles and subsections</p>
                 </div>
                 <div>
-                  <p className="text-base text-zinc-900">Body text - Regular paragraph content</p>
+                  <p className="text-base text-zinc-900 dark:text-zinc-50">Body text - Regular paragraph content</p>
                   <p className="text-sm text-zinc-600">Small text - Secondary information</p>
                 </div>
               </div>

@@ -197,7 +197,7 @@ const TastingSessionPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-background-light font-display text-zinc-900 min-h-screen pb-20">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen pb-20">
       <main id="main-content">
         <div className="container mx-auto px-md py-lg">
           {/* Header */}
