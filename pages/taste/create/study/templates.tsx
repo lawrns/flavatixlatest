@@ -28,7 +28,7 @@ const TemplatesPage: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen pb-20">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
       <main className="container mx-auto px-md py-lg max-w-4xl">
         <div className="mb-lg">
           <button onClick={() => router.back()} className="flex items-center text-text-secondary hover:text-text-primary mb-sm transition-colors">

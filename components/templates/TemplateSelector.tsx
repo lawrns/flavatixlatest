@@ -125,7 +125,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                   {template.fields.map((field) => (
                     <div 
                       key={field.id}
-                      className="flex items-center justify-between text-xs py-xs px-sm bg-white rounded"
+                      className="flex items-center justify-between text-xs py-xs px-sm bg-white dark:bg-zinc-800 rounded"
                     >
                       <div className="flex items-center gap-sm">
                         <span className="text-text-primary font-medium">{field.label}</span>

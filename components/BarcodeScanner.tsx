@@ -312,7 +312,7 @@ export default function BarcodeScanner({ onScan, onClose, category = 'wine' }: B
       {/* Product Found */}
       {detectedCode && productInfo && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/90 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+          <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-md w-full">
             <div className="flex items-center mb-4">
               <CheckCircle className="w-8 h-8 text-green-500 mr-3" />
               <h3 className="text-lg font-semibold">Product Found!</h3>
@@ -362,7 +362,7 @@ export default function BarcodeScanner({ onScan, onClose, category = 'wine' }: B
       {/* Manual Entry Modal */}
       {isManualEntry && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/90 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+          <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-md w-full">
             <h3 className="text-lg font-semibold mb-4">Enter Barcode</h3>
 
             <input
@@ -405,7 +405,7 @@ export default function BarcodeScanner({ onScan, onClose, category = 'wine' }: B
       {/* Error State */}
       {error && (
         <div className="absolute inset-0 flex items-center justify-center bg-black p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+          <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-md w-full">
             <div className="flex items-center mb-4">
               <AlertCircle className="w-8 h-8 text-red-500 mr-3" />
               <h3 className="text-lg font-semibold">Camera Error</h3>

@@ -38,7 +38,7 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
     return (
       <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 ${className}`}>
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 animate-pulse">
+          <div key={i} className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4 animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-12 mb-2"></div>
             <div className="h-4 bg-gray-200 rounded w-20"></div>
           </div>
@@ -90,7 +90,7 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
   return (
     <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 ${className}`}>
       {/* Total Tastings */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-2xl font-bold text-gray-900">{stats.totalTastings}</p>
@@ -101,7 +101,7 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
       </div>
 
       {/* Average Rating */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div>
             <p className={`text-2xl font-bold ${getRatingColor(stats.averageRating)}`}>
@@ -114,7 +114,7 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
       </div>
 
       {/* Current Streak */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div>
             <p className={`text-2xl font-bold ${getStreakColor(stats.currentStreak)}`}>
@@ -127,7 +127,7 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
       </div>
 
       {/* Most Tasted Category */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-lg font-bold text-gray-900 capitalize">
@@ -143,7 +143,7 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
 
       {/* Categories Breakdown */}
       {Object.keys(stats.categoriesCount).length > 0 && (
-        <div className="col-span-2 md:col-span-4 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="col-span-2 md:col-span-4 bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4">
           <h3 className="text-lg font-semibold text-gray-900 mb-3">Distribución por categorías</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {Object.entries(stats.categoriesCount)

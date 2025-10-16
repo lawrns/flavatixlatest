@@ -24,7 +24,7 @@ const StudyModeLanding: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
       <main id="main-content" className="pb-20">
         <div className="container mx-auto px-md py-lg max-w-4xl">
           <div className="mb-lg">
@@ -88,7 +88,7 @@ const StudyModeLanding: React.FC = () => {
             >
               <div className="flex flex-col items-center space-y-md">
                 <div className="w-20 h-20 rounded-full bg-zinc-100 flex items-center justify-center group-hover:bg-zinc-200 transition-colors">
-                  <ArrowLeft size={40} className="text-zinc-600" />
+                  <ArrowLeft size={40} className="text-zinc-600 dark:text-zinc-300" />
                 </div>
                 <div>
                   <h2 className="text-h3 font-heading font-semibold text-text-primary mb-sm">
@@ -104,9 +104,9 @@ const StudyModeLanding: React.FC = () => {
         </div>
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 bg-background-light">
+      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
         <nav className="flex justify-around p-2">
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/dashboard">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
             <span className="material-symbols-outlined">home</span>
             <span className="text-xs font-medium">Home</span>
           </a>
@@ -114,11 +114,11 @@ const StudyModeLanding: React.FC = () => {
             <span className="material-symbols-outlined">restaurant</span>
             <span className="text-xs font-bold">Taste</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/review">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
             <span className="material-symbols-outlined">reviews</span>
             <span className="text-xs font-medium">Review</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/flavor-wheels">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
             <span className="material-symbols-outlined">donut_small</span>
             <span className="text-xs font-medium">Wheels</span>
           </a>

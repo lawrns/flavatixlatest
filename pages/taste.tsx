@@ -46,7 +46,7 @@ const TastePage: React.FC = () => {
   ];
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
       <main id="main-content">
         <div className="container mx-auto px-md py-lg">
           {/* Header */}
@@ -98,7 +98,7 @@ const TastePage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-md max-w-4xl mx-auto">
             <button
               onClick={() => router.push('/join-tasting')}
-              className="flex items-center gap-3 p-4 bg-white rounded-lg border-2 border-zinc-200 hover:border-primary hover:shadow-md transition-all"
+              className="flex items-center gap-3 p-4 bg-white dark:bg-zinc-800 rounded-lg border-2 border-zinc-200 dark:border-zinc-700 hover:border-primary hover:shadow-md transition-all"
             >
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                 <UserPlus size={24} className="text-primary" />
@@ -111,7 +111,7 @@ const TastePage: React.FC = () => {
 
             <button
               onClick={() => router.push('/my-tastings')}
-              className="flex items-center gap-3 p-4 bg-white rounded-lg border-2 border-zinc-200 hover:border-primary hover:shadow-md transition-all"
+              className="flex items-center gap-3 p-4 bg-white dark:bg-zinc-800 rounded-lg border-2 border-zinc-200 dark:border-zinc-700 hover:border-primary hover:shadow-md transition-all"
             >
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                 <History size={24} className="text-primary" />
@@ -126,9 +126,9 @@ const TastePage: React.FC = () => {
       </main>
 
       {/* Bottom Navigation */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 bg-background-light">
+      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
         <nav className="flex justify-around p-2">
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/dashboard">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
             <span className="material-symbols-outlined">home</span>
             <span className="text-xs font-medium">Home</span>
           </a>
@@ -136,11 +136,11 @@ const TastePage: React.FC = () => {
             <span className="material-symbols-outlined">restaurant</span>
             <span className="text-xs font-bold">Taste</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/review">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
             <span className="material-symbols-outlined">reviews</span>
             <span className="text-xs font-medium">Review</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/flavor-wheels">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
             <span className="material-symbols-outlined">donut_small</span>
             <span className="text-xs font-medium">Wheels</span>
           </a>

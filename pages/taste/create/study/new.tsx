@@ -225,7 +225,7 @@ const NewStudyTastingPage: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
       <main id="main-content" className="pb-20">
         <div className="container mx-auto px-md py-lg max-w-4xl">
           {/* Header */}
@@ -322,7 +322,7 @@ const NewStudyTastingPage: React.FC = () => {
               ) : (
                 <div className="space-y-md">
                   {form.categories.map((category, index) => (
-                    <div key={category.id} className="border border-border-default rounded-lg p-md bg-white">
+                    <div key={category.id} className="border border-border-default rounded-lg p-md bg-white dark:bg-zinc-800">
                       <div className="flex items-start justify-between mb-sm">
                         <span className="text-small font-body font-medium text-text-secondary">
                           Category {index + 1}
@@ -505,8 +505,8 @@ const NewStudyTastingPage: React.FC = () => {
       {/* Preview Modal */}
       {showPreview && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-md">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-border-default p-md flex justify-between items-center">
+          <div className="bg-white dark:bg-zinc-800 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white dark:bg-zinc-800 border-b border-border-default p-md flex justify-between items-center">
               <h3 className="text-h3 font-heading font-semibold">Preview</h3>
               <button
                 onClick={() => setShowPreview(false)}
@@ -551,9 +551,9 @@ const NewStudyTastingPage: React.FC = () => {
       )}
 
       {/* Bottom Navigation */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 bg-background-light">
+      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
         <nav className="flex justify-around p-2">
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/dashboard">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
             <span className="material-symbols-outlined">home</span>
             <span className="text-xs font-medium">Home</span>
           </a>
@@ -561,11 +561,11 @@ const NewStudyTastingPage: React.FC = () => {
             <span className="material-symbols-outlined">restaurant</span>
             <span className="text-xs font-bold">Taste</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/review">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
             <span className="material-symbols-outlined">reviews</span>
             <span className="text-xs font-medium">Review</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/flavor-wheels">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
             <span className="material-symbols-outlined">donut_small</span>
             <span className="text-xs font-medium">Wheels</span>
           </a>

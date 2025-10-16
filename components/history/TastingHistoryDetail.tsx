@@ -93,7 +93,7 @@ const TastingHistoryDetail: React.FC<TastingHistoryDetailProps> = ({
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 animate-pulse">
+      <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-6 animate-pulse">
         <div className="flex items-center mb-6">
           <div className="h-6 bg-gray-200 rounded w-20 mr-4"></div>
           <div className="h-8 bg-gray-200 rounded w-64"></div>
@@ -109,7 +109,7 @@ const TastingHistoryDetail: React.FC<TastingHistoryDetailProps> = ({
 
   if (error || !tasting) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="flex items-center mb-4">
           <button
             onClick={onBack}
@@ -134,7 +134,7 @@ const TastingHistoryDetail: React.FC<TastingHistoryDetailProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+    <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200">
       {/* Header */}
       <div className="border-b border-gray-200 p-6">
         <div className="flex items-center justify-between mb-4">

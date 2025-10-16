@@ -123,7 +123,7 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
   const stats = getSuggestionsStats();
 
   return (
-    <div className="bg-white border border-border-primary rounded-lg shadow-sm">
+    <div className="bg-white dark:bg-zinc-800 border border-border-primary rounded-lg shadow-sm">
       {/* Header */}
       <div className="p-6 border-b border-border-primary">
         <div className="flex items-center justify-between">

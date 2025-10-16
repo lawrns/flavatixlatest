@@ -130,7 +130,7 @@ export default function Dashboard() {
               <h2 className="text-2xl font-bold text-primary mb-2">
                 Welcome back, {profile?.full_name || user?.email}!
               </h2>
-              <p className="text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">
+              <p className="text-zinc-600 dark:text-zinc-300">
                 Ready to explore new flavors?
               </p>
             </div>
@@ -197,37 +197,37 @@ export default function Dashboard() {
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="bg-zinc-50 p-4 text-center rounded-lg">
+                  <div className="bg-zinc-50 dark:bg-zinc-700 p-4 text-center rounded-lg">
                     <div className="text-2xl font-bold text-primary">{tastingStats?.totalTastings || profile.tastings_count || 0}</div>
-                    <div className="text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Tastings</div>
+                    <div className="text-sm text-zinc-600 dark:text-zinc-300">Tastings</div>
                   </div>
 
-                  <div className="bg-zinc-50 p-4 text-center rounded-lg">
+                  <div className="bg-zinc-50 dark:bg-zinc-700 p-4 text-center rounded-lg">
                     <div className="text-2xl font-bold text-primary">{profile.reviews_count || 0}</div>
-                    <div className="text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Reviews</div>
+                    <div className="text-sm text-zinc-600 dark:text-zinc-300">Reviews</div>
                   </div>
 
                   <button
                     onClick={() => router.push(`/profile/${profile.username}/followers`)}
-                    className="bg-zinc-50 p-4 text-center rounded-lg hover:bg-zinc-100 transition-colors cursor-pointer"
+                    className="bg-zinc-50 dark:bg-zinc-700 p-4 text-center rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors cursor-pointer"
                   >
                     <div className="text-2xl font-bold text-primary">{profile.followers_count || 0}</div>
-                    <div className="text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Followers</div>
+                    <div className="text-sm text-zinc-600 dark:text-zinc-300">Followers</div>
                   </button>
 
                   <button
                     onClick={() => router.push(`/profile/${profile.username}/following`)}
-                    className="bg-zinc-50 p-4 text-center rounded-lg hover:bg-zinc-100 transition-colors cursor-pointer"
+                    className="bg-zinc-50 dark:bg-zinc-700 p-4 text-center rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors cursor-pointer"
                   >
                     <div className="text-2xl font-bold text-primary">{profile.following_count || 0}</div>
-                    <div className="text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Following</div>
+                    <div className="text-sm text-zinc-600 dark:text-zinc-300">Following</div>
                   </button>
                 </div>
 
                 {/* Additional Info */}
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between items-center">
-                    <span className="text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Member since</span>
+                    <span className="text-zinc-600 dark:text-zinc-300">Member since</span>
                     <span className="text-zinc-900 dark:text-zinc-50 font-medium">
                       {new Date(profile.created_at).toLocaleDateString('en-US', {
                         year: 'numeric',
@@ -239,7 +239,7 @@ export default function Dashboard() {
 
                   {profile.last_tasted_at && (
                     <div className="flex justify-between items-center">
-                      <span className="text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Last tasting</span>
+                      <span className="text-zinc-600 dark:text-zinc-300">Last tasting</span>
                       <span className="text-zinc-900 dark:text-zinc-50 font-medium">
                         {new Date(profile.last_tasted_at).toLocaleDateString('en-US', {
                           year: 'numeric',
@@ -251,7 +251,7 @@ export default function Dashboard() {
                   )}
 
                   <div className="flex justify-between items-center">
-                    <span className="text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Email verified</span>
+                    <span className="text-zinc-600 dark:text-zinc-300">Email verified</span>
                     <div className="flex items-center">
                       {profile.email_confirmed ? (
                         <>
@@ -283,7 +283,7 @@ export default function Dashboard() {
                 <span className="material-symbols-outlined">history</span>
                 <div className="text-left">
                   <div className="font-medium">View History</div>
-                  <div className="text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Your past tastings</div>
+                  <div className="text-sm text-zinc-600 dark:text-zinc-300">Your past tastings</div>
                 </div>
               </button>
 
@@ -291,7 +291,7 @@ export default function Dashboard() {
               {recentTastings.length > 0 ? (
                 <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 dark:text-zinc-50">
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">
                       Recent Tastings
                     </h3>
                     <button
@@ -306,7 +306,7 @@ export default function Dashboard() {
                       <button
                         key={tasting.id}
                         onClick={() => router.push(`/history`)}
-                        className="w-full bg-zinc-50 p-3 rounded-lg hover:bg-zinc-100 transition-colors text-left"
+                        className="w-full bg-zinc-50 dark:bg-zinc-700 p-3 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors text-left"
                       >
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-zinc-900 dark:text-zinc-50 font-medium capitalize">
@@ -319,7 +319,7 @@ export default function Dashboard() {
                             }
                           </span>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">
+                        <div className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-300">
                           {tasting.average_score && (
                             <>
                               <span className="text-primary font-semibold">
@@ -359,13 +359,13 @@ export default function Dashboard() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-primary">{tastingStats.totalTastings}</div>
-                      <div className="text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Total Tastings</div>
+                      <div className="text-sm text-zinc-600 dark:text-zinc-300">Total Tastings</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-primary">
                         {tastingStats.averageScore ? tastingStats.averageScore.toFixed(1) : '0.0'}
                       </div>
-                      <div className="text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">Avg Score</div>
+                      <div className="text-sm text-zinc-600 dark:text-zinc-300">Avg Score</div>
                     </div>
                   </div>
                 </div>
@@ -390,21 +390,21 @@ export default function Dashboard() {
         </main>
 
         {/* Bottom Navigation */}
-        <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light">
+        <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
           <nav className="flex justify-around p-2">
             <Link className="flex flex-col items-center gap-1 p-2 text-primary" href="/dashboard">
               <span className="material-symbols-outlined">home</span>
               <span className="text-xs font-bold">Home</span>
             </Link>
-            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/taste">
+            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/taste">
               <span className="material-symbols-outlined">restaurant</span>
               <span className="text-xs font-medium">Taste</span>
             </Link>
-            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/review">
+            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
               <span className="material-symbols-outlined">reviews</span>
               <span className="text-xs font-medium">Review</span>
             </Link>
-            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/flavor-wheels">
+            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
               <span className="material-symbols-outlined">donut_small</span>
               <span className="text-xs font-medium">Wheels</span>
             </Link>

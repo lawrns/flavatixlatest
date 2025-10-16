@@ -111,10 +111,10 @@ const MyReviewsPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen pb-20">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
       <div className="flex flex-col min-h-screen">
         {/* Header */}
-        <header className="flex items-center justify-between border-b border-zinc-200 p-4 bg-background-light sticky top-0 z-10">
+        <header className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-700 p-4 bg-background-light sticky top-0 z-10">
           <button
             onClick={() => router.push('/review')}
             className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100"
@@ -247,13 +247,13 @@ const MyReviewsPage: React.FC = () => {
         </main>
 
         {/* Bottom Navigation */}
-        <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 bg-background-light">
+        <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
           <nav className="flex justify-around p-2">
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/dashboard">
+            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
               <span className="material-symbols-outlined">home</span>
               <span className="text-xs font-medium">Home</span>
             </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/taste">
+            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/taste">
               <span className="material-symbols-outlined">restaurant</span>
               <span className="text-xs font-medium">Taste</span>
             </a>
@@ -261,7 +261,7 @@ const MyReviewsPage: React.FC = () => {
               <span className="material-symbols-outlined">reviews</span>
               <span className="text-xs font-bold">Review</span>
             </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/flavor-wheels">
+            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
               <span className="material-symbols-outlined">donut_small</span>
               <span className="text-xs font-medium">Wheels</span>
             </a>

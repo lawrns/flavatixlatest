@@ -54,7 +54,7 @@ const CharacteristicSlider: React.FC<CharacteristicSliderProps> = ({
         />
         <div className="absolute -top-1.5 left-0 w-full h-4 pointer-events-none flex items-center">
           <div 
-            className="absolute w-3 h-3 bg-white rounded-full shadow-md border-2 border-primary transition-all duration-200 ease-out"
+            className="absolute w-3 h-3 bg-white dark:bg-zinc-800 rounded-full shadow-md border-2 border-primary transition-all duration-200 ease-out"
             style={{ 
               left: `calc(${((value - min) / (max - min)) * 100}% - 6px)`
             }}

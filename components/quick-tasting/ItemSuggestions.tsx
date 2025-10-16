@@ -172,7 +172,7 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
           suggestions.map((suggestion) => (
             <div
               key={suggestion.id}
-              className="bg-white border border-border-primary rounded-lg p-4"
+              className="bg-white dark:bg-zinc-800 border border-border-primary rounded-lg p-4"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">

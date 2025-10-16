@@ -203,7 +203,7 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
   };
 
   return (
-    <div className="bg-white border border-border-primary rounded-lg shadow-sm">
+    <div className="bg-white dark:bg-zinc-800 border border-border-primary rounded-lg shadow-sm">
       {/* Header */}
       <div className="p-6 border-b border-border-primary">
         <div>

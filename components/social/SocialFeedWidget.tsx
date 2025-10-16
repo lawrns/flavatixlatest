@@ -151,8 +151,8 @@ export default function SocialFeedWidget({ userId, limit = 5 }: SocialFeedWidget
 
   if (loading) {
     return (
-      <div className="bg-white p-4 rounded-lg">
-        <h3 className="text-lg font-bold text-zinc-900 mb-3">Recent Activity</h3>
+      <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg">
+        <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-3">Recent Activity</h3>
         <div className="animate-pulse space-y-3">
           {[1, 2, 3].map(i => (
             <div key={i} className="h-16 bg-zinc-100 rounded"></div>
@@ -164,17 +164,17 @@ export default function SocialFeedWidget({ userId, limit = 5 }: SocialFeedWidget
 
   if (posts.length === 0) {
     return (
-      <div className="bg-white p-4 rounded-lg">
-        <h3 className="text-lg font-bold text-zinc-900 mb-3">Recent Activity</h3>
+      <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg">
+        <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-3">Recent Activity</h3>
         <p className="text-zinc-500 text-sm text-center py-4">No recent activity yet</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white p-4 rounded-lg">
+    <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-bold text-zinc-900">Recent Activity</h3>
+        <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 dark:text-zinc-50">Recent Activity</h3>
         <button
           onClick={() => router.push('/social')}
           className="text-primary hover:underline text-sm"
@@ -209,14 +209,14 @@ export default function SocialFeedWidget({ userId, limit = 5 }: SocialFeedWidget
               {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline gap-2">
-                  <span className="font-medium text-zinc-900 text-sm truncate">
+                  <span className="font-medium text-zinc-900 dark:text-zinc-50 text-sm truncate">
                     {post.user.full_name || post.user.username || 'Anonymous'}
                   </span>
                   <span className="text-xs text-zinc-500">
                     {new Date(post.created_at).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="text-sm text-zinc-600 truncate">
+                <p className="text-sm text-zinc-600 dark:text-zinc-300 truncate">
                   {post.session_name || `${post.category} tasting`} • {post.total_items} items
                   {post.average_score && ` • ${post.average_score.toFixed(1)}⭐`}
                 </p>

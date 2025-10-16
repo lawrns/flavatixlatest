@@ -50,7 +50,7 @@ const TastingHistoryItem: React.FC<TastingHistoryItemProps> = ({ tasting, onClic
 
   return (
     <div 
-      className="group/card bg-white rounded-xl shadow-sm border border-gray-200/60 p-4 sm:p-6 hover:shadow-lg hover:border-gray-300/60 transition-all duration-300 cursor-pointer relative overflow-hidden backdrop-blur-sm"
+      className="group/card bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-gray-200/60 p-4 sm:p-6 hover:shadow-lg hover:border-gray-300/60 transition-all duration-300 cursor-pointer relative overflow-hidden backdrop-blur-sm"
       onClick={() => onClick(tasting)}
     >
       {/* Gradiente sutil de fondo */}

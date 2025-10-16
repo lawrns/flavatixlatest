@@ -141,7 +141,7 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
   return (
     <div className="min-h-screen bg-background-light pb-24">
       {/* Header */}
-      <div className="bg-white border-b border-border-default p-md">
+      <div className="bg-white dark:bg-zinc-800 border-b border-border-default p-md">
         <div className="max-w-4xl mx-auto">
           <button
             onClick={() => router.push('/my-tastings')}

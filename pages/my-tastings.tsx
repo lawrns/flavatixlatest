@@ -86,12 +86,12 @@ export default function MyTastingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background-light font-display text-zinc-900 pb-56">
+    <div className="min-h-screen bg-background-light font-display text-zinc-900 dark:text-zinc-50 pb-56">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-6">
           <button
             onClick={() => router.back()}
-            className="flex items-center text-zinc-600 hover:text-zinc-900 mb-4 transition-colors"
+            className="flex items-center text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:text-zinc-50 mb-4 transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -99,8 +99,8 @@ export default function MyTastingsPage() {
             Back
           </button>
 
-          <h1 className="text-3xl font-bold text-zinc-900 mb-2">My Tastings</h1>
-          <p className="text-zinc-600">View and manage all your tasting sessions</p>
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50 mb-2">My Tastings</h1>
+          <p className="text-zinc-600 dark:text-zinc-300">View and manage all your tasting sessions</p>
         </div>
 
         {/* Filters */}
@@ -110,7 +110,7 @@ export default function MyTastingsPage() {
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               filter === 'all'
                 ? 'bg-primary text-white'
-                : 'bg-white text-zinc-700 border border-zinc-200 hover:bg-zinc-50'
+                : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50'
             }`}
           >
             All
@@ -120,7 +120,7 @@ export default function MyTastingsPage() {
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               filter === 'completed'
                 ? 'bg-primary text-white'
-                : 'bg-white text-zinc-700 border border-zinc-200 hover:bg-zinc-50'
+                : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50'
             }`}
           >
             Completed
@@ -130,7 +130,7 @@ export default function MyTastingsPage() {
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               filter === 'in_progress'
                 ? 'bg-primary text-white'
-                : 'bg-white text-zinc-700 border border-zinc-200 hover:bg-zinc-50'
+                : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50'
             }`}
           >
             In Progress
@@ -143,14 +143,14 @@ export default function MyTastingsPage() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
         ) : tastings.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm border border-zinc-200 p-12 text-center">
+          <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700 p-12 text-center">
             <div className="w-16 h-16 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-zinc-900 mb-2">No tastings yet</h3>
-            <p className="text-zinc-600 mb-6">Start your first tasting session to track your flavor journey</p>
+            <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-2">No tastings yet</h3>
+            <p className="text-zinc-600 dark:text-zinc-300 mb-6">Start your first tasting session to track your flavor journey</p>
             <button
               onClick={() => router.push('/taste')}
               className="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
@@ -163,14 +163,14 @@ export default function MyTastingsPage() {
             {tastings.map((tasting) => (
               <div
                 key={tasting.id}
-                className="bg-white rounded-lg shadow-sm border border-zinc-200 p-6 hover:shadow-md transition-shadow"
+                className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700 p-6 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-lg font-bold text-zinc-900 mb-1">
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-1">
                       {tasting.session_name || `${tasting.category} Tasting`}
                     </h3>
-                    <p className="text-sm text-zinc-500">
+                    <p className="text-sm text-zinc-500 dark:text-zinc-300">
                       {new Date(tasting.created_at).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
@@ -192,17 +192,17 @@ export default function MyTastingsPage() {
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-primary">{tasting.total_items}</div>
-                    <div className="text-sm text-zinc-600">Items</div>
+                    <div className="text-sm text-zinc-600 dark:text-zinc-300">Items</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-primary">{tasting.completed_items}</div>
-                    <div className="text-sm text-zinc-600">Scored</div>
+                    <div className="text-sm text-zinc-600 dark:text-zinc-300">Scored</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-primary">
                       {tasting.average_score ? tasting.average_score.toFixed(1) : 'N/A'}
                     </div>
-                    <div className="text-sm text-zinc-600">Avg Score</div>
+                    <div className="text-sm text-zinc-600 dark:text-zinc-300">Avg Score</div>
                   </div>
                 </div>
 
@@ -253,21 +253,21 @@ export default function MyTastingsPage() {
       </div>
 
       {/* Bottom Navigation */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 bg-background-light">
+      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
         <nav className="flex justify-around p-2">
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/dashboard">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
             <span className="material-symbols-outlined">home</span>
             <span className="text-xs font-medium">Home</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/taste">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/taste">
             <span className="material-symbols-outlined">restaurant</span>
             <span className="text-xs font-medium">Taste</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/review">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
             <span className="material-symbols-outlined">reviews</span>
             <span className="text-xs font-medium">Review</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/flavor-wheels">
+          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
             <span className="material-symbols-outlined">donut_small</span>
             <span className="text-xs font-medium">Wheels</span>
           </a>

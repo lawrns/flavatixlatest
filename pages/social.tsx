@@ -524,7 +524,7 @@ export default function SocialPage() {
 
   // Skeleton Loading Component
   const SkeletonPost = () => (
-    <div className="bg-white p-4 animate-pulse">
+    <div className="bg-white dark:bg-zinc-800 p-4 animate-pulse">
       <div className="flex items-start space-x-3 mb-3">
         <div className="w-12 h-12 bg-zinc-200 rounded-full flex-shrink-0" />
         <div className="flex-1">
@@ -547,9 +547,9 @@ export default function SocialPage() {
 
   if (loading || loadingPosts) {
     return (
-      <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen pb-20">
+      <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
         <div className="flex h-screen flex-col">
-          <header className="border-b border-zinc-200 bg-background-light p-4">
+          <header className="border-b border-zinc-200 dark:border-zinc-700 bg-background-light p-4">
             <div className="flex items-center justify-between mb-4">
               <div className="w-10 h-10 bg-zinc-200 rounded-full animate-pulse" />
               <div className="h-6 bg-zinc-200 rounded w-32 animate-pulse" />
@@ -569,10 +569,10 @@ export default function SocialPage() {
   const categories = ['all', 'coffee', 'wine', 'beer', 'spirits', 'tea', 'chocolate'];
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 min-h-screen pb-20">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
       <div className="flex h-screen flex-col">
         {/* Header */}
-        <header className="border-b border-zinc-200 bg-background-light sticky top-0 z-40">
+        <header className="border-b border-zinc-200 dark:border-zinc-700 bg-background-light sticky top-0 z-40">
           <div className="flex items-center justify-between p-4">
             <button
               onClick={() => router.back()}
@@ -590,13 +590,13 @@ export default function SocialPage() {
           </div>
 
           {/* Tabs */}
-          <div className="flex border-b border-zinc-200">
+          <div className="flex border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-700">
             <button
               onClick={() => setActiveTab('all')}
               className={`flex-1 py-3 text-sm font-medium transition-colors ${
                 activeTab === 'all'
                   ? 'text-primary border-b-2 border-primary'
-                  : 'text-zinc-500 hover:text-zinc-700'
+                  : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-200'
               }`}
             >
               For You
@@ -606,7 +606,7 @@ export default function SocialPage() {
               className={`flex-1 py-3 text-sm font-medium transition-colors ${
                 activeTab === 'following'
                   ? 'text-primary border-b-2 border-primary'
-                  : 'text-zinc-500 hover:text-zinc-700'
+                  : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-200'
               }`}
             >
               Following
@@ -623,7 +623,7 @@ export default function SocialPage() {
                   className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors capitalize ${
                     categoryFilter === cat
                       ? 'bg-primary text-white'
-                      : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
+                      : 'bg-zinc-100 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200'
                   }`}
                 >
                   {cat}
@@ -641,8 +641,8 @@ export default function SocialPage() {
                 <div className="mb-4">
                   <span className="material-symbols-outlined text-6xl text-orange-500">local_bar</span>
                 </div>
-                <h3 className="text-lg font-semibold text-zinc-900 mb-2">No tastings yet</h3>
-                <p className="text-zinc-600 mb-4">
+                <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-2">No tastings yet</h3>
+                <p className="text-zinc-600 dark:text-zinc-300 mb-4">
                   Be the first to share your tasting experience!
                 </p>
                 <button
@@ -654,7 +654,7 @@ export default function SocialPage() {
               </div>
             ) : (
               filteredPosts.map((post) => (
-                <div key={post.id} className="bg-white p-4 hover:bg-zinc-50 transition-colors">
+                <div key={post.id} className="bg-white dark:bg-zinc-800 p-4 hover:bg-zinc-50 transition-colors">
                   {/* User Header */}
                   <div className="flex items-start space-x-3 mb-3">
                     <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
@@ -672,10 +672,10 @@ export default function SocialPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="font-bold text-zinc-900 truncate">
+                          <p className="font-bold text-zinc-900 dark:text-zinc-50 truncate">
                             {post.user.full_name || 'Anonymous User'}
                           </p>
-                          <p className="text-sm text-zinc-500">
+                          <p className="text-sm text-zinc-500 dark:text-zinc-300">
                             {formatTimeAgo(post.completed_at || post.created_at)}
                           </p>
                         </div>
@@ -685,7 +685,7 @@ export default function SocialPage() {
                             className={`px-4 py-1.5 text-sm font-medium rounded-full transition-colors ${
                               post.isFollowed
                                 ? 'bg-primary text-white hover:bg-primary/90'
-                                : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
+                                : 'bg-zinc-100 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200'
                             }`}
                           >
                             {post.isFollowed ? 'Following' : 'Follow'}
@@ -706,14 +706,14 @@ export default function SocialPage() {
 
                   {/* Session Name */}
                   {post.session_name && (
-                    <h3 className="font-bold text-lg text-zinc-900 mb-2">
+                    <h3 className="font-bold text-lg text-zinc-900 dark:text-zinc-50 mb-2">
                       {post.session_name}
                     </h3>
                   )}
 
                   {/* Notes */}
                   {post.notes && (
-                    <p className="text-zinc-700 mb-3 leading-relaxed">
+                    <p className="text-zinc-700 dark:text-zinc-200 mb-3 leading-relaxed">
                       {post.notes}
                     </p>
                   )}
@@ -758,7 +758,7 @@ export default function SocialPage() {
                           }
                           setExpandedPosts(newExpanded);
                         }}
-                        className="flex items-center gap-2 text-sm font-semibold text-zinc-700 hover:text-primary transition-colors mb-2"
+                        className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 hover:text-primary transition-colors mb-2"
                       >
                         <span className="material-symbols-outlined text-base">
                           {expandedPosts.has(post.id) ? 'expand_less' : 'expand_more'}
@@ -777,7 +777,7 @@ export default function SocialPage() {
                             <div key={item.id} className="flex items-center justify-between text-sm">
                               <div className="flex items-center gap-2 flex-1 min-w-0">
                                 <span className="text-zinc-400">{idx + 1}.</span>
-                                <span className="text-zinc-900 truncate">{item.item_name}</span>
+                                <span className="text-zinc-900 dark:text-zinc-50 truncate">{item.item_name}</span>
                               </div>
                               {item.overall_score && (
                                 <span className={`font-semibold ml-2 ${
@@ -812,7 +812,7 @@ export default function SocialPage() {
                     <button
                       onClick={() => handleLike(post.id)}
                       className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-zinc-50 transition-colors ${
-                        post.isLiked ? 'text-red-500' : 'text-zinc-600'
+                        post.isLiked ? 'text-red-500' : 'text-zinc-600 dark:text-zinc-300'
                       }`}
                     >
                       <span className="material-symbols-outlined text-xl">
@@ -822,14 +822,14 @@ export default function SocialPage() {
                     </button>
                     <button
                       onClick={() => handleComment(post.id)}
-                      className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-zinc-50 transition-colors text-zinc-600"
+                      className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-zinc-50 transition-colors text-zinc-600 dark:text-zinc-300"
                     >
                       <span className="material-symbols-outlined text-xl">mode_comment</span>
                       <span className="text-sm font-medium">Comment</span>
                     </button>
                     <button
                       onClick={() => handleShare(post.id)}
-                      className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-zinc-50 transition-colors text-zinc-600"
+                      className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-zinc-50 transition-colors text-zinc-600 dark:text-zinc-300"
                     >
                       <span className="material-symbols-outlined text-xl">share</span>
                       <span className="text-sm font-medium">Share</span>
@@ -843,7 +843,7 @@ export default function SocialPage() {
             {!loadingPosts && filteredPosts.length > 0 && (
               <div id="scroll-sentinel" className="h-20 flex items-center justify-center">
                 {loadingMore && (
-                  <div className="flex items-center gap-2 text-zinc-500">
+                  <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-300">
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                     <span className="text-sm">Loading more...</span>
                   </div>
@@ -857,21 +857,21 @@ export default function SocialPage() {
         </main>
 
         {/* Bottom Navigation */}
-        <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 bg-background-light">
+        <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
           <nav className="flex justify-around p-2">
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/dashboard">
+            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
               <span className="material-symbols-outlined">home</span>
               <span className="text-xs font-medium">Home</span>
             </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/taste">
+            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/taste">
               <span className="material-symbols-outlined">restaurant</span>
               <span className="text-xs font-medium">Taste</span>
             </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/review">
+            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
               <span className="material-symbols-outlined">reviews</span>
               <span className="text-xs font-medium">Review</span>
             </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500" href="/flavor-wheels">
+            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
               <span className="material-symbols-outlined">donut_small</span>
               <span className="text-xs font-medium">Wheels</span>
             </a>

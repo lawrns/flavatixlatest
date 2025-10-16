@@ -99,7 +99,7 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
     return (
       <div className="space-y-4">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 animate-pulse">
+          <div key={i} className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4 animate-pulse">
             <div className="flex justify-between items-start mb-3">
               <div className="flex-1">
                 <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>

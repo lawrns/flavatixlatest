@@ -230,10 +230,10 @@ export default function CommentsModal({ tastingId, isOpen, onClose, initialComme
         {/* Comment Content */}
         <div className="flex-1 min-w-0">
           <div className="bg-zinc-50 rounded-2xl px-4 py-2">
-            <p className="font-semibold text-sm text-zinc-900">
+            <p className="font-semibold text-sm text-zinc-900 dark:text-zinc-50 dark:text-zinc-50">
               {comment.user.full_name || 'Anonymous'}
             </p>
-            <p className="text-zinc-800 text-sm mt-1 break-words">
+            <p className="text-zinc-800 dark:text-zinc-100 text-sm mt-1 break-words">
               {comment.comment_text}
             </p>
           </div>
@@ -273,9 +273,9 @@ export default function CommentsModal({ tastingId, isOpen, onClose, initialComme
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end sm:items-center justify-center">
-      <div className="bg-white w-full sm:max-w-2xl sm:rounded-t-2xl rounded-t-2xl max-h-[90vh] flex flex-col">
+      <div className="bg-white dark:bg-zinc-800 w-full sm:max-w-2xl sm:rounded-t-2xl rounded-t-2xl max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-zinc-200">
+        <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-700">
           <h2 className="text-lg font-bold">Comments ({comments.length})</h2>
           <button
             onClick={onClose}
@@ -301,9 +301,9 @@ export default function CommentsModal({ tastingId, isOpen, onClose, initialComme
         </div>
 
         {/* Input */}
-        <div className="border-t border-zinc-200 p-4">
+        <div className="border-t border-zinc-200 dark:border-zinc-700 p-4">
           {replyingTo && (
-            <div className="flex items-center gap-2 mb-2 text-sm text-zinc-600">
+            <div className="flex items-center gap-2 mb-2 text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">
               <span>Replying to comment</span>
               <button
                 onClick={() => setReplyingTo(null)}
@@ -320,7 +320,7 @@ export default function CommentsModal({ tastingId, isOpen, onClose, initialComme
               onChange={(e) => setCommentText(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmitComment()}
               placeholder="Add a comment..."
-              className="flex-1 px-4 py-2 border border-zinc-300 rounded-full focus:outline-none focus:border-primary"
+              className="flex-1 px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-full focus:outline-none focus:border-primary"
               disabled={submitting}
             />
             <button

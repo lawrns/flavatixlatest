@@ -58,7 +58,7 @@ export const StudyModeSelector: React.FC<StudyModeSelectorProps> = ({
                 : 'border-border-primary'
             }`}>
               {selectedApproach === 'predefined' && (
-                <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                <div className="w-full h-full rounded-full bg-white dark:bg-zinc-800 scale-50"></div>
               )}
             </div>
 
@@ -100,7 +100,7 @@ export const StudyModeSelector: React.FC<StudyModeSelectorProps> = ({
                 : 'border-border-primary'
             }`}>
               {selectedApproach === 'collaborative' && (
-                <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                <div className="w-full h-full rounded-full bg-white dark:bg-zinc-800 scale-50"></div>
               )}
             </div>
 
