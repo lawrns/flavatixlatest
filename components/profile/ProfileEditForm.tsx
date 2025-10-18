@@ -220,7 +220,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
         </div>
 
         {/* Avatar Upload */}
-        <div className="relative z-20">
+        <div className="relative z-[60]">
           <label className="block text-small font-body font-medium text-text-secondary mb-2">
             Profile Picture
           </label>
