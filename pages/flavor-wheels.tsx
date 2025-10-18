@@ -98,7 +98,21 @@ export default function FlavorWheelsPage() {
   // Handle window resize for responsive wheel
   useEffect(() => {
     const updateWheelSize = () => {
-      const newSize = Math.min(700, window.innerWidth - 100);
+      // Calculate responsive size based on screen width
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      
+      // Account for header, controls, padding, and bottom navigation
+      const availableWidth = screenWidth - 64; // 32px padding on each side
+      const availableHeight = screenHeight - 300; // Account for header, controls, and bottom nav
+      
+      // Use the smaller dimension to ensure it fits both width and height
+      const maxSize = Math.min(availableWidth, availableHeight, 600);
+      
+      // Minimum size for usability
+      const minSize = 280;
+      
+      const newSize = Math.max(minSize, maxSize);
       setWheelSize(newSize);
     };
 
@@ -276,7 +290,7 @@ export default function FlavorWheelsPage() {
         </div>
 
         {/* Wheel Visualization */}
-        <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-6">
+        <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-8 mb-6">
           {loading && (
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-600 mb-4"></div>
@@ -305,15 +319,17 @@ export default function FlavorWheelsPage() {
 
           {wheelData && !loading && !error && wheelData.categories.length > 0 && (
             <div className="flex flex-col items-center overflow-hidden">
-              <div className="w-full max-w-2xl mx-auto">
-                <FlavorWheelVisualization
-                  wheelData={wheelData}
-                  width={wheelSize}
-                  height={wheelSize}
-                  showLabels={true}
-                interactive={true}
-                onSegmentClick={handleSegmentClick}
-                />
+              <div className="w-full flex justify-center items-center min-h-[300px]">
+                <div className="relative" style={{ width: wheelSize, height: wheelSize }}>
+                  <FlavorWheelVisualization
+                    wheelData={wheelData}
+                    width={wheelSize}
+                    height={wheelSize}
+                    showLabels={true}
+                    interactive={true}
+                    onSegmentClick={handleSegmentClick}
+                  />
+                </div>
               </div>
 
               {/* AI Badge */}

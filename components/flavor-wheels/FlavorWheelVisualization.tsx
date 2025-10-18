@@ -64,10 +64,16 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();
 
-    const margin = 40;
+    // Responsive margin and sizing
+    const margin = Math.max(20, Math.min(40, width * 0.06)); // 6% of width, min 20px, max 40px
     const radius = (Math.min(width, height) / 2) - margin;
     const centerX = width / 2;
     const centerY = height / 2;
+    
+    // Responsive font sizes
+    const baseFontSize = Math.max(8, Math.min(16, width * 0.025)); // Scale with wheel size
+    const labelFontSize = Math.max(10, Math.min(14, width * 0.02));
+    const centerFontSize = Math.max(12, Math.min(18, width * 0.03));
 
     // Create main group
     const g = svg
@@ -230,7 +236,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'middle')
         .attr('fill', '#ffffff')
-        .attr('font-size', '12px')
+        .attr('font-size', `${labelFontSize}px`)
         .attr('font-weight', 'bold')
         .attr('pointer-events', 'none')
         .text(d => d.label);
@@ -247,7 +253,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
     g.append('text')
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
-      .attr('font-size', '16px')
+      .attr('font-size', `${centerFontSize}px`)
       .attr('font-weight', 'bold')
       .attr('fill', '#1f2937')
       .text(wheelData.wheelType.toUpperCase());
@@ -256,7 +262,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
       .attr('dy', '1.5em')
-      .attr('font-size', '12px')
+      .attr('font-size', `${baseFontSize}px`)
       .attr('fill', '#6b7280')
       .text(`${wheelData.totalDescriptors} notes`);
 
