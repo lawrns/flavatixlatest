@@ -174,7 +174,7 @@ export default function AvatarUpload({
       <div
         {...getRootProps()}
         className={`
-          border-2 border-dashed rounded-lg p-md text-center cursor-pointer transition-colors
+          border-2 border-dashed rounded-lg p-md text-center cursor-pointer transition-colors relative z-10
           ${isDragActive && !isDragReject ? 'border-blue-400 bg-blue-50' : ''}
           ${isDragReject ? 'border-red-400 bg-red-50' : ''}
           ${!isDragActive && !isDragReject ? 'border-gray-300 hover:border-gray-400' : ''}

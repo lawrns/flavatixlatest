@@ -410,7 +410,7 @@ const NewStudyTastingPage: React.FC = () => {
                                 </label>
                                 <input
                                   type="number"
-                                  value={category.scaleMax}
+                                  value={category.scaleMax === 0 ? '' : category.scaleMax}
                                   onChange={(e) => {
                                     const val = e.target.value;
                                     if (val === '') {
