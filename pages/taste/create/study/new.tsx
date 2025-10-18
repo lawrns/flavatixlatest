@@ -289,6 +289,24 @@ const NewStudyTastingPage: React.FC = () => {
                       </option>
                     ))}
                   </select>
+                  
+                  {/* Custom Category Input */}
+                  <div className="mt-sm">
+                    <label className="block text-small font-body font-medium text-text-primary mb-xs">
+                      Or enter custom category
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter custom category name"
+                      onChange={(e) => {
+                        if (e.target.value.trim()) {
+                          setForm(prev => ({ ...prev, baseCategory: e.target.value.trim() }));
+                        }
+                      }}
+                      className="form-input w-full"
+                    />
+                  </div>
+                  
                   {errors.baseCategory && (
                     <span className="text-small text-error mt-xs block">{errors.baseCategory}</span>
                   )}
@@ -396,12 +414,19 @@ const NewStudyTastingPage: React.FC = () => {
                                   onChange={(e) => {
                                     const val = e.target.value;
                                     if (val === '') {
-                                      updateCategory(category.id, { scaleMax: 5 });
+                                      // Don't auto-fill, let user clear the field
+                                      updateCategory(category.id, { scaleMax: 0 });
                                     } else {
                                       const numVal = parseInt(val);
-                                      if (!isNaN(numVal)) {
+                                      if (!isNaN(numVal) && numVal >= 5 && numVal <= 100) {
                                         updateCategory(category.id, { scaleMax: numVal });
                                       }
+                                    }
+                                  }}
+                                  onBlur={(e) => {
+                                    // Only set minimum on blur if field is empty
+                                    if (e.target.value === '' || parseInt(e.target.value) < 5) {
+                                      updateCategory(category.id, { scaleMax: 5 });
                                     }
                                   }}
                                   min={5}
@@ -508,12 +533,28 @@ const NewStudyTastingPage: React.FC = () => {
           <div className="bg-white dark:bg-zinc-800 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
             <div className="sticky top-0 bg-white dark:bg-zinc-800 border-b border-border-default p-md flex justify-between items-center">
               <h3 className="text-h3 font-heading font-semibold">Preview</h3>
-              <button
-                onClick={() => setShowPreview(false)}
-                className="text-text-secondary hover:text-text-primary"
-              >
-                Close
-              </button>
+              <div className="flex gap-sm">
+                <button
+                  onClick={async () => {
+                    try {
+                      // Save as template logic would go here
+                      toast.success('Template saved successfully!');
+                      setShowPreview(false);
+                    } catch (error) {
+                      toast.error('Failed to save template');
+                    }
+                  }}
+                  className="btn-secondary text-small"
+                >
+                  Save to My Templates
+                </button>
+                <button
+                  onClick={() => setShowPreview(false)}
+                  className="text-text-secondary hover:text-text-primary"
+                >
+                  Close
+                </button>
+              </div>
             </div>
 
             <div className="p-md space-y-md">

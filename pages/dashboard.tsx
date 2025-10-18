@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/AuthContext';
@@ -18,18 +19,7 @@ export default function Dashboard() {
    const [recentTastings, setRecentTastings] = useState<any[]>([]);
    const router = useRouter();
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/auth');
-      return;
-    }
-    
-    if (user) {
-      initializeDashboard();
-    }
-  }, [user, loading, router]);
-
-  const initializeDashboard = async () => {
+  const initializeDashboard = useCallback(async () => {
     try {
       if (!user) return;
       
@@ -51,7 +41,18 @@ export default function Dashboard() {
       console.error('Error initializing dashboard:', error);
       toast.error('Error loading dashboard');
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/auth');
+      return;
+    }
+    
+    if (user) {
+      initializeDashboard();
+    }
+  }, [user, loading, router, initializeDashboard]);
 
   const handleLogout = async () => {
     try {
@@ -143,9 +144,11 @@ export default function Dashboard() {
                   <div className="flex-shrink-0 relative">
                     {profile.avatar_url ? (
                       <>
-                        <img
+                        <Image
                           src={profile.avatar_url}
                           alt={profile.full_name || 'Profile'}
+                          width={80}
+                          height={80}
                           className="w-20 h-20 rounded-full object-cover border-2 border-primary"
                           onError={(e) => {
                             const target = e.currentTarget as HTMLImageElement;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -32,6 +32,7 @@ export default function FlavorWheelsPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [cached, setCached] = useState(false);
+  const [wheelSize, setWheelSize] = useState(700);
 
   // Redirect to auth if not logged in
   useEffect(() => {
@@ -40,14 +41,7 @@ export default function FlavorWheelsPage() {
     }
   }, [user, authLoading, router]);
 
-  // Load wheel on mount and when filters change
-  useEffect(() => {
-    if (user) {
-      loadWheel();
-    }
-  }, [user, wheelType, scopeType]);
-
-  const loadWheel = async (forceRegenerate = false) => {
+  const loadWheel = useCallback(async (forceRegenerate = false) => {
     setLoading(true);
     setError(null);
 
@@ -92,7 +86,26 @@ export default function FlavorWheelsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, wheelType, scopeType]);
+
+  // Load wheel on mount and when filters change
+  useEffect(() => {
+    if (user) {
+      loadWheel();
+    }
+  }, [user, wheelType, scopeType, loadWheel]);
+
+  // Handle window resize for responsive wheel
+  useEffect(() => {
+    const updateWheelSize = () => {
+      const newSize = Math.min(700, window.innerWidth - 100);
+      setWheelSize(newSize);
+    };
+
+    updateWheelSize();
+    window.addEventListener('resize', updateWheelSize);
+    return () => window.removeEventListener('resize', updateWheelSize);
+  }, []);
 
   const handleRegenerateWheel = () => {
     loadWheel(true);
@@ -291,15 +304,17 @@ export default function FlavorWheelsPage() {
           )}
 
           {wheelData && !loading && !error && wheelData.categories.length > 0 && (
-            <div className="flex flex-col items-center">
-              <FlavorWheelVisualization
-                wheelData={wheelData}
-                width={700}
-                height={700}
-                showLabels={true}
+            <div className="flex flex-col items-center overflow-hidden">
+              <div className="w-full max-w-2xl mx-auto">
+                <FlavorWheelVisualization
+                  wheelData={wheelData}
+                  width={wheelSize}
+                  height={wheelSize}
+                  showLabels={true}
                 interactive={true}
                 onSegmentClick={handleSegmentClick}
-              />
+                />
+              </div>
 
               {/* AI Badge */}
               {wheelData.aiMetadata?.hasAIDescriptors && (

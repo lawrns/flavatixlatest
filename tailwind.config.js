@@ -49,6 +49,26 @@ module.exports = {
           mineral: '#7A8A8C',
           earthy: '#6D7F4B',
         },
+        // Text Colors
+        'text-primary': 'var(--color-text-primary)',
+        'text-secondary': 'var(--color-text-secondary)',
+        'text-muted': 'var(--color-text-muted)',
+        'text-inverse': 'var(--color-text-inverse)',
+        // Border Colors
+        'border-subtle': 'var(--color-border-subtle)',
+        'border-default': 'var(--color-border-default)',
+        'border-strong': 'var(--color-border-strong)',
+        'border-focus': 'var(--color-border-focus)',
+        // Background Colors
+        'background-app': 'var(--color-background-app)',
+        'background-surface': 'var(--color-background-surface)',
+        'background-surface-secondary': 'var(--color-background-surface-secondary)',
+        'background-muted': 'var(--color-background-muted)',
+        // Semantic Colors
+        success: 'var(--color-success)',
+        warning: 'var(--color-warning)',
+        error: 'var(--color-error)',
+        info: 'var(--color-info)',
       },
       fontFamily: {
         display: ['Space Grotesk', 'sans-serif'],

@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Inter, Crimson_Text } from 'next/font/google'
 import styles from './HeroSection.module.css'
 
@@ -29,9 +30,11 @@ export default function Home() {
           <div className="relative z-10 px-md py-2xl mx-auto max-w-4xl text-center">
             {/* Logo/Brand Area */}
             <div className="mb-lg">
-              <img
+              <Image
                 src="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png"
                 alt="Flavatix Logo"
+                width={64}
+                height={64}
                 className="w-16 h-16 mx-auto mb-md"
               />
               
@@ -127,7 +130,7 @@ export default function Home() {
                   For Everyone
                 </h3>
                 <p className="text-body text-text-secondary leading-body">
-                  Whether you're a casual coffee lover or an industry professional, 
+                  Whether you&apos;re a casual coffee lover or an industry professional, 
                   Flavatix adapts to your needs with intuitive design and powerful customization.
                 </p>
               </div>

@@ -264,6 +264,9 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
       setItems(prev => [...prev, data]);
       setCurrentItemIndex(newIndex);
       toast.success('New item added!');
+      
+      // Scroll to top to show the new item form
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('❌ QuickTastingSession: Error adding new item:', error);
       toast.error('Failed to add new item');
@@ -353,8 +356,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         hasFlavor: !!itemData.flavor
       });
 
-      // Show AI processing indicator
-      aiToastId = toast.info('🤖 AI analyzing your notes...');
+      // AI processing indicator removed for better UX
 
       // Prepare extraction data - use aroma field for aroma_notes
       const extractionPayload = {
@@ -418,30 +420,16 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         return;
       }
 
-      // Dismiss the processing toast
-      toast.dismiss(aiToastId);
-
       if (result.success && result.savedCount > 0) {
         console.log(`✅ Successfully extracted ${result.savedCount} flavor descriptors from item ${itemId}`);
-
-        // Show success message with AI indicator
-        const extractionMethod = result.extractionMethod || 'keyword';
-        if (extractionMethod === 'ai') {
-          toast.success(`✨ AI found ${result.savedCount} flavor descriptors`, 3000);
-        } else {
-          toast.success(`✓ Found ${result.savedCount} flavor descriptors`, 2000);
-        }
+        // Success notifications removed for better UX
       } else if (result.success && result.savedCount === 0) {
         console.log('ℹ️ No descriptors found in the content');
-        toast.dismiss(aiToastId);
       }
     } catch (error) {
       console.error('❌ Error extracting descriptors:', error);
 
-      // Dismiss the processing toast on error
-      if (aiToastId) {
-        toast.dismiss(aiToastId);
-      }
+      // Error handling without toast notifications
 
       // Log the full error for debugging
       if (error instanceof Error) {
