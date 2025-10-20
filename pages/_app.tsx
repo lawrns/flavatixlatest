@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react'
 import { ToastContainer } from 'react-toastify'
 import { AuthProvider } from '../contexts/SimpleAuthContext'
 import GlobalInspirationBox from '../components/GlobalInspirationBox'
+import PerformanceMonitor from '../components/analytics/PerformanceMonitor'
+import ErrorBoundary from '../components/ui/ErrorBoundary'
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isDark, setIsDark] = useState(false)
@@ -52,9 +54,12 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" href="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png" />
         <link rel="apple-touch-icon" href="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png" />
       </Head>
-      <GlobalInspirationBox>
-        <Component {...pageProps} />
-      </GlobalInspirationBox>
+      <ErrorBoundary>
+        <GlobalInspirationBox>
+          <Component {...pageProps} />
+          <PerformanceMonitor />
+        </GlobalInspirationBox>
+      </ErrorBoundary>
       <ToastContainer
         position="top-right"
         autoClose={5000}

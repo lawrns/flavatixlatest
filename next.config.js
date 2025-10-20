@@ -7,7 +7,12 @@ const nextConfig = {
 
   images: {
     domains: ['kobuclkvlacdwvxmakvq.supabase.co'],
-    unoptimized: true
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
   // Disable static optimization to avoid Html import errors
@@ -27,13 +32,36 @@ const nextConfig = {
     pagesBufferLength: 2,
   },
 
-  // Webpack configuration to prevent Html import issues
-  webpack: (config, { isServer }) => {
+  // Webpack configuration for performance optimization
+  webpack: (config, { isServer, dev }) => {
     // Prevent Next.js Document components from being imported outside _document.tsx
     if (!isServer) {
       config.resolve.alias = {
         ...config.resolve.alias,
         'next/document': false,
+      };
+    }
+
+    // Performance optimizations
+    if (!dev) {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+            },
+            common: {
+              name: 'common',
+              minChunks: 2,
+              chunks: 'all',
+              enforce: true,
+            },
+          },
+        },
       };
     }
 

@@ -10,6 +10,7 @@ import ProfileEditForm from '../components/profile/ProfileEditForm';
 import { getUserTastingStats, getLatestTasting, getRecentTastings } from '../lib/historyService';
 import SocialFeedWidget from '../components/social/SocialFeedWidget';
 import BottomNavigation from '../components/navigation/BottomNavigation';
+import NotificationSystem from '../components/notifications/NotificationSystem';
 
 export default function Dashboard() {
    const { user, loading, signOut } = useAuth();
@@ -93,12 +94,15 @@ export default function Dashboard() {
            <h1 className="flex-1 text-center text-xl font-bold">
              {activeTab === 'home' ? 'Dashboard' : 'Profile'}
            </h1>
-           <button
-             onClick={handleLogout}
-             className="text-sm text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100"
-           >
-             Logout
-           </button>
+           <div className="flex items-center gap-4">
+             {user && <NotificationSystem userId={user.id} />}
+             <button
+               onClick={handleLogout}
+               className="text-sm text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100"
+             >
+               Logout
+             </button>
+           </div>
          </header>
 
         <main className="flex-1 overflow-y-auto pb-20">
