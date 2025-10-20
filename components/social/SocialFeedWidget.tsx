@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { getSupabaseClient } from '../../lib/supabase';
 import { Heart, MessageCircle, Share2, User } from 'lucide-react';
 import { Card, CardContent } from '../ui/Card';
-import { Button } from '../ui/Button';
+import Button from '../ui/Button';
 import LoadingSpinner from '../ui/LoadingSpinner';
 
 type TastingPost = {

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { FlavorWheelData, WheelCategory } from '@/lib/flavorWheelGenerator';
 import { Card, CardContent, CardHeader } from '../ui/Card';
-import { Button } from '../ui/Button';
+import Button from '../ui/Button';
 import { Download, Share2, Info } from 'lucide-react';
 
 interface FlavorWheelVisualizationProps {

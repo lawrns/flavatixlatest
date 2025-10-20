@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '../ui/Card';
-import { Button } from '../ui/Button';
+import Button from '../ui/Button';
 import { BarChart3, TrendingUp, Users, Star, Calendar, Filter } from 'lucide-react';
 
 interface AnalyticsData {

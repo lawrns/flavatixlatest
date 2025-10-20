@@ -3,11 +3,11 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { toast } from '@/lib/toast';
-import { ChevronLeft, Plus, Trash2, Eye, Save, ArrowRight, CheckCircle } from 'lucide-react';
+import { ChevronLeft, Plus, Trash2, Eye, Save, ArrowRight, CheckCircle, X } from 'lucide-react';
 import { STUDY_MODE_TEMPLATES, getStudyModeTemplateById } from '@/lib/templates/tastingTemplates';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import BottomNavigation from '@/components/navigation/BottomNavigation';
 
@@ -305,7 +305,8 @@ const NewStudyTastingPage: React.FC = () => {
                   )}
                 </div>
               </div>
-            </div>
+            </CardContent>
+            </Card>
 
             {/* Categories */}
             <div className="card p-md">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '../ui/Card';
-import { Button } from '../ui/Button';
+import Button from '../ui/Button';
 import { Modal, ModalBody, ModalFooter } from '../ui/Modal';
 import { Bell, X, CheckCircle, AlertCircle, Info, Star } from 'lucide-react';
 
