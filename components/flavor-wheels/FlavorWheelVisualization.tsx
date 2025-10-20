@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { FlavorWheelData, WheelCategory } from '@/lib/flavorWheelGenerator';
+import { Card, CardContent, CardHeader } from '../ui/Card';
+import { Button } from '../ui/Button';
+import { Download, Share2, Info } from 'lucide-react';
 
 interface FlavorWheelVisualizationProps {
   wheelData: FlavorWheelData;
@@ -39,6 +42,68 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
   const svgRef = useRef<SVGSVGElement>(null);
   const [hoveredSegment, setHoveredSegment] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ text: string; x: number; y: number } | null>(null);
+
+  // Export functionality
+  const handleExport = (format: 'png' | 'svg') => {
+    if (!svgRef.current) return;
+    
+    if (format === 'svg') {
+      const svgData = new XMLSerializer().serializeToString(svgRef.current);
+      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const svgUrl = URL.createObjectURL(svgBlob);
+      const downloadLink = document.createElement('a');
+      downloadLink.href = svgUrl;
+      downloadLink.download = `flavor-wheel-${Date.now()}.svg`;
+      downloadLink.click();
+      URL.revokeObjectURL(svgUrl);
+    } else if (format === 'png') {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const svgData = new XMLSerializer().serializeToString(svgRef.current);
+      const img = new Image();
+      
+      img.onload = () => {
+        canvas.width = width;
+        canvas.height = height;
+        ctx?.drawImage(img, 0, 0);
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = `flavor-wheel-${Date.now()}.png`;
+            downloadLink.click();
+            URL.revokeObjectURL(url);
+          }
+        });
+      };
+      
+      img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
+    }
+  };
+
+  // Share functionality
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My Flavor Wheel',
+          text: `Check out my flavor wheel with ${wheelData.totalDescriptors} descriptors!`,
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.log('Error sharing:', error);
+      }
+    } else {
+      // Fallback to clipboard
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        // TODO: Show toast notification
+      } catch (error) {
+        console.log('Error copying to clipboard:', error);
+      }
+    }
+  };
 
   // Color scale for categories
   const colorScale = d3.scaleOrdinal<string>()
@@ -295,43 +360,81 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
         </div>
       )}
       
-      {/* Descriptor List */}
+      {/* Enhanced Descriptor List with Actions */}
       {wheelData.categories.length > 0 && (
-        <div className="mt-6 p-4 bg-gray-50 dark:bg-zinc-800 rounded-lg">
-          <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
-            Extracted Descriptors ({wheelData.totalDescriptors})
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-            {wheelData.categories.map(category => (
-              <div key={category.name} className="space-y-1">
-                <div className="text-xs font-medium text-gray-700 dark:text-gray-300">
-                  {category.name} ({category.count})
-                </div>
-                <div className="space-y-1">
-                  {category.subcategories.map(subcategory => (
-                    <div key={subcategory.name} className="ml-2">
-                      <div className="text-xs text-gray-600 dark:text-gray-400">
-                        {subcategory.name} ({subcategory.count})
-                      </div>
-                      <div className="ml-2 space-y-0.5">
-                        {subcategory.descriptors.slice(0, 3).map(descriptor => (
-                          <div key={descriptor.text} className="text-xs text-gray-500 dark:text-gray-500">
-                            • {descriptor.text} ({descriptor.count})
-                          </div>
-                        ))}
-                        {subcategory.descriptors.length > 3 && (
-                          <div className="text-xs text-gray-400 dark:text-gray-600">
-                            +{subcategory.descriptors.length - 3} more...
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+        <Card className="mt-6">
+          <CardHeader 
+            title={`Extracted Descriptors (${wheelData.totalDescriptors})`}
+            action={
+              <div className="flex gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleExport('png')}
+                  icon={<Download size={16} />}
+                >
+                  PNG
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleExport('svg')}
+                  icon={<Download size={16} />}
+                >
+                  SVG
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleShare()}
+                  icon={<Share2 size={16} />}
+                >
+                  Share
+                </Button>
               </div>
-            ))}
-          </div>
-        </div>
+            }
+          />
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {wheelData.categories.map(category => (
+                <div key={category.name} className="space-y-2">
+                  <div className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                    <div 
+                      className="w-3 h-3 rounded-full" 
+                      style={{ backgroundColor: colorScale(category.name) }}
+                    />
+                    {category.name} ({category.count})
+                  </div>
+                  <div className="space-y-2">
+                    {category.subcategories.map(subcategory => (
+                      <div key={subcategory.name} className="ml-2">
+                        <div className="text-xs text-gray-600 dark:text-gray-400 font-medium">
+                          {subcategory.name} ({subcategory.count})
+                        </div>
+                        <div className="ml-2 space-y-1">
+                          {subcategory.descriptors.slice(0, 3).map(descriptor => (
+                            <div 
+                              key={descriptor.text} 
+                              className="text-xs text-gray-500 dark:text-gray-500 hover:text-primary cursor-pointer transition-colors"
+                              onClick={() => onSegmentClick?.(category.name, subcategory.name, descriptor.text)}
+                            >
+                              • {descriptor.text} ({descriptor.count})
+                            </div>
+                          ))}
+                          {subcategory.descriptors.length > 3 && (
+                            <div className="text-xs text-gray-400 dark:text-gray-600">
+                              +{subcategory.descriptors.length - 3} more...
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

@@ -6,6 +6,8 @@ import { toast } from '@/lib/toast';
 import { ChevronLeft } from 'lucide-react';
 import ReviewForm, { ReviewFormData } from '@/components/review/ReviewForm';
 import { generateReviewId } from '@/lib/reviewIdGenerator';
+import BottomNavigation from '@/components/navigation/BottomNavigation';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const CreateReviewPage: React.FC = () => {
   const router = useRouter();
@@ -116,11 +118,8 @@ const CreateReviewPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
-        <div className="flex flex-col items-center">
-          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-sm"></div>
-          <div className="text-text-primary text-h4 font-body font-medium">Loading...</div>
-        </div>
+      <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center">
+        <LoadingSpinner size="lg" text="Loading..." />
       </div>
     );
   }
@@ -160,26 +159,7 @@ const CreateReviewPage: React.FC = () => {
       </main>
 
       {/* Bottom Navigation */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
-        <nav className="flex justify-around p-2">
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
-            <span className="material-symbols-outlined">home</span>
-            <span className="text-xs font-medium">Home</span>
-          </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/taste">
-            <span className="material-symbols-outlined">restaurant</span>
-            <span className="text-xs font-medium">Taste</span>
-          </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-primary" href="/review">
-            <span className="material-symbols-outlined">reviews</span>
-            <span className="text-xs font-bold">Review</span>
-          </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
-            <span className="material-symbols-outlined">donut_small</span>
-            <span className="text-xs font-medium">Wheels</span>
-          </a>
-        </nav>
-      </footer>
+      <BottomNavigation />
     </div>
   );
 };

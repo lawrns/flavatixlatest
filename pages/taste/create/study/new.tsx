@@ -3,8 +3,13 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { toast } from '@/lib/toast';
-import { ChevronLeft, Plus, Trash2, Eye, Save } from 'lucide-react';
+import { ChevronLeft, Plus, Trash2, Eye, Save, ArrowRight, CheckCircle } from 'lucide-react';
 import { STUDY_MODE_TEMPLATES, getStudyModeTemplateById } from '@/lib/templates/tastingTemplates';
+import { Card, CardContent, CardHeader } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import BottomNavigation from '@/components/navigation/BottomNavigation';
 
 const BASE_CATEGORIES = [
   'Red Wine',
@@ -216,8 +221,8 @@ const NewStudyTastingPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center">
+        <LoadingSpinner size="lg" text="Loading..." />
       </div>
     );
   }
@@ -247,31 +252,19 @@ const NewStudyTastingPage: React.FC = () => {
 
           <form onSubmit={(e) => { e.preventDefault(); handleSubmit(false); }} className="space-y-lg">
             {/* Basic Info */}
-            <div className="card p-md">
-              <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">Basic Information</h2>
-
-              <div className="space-y-md">
-                <div>
-                  <label className="block text-small font-body font-medium text-text-primary mb-xs">
-                    Tasting Name *
-                  </label>
-                  <input
-                    type="text"
+            <Card>
+              <CardHeader title="Basic Information" />
+              <CardContent>
+                <div className="space-y-6">
+                  <Input
+                    label="Tasting Name *"
                     value={form.name}
                     onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))}
                     placeholder="e.g., Colombian Coffee Cupping"
-                    className={`form-input w-full ${errors.name ? 'border-error' : ''}`}
+                    error={errors.name}
+                    helperText={`${form.name.length}/120 characters`}
                     maxLength={120}
                   />
-                  <div className="flex justify-between items-center mt-xs">
-                    {errors.name && (
-                      <span className="text-small text-error">{errors.name}</span>
-                    )}
-                    <span className="text-xs text-text-secondary ml-auto">
-                      {form.name.length}/120
-                    </span>
-                  </div>
-                </div>
 
                 <div>
                   <label className="block text-small font-body font-medium text-text-primary mb-xs">
@@ -592,26 +585,7 @@ const NewStudyTastingPage: React.FC = () => {
       )}
 
       {/* Bottom Navigation */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
-        <nav className="flex justify-around p-2">
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
-            <span className="material-symbols-outlined">home</span>
-            <span className="text-xs font-medium">Home</span>
-          </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-primary" href="/taste">
-            <span className="material-symbols-outlined">restaurant</span>
-            <span className="text-xs font-bold">Taste</span>
-          </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
-            <span className="material-symbols-outlined">reviews</span>
-            <span className="text-xs font-medium">Review</span>
-          </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
-            <span className="material-symbols-outlined">donut_small</span>
-            <span className="text-xs font-medium">Wheels</span>
-          </a>
-        </nav>
-      </footer>
+      <BottomNavigation />
     </div>
   );
 };

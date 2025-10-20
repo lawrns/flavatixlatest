@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSupabaseClient } from '../../lib/supabase';
-import { Heart } from 'lucide-react';
+import { Heart, MessageCircle, Share2, User } from 'lucide-react';
+import { Card, CardContent } from '../ui/Card';
+import { Button } from '../ui/Button';
+import LoadingSpinner from '../ui/LoadingSpinner';
 
 type TastingPost = {
   id: string;
@@ -151,37 +154,49 @@ export default function SocialFeedWidget({ userId, limit = 5 }: SocialFeedWidget
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg">
-        <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-3">Recent Activity</h3>
-        <div className="animate-pulse space-y-3">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="h-16 bg-zinc-100 rounded"></div>
-          ))}
-        </div>
-      </div>
+      <Card>
+        <CardContent>
+          <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-4">Recent Activity</h3>
+          <LoadingSpinner text="Loading recent activity..." />
+        </CardContent>
+      </Card>
     );
   }
 
   if (posts.length === 0) {
     return (
-      <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg">
-        <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-3">Recent Activity</h3>
-        <p className="text-zinc-500 text-sm text-center py-4">No recent activity yet</p>
-      </div>
+      <Card>
+        <CardContent>
+          <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-4">Recent Activity</h3>
+          <div className="text-center py-8">
+            <User className="w-12 h-12 text-zinc-400 mx-auto mb-3" />
+            <p className="text-zinc-500 text-sm mb-4">No recent activity yet</p>
+            <Button 
+              variant="primary" 
+              size="sm"
+              onClick={() => router.push('/taste')}
+            >
+              Start Your First Tasting
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 dark:text-zinc-50">Recent Activity</h3>
-        <button
-          onClick={() => router.push('/social')}
-          className="text-primary hover:underline text-sm"
-        >
-          View All
-        </button>
-      </div>
+    <Card>
+      <CardContent>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">Recent Activity</h3>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => router.push('/social')}
+          >
+            View All
+          </Button>
+        </div>
 
       <div className="space-y-3">
         {posts.map(post => (
@@ -236,19 +251,38 @@ export default function SocialFeedWidget({ userId, limit = 5 }: SocialFeedWidget
             <div className="flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400 ml-10">
               <button
                 onClick={(e) => handleLike(post.id, e)}
-                className={`flex items-center gap-1 ${post.isLiked ? 'text-red-500' : 'hover:text-red-500'} transition-colors`}
+                className={`flex items-center gap-1 touch-manipulation min-h-[44px] min-w-[44px] justify-center ${post.isLiked ? 'text-red-500' : 'hover:text-red-500'} transition-colors`}
+                aria-label={`${post.isLiked ? 'Unlike' : 'Like'} this tasting`}
               >
-                <Heart size={14} fill={post.isLiked ? 'currentColor' : 'none'} />
-                <span>{post.stats.likes}</span>
+                <Heart size={16} fill={post.isLiked ? 'currentColor' : 'none'} />
+                <span className="ml-1">{post.stats.likes}</span>
               </button>
-              <span className="flex items-center gap-1">
-                <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>comment</span>
-                {post.stats.comments}
-              </span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // TODO: Implement comments
+                }}
+                className="flex items-center gap-1 hover:text-primary transition-colors touch-manipulation min-h-[44px] min-w-[44px] justify-center"
+                aria-label="View comments"
+              >
+                <MessageCircle size={16} />
+                <span className="ml-1">{post.stats.comments}</span>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // TODO: Implement sharing
+                }}
+                className="flex items-center gap-1 hover:text-primary transition-colors touch-manipulation min-h-[44px] min-w-[44px] justify-center"
+                aria-label="Share this tasting"
+              >
+                <Share2 size={16} />
+              </button>
             </div>
           </div>
         ))}
       </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
