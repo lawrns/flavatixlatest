@@ -290,9 +290,11 @@ module.exports = {
       minHeight: {
         'touch': '44px',
         'touch-large': '48px',
+        'touch-xl': '52px',
         0: '0px',
         full: '100vh',
         screen: '100vh',
+        'safe-screen': 'calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))',
       },
       animation: {
         none: 'none',
@@ -401,6 +403,10 @@ module.exports = {
         'touch': { 'raw': '(hover: none) and (pointer: coarse)' },
         'hover': { 'raw': '(hover: hover) and (pointer: fine)' },
         'reduced-motion': { 'raw': '(prefers-reduced-motion: reduce)' },
+        // Mobile-specific breakpoints
+        'sm-mobile': '320px',
+        'md-mobile': '375px',
+        'lg-mobile': '414px',
       },
       aria: {
         busy: 'busy="true"',

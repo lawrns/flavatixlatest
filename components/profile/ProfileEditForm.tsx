@@ -126,34 +126,42 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Full Name */}
         <div>
-          <label className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2">
+          <label htmlFor="full_name" className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2">
             Full Name
           </label>
           <input
             type="text"
+            id="full_name"
             value={formData.full_name}
             onChange={(e) => handleInputChange('full_name', e.target.value)}
-            className="w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary dark:text-zinc-100 dark:bg-zinc-800 dark:border-zinc-600 border-border focus:border-primary"
+            className="w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary dark:text-zinc-100 dark:bg-zinc-800 dark:border-zinc-600 border-border focus:border-primary touch-manipulation"
             placeholder="Enter your full name"
+            aria-describedby="full_name-help"
           />
+          <p id="full_name-help" className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            This will be displayed on your profile
+          </p>
         </div>
 
         {/* Username */}
         <div>
-          <label className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2">
+          <label htmlFor="username" className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2">
             Username
           </label>
           <div className="relative">
             <input
               type="text"
+              id="username"
               value={formData.username}
               onChange={(e) => handleInputChange('username', e.target.value)}
-              className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary dark:text-zinc-100 dark:bg-zinc-800 dark:border-zinc-600 ${
+              className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary dark:text-zinc-100 dark:bg-zinc-800 dark:border-zinc-600 touch-manipulation ${
                 usernameStatus === 'available' ? 'border-success focus:border-success' :
                 usernameStatus === 'taken' || usernameStatus === 'too-short' ? 'border-error focus:border-error' :
                 'border-border focus:border-primary'
               }`}
               placeholder="Choose a unique username"
+              aria-describedby="username-help username-status"
+              aria-invalid={usernameStatus === 'taken' || usernameStatus === 'too-short'}
             />
             {usernameStatus && (
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -173,14 +181,17 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
               </div>
             )}
           </div>
+          <p id="username-help" className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            Choose a unique username for your profile
+          </p>
           {usernameStatus === 'too-short' && (
-            <p className="text-small font-body text-error dark:text-red-400 mt-1">Username must be at least 3 characters</p>
+            <p id="username-status" className="text-small font-body text-error dark:text-red-400 mt-1" role="alert">Username must be at least 3 characters</p>
           )}
           {usernameStatus === 'taken' && (
-            <p className="text-small font-body text-error dark:text-red-400 mt-1">Username is already taken</p>
+            <p id="username-status" className="text-small font-body text-error dark:text-red-400 mt-1" role="alert">Username is already taken</p>
           )}
           {usernameStatus === 'available' && (
-            <p className="text-small font-body text-success dark:text-green-400 mt-1">Username is available</p>
+            <p id="username-status" className="text-small font-body text-success dark:text-green-400 mt-1">Username is available</p>
           )}
         </div>
 

@@ -7,6 +7,7 @@ import * as d3 from 'd3';
 import { FlavorWheelData } from '@/lib/flavorWheelGenerator';
 import { Download, RefreshCw, Info } from 'lucide-react';
 import ShareButton from '../components/sharing/ShareButton';
+import BottomNavigation from '../components/navigation/BottomNavigation';
 
 // Dynamically import to avoid SSR issues
 const InspirationBox = dynamic(() => import('../components/ui/inspiration-box'), {
@@ -401,26 +402,7 @@ export default function FlavorWheelsPage() {
       </div>
 
       {/* Bottom Navigation */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
-        <nav className="flex justify-around p-2">
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300 hover:text-primary dark:hover:text-primary" href="/dashboard">
-            <span className="material-symbols-outlined">home</span>
-            <span className="text-xs font-medium">Home</span>
-          </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300 hover:text-primary dark:hover:text-primary" href="/taste">
-            <span className="material-symbols-outlined">restaurant</span>
-            <span className="text-xs font-medium">Taste</span>
-          </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300 hover:text-primary dark:hover:text-primary" href="/review">
-            <span className="material-symbols-outlined">reviews</span>
-            <span className="text-xs font-medium">Review</span>
-          </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-primary dark:text-primary" href="/flavor-wheels">
-            <span className="material-symbols-outlined">donut_small</span>
-            <span className="text-xs font-bold">Wheels</span>
-          </a>
-        </nav>
-      </footer>
+      <BottomNavigation />
     </div>
   );
 }

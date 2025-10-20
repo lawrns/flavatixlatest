@@ -67,6 +67,14 @@ body {
   background-color: var(--background);
   color: var(--text-primary);
   line-height: 1.6;
+  /* Mobile optimization */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  /* Prevent zoom on input focus on iOS */
+  -webkit-text-size-adjust: 100%;
+  /* Improve touch scrolling */
+  -webkit-overflow-scrolling: touch;
 }
 
 a {
@@ -74,17 +82,17 @@ a {
   text-decoration: none;
 }
 
-/* Custom component styles with dark mode support */
+/* Custom component styles with dark mode support and mobile optimization */
 .btn-primary {
-  @apply bg-primary text-white rounded-lg px-5 py-3 min-h-11 font-semibold transition-all duration-200 hover:bg-orange-600 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0.5 active:scale-95;
+  @apply bg-primary text-white rounded-lg px-5 py-3 min-h-[44px] font-semibold transition-all duration-200 hover:bg-orange-600 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0.5 active:scale-95 touch-manipulation;
 }
 
 .btn-secondary {
-  @apply bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-white rounded-lg px-5 py-3 min-h-11 font-medium transition-all duration-200 hover:border-primary hover:shadow-sm;
+  @apply bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-white rounded-lg px-5 py-3 min-h-[44px] font-medium transition-all duration-200 hover:border-primary hover:shadow-sm touch-manipulation;
 }
 
 .btn-ghost {
-  @apply bg-transparent text-primary border border-primary rounded-lg px-5 py-3 min-h-11 transition-all duration-200 hover:bg-primary hover:text-white;
+  @apply bg-transparent text-primary border border-primary rounded-lg px-5 py-3 min-h-[44px] transition-all duration-200 hover:bg-primary hover:text-white touch-manipulation;
 }
 
 .card {
@@ -96,7 +104,7 @@ a {
 }
 
 .input {
-  @apply bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-white rounded-lg px-3.5 py-3 min-h-11 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-200;
+  @apply bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-white rounded-lg px-3.5 py-3 min-h-[44px] focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-200 touch-manipulation;
 }
 
 .text-small {
@@ -472,12 +480,45 @@ textarea {
 }
 
 /* Dark mode slider styles */
-.dark .slider-dark-mode {
+.dark .slider-ultra-thin {
   background: linear-gradient(to right, 
     #ec7813 0%, 
     #ec7813 var(--slider-value, 0)%, 
     #52525b var(--slider-value, 0)%, 
     #52525b 100%) !important;
+}
+
+/* Dark mode text improvements */
+.dark .text-text-primary {
+  color: #fafafa !important;
+}
+
+.dark .text-text-secondary {
+  color: #a1a1aa !important;
+}
+
+.dark .text-text-muted {
+  color: #71717a !important;
+}
+
+/* Dark mode form improvements */
+.dark input[type="range"]::-webkit-slider-thumb {
+  background: #ec7813;
+  border: 2px solid #ffffff;
+}
+
+.dark input[type="range"]::-moz-range-thumb {
+  background: #ec7813;
+  border: 2px solid #ffffff;
+}
+
+/* Dark mode accessibility improvements */
+.dark .focus\:ring-primary\/20:focus {
+  --tw-ring-color: rgba(236, 120, 19, 0.2);
+}
+
+.dark .focus\:border-primary:focus {
+  border-color: #ec7813;
 }
 
 /* Enhanced touch interactions for mobile */
@@ -495,5 +536,59 @@ textarea {
   
   .hover\:border-primary-400:hover {
     border-color: inherit;
+  }
+}
+
+/* Additional mobile optimizations */
+@media (max-width: 768px) {
+  /* Ensure minimum touch target size for all interactive elements */
+  button, 
+  [role="button"], 
+  input[type="button"], 
+  input[type="submit"], 
+  input[type="reset"],
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Improve touch scrolling */
+  .overflow-y-auto,
+  .overflow-y-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent text selection on interactive elements */
+  button,
+  [role="button"],
+  .clickable {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Improve form input experience */
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  /* Better spacing for mobile */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Improve modal experience on mobile */
+  .modal {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+  }
+  
+  /* Better bottom navigation spacing */
+  .bottom-nav {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
