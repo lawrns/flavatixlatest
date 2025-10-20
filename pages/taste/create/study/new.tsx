@@ -304,8 +304,7 @@ const NewStudyTastingPage: React.FC = () => {
                     <span className="text-small text-error mt-xs block">{errors.baseCategory}</span>
                   )}
                 </div>
-              </div>
-            </CardContent>
+              </CardContent>
             </Card>
 
             {/* Categories */}
