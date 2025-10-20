@@ -265,8 +265,19 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
       setCurrentItemIndex(newIndex);
       toast.success('New item added!');
       
-      // Scroll to top to show the new item form
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Scroll to the new item form instead of top
+      setTimeout(() => {
+        const itemElement = document.querySelector(`[data-item-id="${data.id}"]`);
+        if (itemElement) {
+          itemElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          // Fallback: scroll to the tasting form area
+          const formElement = document.querySelector('.tasting-form');
+          if (formElement) {
+            formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      }, 100);
     } catch (error) {
       console.error('❌ QuickTastingSession: Error adding new item:', error);
       toast.error('Failed to add new item');

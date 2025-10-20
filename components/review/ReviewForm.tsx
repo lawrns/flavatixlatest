@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Camera, X } from 'lucide-react';
 import { REVIEW_CATEGORIES, COUNTRIES, getStatesForCountry, hasStates } from '@/lib/reviewCategories';
 import CharacteristicSlider from './CharacteristicSlider';
@@ -70,6 +70,13 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Update form data when initialData changes
+  useEffect(() => {
+    if (initialData) {
+      setFormData(prev => ({ ...prev, ...initialData }));
+    }
+  }, [initialData]);
 
   const updateField = <K extends keyof ReviewFormData>(
     field: K,

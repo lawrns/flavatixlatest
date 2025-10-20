@@ -307,7 +307,8 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
           return rotationAngle > 90 && rotationAngle < 270 ? 'end' : 'start';
         })
         .attr('dominant-baseline', 'middle')
-        .attr('fill', '#374151')
+        .attr('fill', 'currentColor')
+        .attr('class', 'text-gray-700 dark:text-gray-300')
         .attr('font-size', `${labelFontSize}px`)
         .attr('font-weight', 'bold')
         .attr('pointer-events', 'none')
@@ -317,8 +318,8 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
     // Add center circle
     g.append('circle')
       .attr('r', radius * 0.3)
-      .attr('fill', '#f3f4f6')
-      .attr('stroke', '#d1d5db')
+      .attr('fill', 'var(--color-background-secondary)')
+      .attr('stroke', 'var(--color-border-default)')
       .attr('stroke-width', 2);
 
     // Add center text
@@ -327,7 +328,8 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
       .attr('dominant-baseline', 'middle')
       .attr('font-size', `${centerFontSize}px`)
       .attr('font-weight', 'bold')
-      .attr('fill', '#1f2937')
+      .attr('fill', 'currentColor')
+      .attr('class', 'text-gray-800 dark:text-gray-200')
       .text(wheelData.wheelType.toUpperCase());
 
     g.append('text')
@@ -335,7 +337,8 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
       .attr('dominant-baseline', 'middle')
       .attr('dy', '1.5em')
       .attr('font-size', `${baseFontSize}px`)
-      .attr('fill', '#6b7280')
+      .attr('fill', 'currentColor')
+      .attr('class', 'text-gray-500 dark:text-gray-400')
       .text(`${wheelData.totalDescriptors} notes`);
 
   }, [wheelData, width, height, showLabels, interactive, onSegmentClick, colorScale]);

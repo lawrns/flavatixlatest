@@ -223,7 +223,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
   };
 
   return (
-    <div className="card p-sm tablet:p-md mobile-container mobile-touch">
+    <div className="card p-sm tablet:p-md mobile-container mobile-touch" data-item-id={item.id}>
       {/* Item Header */}
       <div className="flex flex-col tablet:flex-row tablet:items-center tablet:justify-between gap-sm mb-md">
         <div className="flex items-center space-x-sm min-w-0 flex-1">

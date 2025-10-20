@@ -418,9 +418,10 @@ const NewStudyTastingPage: React.FC = () => {
                                     }
                                   }}
                                   onBlur={(e) => {
-                                    // Only set minimum on blur if field is empty
-                                    if (e.target.value === '' || parseInt(e.target.value) < 5) {
-                                      updateCategory(category.id, { scaleMax: 5 });
+                                    // Only validate on blur, don't auto-fill
+                                    const val = e.target.value;
+                                    if (val !== '' && parseInt(val) < 5) {
+                                      toast.error('Scale maximum must be at least 5');
                                     }
                                   }}
                                   min={5}
