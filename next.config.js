@@ -16,6 +16,17 @@ const nextConfig = {
     esmExternals: false,
   },
 
+  // Disable fetchPriority warnings
+  compiler: {
+    removeConsole: false,
+  },
+
+  // Suppress fetchPriority warnings
+  onDemandEntries: {
+    maxInactiveAge: 25 * 1000,
+    pagesBufferLength: 2,
+  },
+
   // Webpack configuration to prevent Html import issues
   webpack: (config, { isServer }) => {
     // Prevent Next.js Document components from being imported outside _document.tsx

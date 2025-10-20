@@ -119,28 +119,28 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
 
   return (
     <div className="card p-6">
-      <h3 className="text-h3 font-heading font-semibold text-text-primary mb-6">
+      <h3 className="text-h3 font-heading font-semibold text-text-primary dark:text-zinc-100 mb-6">
         Edit Profile
       </h3>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Full Name */}
         <div>
-          <label className="block text-small font-body font-medium text-text-secondary mb-2">
+          <label className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2">
             Full Name
           </label>
           <input
             type="text"
             value={formData.full_name}
             onChange={(e) => handleInputChange('full_name', e.target.value)}
-            className="w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary border-border focus:border-primary"
+            className="w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary dark:text-zinc-100 dark:bg-zinc-800 dark:border-zinc-600 border-border focus:border-primary"
             placeholder="Enter your full name"
           />
         </div>
 
         {/* Username */}
         <div>
-          <label className="block text-small font-body font-medium text-text-secondary mb-2">
+          <label className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2">
             Username
           </label>
           <div className="relative">
@@ -148,7 +148,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
               type="text"
               value={formData.username}
               onChange={(e) => handleInputChange('username', e.target.value)}
-              className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary ${
+              className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary dark:text-zinc-100 dark:bg-zinc-800 dark:border-zinc-600 ${
                 usernameStatus === 'available' ? 'border-success focus:border-success' :
                 usernameStatus === 'taken' || usernameStatus === 'too-short' ? 'border-error focus:border-error' :
                 'border-border focus:border-primary'
@@ -174,43 +174,43 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
             )}
           </div>
           {usernameStatus === 'too-short' && (
-            <p className="text-small font-body text-error mt-1">Username must be at least 3 characters</p>
+            <p className="text-small font-body text-error dark:text-red-400 mt-1">Username must be at least 3 characters</p>
           )}
           {usernameStatus === 'taken' && (
-            <p className="text-small font-body text-error mt-1">Username is already taken</p>
+            <p className="text-small font-body text-error dark:text-red-400 mt-1">Username is already taken</p>
           )}
           {usernameStatus === 'available' && (
-            <p className="text-small font-body text-success mt-1">Username is available</p>
+            <p className="text-small font-body text-success dark:text-green-400 mt-1">Username is available</p>
           )}
         </div>
 
         {/* Bio */}
         <div>
-          <label className="block text-small font-body font-medium text-text-secondary mb-2">
+          <label className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2">
             Bio
           </label>
           <textarea
             value={formData.bio}
             onChange={(e) => handleInputChange('bio', e.target.value)}
-            className="w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary border-border focus:border-primary resize-none"
+            className="w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary dark:text-zinc-100 dark:bg-zinc-800 dark:border-zinc-600 border-border focus:border-primary resize-none"
             placeholder="Tell us about yourself..."
             rows={3}
             maxLength={200}
           />
-          <div className="text-right text-small font-body text-text-muted mt-1">
+          <div className="text-right text-small font-body text-text-muted dark:text-zinc-400 mt-1">
             {formData.bio?.length || 0}/200
           </div>
         </div>
 
         {/* Preferred Category */}
         <div>
-          <label className="block text-small font-body font-medium text-text-secondary mb-2">
+          <label className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2">
             Preferred Category
           </label>
           <select
             value={formData.preferred_category}
             onChange={(e) => handleInputChange('preferred_category', e.target.value)}
-            className="w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary border-border focus:border-primary"
+            className="w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary dark:text-zinc-100 dark:bg-zinc-800 dark:border-zinc-600 border-border focus:border-primary"
           >
             <option value="">Select a category</option>
             {CATEGORY_OPTIONS.map(category => (
@@ -220,8 +220,8 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
         </div>
 
         {/* Avatar Upload */}
-        <div className="relative z-[60]">
-          <label className="block text-small font-body font-medium text-text-secondary mb-2">
+        <div className="relative">
+          <label className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2">
             Profile Picture
           </label>
           <AvatarUpload

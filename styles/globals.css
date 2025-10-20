@@ -471,6 +471,15 @@ textarea {
   }
 }
 
+/* Dark mode slider styles */
+.dark .slider-dark-mode {
+  background: linear-gradient(to right, 
+    #ec7813 0%, 
+    #ec7813 var(--slider-value, 0)%, 
+    #52525b var(--slider-value, 0)%, 
+    #52525b 100%) !important;
+}
+
 /* Enhanced touch interactions for mobile */
 @media (hover: none) and (pointer: coarse) {
   /* Mobile devices - enhance touch targets */

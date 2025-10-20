@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import QuickTastingSession from '@/components/quick-tasting/QuickTastingSession';
 import { toast } from '@/lib/toast';

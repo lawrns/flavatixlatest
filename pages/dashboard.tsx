@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/SimpleAuthContext';
 import ProfileService, { UserProfile } from '../lib/profileService';
 import ProfileDisplay from '../components/profile/ProfileDisplay';
 import ProfileEditForm from '../components/profile/ProfileEditForm';

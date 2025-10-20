@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/SimpleAuthContext';
 import { getSupabaseClient } from '../lib/supabase';
 import { getUserTastingHistory, TastingHistory } from '../lib/historyService';
 import { toast } from '../lib/toast';

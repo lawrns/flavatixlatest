@@ -130,7 +130,7 @@ export default function AvatarUpload({
       {/* Avatar Preview */}
       <div className="flex justify-center">
         <div className="relative">
-          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 bg-gray-100 flex items-center justify-center">
+          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 dark:border-zinc-600 bg-gray-100 dark:bg-zinc-800 flex items-center justify-center">
             {previewUrl ? (
               <Image
                 src={previewUrl}
@@ -140,7 +140,7 @@ export default function AvatarUpload({
                 className="w-full h-full object-cover"
               />
             ) : (
-              <User className="w-16 h-16 text-gray-400" />
+              <User className="w-16 h-16 text-gray-400 dark:text-zinc-500" />
             )}
           </div>
           
@@ -158,13 +158,13 @@ export default function AvatarUpload({
       {/* Upload Progress */}
       {uploading && (
         <div className="space-y-xs">
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 dark:bg-zinc-700 rounded-full h-2">
             <div 
               className="bg-gradient-to-r from-[#1F5D4C] to-[#2E7D32] h-2 rounded-full transition-all duration-300"
               style={{ width: `${uploadProgress}%` }}
             ></div>
           </div>
-          <p className="text-small font-body text-center text-gray-600">
+          <p className="text-small font-body text-center text-gray-600 dark:text-zinc-300">
             {uploadProgress < 100 ? 'Uploading...' : 'Processing...'}
           </p>
         </div>
@@ -174,16 +174,16 @@ export default function AvatarUpload({
       <div
         {...getRootProps()}
         className={`
-          border-2 border-dashed rounded-lg p-md text-center cursor-pointer transition-colors relative z-[70]
-          ${isDragActive && !isDragReject ? 'border-blue-400 bg-blue-50' : ''}
-          ${isDragReject ? 'border-red-400 bg-red-50' : ''}
-          ${!isDragActive && !isDragReject ? 'border-gray-300 hover:border-gray-400' : ''}
+          border-2 border-dashed rounded-lg p-md text-center cursor-pointer transition-colors relative z-10
+          ${isDragActive && !isDragReject ? 'border-blue-400 bg-blue-50 dark:bg-blue-900/20' : ''}
+          ${isDragReject ? 'border-red-400 bg-red-50 dark:bg-red-900/20' : ''}
+          ${!isDragActive && !isDragReject ? 'border-gray-300 dark:border-zinc-600 hover:border-gray-400 dark:hover:border-zinc-500' : ''}
           ${uploading ? 'opacity-50 cursor-not-allowed' : ''}
         `}
       >
         <input {...getInputProps()} />
         
-        <Upload className="w-8 h-8 mx-auto mb-xs text-gray-400" />
+        <Upload className="w-8 h-8 mx-auto mb-xs text-gray-400 dark:text-zinc-500" />
         
         {isDragActive ? (
           isDragReject ? (
@@ -193,10 +193,10 @@ export default function AvatarUpload({
           )
         ) : (
           <div>
-            <p className="text-gray-600 mb-xs">
+            <p className="text-gray-600 dark:text-zinc-300 mb-xs">
               Drag & drop an image here, or click to select
             </p>
-            <p className="text-small font-body text-gray-500">
+            <p className="text-small font-body text-gray-500 dark:text-zinc-400">
               Supports: JPEG, PNG, WebP (max 5MB)
             </p>
           </div>
@@ -220,7 +220,7 @@ export default function AvatarUpload({
       )}
 
       {/* Upload Guidelines */}
-      <div className="text-caption font-body text-gray-500 space-y-xs">
+      <div className="text-caption font-body text-gray-500 dark:text-zinc-400 space-y-xs">
         <p>• Images will be automatically resized to 400x400 pixels</p>
         <p>• Supported formats: JPEG, PNG, WebP</p>
         <p>• Maximum file size: 5MB</p>

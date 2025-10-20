@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SimpleAuthContext';
 import { CompetitionLeaderboard } from '@/components/competition/CompetitionLeaderboard';
 
 const LeaderboardPage: React.FC = () => {

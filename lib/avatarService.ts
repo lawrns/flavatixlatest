@@ -1,9 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { getSupabaseClient } from './supabase';
 
 export interface AvatarUploadResult {
   success: boolean;
@@ -21,6 +16,10 @@ export class AvatarService {
   private static readonly MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
   private static readonly ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
   private static readonly MAX_DIMENSION = 2048; // Max width/height in pixels
+
+  private static getSupabase() {
+    return getSupabaseClient();
+  }
 
   /**
    * Validates an avatar file before upload
@@ -117,7 +116,7 @@ export class AvatarService {
       await this.deleteExistingAvatar(userId);
 
       // Upload file to Supabase Storage
-      const { data, error } = await supabase.storage
+      const { data, error } = await this.getSupabase().storage
         .from(this.BUCKET_NAME)
         .upload(fileName, file, {
           cacheControl: '3600',
@@ -133,7 +132,7 @@ export class AvatarService {
       }
 
       // Get public URL
-      const { data: urlData } = supabase.storage
+      const { data: urlData } = this.getSupabase().storage
         .from(this.BUCKET_NAME)
         .getPublicUrl(fileName);
 
@@ -157,7 +156,7 @@ export class AvatarService {
   private static async deleteExistingAvatar(userId: string): Promise<void> {
     try {
       // List all files in the user's folder
-      const { data: files, error } = await supabase.storage
+      const { data: files, error } = await this.getSupabase().storage
         .from(this.BUCKET_NAME)
         .list(userId);
 
@@ -167,7 +166,7 @@ export class AvatarService {
 
       // Delete all existing avatar files
       const filePaths = files.map(file => `${userId}/${file.name}`);
-      await supabase.storage
+      await this.getSupabase().storage
         .from(this.BUCKET_NAME)
         .remove(filePaths);
 
@@ -187,7 +186,7 @@ export class AvatarService {
       const fileName = urlParts[urlParts.length - 1];
       const filePath = `avatars/${fileName}`;
 
-      const { error } = await supabase.storage
+      const { error } = await this.getSupabase().storage
         .from(this.BUCKET_NAME)
         .remove([filePath]);
 
@@ -207,7 +206,7 @@ export class AvatarService {
    * Gets the public URL for an avatar
    */
   static getAvatarUrl(fileName: string): string {
-    const { data } = supabase.storage
+    const { data } = this.getSupabase().storage
       .from(this.BUCKET_NAME)
       .getPublicUrl(fileName);
     

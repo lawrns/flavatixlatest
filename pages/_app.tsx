@@ -4,7 +4,7 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { ToastContainer } from 'react-toastify'
-import { AuthProvider } from '../contexts/AuthContext'
+import { AuthProvider } from '../contexts/SimpleAuthContext'
 import GlobalInspirationBox from '../components/GlobalInspirationBox'
 
 export default function App({ Component, pageProps }: AppProps) {

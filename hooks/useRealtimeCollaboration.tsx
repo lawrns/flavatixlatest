@@ -5,7 +5,7 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { RealtimeManager, PresenceState, Cursor, RealtimeUpdate } from '@/lib/realtime/realtimeManager';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { toast } from '@/lib/toast';
 

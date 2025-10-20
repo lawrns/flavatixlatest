@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { getSupabaseClient } from '../../lib/supabase';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/SimpleAuthContext';
 import { toast } from '../../lib/toast';
 import { z } from 'zod';
 
@@ -16,6 +16,7 @@ const AuthSection = () => {
   const { user } = useAuth();
 
   useEffect(() => {
+    // Set mounted immediately to avoid blocking the UI
     setMounted(true);
     console.log('AuthSection mounted, Supabase config:', {
       url: process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -24,7 +25,7 @@ const AuthSection = () => {
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (user && router.pathname !== '/dashboard') {
       router.push('/dashboard');
     }
   }, [user, router]);
@@ -108,13 +109,7 @@ const AuthSection = () => {
     }
   };
 
-  if (!mounted) {
-    return (
-      <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen p-4 flex items-center justify-center">
-        <div className="text-text-primary text-body font-body">Loading...</div>
-      </div>
-    );
-  }
+  // Removed mounted check to prevent indefinite loading
 
   return (
     <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 dark:text-zinc-50">

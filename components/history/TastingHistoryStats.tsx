@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TastingStats, getUserTastingStats } from '../../lib/historyService';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/SimpleAuthContext';
 
 interface TastingHistoryStatsProps {
   className?: string;

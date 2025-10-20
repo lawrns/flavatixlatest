@@ -1,7 +1,7 @@
 import { UserProfile } from '../../lib/profileService';
 import { getUserTastingStats, TastingStats } from '../../lib/historyService';
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/SimpleAuthContext';
 
 interface ProfileDisplayProps {
   profile: UserProfile | null;

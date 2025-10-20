@@ -27,10 +27,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const supabase = getSupabaseClient();
 
   useEffect(() => {
-    // Get initial session
+    // Get initial session with timeout to prevent indefinite loading
     const getInitialSession = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
+        // Add timeout to prevent indefinite loading
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Auth initialization timeout')), 5000)
+        );
+        
+        const sessionPromise = supabase.auth.getSession();
+        
+        const { data: { session }, error } = await Promise.race([sessionPromise, timeoutPromise]) as any;
+        
         if (error) {
           console.error('Error getting session:', error);
         } else {
@@ -39,6 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       } catch (error) {
         console.error('Error in getInitialSession:', error);
+        // Set loading to false even on error to prevent indefinite loading
       } finally {
         setLoading(false);
       }

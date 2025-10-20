@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { getSupabaseClient } from '@/lib/supabase';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SimpleAuthContext';
 import QuickTastingSession from '@/components/quick-tasting/QuickTastingSession';
 import { toast } from '@/lib/toast';
 import { ChevronLeft } from 'lucide-react';

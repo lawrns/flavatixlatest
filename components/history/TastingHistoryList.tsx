@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TastingHistory, HistoryFilters, getUserTastingHistory, deleteTasting } from '../../lib/historyService';
 import TastingHistoryItem from './TastingHistoryItem';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/SimpleAuthContext';
 
 interface TastingHistoryListProps {
   filters?: HistoryFilters;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { getSupabaseClient, supabase } from '@/lib/supabase';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SimpleAuthContext';
 import { toast } from '@/lib/toast';
 import { Trophy, Clock, Target, ChevronLeft, ChevronRight, Eye, EyeOff } from 'lucide-react';
 

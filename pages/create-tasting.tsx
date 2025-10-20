@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { getSupabaseClient } from '@/lib/supabase';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SimpleAuthContext';
 import { toast } from '@/lib/toast';
 import { ChevronLeft, Users, Trophy, BookOpen, Eye, EyeOff, Plus, Trash2, FileText } from 'lucide-react';
 import { StudyModeSelector, StudyApproach } from '@/components/quick-tasting/StudyModeSelector';

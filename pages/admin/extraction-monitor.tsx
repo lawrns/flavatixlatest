@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SimpleAuthContext';
 import { useRouter } from 'next/router';
 import { Activity, TrendingUp, AlertTriangle, CheckCircle, RefreshCw } from 'lucide-react';
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { getSupabaseClient, Database } from '@/lib/supabase';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SimpleAuthContext';
 import QuickTastingSession from '@/components/quick-tasting/QuickTastingSession';
 import CategorySelector from '@/components/quick-tasting/CategorySelector';
 import QuickTastingSummary from '@/components/quick-tasting/QuickTastingSummary';

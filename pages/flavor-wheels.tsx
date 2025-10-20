@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/SimpleAuthContext';
 import { supabase } from '../lib/supabase';
 import dynamic from 'next/dynamic';
 import * as d3 from 'd3';

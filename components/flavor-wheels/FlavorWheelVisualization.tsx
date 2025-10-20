@@ -216,7 +216,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
         );
       });
 
-    // Add labels to category segments (innermost ring)
+    // Add labels outside the wheel (perpendicular to outer rim)
     if (showLabels) {
       const categorySegments = segments.filter(s =>
         s.subcategoryIndex === undefined && s.descriptorIndex === undefined
@@ -228,14 +228,21 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
         .append('text')
         .attr('transform', d => {
           const midAngle = (d.startAngle + d.endAngle) / 2;
-          const labelRadius = (d.innerRadius + d.outerRadius) / 2;
+          const labelRadius = radius * 1.05; // Position outside the wheel
           const x = Math.cos(midAngle) * labelRadius;
           const y = Math.sin(midAngle) * labelRadius;
-          return `translate(${x},${y}) rotate(${(midAngle * 180 / Math.PI) + 90})`;
+          // Rotate text perpendicular to the rim
+          const rotationAngle = midAngle * 180 / Math.PI;
+          const textRotation = rotationAngle > 90 && rotationAngle < 270 ? rotationAngle + 180 : rotationAngle;
+          return `translate(${x},${y}) rotate(${textRotation})`;
         })
-        .attr('text-anchor', 'middle')
+        .attr('text-anchor', d => {
+          const midAngle = (d.startAngle + d.endAngle) / 2;
+          const rotationAngle = midAngle * 180 / Math.PI;
+          return rotationAngle > 90 && rotationAngle < 270 ? 'end' : 'start';
+        })
         .attr('dominant-baseline', 'middle')
-        .attr('fill', '#ffffff')
+        .attr('fill', '#374151')
         .attr('font-size', `${labelFontSize}px`)
         .attr('font-weight', 'bold')
         .attr('pointer-events', 'none')
@@ -285,6 +292,45 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
           }}
         >
           {tooltip.text}
+        </div>
+      )}
+      
+      {/* Descriptor List */}
+      {wheelData.categories.length > 0 && (
+        <div className="mt-6 p-4 bg-gray-50 dark:bg-zinc-800 rounded-lg">
+          <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
+            Extracted Descriptors ({wheelData.totalDescriptors})
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+            {wheelData.categories.map(category => (
+              <div key={category.name} className="space-y-1">
+                <div className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                  {category.name} ({category.count})
+                </div>
+                <div className="space-y-1">
+                  {category.subcategories.map(subcategory => (
+                    <div key={subcategory.name} className="ml-2">
+                      <div className="text-xs text-gray-600 dark:text-gray-400">
+                        {subcategory.name} ({subcategory.count})
+                      </div>
+                      <div className="ml-2 space-y-0.5">
+                        {subcategory.descriptors.slice(0, 3).map(descriptor => (
+                          <div key={descriptor.text} className="text-xs text-gray-500 dark:text-gray-500">
+                            • {descriptor.text} ({descriptor.count})
+                          </div>
+                        ))}
+                        {subcategory.descriptors.length > 3 && (
+                          <div className="text-xs text-gray-400 dark:text-gray-600">
+                            +{subcategory.descriptors.length - 3} more...
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

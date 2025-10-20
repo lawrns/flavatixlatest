@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SimpleAuthContext';
 import { FileText, PenTool, History, ChevronLeft } from 'lucide-react';
 
 const ReviewPage: React.FC = () => {

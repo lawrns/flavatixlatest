@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { getSupabaseClient } from '@/lib/supabase';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SimpleAuthContext';
 import { Trophy, Medal, Award, ChevronLeft, Crown } from 'lucide-react';
 
 interface LeaderboardEntry {

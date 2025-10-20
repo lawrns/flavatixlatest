@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getSupabaseClient } from '@/lib/supabase';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SimpleAuthContext';
 import { toast } from '@/lib/toast';
 import { CommentWithUser } from '@/lib/types/comments';
 
