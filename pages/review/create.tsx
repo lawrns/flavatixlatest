@@ -96,7 +96,14 @@ const CreateReviewPage: React.FC = () => {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        throw new Error(`Failed to save review: ${error.message || 'Unknown error'}`);
+      }
+
+      if (!review) {
+        throw new Error('Review was not created successfully');
+      }
 
       if (action === 'done') {
         toast.success('Review completed!');
@@ -106,11 +113,13 @@ const CreateReviewPage: React.FC = () => {
         router.push('/review/my-reviews');
       } else if (action === 'new') {
         toast.success('Review completed! Starting new review...');
-        router.reload();
+        // Navigate to a fresh page with a timestamp to force reload
+        router.push(`/review/create?t=${Date.now()}`);
       }
     } catch (error) {
       console.error('Error saving review:', error);
-      toast.error('Failed to save review');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save review';
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

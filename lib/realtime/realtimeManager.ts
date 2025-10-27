@@ -5,6 +5,7 @@
 
 import { RealtimeChannel, RealtimePresenceState } from '@supabase/supabase-js';
 import { getSupabaseClient } from '../supabase';
+import { logger } from '../logger';
 
 export interface Cursor {
   userId: string;
@@ -133,7 +134,7 @@ export class RealtimeManager {
         });
 
         this.emit('connected', { sessionId: this.sessionId });
-        console.log('✅ Realtime connected for session:', this.sessionId);
+        logger.debug('✅ Realtime connected for session:', this.sessionId);
       }
     });
   }
@@ -263,7 +264,7 @@ export class RealtimeManager {
       const presence = newPresences[0] as PresenceState;
       this.presenceState.set(key, presence);
       this.emit('user_joined', presence);
-      console.log('👤 User joined:', presence.userName);
+      logger.debug('👤 User joined:', presence.userName);
     }
   }
 
@@ -272,7 +273,7 @@ export class RealtimeManager {
     if (presence) {
       this.presenceState.delete(key);
       this.emit('user_left', presence);
-      console.log('👤 User left:', presence.userName);
+      logger.debug('👤 User left:', presence.userName);
     }
   }
 
@@ -349,7 +350,7 @@ export class RealtimeManager {
       this.channel = null;
       this.presenceState.clear();
       this.callbacks.clear();
-      console.log('🔌 Realtime disconnected');
+      logger.debug('🔌 Realtime disconnected');
     }
   }
 

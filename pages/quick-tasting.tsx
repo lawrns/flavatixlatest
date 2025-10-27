@@ -7,6 +7,7 @@ import CategorySelector from '@/components/quick-tasting/CategorySelector';
 import QuickTastingSummary from '@/components/quick-tasting/QuickTastingSummary';
 import { toast } from '@/lib/toast';
 import BottomNavigation from '@/components/navigation/BottomNavigation';
+import { logger } from '@/lib/logger';
 
 type QuickTasting = Database['public']['Tables']['quick_tastings']['Row'];
 type QuickTastingWithNull = {
@@ -60,7 +61,7 @@ const QuickTastingPage: React.FC = () => {
   }, [user, loading, router]);
 
   useEffect(() => {
-    console.log('🔄 QuickTastingPage: useEffect triggered', {
+    logger.debug('🔄 QuickTastingPage: useEffect triggered', {
       loading,
       hasUser: !!user,
       hasCurrentSession: !!currentSession,
@@ -68,13 +69,13 @@ const QuickTastingPage: React.FC = () => {
     });
 
     if (!loading && user && !currentSession && !isLoading) {
-      console.log('🔄 QuickTastingPage: Creating default session for user:', user.id);
+      logger.debug('🔄 QuickTastingPage: Creating default session for user:', user.id);
 
       // Create default session with coffee category
       const createDefaultSession = async () => {
         setIsLoading(true);
         try {
-          console.log('📝 QuickTastingPage: Inserting session...');
+          logger.debug('📝 QuickTastingPage: Inserting session...');
           const { data, error } = await supabase
             .from('quick_tastings')
             .insert({
@@ -87,14 +88,14 @@ const QuickTastingPage: React.FC = () => {
             .single();
 
           if (error) {
-            console.error('❌ QuickTastingPage: Error creating session:', error);
+            logger.error('❌ QuickTastingPage: Error creating session:', error);
             throw error;
           }
 
-          console.log('✅ QuickTastingPage: Session created:', data.id);
+          logger.debug('✅ QuickTastingPage: Session created:', data.id);
           setCurrentSession(data);
         } catch (error) {
-          console.error('❌ QuickTastingPage: Error in createDefaultSession:', error);
+          logger.error('❌ QuickTastingPage: Error in createDefaultSession:', error);
           toast.error('Failed to start tasting session');
         } finally {
           setIsLoading(false);

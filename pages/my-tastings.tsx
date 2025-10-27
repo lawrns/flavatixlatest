@@ -87,7 +87,7 @@ export default function MyTastingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background-light font-display text-zinc-900 dark:text-zinc-50 pb-20">
+    <div className="min-h-screen bg-background-light font-display text-zinc-900 dark:text-zinc-50 pb-24 md:pb-8">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-6">
           <button

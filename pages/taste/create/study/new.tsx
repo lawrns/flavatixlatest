@@ -270,35 +270,22 @@ const NewStudyTastingPage: React.FC = () => {
                   <label className="block text-small font-body font-medium text-text-primary mb-xs">
                     Base Category *
                   </label>
-                  <select
+                  <input
+                    type="text"
+                    list="category-options"
                     value={form.baseCategory}
                     onChange={(e) => setForm(prev => ({ ...prev, baseCategory: e.target.value }))}
+                    placeholder="Select or type a category"
                     className={`form-input w-full ${errors.baseCategory ? 'border-error' : ''}`}
-                  >
-                    <option value="">Select a category</option>
+                  />
+                  <datalist id="category-options">
                     {BASE_CATEGORIES.map(category => (
-                      <option key={category} value={category}>
-                        {category}
-                      </option>
+                      <option key={category} value={category} />
                     ))}
-                  </select>
-                  
-                  {/* Custom Category Input */}
-                  <div className="mt-sm">
-                    <label className="block text-small font-body font-medium text-text-primary mb-xs">
-                      Or enter custom category
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Enter custom category name"
-                      onChange={(e) => {
-                        if (e.target.value.trim()) {
-                          setForm(prev => ({ ...prev, baseCategory: e.target.value.trim() }));
-                        }
-                      }}
-                      className="form-input w-full"
-                    />
-                  </div>
+                  </datalist>
+                  <p className="text-xs text-text-secondary mt-1">
+                    Select from the list or type your own custom category
+                  </p>
                   
                   {errors.baseCategory && (
                     <span className="text-small text-error mt-xs block">{errors.baseCategory}</span>
@@ -408,20 +395,25 @@ const NewStudyTastingPage: React.FC = () => {
                                   onChange={(e) => {
                                     const val = e.target.value;
                                     if (val === '') {
-                                      // Don't auto-fill, let user clear the field
+                                      // Allow empty field for user to clear and retype
                                       updateCategory(category.id, { scaleMax: 0 });
                                     } else {
                                       const numVal = parseInt(val);
-                                      if (!isNaN(numVal) && numVal >= 5 && numVal <= 100) {
+                                      // Allow any number input while typing
+                                      if (!isNaN(numVal)) {
                                         updateCategory(category.id, { scaleMax: numVal });
                                       }
                                     }
                                   }}
                                   onBlur={(e) => {
-                                    // Only validate on blur, don't auto-fill
+                                    // Validate and correct on blur
                                     const val = e.target.value;
-                                    if (val !== '' && parseInt(val) < 5) {
-                                      toast.error('Scale maximum must be at least 5');
+                                    if (val === '' || parseInt(val) < 5) {
+                                      updateCategory(category.id, { scaleMax: 5 });
+                                      toast.error('Scale maximum must be at least 5. Set to minimum value.');
+                                    } else if (parseInt(val) > 100) {
+                                      updateCategory(category.id, { scaleMax: 100 });
+                                      toast.error('Scale maximum cannot exceed 100. Set to maximum value.');
                                     }
                                   }}
                                   min={5}

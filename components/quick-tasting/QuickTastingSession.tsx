@@ -13,6 +13,7 @@ import { ItemNavigationDropdown } from './ItemNavigationDropdown';
 import { useRealtimeCollaboration, CollaboratorPresence } from '../../hooks/useRealtimeCollaboration';
 import { toast } from '../../lib/toast';
 import { Utensils, Settings, Play, Edit, Users } from 'lucide-react';
+import { logger } from '../../lib/logger';
 
 interface QuickTasting {
   id: string;
@@ -99,11 +100,11 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   }, []);
 
   const handleUserJoined = useCallback((user: any) => {
-    console.log(`👥 ${user.userName} joined the tasting`);
+    logger.debug(`👥 ${user.userName} joined the tasting`);
   }, []);
 
   const handleUserLeft = useCallback((user: any) => {
-    console.log(`👤 ${user.userName} left the tasting`);
+    logger.debug(`👤 ${user.userName} left the tasting`);
   }, []);
 
   const {
@@ -187,7 +188,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     if (!session) return;
 
     try {
-      console.log('🔄 QuickTastingSession: Loading items for session:', session.id, 'mode:', session.mode, 'phase:', phase, 'isLoading:', isLoading);
+      logger.debug('🔄 QuickTastingSession: Loading items for session:', session.id, 'mode:', session.mode, 'phase:', phase, 'isLoading:', isLoading);
       const { data, error } = await supabase
         .from('quick_tasting_items')
         .select('*')
@@ -196,12 +197,12 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
 
       if (error) throw error;
 
-      console.log('✅ QuickTastingSession: Loaded', (data || []).length, 'items');
+      logger.debug('✅ QuickTastingSession: Loaded', (data || []).length, 'items');
       setItems(data || []);
 
       // After loading items, check if we need to create the first item for quick tasting
       if ((data || []).length === 0 && session.mode === 'quick' && phase === 'tasting' && !isLoading) {
-        console.log('🔄 QuickTastingSession: No items found, auto-adding first item...');
+        logger.debug('🔄 QuickTastingSession: No items found, auto-adding first item...');
         setTimeout(() => addNewItem(), 100); // Small delay to ensure state is updated
       }
     } catch (error) {
@@ -213,37 +214,37 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   const addNewItem = async () => {
     if (!session) return;
 
-    console.log('➕ QuickTastingSession: addNewItem called for session:', session.id);
+    logger.debug('➕ QuickTastingSession: addNewItem called for session:', session.id);
 
     // Wait for permissions to load for study mode
     if (session.mode === 'study' && (!userPermissions || !userRole)) {
-      console.log('⏳ QuickTastingSession: Waiting for permissions to load...');
+      logger.debug('⏳ QuickTastingSession: Waiting for permissions to load...');
       return;
     }
 
     // Check permissions based on mode
     if (session.mode === 'competition') {
-      console.log('❌ QuickTastingSession: Cannot add items in competition mode');
+      logger.debug('❌ QuickTastingSession: Cannot add items in competition mode');
       toast.error('Cannot add items in competition mode');
       return;
     }
 
     if (session.mode === 'study' && session.study_approach === 'collaborative') {
-      console.log('❌ QuickTastingSession: Collaborative mode - showing suggestions');
+      logger.debug('❌ QuickTastingSession: Collaborative mode - showing suggestions');
       toast.error('In collaborative mode, suggest items instead of adding them directly');
       setShowItemSuggestions(true);
       return;
     }
 
     if (session.mode === 'study' && !userPermissions.canAddItems) {
-      console.log('❌ QuickTastingSession: No permission to add items');
+      logger.debug('❌ QuickTastingSession: No permission to add items');
       toast.error('You do not have permission to add items');
       return;
     }
 
     const newIndex = items.length;
     const itemName = `${getDisplayCategoryName(session.category, session.custom_category_name)} ${newIndex + 1}`;
-    console.log('📝 QuickTastingSession: Creating item:', itemName, 'at index:', newIndex, 'for session:', session.id);
+    logger.debug('📝 QuickTastingSession: Creating item:', itemName, 'at index:', newIndex, 'for session:', session.id);
 
     try {
       const { data, error } = await supabase
@@ -260,7 +261,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         throw error;
       }
 
-      console.log('✅ QuickTastingSession: Item created successfully:', data.id);
+      logger.debug('✅ QuickTastingSession: Item created successfully:', data.id);
       setItems(prev => [...prev, data]);
       setCurrentItemIndex(newIndex);
       toast.success('New item added!');
@@ -287,7 +288,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   const updateItem = async (itemId: string, updates: Partial<TastingItemData>) => {
     if (!session) return;
 
-    console.log('🔄 QuickTastingSession: Updating item:', itemId, 'with:', updates);
+    logger.debug('🔄 QuickTastingSession: Updating item:', itemId, 'with:', updates);
 
     // Broadcast updates to collaborators in study mode
     if (session.mode === 'study' && isConnected) {
@@ -313,7 +314,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         throw error;
       }
 
-      console.log('✅ QuickTastingSession: Item updated successfully:', data.id);
+      logger.debug('✅ QuickTastingSession: Item updated successfully:', data.id);
 
       const updatedItems = items.map(item =>
         item.id === itemId ? { ...item, ...data } : item
@@ -357,11 +358,11 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
       // Only extract if there's meaningful content
       const hasContent = itemData.notes?.trim() || itemData.aroma?.trim() || itemData.flavor?.trim();
       if (!hasContent) {
-        console.log('⏭️ Skipping extraction - no content to extract from');
+        logger.debug('⏭️ Skipping extraction - no content to extract from');
         return;
       }
 
-      console.log('🔍 Extracting flavor descriptors from item:', itemId, {
+      logger.debug('🔍 Extracting flavor descriptors from item:', itemId, {
         hasNotes: !!itemData.notes,
         hasAroma: !!itemData.aroma,
         hasFlavor: !!itemData.flavor
@@ -394,7 +395,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
           console.error('❌ Failed to refresh auth session');
           return;
         }
-        console.log('✅ Auth session refreshed successfully');
+        logger.debug('✅ Auth session refreshed successfully');
       }
 
       const token = authSession?.access_token || (await supabase.auth.getSession()).data.session?.access_token;
@@ -432,10 +433,10 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
       }
 
       if (result.success && result.savedCount > 0) {
-        console.log(`✅ Successfully extracted ${result.savedCount} flavor descriptors from item ${itemId}`);
+        logger.debug(`✅ Successfully extracted ${result.savedCount} flavor descriptors from item ${itemId}`);
         // Success notifications removed for better UX
       } else if (result.success && result.savedCount === 0) {
-        console.log('ℹ️ No descriptors found in the content');
+        logger.debug('ℹ️ No descriptors found in the content');
       }
     } catch (error) {
       console.error('❌ Error extracting descriptors:', error);
@@ -599,24 +600,24 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   const completeSession = async () => {
     if (!session) return;
 
-    console.log('🏁 QuickTastingSession: Completing session:', session.id);
-    console.log('📊 QuickTastingSession: Current items state:', items.length, 'items');
+    logger.debug('🏁 QuickTastingSession: Completing session:', session.id);
+    logger.debug('📊 QuickTastingSession: Current items state:', items.length, 'items');
 
     items.forEach((item, index) => {
-      console.log(`  ${index + 1}. ${item.item_name} (ID: ${item.id}, Score: ${item.overall_score})`);
+      logger.debug(`  ${index + 1}. ${item.item_name} (ID: ${item.id}, Score: ${item.overall_score})`);
     });
 
     setIsLoading(true);
     try {
       // First, ensure all items with content have their descriptors extracted
-      console.log('🔄 Extracting descriptors for all items before completing session...');
+      logger.debug('🔄 Extracting descriptors for all items before completing session...');
       const extractionPromises = items
         .filter(item => item.notes?.trim() || item.aroma?.trim() || item.flavor?.trim())
         .map(item => extractDescriptors(item.id, item));
 
       // Wait for all extractions to complete (but don't fail the session if extraction fails)
       await Promise.allSettled(extractionPromises);
-      console.log('✅ Descriptor extraction batch completed');
+      logger.debug('✅ Descriptor extraction batch completed');
 
       const { data, error } = await supabase
         .from('quick_tastings')
@@ -630,7 +631,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
 
       if (error) throw error;
 
-      console.log('✅ QuickTastingSession: Session completed successfully');
+      logger.debug('✅ QuickTastingSession: Session completed successfully');
       toast.success('Tasting session completed!');
       onSessionComplete(data);
     } catch (error) {
@@ -645,7 +646,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   useEffect(() => {
     if (!session) return;
 
-    console.log('🔄 QuickTastingSession: Loading session:', session.id, 'mode:', session.mode);
+    logger.debug('🔄 QuickTastingSession: Loading session:', session.id, 'mode:', session.mode);
     loadTastingItems();
     // Only load user roles for study mode sessions
     if (session.mode === 'study') {

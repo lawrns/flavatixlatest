@@ -144,7 +144,7 @@ const InspirationBox: React.FC<InspirationBoxProps> = ({ className = '' }) => {
 
         {/* Category indicator */}
         <div className="mt-3 text-xs uppercase tracking-wide font-medium text-zinc-600 dark:text-zinc-400">
-          {currentContent.category.replace('_', ' ')}
+          {currentContent.category.replace(/_/g, ' ')}
         </div>
       </div>
     </div>
