@@ -223,7 +223,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
   };
 
   return (
-    <div className="card p-sm tablet:p-md mobile-container mobile-touch" data-item-id={item.id}>
+    <div className="card-premium p-4 sm:p-6 mobile-container mobile-touch animate-fade-in" data-item-id={item.id}>
       {/* Item Header */}
       <div className="flex flex-col tablet:flex-row tablet:items-center tablet:justify-between gap-sm mb-md">
         <div className="flex items-center space-x-sm min-w-0 flex-1">
@@ -314,43 +314,64 @@ const TastingItem: React.FC<TastingItemProps> = ({
       {showNotesFields && (
         <>
           {/* Aroma Section */}
-          <div className="mb-md">
-            <h4 className="text-base tablet:text-lg font-body font-medium text-text-primary mb-sm">Aroma</h4>
+          <div className="mb-5">
+            <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
+              <span className="text-lg">🌸</span>
+              Aroma
+            </label>
             <textarea
               value={localAroma}
               onChange={(e) => handleAromaChange(e.target.value)}
               placeholder={`Describe the ${category}'s aroma...`}
-              className="form-input w-full h-20 tablet:h-24 resize-none text-sm tablet:text-base"
+              className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl text-sm focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all resize-none placeholder:text-zinc-400"
             />
           </div>
 
           {/* Flavor Section */}
-          <div className="mb-md">
-            <h4 className="text-base tablet:text-lg font-body font-medium text-text-primary mb-sm">Flavor</h4>
+          <div className="mb-5">
+            <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
+              <span className="text-lg">👅</span>
+              Flavor
+            </label>
             <textarea
               value={localFlavor}
               onChange={(e) => handleFlavorChange(e.target.value)}
               placeholder={`Describe the ${category}'s flavor, taste, and mouthfeel...`}
-              className="form-input w-full h-20 tablet:h-24 resize-none text-sm tablet:text-base"
+              className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl text-sm focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all resize-none placeholder:text-zinc-400"
             />
           </div>
 
           {/* Overall Score - Show when requested */}
           {showOverallScore && (
-            <div className="mb-md">
+            <div className="mb-6 py-6 px-4 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-zinc-800/50 dark:to-zinc-900/50 rounded-2xl border border-orange-100 dark:border-zinc-700">
               <div className="text-center">
-                <div className="text-xs tablet:text-sm font-medium text-text-primary mb-6 tracking-widest uppercase">
+                <div className="inline-flex items-center gap-2 text-xs font-semibold text-orange-600 dark:text-orange-400 mb-4 tracking-widest uppercase bg-white dark:bg-zinc-800 px-3 py-1 rounded-full shadow-sm">
+                  <Star size={12} className="fill-current" />
                   Overall Score
                 </div>
-                <div className="flex flex-col items-center space-y-6">
-                  <div className="relative w-48 mobile:w-52 tablet:w-64">
+                <div className="flex flex-col items-center space-y-4">
+                  {/* Score display */}
+                  <div className="relative">
+                    <div className="text-6xl sm:text-7xl font-bold bg-gradient-to-br from-orange-500 to-amber-500 bg-clip-text text-transparent leading-none">
+                      {localScore}
+                    </div>
+                    {localScore > 0 && (
+                      <div className="mt-2 text-sm font-medium text-zinc-500 dark:text-zinc-400 animate-fade-in">
+                        {getScoreLabel(localScore)}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Enhanced slider */}
+                  <div className="relative w-full max-w-xs px-2">
+                    <div className="score-indicator mb-2" />
                     <input
                       type="range"
                       min="0"
                       max="100"
                       value={localScore}
                       onChange={(e) => handleScoreChange(parseInt(e.target.value))}
-                      className="w-full bg-neutral-200 rounded-full appearance-none cursor-pointer slider-ultra-thin shadow-none border-0"
+                      className="w-full h-2 rounded-full appearance-none cursor-pointer"
                       style={{
                         background: `linear-gradient(to right,
                           #ec7813 0%,
@@ -359,16 +380,11 @@ const TastingItem: React.FC<TastingItemProps> = ({
                           #e5e5e5 100%)`
                       }}
                     />
-                  </div>
-                  <div className="text-center space-y-2">
-                    <div className="text-4xl mobile:text-5xl tablet:text-6xl font-thin text-neutral-600 tracking-tight leading-none">
-                      {localScore}
+                    <div className="flex justify-between mt-1 text-xs text-zinc-400">
+                      <span>0</span>
+                      <span>50</span>
+                      <span>100</span>
                     </div>
-                    {localScore > 0 && (
-                      <div className="text-sm mobile:text-base tablet:text-lg font-normal text-neutral-400 animate-fade-in leading-relaxed tracking-wide opacity-80">
-                        {getScoreLabel(localScore)}
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
@@ -377,12 +393,15 @@ const TastingItem: React.FC<TastingItemProps> = ({
 
           {/* Other Notes Section */}
           <div>
-            <h4 className="text-base tablet:text-lg font-body font-medium text-text-primary mb-sm">Other Notes</h4>
+            <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
+              <span className="text-lg">📝</span>
+              Other Notes
+            </label>
             <textarea
               value={localNotes}
               onChange={(e) => handleNotesChange(e.target.value)}
               placeholder={`Additional notes about the ${category}...`}
-              className="form-input w-full h-20 tablet:h-24 resize-none text-sm tablet:text-base"
+              className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl text-sm focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all resize-none placeholder:text-zinc-400"
             />
           </div>
         </>

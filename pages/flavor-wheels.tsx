@@ -236,7 +236,7 @@ export default function FlavorWheelsPage() {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-safe">
       {/* Header */}
       <div className="bg-white dark:bg-zinc-800 shadow-sm border-b border-orange-100 dark:border-zinc-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

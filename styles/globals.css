@@ -198,6 +198,176 @@ textarea {
   line-height: 1;
 }
 
+/* ============================================================================
+   BOTTOM NAVIGATION SAFE AREA
+   Ensures content is not hidden behind fixed bottom navigation
+   ============================================================================ */
+.page-container {
+  min-height: 100vh;
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+}
+
+.pb-safe {
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+}
+
+.mb-safe {
+  margin-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+}
+
+/* ============================================================================
+   ENHANCED UI COMPONENTS - Modern & Charming Design
+   ============================================================================ */
+
+/* Premium card with subtle gradient border */
+.card-premium {
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
+  border: 1px solid rgba(236, 120, 19, 0.15);
+  border-radius: 16px;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -2px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(236, 120, 19, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.08),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(236, 120, 19, 0.1);
+}
+
+.dark .card-premium {
+  background: linear-gradient(135deg, rgba(39, 39, 42, 0.95) 0%, rgba(39, 39, 42, 0.9) 100%);
+  border-color: rgba(236, 120, 19, 0.2);
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass {
+  background: rgba(39, 39, 42, 0.7);
+  border-color: rgba(63, 63, 70, 0.5);
+}
+
+/* Soft gradient backgrounds */
+.bg-gradient-warm {
+  background: linear-gradient(135deg, #FFF7ED 0%, #FEF3C7 50%, #FDE68A 100%);
+}
+
+.bg-gradient-cool {
+  background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 50%, #BAE6FD 100%);
+}
+
+.dark .bg-gradient-warm {
+  background: linear-gradient(135deg, rgba(124, 45, 18, 0.2) 0%, rgba(146, 64, 14, 0.15) 100%);
+}
+
+/* Floating label input style */
+.input-floating {
+  position: relative;
+}
+
+.input-floating input,
+.input-floating textarea {
+  padding-top: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.input-floating label {
+  position: absolute;
+  left: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.875rem;
+  color: #71717A;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.input-floating input:focus + label,
+.input-floating input:not(:placeholder-shown) + label,
+.input-floating textarea:focus + label,
+.input-floating textarea:not(:placeholder-shown) + label {
+  top: 0.5rem;
+  transform: translateY(0);
+  font-size: 0.75rem;
+  color: #ec7813;
+}
+
+/* Smooth score indicator */
+.score-indicator {
+  position: relative;
+  height: 8px;
+  background: linear-gradient(90deg, 
+    #ef4444 0%, 
+    #f59e0b 25%, 
+    #eab308 50%, 
+    #84cc16 75%, 
+    #22c55e 100%
+  );
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.score-indicator::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+}
+
+/* Micro-interactions */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(236, 120, 19, 0.3);
+}
+
+/* Pulse animation for attention */
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-gentle-pulse {
+  animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+/* Shimmer loading effect */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
 /* Add any additional global styles here */
 
 /* Form inputs with dark mode support */
