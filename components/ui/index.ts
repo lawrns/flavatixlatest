@@ -29,3 +29,4 @@ export {
   StepperNavigation,
 } from './FormStepper';
 export type { Step } from './FormStepper';
+export { LoadingState, InlineLoading, ButtonLoading } from './LoadingState';

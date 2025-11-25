@@ -240,6 +240,33 @@
   --shadow-neumorphic-inset: inset 0 2px 4px rgba(0,0,0,0.1), inset 0 -2px 4px rgba(255,255,255,0.5);
   --shadow-neumorphic-pressed: inset 0 2px 8px rgba(0,0,0,0.15), inset 0 -1px 2px rgba(255,255,255,0.3);
   
+  /* === SEMANTIC SHADOW ALIASES === */
+  /* Use these for consistent component styling */
+  
+  /* Card shadows */
+  --shadow-card: var(--shadow-sm);
+  --shadow-card-hover: var(--shadow-md);
+  --shadow-card-active: var(--shadow-lg);
+  
+  /* Modal/Dialog shadows */
+  --shadow-modal: var(--shadow-xl);
+  --shadow-dropdown: var(--shadow-lg);
+  --shadow-popover: var(--shadow-md);
+  --shadow-tooltip: var(--shadow-sm);
+  
+  /* Button shadows */
+  --shadow-button: var(--shadow-sm);
+  --shadow-button-hover: var(--shadow-md);
+  --shadow-button-active: var(--shadow-inner);
+  
+  /* Input shadows */
+  --shadow-input: var(--shadow-xs);
+  --shadow-input-hover: var(--shadow-sm);
+  
+  /* Navigation shadows */
+  --shadow-nav: var(--shadow-sm);
+  --shadow-nav-sticky: var(--shadow-md);
+  
   /* === ANIMATION TOKENS === */
   
   /* Durations */

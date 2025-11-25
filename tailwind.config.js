@@ -284,6 +284,21 @@ module.exports = {
         'elevation-3': '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
         'elevation-4': '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
         'elevation-5': '0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22)',
+        // Semantic shadow aliases - use these for consistent styling
+        'card': 'var(--shadow-card)',
+        'card-hover': 'var(--shadow-card-hover)',
+        'card-active': 'var(--shadow-card-active)',
+        'modal': 'var(--shadow-modal)',
+        'dropdown': 'var(--shadow-dropdown)',
+        'popover': 'var(--shadow-popover)',
+        'tooltip': 'var(--shadow-tooltip)',
+        'button': 'var(--shadow-button)',
+        'button-hover': 'var(--shadow-button-hover)',
+        'button-active': 'var(--shadow-button-active)',
+        'input': 'var(--shadow-input)',
+        'input-hover': 'var(--shadow-input-hover)',
+        'nav': 'var(--shadow-nav)',
+        'nav-sticky': 'var(--shadow-nav-sticky)',
       },
       backgroundImage: {
         // Primary gradients
