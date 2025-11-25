@@ -9,6 +9,7 @@ import { QueryProvider } from '../lib/query/queryClient'
 import GlobalInspirationBox from '../components/GlobalInspirationBox'
 import PerformanceMonitor from '../components/analytics/PerformanceMonitor'
 import ErrorBoundary from '../components/ui/ErrorBoundary'
+import { LiveRegionProvider } from '../components/ui/LiveRegion'
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isDark, setIsDark] = useState(false)
@@ -56,12 +57,25 @@ export default function App({ Component, pageProps }: AppProps) {
           <link rel="icon" href="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png" />
           <link rel="apple-touch-icon" href="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png" />
         </Head>
-        <ErrorBoundary>
-          <GlobalInspirationBox>
-            <Component {...pageProps} />
-            <PerformanceMonitor />
-          </GlobalInspirationBox>
-        </ErrorBoundary>
+        
+        {/* Skip to main content link for keyboard accessibility */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-300"
+        >
+          Skip to main content
+        </a>
+        
+        <LiveRegionProvider>
+          <ErrorBoundary>
+            <GlobalInspirationBox>
+              <main id="main-content" tabIndex={-1} className="outline-none">
+                <Component {...pageProps} />
+              </main>
+              <PerformanceMonitor />
+            </GlobalInspirationBox>
+          </ErrorBoundary>
+        </LiveRegionProvider>
         <ToastContainer
           position="top-right"
           autoClose={5000}

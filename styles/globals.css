@@ -100,7 +100,7 @@ a {
 }
 
 .card-tasting {
-  @apply bg-zinc-50 dark:bg-zinc-800/50 border border-primary/10 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:scale-[1.01];
+  @apply bg-zinc-50 dark:bg-zinc-800/50 border border-primary-100 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:scale-[1.01];
 }
 
 .input {

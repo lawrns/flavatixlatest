@@ -4,17 +4,17 @@
 :root {
   /* === COLOR TOKENS === */
   
-  /* Primary Colors - Mexican Orange */
-  --color-primary-50: #fef7ee;
-  --color-primary-100: #fdedd3;
-  --color-primary-200: #fbd7a5;
-  --color-primary-300: #f8bc6d;
-  --color-primary-400: #f59e0b;
-  --color-primary-500: #b45309;
-  --color-primary-600: #92400e;
-  --color-primary-700: #78350f;
-  --color-primary-800: #78350f;
-  --color-primary-900: #451a03;
+  /* Primary Colors - Brand Orange (#ec7813) */
+  --color-primary-50: #fff7ed;
+  --color-primary-100: #ffedd5;
+  --color-primary-200: #fed7aa;
+  --color-primary-300: #fdba74;
+  --color-primary-400: #fb923c;
+  --color-primary-500: #ec7813;
+  --color-primary-600: #d4690f;
+  --color-primary-700: #b45309;
+  --color-primary-800: #92400e;
+  --color-primary-900: #78350f;
   --color-primary: var(--color-primary-500);
   --color-primary-hover: var(--color-primary-600);
   

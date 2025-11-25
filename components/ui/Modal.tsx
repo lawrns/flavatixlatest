@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useId } from 'react';
 import { cn } from '@/lib/utils';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface ModalProps {
   isOpen: boolean;
@@ -11,6 +12,8 @@ interface ModalProps {
   closeOnEscape?: boolean;
   showCloseButton?: boolean;
   className?: string;
+  /** Description for screen readers */
+  ariaDescription?: string;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -22,25 +25,30 @@ const Modal: React.FC<ModalProps> = ({
   closeOnOverlayClick = true,
   closeOnEscape = true,
   showCloseButton = true,
-  className
+  className,
+  ariaDescription
 }) => {
+  const modalId = useId();
+  const titleId = `${modalId}-title`;
+  const descriptionId = `${modalId}-description`;
+
+  // Focus trap for accessibility
+  const { containerRef } = useFocusTrap({
+    isActive: isOpen,
+    returnFocusOnDeactivate: true,
+    onEscape: closeOnEscape ? onClose : undefined,
+  });
+
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && closeOnEscape) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
+    // Prevent body scroll when modal is open
     document.body.style.overflow = 'hidden';
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, onClose, closeOnEscape]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -62,22 +70,34 @@ const Modal: React.FC<ModalProps> = ({
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
       onClick={handleOverlayClick}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby={title ? 'modal-title' : undefined}
+      role="presentation"
     >
       <div
+        ref={containerRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? titleId : undefined}
+        aria-describedby={ariaDescription ? descriptionId : undefined}
         className={cn(
           'bg-white dark:bg-zinc-800 rounded-lg shadow-xl w-full max-h-[90vh] overflow-hidden',
+          'focus:outline-none',
           sizeClasses[size],
           className
         )}
+        tabIndex={-1}
       >
+        {/* Screen reader only description */}
+        {ariaDescription && (
+          <p id={descriptionId} className="sr-only">
+            {ariaDescription}
+          </p>
+        )}
+        
         {(title || showCloseButton) && (
           <div className="flex items-center justify-between p-6 border-b border-zinc-200 dark:border-zinc-700">
             {title && (
               <h2
-                id="modal-title"
+                id={titleId}
                 className="text-xl font-semibold text-zinc-900 dark:text-white"
               >
                 {title}
@@ -86,12 +106,24 @@ const Modal: React.FC<ModalProps> = ({
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                className="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
                 aria-label="Close modal"
+                type="button"
               >
-                <span className="material-symbols-outlined text-xl">
-                  close
-                </span>
+                <svg 
+                  className="w-5 h-5" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M6 18L18 6M6 6l12 12" 
+                  />
+                </svg>
               </button>
             )}
           </div>
