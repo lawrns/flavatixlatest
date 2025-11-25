@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { getSupabaseClient } from '../lib/supabase';
+import { logger } from '../lib/logger';
 
 interface AuthContextType {
   user: User | null;
@@ -32,13 +33,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
         if (error) {
-          console.error('Error getting session:', error);
+          logger.error('Auth', 'Error getting session', error);
         } else {
           setSession(session);
           setUser(session?.user ?? null);
         }
       } catch (error) {
-        console.error('Error in getInitialSession:', error);
+        logger.error('Auth', 'Error in getInitialSession', error);
       } finally {
         setLoading(false);
       }
@@ -49,7 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email);
+        logger.debug('Auth', 'Auth state changed', { event, email: session?.user?.email });
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -63,10 +64,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const { error } = await supabase.auth.signOut();
       if (error) {
-        console.error('Error signing out:', error);
+        logger.error('Auth', 'Error signing out', error);
       }
     } catch (error) {
-      console.error('Error in signOut:', error);
+      logger.error('Auth', 'Error in signOut', error);
     }
   };
 
@@ -74,13 +75,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const { data: { session }, error } = await supabase.auth.refreshSession();
       if (error) {
-        console.error('Error refreshing session:', error);
+        logger.error('Auth', 'Error refreshing session', error);
       } else {
         setSession(session);
         setUser(session?.user ?? null);
       }
     } catch (error) {
-      console.error('Error in refreshSession:', error);
+      logger.error('Auth', 'Error in refreshSession', error);
     }
   };
 

@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import Combobox from '@/components/ui/Combobox';
 import BottomNavigation from '@/components/navigation/BottomNavigation';
 
 const BASE_CATEGORIES = [
@@ -270,19 +271,14 @@ const NewStudyTastingPage: React.FC = () => {
                   <label className="block text-small font-body font-medium text-text-primary mb-xs">
                     Base Category *
                   </label>
-                  <input
-                    type="text"
-                    list="category-options"
+                  <Combobox
+                    options={BASE_CATEGORIES}
                     value={form.baseCategory}
-                    onChange={(e) => setForm(prev => ({ ...prev, baseCategory: e.target.value }))}
+                    onChange={(value) => setForm(prev => ({ ...prev, baseCategory: value }))}
                     placeholder="Select or type a category"
-                    className={`form-input w-full ${errors.baseCategory ? 'border-error' : ''}`}
+                    className={errors.baseCategory ? 'border-error' : ''}
+                    allowCustom={true}
                   />
-                  <datalist id="category-options">
-                    {BASE_CATEGORIES.map(category => (
-                      <option key={category} value={category} />
-                    ))}
-                  </datalist>
                   <p className="text-xs text-text-secondary mt-1">
                     Select from the list or type your own custom category
                   </p>
@@ -400,20 +396,26 @@ const NewStudyTastingPage: React.FC = () => {
                                     } else {
                                       const numVal = parseInt(val);
                                       // Allow any number input while typing
-                                      if (!isNaN(numVal)) {
+                                      if (!isNaN(numVal) && numVal >= 0) {
                                         updateCategory(category.id, { scaleMax: numVal });
                                       }
                                     }
                                   }}
                                   onBlur={(e) => {
-                                    // Validate and correct on blur
+                                    // Validate and correct on blur only if field is not empty
                                     const val = e.target.value;
-                                    if (val === '' || parseInt(val) < 5) {
-                                      updateCategory(category.id, { scaleMax: 5 });
-                                      toast.error('Scale maximum must be at least 5. Set to minimum value.');
-                                    } else if (parseInt(val) > 100) {
-                                      updateCategory(category.id, { scaleMax: 100 });
-                                      toast.error('Scale maximum cannot exceed 100. Set to maximum value.');
+                                    if (val === '') {
+                                      // Keep field empty for user to retype
+                                      updateCategory(category.id, { scaleMax: 0 });
+                                    } else {
+                                      const numVal = parseInt(val);
+                                      if (isNaN(numVal) || numVal < 5) {
+                                        updateCategory(category.id, { scaleMax: 5 });
+                                        toast.error('Scale maximum must be at least 5. Set to minimum value.');
+                                      } else if (numVal > 100) {
+                                        updateCategory(category.id, { scaleMax: 100 });
+                                        toast.error('Scale maximum cannot exceed 100. Set to maximum value.');
+                                      }
                                     }
                                   }}
                                   min={5}

@@ -1,0 +1,746 @@
+{
+  "meta": {
+    "version": "1.0",
+    "purpose": "Comprehensive architectural diagnostic and optimization prompt for Flavatix codebase",
+    "generated": "2025-11-24",
+    "scope": "Full stack Next.js + Supabase + React application",
+    "intended_use": "Feed this entire JSON to an AI model to get comprehensive architectural recommendations"
+  },
+  "codebase_overview": {
+    "framework": "Next.js 14.0.4",
+    "language": "TypeScript",
+    "database": "Supabase (PostgreSQL)",
+    "ui_framework": "React 18 + TailwindCSS",
+    "state_management": "React Context API (SimpleAuthContext)",
+    "data_fetching": "Direct Supabase client calls + custom service layer",
+    "testing": "Jest + Playwright",
+    "deployment": "Netlify/Vercel",
+    "total_pages": "47 page files",
+    "total_components": "48 component files",
+    "total_lib_services": "24 library/service files",
+    "total_api_routes": "16 API endpoint files"
+  },
+  "current_architecture": {
+    "frontend_layer": {
+      "structure": "Pages-based routing (Next.js Pages Router)",
+      "state_management": "Mixed - Context API for auth, local useState in components",
+      "data_fetching": "Direct Supabase calls in useEffect hooks + custom service functions",
+      "issues": [
+        "No centralized data fetching layer (fetch logic scattered across components)",
+        "No query caching or request deduplication",
+        "No global error handling for API failures",
+        "No request retry logic or exponential backoff",
+        "Multiple instances of useState for similar data (e.g., tastingStats, latestTasting, recentTastings)",
+        "No loading/error states standardization",
+        "Console.log statements in production code (SimpleAuthContext.tsx line 35, 52, 66, 69, 76, 82)"
+      ]
+    },
+    "backend_layer": {
+      "structure": "API routes in /pages/api - inconsistent patterns",
+      "auth": "Bearer token validation per endpoint",
+      "database": "Direct Supabase client instantiation in each route",
+      "issues": [
+        "Duplicate Supabase client creation (pages/api/tastings/create.ts creates new client instead of using singleton)",
+        "No centralized request validation middleware",
+        "No standardized error response format",
+        "No request logging or monitoring",
+        "No rate limiting",
+        "No input sanitization layer",
+        "Inconsistent auth token extraction (some use Authorization header, some use cookies)"
+      ]
+    },
+    "data_layer": {
+      "structure": "Service layer pattern (/lib/*.ts) + direct Supabase calls",
+      "services": [
+        "profileService.ts - user profile operations",
+        "historyService.ts - tasting history queries",
+        "studyModeService.ts - study mode logic",
+        "flavorDescriptorExtractor.ts - AI descriptor extraction",
+        "flavorWheelGenerator.ts - wheel visualization",
+        "roleService.ts - role-based access control"
+      ],
+      "issues": [
+        "No single source of truth for database queries",
+        "Query logic duplicated across services and components",
+        "No query result caching",
+        "No database transaction management",
+        "No connection pooling optimization",
+        "Service functions return raw Supabase responses {data, error} - inconsistent error handling",
+        "No data validation schemas at service layer",
+        "No audit logging for data mutations"
+      ]
+    },
+    "database_schema": {
+      "issues": [
+        "No explicit foreign key constraints visible in schema",
+        "No check constraints for data integrity",
+        "No indexes defined for common queries",
+        "No partitioning for large tables",
+        "No archival strategy for old data",
+        "RLS policies exist but may have gaps (see add_rls_policies.js)",
+        "No audit tables for compliance/debugging",
+        "Trigger-based counters (update_profile_reviews_count, update_profile_tasting_count) - potential race conditions"
+      ]
+    }
+  },
+  "identified_shortcomings": {
+    "separation_of_concerns": {
+      "severity": "HIGH",
+      "issues": [
+        {
+          "category": "Data fetching scattered",
+          "description": "Components directly call supabase.from().select() instead of using service layer",
+          "example": "dashboard.tsx calls getUserTastingStats, getLatestTasting, getRecentTastings directly in useEffect",
+          "impact": "Hard to maintain, test, and refactor; logic duplication"
+        },
+        {
+          "category": "Business logic in components",
+          "description": "Complex state management and data transformation in React components",
+          "example": "flavor-wheels.tsx has 21KB of component code with embedded D3.js logic",
+          "impact": "Components become bloated; hard to reuse logic; testing difficult"
+        },
+        {
+          "category": "API route inconsistency",
+          "description": "Each API route handles auth, validation, and error handling differently",
+          "example": "tastings/create.ts vs flavor-wheels/generate.ts use different auth patterns",
+          "impact": "Security vulnerabilities; maintenance burden; inconsistent behavior"
+        },
+        {
+          "category": "No middleware layer",
+          "description": "No centralized middleware for auth, logging, error handling, rate limiting",
+          "impact": "Cross-cutting concerns scattered; hard to enforce policies globally"
+        }
+      ]
+    },
+    "single_source_of_truth": {
+      "severity": "HIGH",
+      "issues": [
+        {
+          "category": "Duplicate data fetching",
+          "description": "Same queries written in multiple places (historyService.ts + dashboard.tsx + my-tastings.tsx)",
+          "impact": "Inconsistent data; hard to update queries; cache invalidation nightmare"
+        },
+        {
+          "category": "Type definitions scattered",
+          "description": "Database types defined in supabase.ts, service types in individual files, component types inline",
+          "impact": "Type inconsistencies; hard to maintain; no single source of truth for data models"
+        },
+        {
+          "category": "Configuration scattered",
+          "description": "Constants like validCategories hardcoded in multiple files (tastings/create.ts, other routes)",
+          "impact": "Changes require updating multiple files; risk of inconsistency"
+        },
+        {
+          "category": "Validation rules duplicated",
+          "description": "Input validation logic in components, services, and API routes separately",
+          "impact": "Inconsistent validation; security gaps; maintenance burden"
+        }
+      ]
+    },
+    "infrastructure_agility": {
+      "severity": "MEDIUM-HIGH",
+      "issues": [
+        {
+          "category": "No environment-based configuration",
+          "description": "Hardcoded URLs and keys in multiple places; .env.example incomplete",
+          "impact": "Hard to deploy to different environments; security risk"
+        },
+        {
+          "category": "No feature flags",
+          "description": "No way to enable/disable features without code changes",
+          "impact": "Can't do gradual rollouts; hard to A/B test"
+        },
+        {
+          "category": "No dependency injection",
+          "description": "Services directly instantiate dependencies (e.g., supabase client)",
+          "impact": "Hard to test; hard to swap implementations; tight coupling"
+        },
+        {
+          "category": "No API versioning",
+          "description": "All endpoints are v1 implicitly; no migration path for breaking changes",
+          "impact": "Can't evolve API without breaking clients"
+        },
+        {
+          "category": "No monitoring/observability",
+          "description": "No structured logging, metrics, or tracing",
+          "impact": "Hard to debug production issues; can't measure performance"
+        }
+      ]
+    },
+    "data_consistency": {
+      "severity": "MEDIUM",
+      "issues": [
+        {
+          "category": "No optimistic updates",
+          "description": "All updates wait for server response before updating UI",
+          "impact": "Slow UX; network latency visible to users"
+        },
+        {
+          "category": "No cache invalidation strategy",
+          "description": "No way to know when cached data is stale",
+          "impact": "Stale data shown to users; inconsistent state"
+        },
+        {
+          "category": "Race conditions in triggers",
+          "description": "Trigger-based counters (update_profile_reviews_count) can race",
+          "impact": "Incorrect counts; data integrity issues"
+        },
+        {
+          "category": "No transaction support in service layer",
+          "description": "Multi-step operations not wrapped in transactions",
+          "example": "Creating tasting + items is two separate operations",
+          "impact": "Partial failures leave inconsistent state"
+        }
+      ]
+    },
+    "performance": {
+      "severity": "MEDIUM",
+      "issues": [
+        {
+          "category": "No query optimization",
+          "description": "No indexes, no query analysis, no N+1 query prevention",
+          "impact": "Slow queries; database overload"
+        },
+        {
+          "category": "No pagination defaults",
+          "description": "Some queries fetch all results without limit",
+          "impact": "Memory issues; slow page loads"
+        },
+        {
+          "category": "No request batching",
+          "description": "Multiple sequential API calls instead of batch operations",
+          "impact": "Increased latency; more network requests"
+        },
+        {
+          "category": "No code splitting strategy",
+          "description": "Large components not lazy-loaded",
+          "impact": "Large bundle size; slow initial page load"
+        },
+        {
+          "category": "No image optimization",
+          "description": "Images served from Supabase storage without optimization",
+          "impact": "Large downloads; slow rendering"
+        }
+      ]
+    },
+    "security": {
+      "severity": "MEDIUM",
+      "issues": [
+        {
+          "category": "No input validation schemas",
+          "description": "Zod is imported but not used consistently",
+          "impact": "SQL injection; data corruption; type errors"
+        },
+        {
+          "category": "No CSRF protection",
+          "description": "No CSRF tokens on state-changing operations",
+          "impact": "Vulnerable to CSRF attacks"
+        },
+        {
+          "category": "No rate limiting",
+          "description": "No protection against brute force or DDoS",
+          "impact": "Vulnerable to abuse"
+        },
+        {
+          "category": "Inconsistent RLS policies",
+          "description": "RLS policies may have gaps or inconsistencies",
+          "impact": "Unauthorized data access"
+        },
+        {
+          "category": "No audit logging",
+          "description": "No record of who did what when",
+          "impact": "Can't investigate security incidents; no compliance trail"
+        }
+      ]
+    },
+    "testing": {
+      "severity": "MEDIUM",
+      "issues": [
+        {
+          "category": "No unit test coverage",
+          "description": "Services and utilities have no unit tests",
+          "impact": "Regressions; hard to refactor"
+        },
+        {
+          "category": "No integration test coverage",
+          "description": "API routes not tested with database",
+          "impact": "Integration bugs; hard to catch data layer issues"
+        },
+        {
+          "category": "E2E tests incomplete",
+          "description": "Playwright tests exist but coverage is limited",
+          "impact": "User-facing bugs slip through"
+        },
+        {
+          "category": "No test fixtures/factories",
+          "description": "Tests create data manually; no reusable test data",
+          "impact": "Tests are brittle; hard to maintain"
+        }
+      ]
+    },
+    "maintainability": {
+      "severity": "MEDIUM",
+      "issues": [
+        {
+          "category": "No documentation",
+          "description": "No API documentation, architecture docs, or runbook",
+          "impact": "Hard for new developers to onboard"
+        },
+        {
+          "category": "Inconsistent naming conventions",
+          "description": "Mix of camelCase, snake_case, PascalCase",
+          "impact": "Hard to find things; confusing"
+        },
+        {
+          "category": "Large files",
+          "description": "dashboard.tsx (410 lines), flavor-wheels.tsx (21KB), social.tsx (33KB)",
+          "impact": "Hard to understand; hard to test; hard to modify"
+        },
+        {
+          "category": "No error boundary coverage",
+          "description": "Only one ErrorBoundary at app level",
+          "impact": "One error crashes entire app"
+        },
+        {
+          "category": "Production console logs",
+          "description": "console.log/error statements in production code",
+          "impact": "Noise in logs; potential security leaks"
+        }
+      ]
+    }
+  },
+  "optimization_opportunities": {
+    "high_impact_quick_wins": [
+      {
+        "title": "Centralize data fetching with React Query or SWR",
+        "effort": "MEDIUM",
+        "impact": "HIGH",
+        "description": "Replace direct Supabase calls with React Query for automatic caching, deduplication, and refetching",
+        "benefits": [
+          "Automatic request deduplication",
+          "Built-in caching with stale-while-revalidate",
+          "Automatic refetching on focus/reconnect",
+          "Standardized loading/error states",
+          "Easier testing"
+        ]
+      },
+      {
+        "title": "Create API middleware layer",
+        "effort": "MEDIUM",
+        "impact": "HIGH",
+        "description": "Centralize auth, validation, error handling, logging in middleware",
+        "benefits": [
+          "Consistent error responses",
+          "Centralized auth logic",
+          "Request logging for debugging",
+          "Rate limiting",
+          "Input validation"
+        ]
+      },
+      {
+        "title": "Extract configuration to environment variables",
+        "effort": "LOW",
+        "impact": "MEDIUM",
+        "description": "Move hardcoded values to .env files",
+        "benefits": [
+          "Easy environment switching",
+          "Security improvements",
+          "Easier deployment"
+        ]
+      },
+      {
+        "title": "Remove production console logs",
+        "effort": "LOW",
+        "impact": "MEDIUM",
+        "description": "Replace console.log with structured logger utility",
+        "benefits": [
+          "Cleaner logs",
+          "Better debugging",
+          "Security improvements"
+        ]
+      }
+    ],
+    "medium_impact_improvements": [
+      {
+        "title": "Implement centralized type system",
+        "effort": "MEDIUM",
+        "impact": "MEDIUM",
+        "description": "Create single source of truth for all types (database, API, components)",
+        "location": "Create /lib/types/index.ts with all type definitions",
+        "benefits": [
+          "Type consistency",
+          "Easier refactoring",
+          "Better IDE support"
+        ]
+      },
+      {
+        "title": "Add input validation with Zod schemas",
+        "effort": "MEDIUM",
+        "impact": "MEDIUM",
+        "description": "Create validation schemas for all API inputs and use consistently",
+        "location": "Create /lib/validations/index.ts with all schemas",
+        "benefits": [
+          "Runtime type safety",
+          "Better error messages",
+          "Security improvements"
+        ]
+      },
+      {
+        "title": "Extract business logic to service layer",
+        "effort": "MEDIUM-HIGH",
+        "impact": "MEDIUM",
+        "description": "Move complex logic from components to services",
+        "examples": [
+          "Flavor wheel generation logic",
+          "Study mode state management",
+          "Tasting session creation"
+        ],
+        "benefits": [
+          "Easier testing",
+          "Reusable logic",
+          "Cleaner components"
+        ]
+      },
+      {
+        "title": "Implement proper error handling",
+        "effort": "MEDIUM",
+        "impact": "MEDIUM",
+        "description": "Create custom error classes and consistent error handling",
+        "benefits": [
+          "Better error messages",
+          "Easier debugging",
+          "Better UX"
+        ]
+      },
+      {
+        "title": "Add database indexes for common queries",
+        "effort": "LOW",
+        "impact": "MEDIUM",
+        "description": "Analyze slow queries and add indexes",
+        "examples": [
+          "Index on quick_tastings(user_id, created_at)",
+          "Index on quick_tasting_items(tasting_id)",
+          "Index on profiles(user_id)"
+        ],
+        "benefits": [
+          "Faster queries",
+          "Better performance",
+          "Lower database load"
+        ]
+      }
+    ],
+    "architectural_refactoring": [
+      {
+        "title": "Migrate to App Router (Next.js 14+)",
+        "effort": "HIGH",
+        "impact": "MEDIUM",
+        "description": "Migrate from Pages Router to App Router for better organization",
+        "benefits": [
+          "Better file organization",
+          "Server components",
+          "Better performance"
+        ],
+        "timeline": "Phase 2-3 work"
+      },
+      {
+        "title": "Implement proper state management",
+        "effort": "MEDIUM",
+        "impact": "MEDIUM",
+        "description": "Consider Zustand or Redux for complex state",
+        "current": "Context API only",
+        "benefits": [
+          "Better state organization",
+          "Easier debugging",
+          "Better performance"
+        ]
+      },
+      {
+        "title": "Separate concerns into layers",
+        "effort": "HIGH",
+        "impact": "HIGH",
+        "description": "Clear separation: UI Layer → Service Layer → Data Layer → Database",
+        "structure": {
+          "ui_layer": "React components, pages, hooks",
+          "service_layer": "Business logic, data transformation",
+          "data_layer": "Supabase queries, caching",
+          "database_layer": "PostgreSQL, migrations"
+        },
+        "benefits": [
+          "Easier to understand",
+          "Easier to test",
+          "Easier to scale"
+        ]
+      }
+    ]
+  },
+  "recommended_implementation_order": {
+    "phase_1_foundation": {
+      "duration": "1-2 weeks",
+      "goal": "Fix critical issues and establish patterns",
+      "tasks": [
+        "Remove production console logs (1-2 hours)",
+        "Create centralized configuration (.env) (2-3 hours)",
+        "Create centralized type system (/lib/types) (3-4 hours)",
+        "Create input validation schemas (/lib/validations) (4-5 hours)",
+        "Add database indexes (2-3 hours)"
+      ]
+    },
+    "phase_2_data_layer": {
+      "duration": "2-3 weeks",
+      "goal": "Centralize data fetching and caching",
+      "tasks": [
+        "Implement React Query setup (2-3 hours)",
+        "Create query hooks for all data fetching (8-10 hours)",
+        "Migrate components to use query hooks (10-15 hours)",
+        "Add query caching strategies (3-4 hours)",
+        "Add error handling and retry logic (3-4 hours)"
+      ]
+    },
+    "phase_3_api_layer": {
+      "duration": "2-3 weeks",
+      "goal": "Standardize API routes and add middleware",
+      "tasks": [
+        "Create API middleware layer (4-5 hours)",
+        "Standardize error responses (2-3 hours)",
+        "Add request validation middleware (3-4 hours)",
+        "Add request logging (2-3 hours)",
+        "Refactor API routes to use middleware (8-10 hours)"
+      ]
+    },
+    "phase_4_testing": {
+      "duration": "2-3 weeks",
+      "goal": "Add comprehensive test coverage",
+      "tasks": [
+        "Add unit tests for services (10-15 hours)",
+        "Add integration tests for API routes (10-15 hours)",
+        "Add E2E tests for critical flows (8-10 hours)",
+        "Set up test fixtures and factories (4-5 hours)"
+      ]
+    },
+    "phase_5_optimization": {
+      "duration": "1-2 weeks",
+      "goal": "Performance and scalability improvements",
+      "tasks": [
+        "Implement code splitting (3-4 hours)",
+        "Optimize images (2-3 hours)",
+        "Add performance monitoring (3-4 hours)",
+        "Implement pagination for large datasets (4-5 hours)"
+      ]
+    }
+  },
+  "specific_code_locations_to_refactor": {
+    "high_priority": [
+      {
+        "file": "/pages/dashboard.tsx",
+        "lines": "24-46",
+        "issue": "Data fetching in useEffect should use React Query",
+        "refactor": "Extract to useUserProfile, useTastingStats hooks"
+      },
+      {
+        "file": "/pages/flavor-wheels.tsx",
+        "lines": "1-100",
+        "issue": "21KB file with mixed UI and business logic",
+        "refactor": "Split into FlavorWheelPage (UI) + useFlavorWheel hook (logic)"
+      },
+      {
+        "file": "/pages/social.tsx",
+        "lines": "1-100",
+        "issue": "33KB file with complex state management",
+        "refactor": "Extract components and use proper state management"
+      },
+      {
+        "file": "/pages/api/tastings/create.ts",
+        "lines": "1-143",
+        "issue": "No middleware, inconsistent error handling",
+        "refactor": "Use API middleware for auth, validation, error handling"
+      },
+      {
+        "file": "/contexts/SimpleAuthContext.tsx",
+        "lines": "35, 52, 66, 69, 76, 82",
+        "issue": "Production console logs",
+        "refactor": "Use structured logger utility instead"
+      }
+    ],
+    "medium_priority": [
+      {
+        "file": "/lib/supabase.ts",
+        "issue": "Duplicate client creation in API routes",
+        "refactor": "Ensure all routes use singleton pattern"
+      },
+      {
+        "file": "/lib/historyService.ts",
+        "issue": "Query logic could be cached and deduplicated",
+        "refactor": "Add caching layer or use React Query"
+      },
+      {
+        "file": "/components/quick-tasting/*",
+        "issue": "13 component files - possible consolidation",
+        "refactor": "Review for duplication and consolidate"
+      }
+    ]
+  },
+  "metrics_to_track": {
+    "code_quality": [
+      "Type coverage (target: 100%)",
+      "Test coverage (target: >80%)",
+      "Cyclomatic complexity (target: <10 per function)",
+      "File size (target: <500 lines per file)"
+    ],
+    "performance": [
+      "Largest Contentful Paint (LCP) - target: <2.5s",
+      "Interaction to Next Paint (INP) - target: <200ms",
+      "Cumulative Layout Shift (CLS) - target: <0.1",
+      "Bundle size - target: <500KB (gzipped)",
+      "API response time - target: <200ms p95"
+    ],
+    "reliability": [
+      "Error rate - target: <0.1%",
+      "API uptime - target: >99.9%",
+      "Test pass rate - target: 100%",
+      "Production console errors - target: 0"
+    ]
+  },
+  "success_criteria": {
+    "phase_1": [
+      "All console logs removed from production code",
+      "Configuration centralized in .env",
+      "Type system unified in /lib/types",
+      "Validation schemas created and used consistently",
+      "Database indexes added and performance improved"
+    ],
+    "phase_2": [
+      "React Query implemented and integrated",
+      "All data fetching uses query hooks",
+      "Automatic caching working",
+      "Request deduplication working",
+      "Error handling standardized"
+    ],
+    "phase_3": [
+      "API middleware implemented",
+      "All routes use middleware",
+      "Error responses standardized",
+      "Request logging working",
+      "Input validation working"
+    ],
+    "phase_4": [
+      "Unit test coverage >80%",
+      "Integration test coverage >70%",
+      "E2E test coverage for critical flows",
+      "All tests passing"
+    ],
+    "phase_5": [
+      "LCP <2.5s",
+      "INP <200ms",
+      "CLS <0.1",
+      "Bundle size <500KB",
+      "API response time <200ms p95"
+    ]
+  },
+  "implementation_checklist": {
+    "before_starting": [
+      "Create feature branch for refactoring work",
+      "Set up code review process",
+      "Establish testing requirements",
+      "Document current architecture",
+      "Create migration plan for breaking changes"
+    ],
+    "during_implementation": [
+      "Write tests before refactoring",
+      "Keep commits small and focused",
+      "Update documentation as you go",
+      "Get code reviews for each phase",
+      "Monitor performance metrics"
+    ],
+    "after_implementation": [
+      "Run full test suite",
+      "Performance testing",
+      "Security audit",
+      "Documentation review",
+      "Deployment and monitoring"
+    ]
+  },
+  "tools_and_libraries_to_consider": {
+    "data_fetching": [
+      "React Query (TanStack Query) - recommended",
+      "SWR - lighter alternative",
+      "Apollo Client - if using GraphQL"
+    ],
+    "state_management": [
+      "Zustand - lightweight, recommended",
+      "Redux Toolkit - if complex state needed",
+      "Jotai - atomic state management"
+    ],
+    "validation": [
+      "Zod - already in project, use consistently",
+      "Yup - alternative",
+      "io-ts - functional approach"
+    ],
+    "testing": [
+      "Vitest - faster than Jest",
+      "Testing Library - already used",
+      "Playwright - already used for E2E"
+    ],
+    "monitoring": [
+      "Sentry - error tracking",
+      "LogRocket - session replay",
+      "Datadog - APM and monitoring",
+      "Vercel Analytics - built-in if using Vercel"
+    ],
+    "logging": [
+      "Pino - fast JSON logger",
+      "Winston - flexible logger",
+      "Bunyan - structured logging"
+    ]
+  },
+  "risk_mitigation": {
+    "breaking_changes": {
+      "risk": "Refactoring could break existing functionality",
+      "mitigation": [
+        "Comprehensive test suite before refactoring",
+        "Feature flags for gradual rollout",
+        "Parallel old/new implementation during transition",
+        "Automated regression testing"
+      ]
+    },
+    "performance_regression": {
+      "risk": "New patterns could be slower",
+      "mitigation": [
+        "Performance benchmarking before/after",
+        "Load testing",
+        "Monitoring in staging environment",
+        "Rollback plan"
+      ]
+    },
+    "team_knowledge": {
+      "risk": "Team may not be familiar with new patterns",
+      "mitigation": [
+        "Documentation and examples",
+        "Code review and pair programming",
+        "Training sessions",
+        "Gradual adoption"
+      ]
+    }
+  },
+  "quick_reference_commands": {
+    "analysis": [
+      "npm run lint - check for linting issues",
+      "npm run test - run unit tests",
+      "npm run test:coverage - check test coverage",
+      "npm run test:e2e - run E2E tests",
+      "npm run build - check for build errors"
+    ],
+    "development": [
+      "npm run dev - start development server",
+      "npm run test:watch - watch mode for tests",
+      "npm run test:e2e:ui - E2E tests with UI"
+    ]
+  },
+  "final_notes": {
+    "priority": "Start with Phase 1 (foundation) - these are quick wins that unblock other work",
+    "timeline": "5 phases over 8-15 weeks depending on team size and other commitments",
+    "team_size": "Recommended: 1-2 developers for refactoring work",
+    "communication": "Keep stakeholders informed of progress and any blockers",
+    "documentation": "Update documentation as architecture changes",
+    "monitoring": "Set up monitoring before and after refactoring to catch issues"
+  }
+}

@@ -10,7 +10,7 @@
  * 6. No 406 errors on tasting_participants
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+// Using Jest (project's test runner)
 
 describe('Review Form - Slider Defaults', () => {
   it('should default all sliders to 0 in ReviewForm component', () => {

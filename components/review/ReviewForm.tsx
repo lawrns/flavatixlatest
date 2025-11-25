@@ -44,13 +44,15 @@ interface ReviewFormProps {
   onSubmit: (data: ReviewFormData, action: 'done' | 'save' | 'new') => void;
   onPhotoUpload?: (file: File) => Promise<string>;
   isSubmitting?: boolean;
+  onReset?: () => void;
 }
 
 const ReviewForm: React.FC<ReviewFormProps> = ({
   initialData,
   onSubmit,
   onPhotoUpload,
-  isSubmitting = false
+  isSubmitting = false,
+  onReset
 }) => {
   const [formData, setFormData] = useState<ReviewFormData>({
     item_name: '',
@@ -83,6 +85,47 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     value: ReviewFormData[K]
   ) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const resetForm = () => {
+    setFormData({
+      item_name: '',
+      category: '',
+      aroma_intensity: 0,
+      salt_score: 0,
+      sweetness_score: 0,
+      acidity_score: 0,
+      umami_score: 0,
+      spiciness_score: 0,
+      flavor_intensity: 0,
+      typicity_score: 0,
+      complexity_score: 0,
+      overall_score: 0,
+      picture_url: undefined,
+      brand: undefined,
+      country: undefined,
+      state: undefined,
+      region: undefined,
+      vintage: undefined,
+      batch_id: undefined,
+      upc_barcode: undefined,
+      aroma_notes: undefined,
+      salt_notes: undefined,
+      sweetness_notes: undefined,
+      acidity_notes: undefined,
+      umami_notes: undefined,
+      spiciness_notes: undefined,
+      flavor_notes: undefined,
+      texture_notes: undefined,
+      other_notes: undefined
+    });
+    
+    // Clear file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    
+    toast.success('Form reset successfully');
   };
 
   const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,7 +164,15 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
       toast.error('Category is required');
       return;
     }
-    onSubmit(formData, action);
+    
+    if (action === 'new') {
+      // First submit the current review, then reset the form
+      onSubmit(formData, action);
+      resetForm();
+      onReset?.();
+    } else {
+      onSubmit(formData, action);
+    }
   };
 
   const availableStates = formData.country ? getStatesForCountry(formData.country) : [];

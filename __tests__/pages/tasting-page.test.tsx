@@ -2,14 +2,37 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TastingSessionPage from '@/pages/tasting/[id]';
-import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/AuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
+import { useRouter } from 'next/router';
 
-// Mock dependencies
-jest.mock('next/router');
-jest.mock('@/contexts/AuthContext');
-jest.mock('@/lib/supabase');
+// Mock dependencies - useRouter is already mocked in jest.setup.js
+const mockPush = jest.fn();
+const mockBack = jest.fn();
+
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({
+    query: { id: 'test-session-id' },
+    push: mockPush,
+    back: mockBack,
+    isReady: true,
+    prefetch: jest.fn().mockResolvedValue(undefined),
+    events: {
+      on: jest.fn(),
+      off: jest.fn(),
+      emit: jest.fn(),
+    },
+  })),
+}));
+
+jest.mock('@/contexts/AuthContext', () => ({
+  useAuth: jest.fn(),
+}));
+
+jest.mock('@/lib/supabase', () => ({
+  getSupabaseClient: jest.fn(),
+}));
+
 jest.mock('@/lib/toast', () => ({
   toast: {
     success: jest.fn(),
@@ -18,13 +41,6 @@ jest.mock('@/lib/toast', () => ({
 }));
 
 describe('TastingSessionPage - Mobile Navigation', () => {
-  const mockRouter = {
-    query: { id: 'test-session-id' },
-    push: jest.fn(),
-    back: jest.fn(),
-    isReady: true,
-  };
-
   const mockUser = {
     id: 'test-user-id',
     email: 'test@example.com',
@@ -56,7 +72,6 @@ describe('TastingSessionPage - Mobile Navigation', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (useRouter as jest.Mock).mockReturnValue(mockRouter);
     (useAuth as jest.Mock).mockReturnValue({ user: mockUser, loading: false });
     (getSupabaseClient as jest.Mock).mockReturnValue(mockSupabase);
   });

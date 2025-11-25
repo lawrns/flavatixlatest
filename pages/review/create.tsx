@@ -13,6 +13,7 @@ const CreateReviewPage: React.FC = () => {
   const router = useRouter();
   const { user, loading } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const supabase = getSupabaseClient() as any;
 
   React.useEffect(() => {
@@ -112,9 +113,8 @@ const CreateReviewPage: React.FC = () => {
         toast.success('Review saved for later');
         router.push('/review/my-reviews');
       } else if (action === 'new') {
-        toast.success('Review completed! Starting new review...');
-        // Navigate to a fresh page with a timestamp to force reload
-        router.push(`/review/create?t=${Date.now()}`);
+        toast.success('Review completed! Ready for new review...');
+        // Form will be reset by the ReviewForm component
       }
     } catch (error) {
       console.error('Error saving review:', error);
@@ -123,6 +123,10 @@ const CreateReviewPage: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleReset = () => {
+    setIsResetting(false);
   };
 
   if (loading) {
@@ -163,6 +167,7 @@ const CreateReviewPage: React.FC = () => {
             onSubmit={handleSubmit}
             onPhotoUpload={handlePhotoUpload}
             isSubmitting={isSubmitting}
+            onReset={handleReset}
           />
         </div>
       </main>

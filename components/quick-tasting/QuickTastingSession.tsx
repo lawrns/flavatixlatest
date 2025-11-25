@@ -100,11 +100,11 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   }, []);
 
   const handleUserJoined = useCallback((user: any) => {
-    logger.debug(`👥 ${user.userName} joined the tasting`);
+    logger.debug('Realtime', `User joined the tasting`, { userName: user.userName });
   }, []);
 
   const handleUserLeft = useCallback((user: any) => {
-    logger.debug(`👤 ${user.userName} left the tasting`);
+    logger.debug('Realtime', `User left the tasting`, { userName: user.userName });
   }, []);
 
   const {
@@ -188,7 +188,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     if (!session) return;
 
     try {
-      logger.debug('🔄 QuickTastingSession: Loading items for session:', session.id, 'mode:', session.mode, 'phase:', phase, 'isLoading:', isLoading);
+      logger.debug('Tasting', `Loading items for session`, { sessionId: session.id, mode: session.mode, phase, isLoading });
       const { data, error } = await supabase
         .from('quick_tasting_items')
         .select('*')
@@ -197,7 +197,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
 
       if (error) throw error;
 
-      logger.debug('✅ QuickTastingSession: Loaded', (data || []).length, 'items');
+      logger.debug('Tasting', `Loaded ${(data || []).length} items`);
       setItems(data || []);
 
       // After loading items, check if we need to create the first item for quick tasting
@@ -244,7 +244,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
 
     const newIndex = items.length;
     const itemName = `${getDisplayCategoryName(session.category, session.custom_category_name)} ${newIndex + 1}`;
-    logger.debug('📝 QuickTastingSession: Creating item:', itemName, 'at index:', newIndex, 'for session:', session.id);
+    logger.debug('Tasting', `Creating item: ${itemName}`, { index: newIndex, sessionId: session.id });
 
     try {
       const { data, error } = await supabase
@@ -288,7 +288,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   const updateItem = async (itemId: string, updates: Partial<TastingItemData>) => {
     if (!session) return;
 
-    logger.debug('🔄 QuickTastingSession: Updating item:', itemId, 'with:', updates);
+    logger.debug('Tasting', `Updating item: ${itemId}`, { updates });
 
     // Broadcast updates to collaborators in study mode
     if (session.mode === 'study' && isConnected) {
@@ -601,7 +601,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     if (!session) return;
 
     logger.debug('🏁 QuickTastingSession: Completing session:', session.id);
-    logger.debug('📊 QuickTastingSession: Current items state:', items.length, 'items');
+    logger.debug('Tasting', `Current items state: ${items.length} items`);
 
     items.forEach((item, index) => {
       logger.debug(`  ${index + 1}. ${item.item_name} (ID: ${item.id}, Score: ${item.overall_score})`);
@@ -646,7 +646,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   useEffect(() => {
     if (!session) return;
 
-    logger.debug('🔄 QuickTastingSession: Loading session:', session.id, 'mode:', session.mode);
+    logger.debug('Tasting', `Loading session`, { sessionId: session.id, mode: session.mode });
     loadTastingItems();
     // Only load user roles for study mode sessions
     if (session.mode === 'study') {

@@ -5,6 +5,7 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { ToastContainer } from 'react-toastify'
 import { AuthProvider } from '../contexts/SimpleAuthContext'
+import { QueryProvider } from '../lib/query/queryClient'
 import GlobalInspirationBox from '../components/GlobalInspirationBox'
 import PerformanceMonitor from '../components/analytics/PerformanceMonitor'
 import ErrorBoundary from '../components/ui/ErrorBoundary'
@@ -45,33 +46,35 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [])
 
   return (
-    <AuthProvider>
-      <Head>
-        <title>Flavatix - The one place for all your tasting needs</title>
-        <meta name="description" content="The world's most pivotal tasting app for anything with flavor or aroma. Discover, analyze, and share your tasting experiences with our user-friendly platform." />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-        <meta name="theme-color" content={isDark ? '#1a1410' : '#FEF3E7'} />
-        <link rel="icon" href="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png" />
-        <link rel="apple-touch-icon" href="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png" />
-      </Head>
-      <ErrorBoundary>
-        <GlobalInspirationBox>
-          <Component {...pageProps} />
-          <PerformanceMonitor />
-        </GlobalInspirationBox>
-      </ErrorBoundary>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme={isDark ? 'dark' : 'light'}
-      />
-    </AuthProvider>
+    <QueryProvider>
+      <AuthProvider>
+        <Head>
+          <title>Flavatix - The one place for all your tasting needs</title>
+          <meta name="description" content="The world's most pivotal tasting app for anything with flavor or aroma. Discover, analyze, and share your tasting experiences with our user-friendly platform." />
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+          <meta name="theme-color" content={isDark ? '#1a1410' : '#FEF3E7'} />
+          <link rel="icon" href="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png" />
+          <link rel="apple-touch-icon" href="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png" />
+        </Head>
+        <ErrorBoundary>
+          <GlobalInspirationBox>
+            <Component {...pageProps} />
+            <PerformanceMonitor />
+          </GlobalInspirationBox>
+        </ErrorBoundary>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme={isDark ? 'dark' : 'light'}
+        />
+      </AuthProvider>
+    </QueryProvider>
   )
 }

@@ -5,9 +5,11 @@ import { supabase } from '../lib/supabase';
 import dynamic from 'next/dynamic';
 import * as d3 from 'd3';
 import { FlavorWheelData } from '@/lib/flavorWheelGenerator';
-import { Download, RefreshCw, Info } from 'lucide-react';
+import { Download, RefreshCw, Info, List } from 'lucide-react';
 import ShareButton from '../components/sharing/ShareButton';
 import BottomNavigation from '../components/navigation/BottomNavigation';
+import FlavorWheelListView from '../components/flavor-wheels/FlavorWheelListView';
+import { FlavorWheelPDFExporter } from '../lib/flavorWheelPDFExporter';
 
 // Dynamically import to avoid SSR issues
 const InspirationBox = dynamic(() => import('../components/ui/inspiration-box'), {
@@ -22,6 +24,14 @@ const FlavorWheelVisualization = dynamic(
 
 type WheelType = 'aroma' | 'flavor' | 'combined' | 'metaphor';
 type ScopeType = 'personal' | 'universal';
+type ViewMode = 'list' | 'wheel';
+
+interface PredefinedCategory {
+  id: string;
+  name: string;
+  display_order: number;
+  color_hex: string;
+}
 
 export default function FlavorWheelsPage() {
   const { user, loading: authLoading } = useAuth();
@@ -29,11 +39,38 @@ export default function FlavorWheelsPage() {
 
   const [wheelType, setWheelType] = useState<WheelType>('aroma');
   const [scopeType, setScopeType] = useState<ScopeType>('personal');
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [wheelData, setWheelData] = useState<FlavorWheelData | null>(null);
+  const [predefinedCategories, setPredefinedCategories] = useState<PredefinedCategory[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [cached, setCached] = useState(false);
   const [wheelSize, setWheelSize] = useState(700);
+  const [exportingPDF, setExportingPDF] = useState(false);
+
+  // Load predefined categories
+  useEffect(() => {
+    const loadPredefinedCategories = async () => {
+      if (!user) return;
+      
+      try {
+        const isMetaphor = wheelType === 'metaphor';
+        const tableName = isMetaphor ? 'active_metaphor_categories' : 'active_flavor_categories';
+        
+        const { data, error } = await supabase
+          .from(tableName)
+          .select('*')
+          .order('display_order');
+
+        if (error) throw error;
+        setPredefinedCategories(data || []);
+      } catch (error) {
+        console.error('Error loading predefined categories:', error);
+      }
+    };
+
+    loadPredefinedCategories();
+  }, [user, wheelType]);
 
   // Redirect to auth if not logged in
   useEffect(() => {
@@ -41,6 +78,24 @@ export default function FlavorWheelsPage() {
       router.push('/auth');
     }
   }, [user, authLoading, router]);
+
+  const handleExportPDF = async () => {
+    if (!wheelData) return;
+    
+    setExportingPDF(true);
+    try {
+      await FlavorWheelPDFExporter.quickExport({
+        categories: wheelData.categories,
+        totalDescriptors: wheelData.totalDescriptors,
+        wheelType: wheelType
+      });
+    } catch (error) {
+      console.error('PDF export failed:', error);
+      setError('Failed to generate PDF. Please try again.');
+    } finally {
+      setExportingPDF(false);
+    }
+  };
 
   const loadWheel = useCallback(async (forceRegenerate = false) => {
     setLoading(true);
@@ -320,18 +375,60 @@ export default function FlavorWheelsPage() {
 
           {wheelData && !loading && !error && wheelData.categories.length > 0 && (
             <div className="flex flex-col items-center overflow-hidden">
-              <div className="w-full flex justify-center items-center min-h-[300px]">
-                <div className="relative" style={{ width: wheelSize, height: wheelSize }}>
-                  <FlavorWheelVisualization
-                    wheelData={wheelData}
-                    width={wheelSize}
-                    height={wheelSize}
-                    showLabels={true}
-                    interactive={true}
-                    onSegmentClick={handleSegmentClick}
-                  />
+              {/* View Mode Toggle */}
+              <div className="w-full flex justify-center mb-6">
+                <div className="inline-flex rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-1">
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                      viewMode === 'list'
+                        ? 'bg-orange-600 text-white'
+                        : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200'
+                    }`}
+                  >
+                    <List className="w-4 h-4" />
+                    Mobile View
+                  </button>
+                  <button
+                    onClick={() => setViewMode('wheel')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                      viewMode === 'wheel'
+                        ? 'bg-orange-600 text-white'
+                        : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200'
+                    }`}
+                  >
+                    <Download className="w-4 h-4" />
+                    Wheel View
+                  </button>
                 </div>
               </div>
+
+              {/* Content based on view mode */}
+              {viewMode === 'list' ? (
+                <FlavorWheelListView
+                  wheelData={{
+                    categories: wheelData.categories,
+                    totalDescriptors: wheelData.totalDescriptors,
+                    wheelType: wheelType
+                  }}
+                  predefinedCategories={predefinedCategories}
+                  onExportPDF={handleExportPDF}
+                  className="w-full"
+                />
+              ) : (
+                <div className="w-full flex justify-center items-center min-h-[300px]">
+                  <div className="relative" style={{ width: wheelSize, height: wheelSize }}>
+                    <FlavorWheelVisualization
+                      wheelData={wheelData}
+                      width={wheelSize}
+                      height={wheelSize}
+                      showLabels={true}
+                      interactive={true}
+                      onSegmentClick={handleSegmentClick}
+                    />
+                  </div>
+                </div>
+              )}
 
               {/* AI Badge */}
               {wheelData.aiMetadata?.hasAIDescriptors && (
