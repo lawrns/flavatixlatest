@@ -7,6 +7,14 @@ import { getSupabaseClient } from '@/lib/supabase';
 // Mock the Supabase client
 jest.mock('@/lib/supabase');
 
+// Mock useAuth
+jest.mock('@/contexts/SimpleAuthContext', () => ({
+  useAuth: () => ({
+    user: { id: 'test-user-id', email: 'test@example.com' },
+    loading: false,
+  }),
+}));
+
 // Mock toast
 jest.mock('@/lib/toast', () => ({
   toast: {
@@ -120,7 +128,7 @@ describe('QuickTastingSession - Complete Tasting Button', () => {
       completed_at: new Date().toISOString(),
     };
 
-    mockSupabase.from = jest.fn(() => ({
+    (mockSupabase as any).from = jest.fn(() => ({
       update: jest.fn(() => ({
         eq: jest.fn(() => ({
           select: jest.fn(() => ({
@@ -155,7 +163,7 @@ describe('QuickTastingSession - Complete Tasting Button', () => {
 
   it('should handle errors gracefully when completing session', async () => {
     const mockError = new Error('Database error');
-    mockSupabase.from = jest.fn(() => ({
+    (mockSupabase as any).from = jest.fn(() => ({
       update: jest.fn(() => ({
         eq: jest.fn(() => ({
           select: jest.fn(() => ({

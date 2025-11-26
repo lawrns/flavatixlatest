@@ -269,7 +269,7 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
                     <div>
                       <p className="text-small font-semibold text-text-primary">Your Rank</p>
                       <p className="text-xs text-text-secondary">
-                        {userRank === 1 ? '🎉 Champion!' : userRank <= 3 ? '🏆 Podium finish!' : 'Keep practicing!'}
+                        {userRank === 1 ? 'Champion!' : userRank <= 3 ? 'Podium finish!' : 'Keep practicing!'}
                       </p>
                     </div>
                   </div>

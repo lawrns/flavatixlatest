@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { AvatarService, AvatarUploadResult } from '../lib/avatarService';
 // Using project's custom styling instead of external UI components
 import * as LucideIcons from 'lucide-react';
-const { Upload, X, User, AlertCircle, CheckCircle } = LucideIcons;
+const { Upload, X, User, AlertCircle, CheckCircle, Camera } = LucideIcons;
 
 interface AvatarUploadProps {
   userId: string;
@@ -28,11 +28,12 @@ export default function AvatarUpload({
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentAvatarUrl || null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const cameraInputRef = React.useRef<HTMLInputElement>(null);
 
   // Using static methods from AvatarService
 
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
+  const handleFileUpload = async (file: File | null) => {
     if (!file) return;
 
     setError(null);
@@ -41,6 +42,13 @@ export default function AvatarUpload({
     setUploadProgress(0);
 
     try {
+      console.log('[AvatarUpload] Starting upload:', {
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type,
+        userId
+      });
+
       // Create preview
       const preview = URL.createObjectURL(file);
       setPreviewUrl(preview);
@@ -62,6 +70,12 @@ export default function AvatarUpload({
       clearInterval(progressInterval);
       setUploadProgress(100);
 
+      console.log('[AvatarUpload] Upload result:', {
+        success: result.success,
+        hasUrl: !!result.url,
+        error: result.error
+      });
+
       if (result.success && result.url) {
         setSuccess('Avatar uploaded successfully!');
         onUploadSuccess?.(result.url);
@@ -75,6 +89,12 @@ export default function AvatarUpload({
         throw new Error(result.error || 'Upload failed');
       }
     } catch (err) {
+      console.error('[AvatarUpload] Upload error:', {
+        error: err,
+        message: err instanceof Error ? err.message : 'Unknown error',
+        userId
+      });
+      
       const errorMessage = err instanceof Error ? err.message : 'Upload failed';
       setError(errorMessage);
       onUploadError?.(errorMessage);
@@ -88,7 +108,21 @@ export default function AvatarUpload({
         setSuccess(null);
       }, 3000);
     }
+  };
+
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    await handleFileUpload(file);
   }, [userId, currentAvatarUrl, onUploadSuccess, onUploadError]);
+
+  const handleCameraCapture = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    await handleFileUpload(file || null);
+    // Reset input so same file can be selected again
+    if (cameraInputRef.current) {
+      cameraInputRef.current.value = '';
+    }
+  };
 
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
     onDrop,
@@ -170,37 +204,60 @@ export default function AvatarUpload({
         </div>
       )}
 
-      {/* Dropzone */}
-      <div
-        {...getRootProps()}
-        className={`
-          border-2 border-dashed rounded-lg p-md text-center cursor-pointer transition-colors relative z-10
-          ${isDragActive && !isDragReject ? 'border-blue-400 bg-blue-50 dark:bg-blue-900/20' : ''}
-          ${isDragReject ? 'border-red-400 bg-red-50 dark:bg-red-900/20' : ''}
-          ${!isDragActive && !isDragReject ? 'border-gray-300 dark:border-zinc-600 hover:border-gray-400 dark:hover:border-zinc-500' : ''}
-          ${uploading ? 'opacity-50 cursor-not-allowed' : ''}
-        `}
-      >
-        <input {...getInputProps()} />
-        
-        <Upload className="w-8 h-8 mx-auto mb-xs text-gray-400 dark:text-zinc-500" />
-        
-        {isDragActive ? (
-          isDragReject ? (
-            <p className="text-red-600">Invalid file type</p>
+      {/* Upload Options */}
+      <div className="grid grid-cols-1 gap-xs">
+        {/* Take Photo Button (Mobile Camera) */}
+        <button
+          type="button"
+          onClick={() => cameraInputRef.current?.click()}
+          disabled={uploading}
+          className="btn-secondary flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+        >
+          <LucideIcons.Camera className="w-5 h-5" />
+          <span>Take Photo</span>
+        </button>
+        <input
+          ref={cameraInputRef}
+          type="file"
+          accept="image/*"
+          capture="user"
+          onChange={handleCameraCapture}
+          className="hidden"
+          disabled={uploading}
+        />
+
+        {/* Dropzone */}
+        <div
+          {...getRootProps()}
+          className={`
+            border-2 border-dashed rounded-lg p-md text-center cursor-pointer transition-colors relative z-10
+            ${isDragActive && !isDragReject ? 'border-blue-400 bg-blue-50 dark:bg-blue-900/20' : ''}
+            ${isDragReject ? 'border-red-400 bg-red-50 dark:bg-red-900/20' : ''}
+            ${!isDragActive && !isDragReject ? 'border-gray-300 dark:border-zinc-600 hover:border-gray-400 dark:hover:border-zinc-500' : ''}
+            ${uploading ? 'opacity-50 cursor-not-allowed' : ''}
+          `}
+        >
+          <input {...getInputProps()} />
+          
+          <Upload className="w-8 h-8 mx-auto mb-xs text-gray-400 dark:text-zinc-500" />
+          
+          {isDragActive ? (
+            isDragReject ? (
+              <p className="text-red-600">Invalid file type</p>
+            ) : (
+              <p className="text-blue-600">Drop the image here...</p>
+            )
           ) : (
-            <p className="text-blue-600">Drop the image here...</p>
-          )
-        ) : (
-          <div>
-            <p className="text-gray-600 dark:text-zinc-300 mb-xs">
-              Drag & drop an image here, or click to select
-            </p>
-            <p className="text-small font-body text-gray-500 dark:text-zinc-400">
-              Supports: JPEG, PNG, WebP (max 5MB)
-            </p>
-          </div>
-        )}
+            <div>
+              <p className="text-gray-600 dark:text-zinc-300 mb-xs">
+                Drag & drop an image here, or click to select
+              </p>
+              <p className="text-small font-body text-gray-500 dark:text-zinc-400">
+                Supports: JPEG, PNG, WebP (max 5MB)
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Error Message */}

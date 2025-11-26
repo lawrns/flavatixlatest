@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { getSupabaseClient } from '../../lib/supabase';
 import { toast } from '../../lib/toast';
-import { Coffee, Wine, Beer, Utensils, Star, Camera, Edit } from 'lucide-react';
+import { Coffee, Wine, Beer, Utensils, Star, Camera, Edit, Flower2, Droplet, FileText } from 'lucide-react';
 import FlavorWheel from './FlavorWheel';
 
 interface TastingItemData {
@@ -316,7 +316,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
           {/* Aroma Section */}
           <div className="mb-5">
             <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
-              <span className="text-lg">🌸</span>
+              <Flower2 size={20} className="text-pink-500" />
               Aroma
             </label>
             <textarea
@@ -330,7 +330,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
           {/* Flavor Section */}
           <div className="mb-5">
             <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
-              <span className="text-lg">👅</span>
+              <Droplet size={20} className="text-orange-500" />
               Flavor
             </label>
             <textarea
@@ -394,7 +394,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
           {/* Other Notes Section */}
           <div>
             <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
-              <span className="text-lg">📝</span>
+              <FileText size={20} className="text-blue-500" />
               Other Notes
             </label>
             <textarea

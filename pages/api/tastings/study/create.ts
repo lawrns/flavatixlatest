@@ -88,6 +88,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     };
 
     // Create study session in quick_tastings table
+    console.log('[Study Create API] Creating session with metadata:', {
+      name,
+      baseCategory,
+      categoriesCount: categories.length,
+      studyMetadata
+    });
+
     const { data: session, error: sessionError } = await supabase
       .from('quick_tastings')
       .insert({
@@ -105,7 +112,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .single();
 
     if (sessionError) {
-      console.error('Error creating study session:', sessionError);
+      console.error('[Study Create API] Error creating study session:', sessionError);
 
       // Check if it's a column not found error (migration not applied)
       if (sessionError.message?.includes('column') && (sessionError.message?.includes('mode') || sessionError.message?.includes('study_approach'))) {
@@ -117,6 +124,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       return res.status(500).json({ error: 'Failed to create study session', details: sessionError.message });
     }
+
+    console.log('[Study Create API] Session created successfully:', {
+      sessionId: session.id,
+      hasNotes: !!session.notes,
+      notesLength: session.notes?.length || 0
+    });
 
     res.status(201).json({
       sessionId: session.id,

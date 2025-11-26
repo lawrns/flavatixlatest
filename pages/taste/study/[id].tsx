@@ -68,9 +68,17 @@ const StudyTastingPage: React.FC = () => {
           return;
         }
 
+        console.log('[Study Session Page] Session loaded:', {
+          sessionId: data.id,
+          mode: data.mode,
+          hasNotes: !!data.notes,
+          notesLength: data.notes?.length || 0,
+          notesPreview: data.notes ? data.notes.substring(0, 100) : 'N/A'
+        });
+
         setSession(data);
       } catch (error) {
-        console.error('Error loading study session:', error);
+        console.error('[Study Session Page] Error loading study session:', error);
         toast.error('Failed to load study session');
         router.push('/my-tastings');
       } finally {

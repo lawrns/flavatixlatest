@@ -243,7 +243,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     }
 
     const newIndex = items.length;
-    const itemName = `${getDisplayCategoryName(session.category, session.custom_category_name)} ${newIndex + 1}`;
+    const itemName = `Item ${newIndex + 1}`;
     logger.debug('Tasting', `Creating item: ${itemName}`, { index: newIndex, sessionId: session.id });
 
     try {

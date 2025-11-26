@@ -281,7 +281,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
         );
       });
 
-    // Add labels outside the wheel (perpendicular to outer rim)
+    // Add labels outside the wheel (perpendicular to outer rim) with more space
     if (showLabels) {
       const categorySegments = segments.filter(s =>
         s.subcategoryIndex === undefined && s.descriptorIndex === undefined
@@ -293,7 +293,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
         .append('text')
         .attr('transform', d => {
           const midAngle = (d.startAngle + d.endAngle) / 2;
-          const labelRadius = radius * 1.05; // Position outside the wheel
+          const labelRadius = radius * 1.15; // Increased from 1.05 to 1.15 for more space
           const x = Math.cos(midAngle) * labelRadius;
           const y = Math.sin(midAngle) * labelRadius;
           // Rotate text perpendicular to the rim
@@ -315,10 +315,11 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
         .text(d => d.label);
     }
 
-    // Add center circle
+    // Add center circle with proper light/dark mode colors
     g.append('circle')
       .attr('r', radius * 0.3)
-      .attr('fill', 'var(--color-background-secondary)')
+      .attr('fill', 'white')
+      .attr('class', 'dark:fill-zinc-800')
       .attr('stroke', 'var(--color-border-default)')
       .attr('stroke-width', 2);
 
@@ -344,12 +345,13 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
   }, [wheelData, width, height, showLabels, interactive, onSegmentClick, colorScale]);
 
   return (
-    <div className="relative">
+    <div className="relative overflow-auto touch-pan-x touch-pan-y" style={{ maxHeight: '80vh' }}>
       <svg
         ref={svgRef}
         width={width}
         height={height}
-        className="flavor-wheel-svg"
+        className="flavor-wheel-svg mx-auto"
+        style={{ minWidth: '600px', touchAction: 'pinch-zoom' }}
       />
       {tooltip && (
         <div

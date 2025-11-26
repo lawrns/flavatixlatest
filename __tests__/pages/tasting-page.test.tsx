@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TastingSessionPage from '@/pages/tasting/[id]';
-import { useAuth } from '@/contexts/AuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { useRouter } from 'next/router';
 
@@ -25,8 +24,10 @@ jest.mock('next/router', () => ({
   })),
 }));
 
-jest.mock('@/contexts/AuthContext', () => ({
-  useAuth: jest.fn(),
+// Mock SimpleAuthContext (the actual auth context used by the page)
+const mockUseAuth = jest.fn();
+jest.mock('@/contexts/SimpleAuthContext', () => ({
+  useAuth: () => mockUseAuth(),
 }));
 
 jest.mock('@/lib/supabase', () => ({
@@ -72,7 +73,7 @@ describe('TastingSessionPage - Mobile Navigation', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (useAuth as jest.Mock).mockReturnValue({ user: mockUser, loading: false });
+    mockUseAuth.mockReturnValue({ user: mockUser, loading: false });
     (getSupabaseClient as jest.Mock).mockReturnValue(mockSupabase);
   });
 
@@ -155,7 +156,7 @@ describe('TastingSessionPage - Session Completion Redirect', () => {
     jest.clearAllMocks();
     jest.useFakeTimers();
     (useRouter as jest.Mock).mockReturnValue(mockRouter);
-    (useAuth as jest.Mock).mockReturnValue({ user: mockUser, loading: false });
+    mockUseAuth.mockReturnValue({ user: mockUser, loading: false });
   });
 
   afterEach(() => {
@@ -234,7 +235,7 @@ describe('TastingSessionPage - Error Handling', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (useRouter as jest.Mock).mockReturnValue(mockRouter);
-    (useAuth as jest.Mock).mockReturnValue({ user: mockUser, loading: false });
+    mockUseAuth.mockReturnValue({ user: mockUser, loading: false });
   });
 
   it('should show error message for invalid session ID', async () => {

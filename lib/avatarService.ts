@@ -91,9 +91,17 @@ export class AvatarService {
    */
   static async uploadAvatar(file: File, userId: string): Promise<AvatarUploadResult> {
     try {
+      console.log('[AvatarService] Starting upload process:', {
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type,
+        userId
+      });
+
       // Validate file
       const fileValidation = this.validateFile(file);
       if (!fileValidation.isValid) {
+        console.warn('[AvatarService] File validation failed:', fileValidation.error);
         return {
           success: false,
           error: fileValidation.error
@@ -103,6 +111,7 @@ export class AvatarService {
       // Validate image dimensions
       const dimensionValidation = await this.validateImageDimensions(file);
       if (!dimensionValidation.isValid) {
+        console.warn('[AvatarService] Dimension validation failed:', dimensionValidation.error);
         return {
           success: false,
           error: dimensionValidation.error
@@ -111,11 +120,13 @@ export class AvatarService {
 
       // Generate unique filename
       const fileName = this.generateFileName(userId, file.name);
+      console.log('[AvatarService] Generated filename:', fileName);
 
       // Delete existing avatar if it exists
       await this.deleteExistingAvatar(userId);
 
       // Upload file to Supabase Storage
+      console.log('[AvatarService] Uploading to storage...');
       const { data, error } = await this.getSupabase().storage
         .from(this.BUCKET_NAME)
         .upload(fileName, file, {
@@ -124,7 +135,27 @@ export class AvatarService {
         });
 
       if (error) {
-        console.error('Upload error:', error);
+        console.error('[AvatarService] Storage upload error:', {
+          error,
+          message: error.message,
+          statusCode: (error as any).statusCode || 'unknown',
+          fileName
+        });
+        
+        // Provide more specific error messages
+        if (error.message?.includes('permissions')) {
+          return {
+            success: false,
+            error: 'Permission denied. Please check your account settings.'
+          };
+        }
+        if (error.message?.includes('network')) {
+          return {
+            success: false,
+            error: 'Network error. Please check your internet connection.'
+          };
+        }
+        
         return {
           success: false,
           error: 'Failed to upload avatar. Please try again.'
@@ -136,16 +167,26 @@ export class AvatarService {
         .from(this.BUCKET_NAME)
         .getPublicUrl(fileName);
 
+      console.log('[AvatarService] Upload successful:', {
+        publicUrl: urlData.publicUrl
+      });
+
       return {
         success: true,
         url: urlData.publicUrl
       };
 
     } catch (error) {
-      console.error('Avatar upload error:', error);
+      console.error('[AvatarService] Unexpected error during upload:', {
+        error,
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        userId
+      });
+      
       return {
         success: false,
-        error: 'An unexpected error occurred during upload'
+        error: 'An unexpected error occurred during upload. Please try again.'
       };
     }
   }

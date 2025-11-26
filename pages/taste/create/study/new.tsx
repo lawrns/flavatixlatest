@@ -569,7 +569,7 @@ const NewStudyTastingPage: React.FC = () => {
                         {cat.hasText && <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded mr-xs">Text</span>}
                         {cat.hasScale && <span className="inline-block px-2 py-1 bg-green-100 text-green-800 rounded mr-xs">Scale (1-{cat.scaleMax})</span>}
                         {cat.hasBoolean && <span className="inline-block px-2 py-1 bg-purple-100 text-purple-800 rounded mr-xs">Yes/No</span>}
-                        {cat.rankInSummary && <span className="inline-block px-2 py-1 bg-amber-100 text-amber-800 rounded">Ranked</span>}
+                        {cat.hasScale && cat.rankInSummary && <span className="inline-block px-2 py-1 bg-amber-100 text-amber-800 rounded">Ranked</span>}
                       </div>
                     </div>
                   ))}
