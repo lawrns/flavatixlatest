@@ -16,6 +16,7 @@ interface TastingItemData {
   photo_url?: string;
   created_at: string;
   updated_at: string;
+  study_category_data?: Record<string, any>; // Store study category responses
 }
 
 interface TastingItemProps {
@@ -31,6 +32,7 @@ interface TastingItemProps {
   showPhotoControls?: boolean;
   showNotesFields?: boolean;
   itemIndex?: number; // 1-based index for dynamic naming
+  studyCategories?: any[]; // Study mode categories with input types
 }
 
 const TastingItem: React.FC<TastingItemProps> = ({
@@ -46,12 +48,16 @@ const TastingItem: React.FC<TastingItemProps> = ({
   showPhotoControls = true,
   showNotesFields = true,
   itemIndex,
+  studyCategories = [],
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [localNotes, setLocalNotes] = useState(item.notes || '');
   const [localAroma, setLocalAroma] = useState(item.aroma || '');
   const [localFlavor, setLocalFlavor] = useState(item.flavor || '');
   const [localScore, setLocalScore] = useState(item.overall_score || 0);
+  const [studyCategoryData, setStudyCategoryData] = useState<Record<string, any>>(
+    item.study_category_data || {}
+  );
 
   // Generate dynamic display name based on current category and item index
   const getDisplayName = () => {
@@ -70,9 +76,10 @@ const TastingItem: React.FC<TastingItemProps> = ({
     setLocalAroma(item.aroma || '');
     setLocalFlavor(item.flavor || '');
     setLocalScore(item.overall_score || 0);
+    setStudyCategoryData(item.study_category_data || {});
     setEditingName(item.item_name);
     setIsEditingName(false);
-  }, [item.id]);
+  }, [item.id, item.study_category_data]);
 
   const getScoreLabel = (score: number): string => {
     if (score >= 90) return '(Exceptional)';
@@ -158,6 +165,12 @@ const TastingItem: React.FC<TastingItemProps> = ({
   const handleScoreChange = (score: number) => {
     setLocalScore(score);
     onUpdate({ overall_score: score });
+  };
+
+  const handleStudyCategoryChange = (categoryName: string, value: any) => {
+    const updatedData = { ...studyCategoryData, [categoryName]: value };
+    setStudyCategoryData(updatedData);
+    onUpdate({ study_category_data: updatedData });
   };
 
   const startEditingName = () => {
@@ -313,33 +326,131 @@ const TastingItem: React.FC<TastingItemProps> = ({
       {/* Notes Fields - Only show in tasting/review mode */}
       {showNotesFields && (
         <>
-          {/* Aroma Section */}
-          <div className="mb-5">
-            <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
-              <Flower2 size={20} className="text-pink-500" />
-              Aroma
-            </label>
-            <textarea
-              value={localAroma}
-              onChange={(e) => handleAromaChange(e.target.value)}
-              placeholder={`Describe the ${category}'s aroma...`}
-              className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl text-sm focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all resize-none placeholder:text-zinc-400"
-            />
-          </div>
+          {/* Study Categories - Replace default fields when present */}
+          {studyCategories.length > 0 ? (
+            <div className="space-y-5">
+              <h4 className="text-base font-semibold text-text-primary mb-3">Evaluation Categories</h4>
+              {studyCategories.map((category, index) => (
+                <div key={index} className="mb-5">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-text-primary mb-2">
+                    <span className="w-6 h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center text-xs font-bold">
+                      {index + 1}
+                    </span>
+                    {category.name}
+                  </label>
+                  
+                  {/* Text Input */}
+                  {category.hasText && (
+                    <textarea
+                      value={studyCategoryData[category.name]?.text || ''}
+                      onChange={(e) => handleStudyCategoryChange(category.name, { 
+                        ...studyCategoryData[category.name], 
+                        text: e.target.value 
+                      })}
+                      placeholder={`Enter ${category.name.toLowerCase()} notes...`}
+                      className="w-full h-20 px-3 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all resize-none placeholder:text-zinc-400 mb-3"
+                    />
+                  )}
+                  
+                  {/* Scale Input */}
+                  {category.hasScale && (
+                    <div className="mb-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs text-text-secondary">Rating: {studyCategoryData[category.name]?.scale || 0}/{category.scaleMax || 100}</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="0"
+                        max={category.scaleMax || 100}
+                        value={studyCategoryData[category.name]?.scale || 0}
+                        onChange={(e) => handleStudyCategoryChange(category.name, { 
+                          ...studyCategoryData[category.name], 
+                          scale: parseInt(e.target.value) 
+                        })}
+                        className="w-full h-2 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-primary"
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Boolean Input */}
+                  {category.hasBoolean && (
+                    <div className="flex items-center gap-3">
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="radio"
+                          name={`${category.name}-boolean`}
+                          checked={studyCategoryData[category.name]?.boolean === true}
+                          onChange={() => handleStudyCategoryChange(category.name, { 
+                            ...studyCategoryData[category.name], 
+                            boolean: true 
+                          })}
+                          className="mr-2 text-primary focus:ring-primary"
+                        />
+                        <span className="text-sm text-text-primary">Yes</span>
+                      </label>
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="radio"
+                          name={`${category.name}-boolean`}
+                          checked={studyCategoryData[category.name]?.boolean === false}
+                          onChange={() => handleStudyCategoryChange(category.name, { 
+                            ...studyCategoryData[category.name], 
+                            boolean: false 
+                          })}
+                          className="mr-2 text-primary focus:ring-primary"
+                        />
+                        <span className="text-sm text-text-primary">No</span>
+                      </label>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <>
+              {/* Default Aroma Section */}
+              <div className="mb-5">
+                <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
+                  <Flower2 size={20} className="text-pink-500" />
+                  Aroma
+                </label>
+                <textarea
+                  value={localAroma}
+                  onChange={(e) => handleAromaChange(e.target.value)}
+                  placeholder={`Describe the ${category}'s aroma...`}
+                  className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl text-sm focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all resize-none placeholder:text-zinc-400"
+                />
+              </div>
 
-          {/* Flavor Section */}
-          <div className="mb-5">
-            <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
-              <Droplet size={20} className="text-orange-500" />
-              Flavor
-            </label>
-            <textarea
-              value={localFlavor}
-              onChange={(e) => handleFlavorChange(e.target.value)}
-              placeholder={`Describe the ${category}'s flavor, taste, and mouthfeel...`}
-              className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl text-sm focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all resize-none placeholder:text-zinc-400"
-            />
-          </div>
+              {/* Default Flavor Section */}
+              <div className="mb-5">
+                <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
+                  <Droplet size={20} className="text-orange-500" />
+                  Flavor
+                </label>
+                <textarea
+                  value={localFlavor}
+                  onChange={(e) => handleFlavorChange(e.target.value)}
+                  placeholder={`Describe the ${category}'s flavor, taste, and mouthfeel...`}
+                  className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl text-sm focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all resize-none placeholder:text-zinc-400"
+                />
+              </div>
+
+              {/* Other Notes Section */}
+              <div>
+                <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
+                  <FileText size={20} className="text-blue-500" />
+                  Other Notes
+                </label>
+                <textarea
+                  value={localNotes}
+                  onChange={(e) => handleNotesChange(e.target.value)}
+                  placeholder={`Additional notes about the ${category}...`}
+                  className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl text-sm focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all resize-none placeholder:text-zinc-400"
+                />
+              </div>
+            </>
+          )}
 
           {/* Overall Score - Show when requested */}
           {showOverallScore && (
@@ -390,20 +501,6 @@ const TastingItem: React.FC<TastingItemProps> = ({
               </div>
             </div>
           )}
-
-          {/* Other Notes Section */}
-          <div>
-            <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
-              <FileText size={20} className="text-blue-500" />
-              Other Notes
-            </label>
-            <textarea
-              value={localNotes}
-              onChange={(e) => handleNotesChange(e.target.value)}
-              placeholder={`Additional notes about the ${category}...`}
-              className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl text-sm focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all resize-none placeholder:text-zinc-400"
-            />
-          </div>
         </>
       )}
 

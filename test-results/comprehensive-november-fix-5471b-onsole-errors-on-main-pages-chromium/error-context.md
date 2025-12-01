@@ -1,0 +1,211 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e9]:
+          - button "Back to Dashboard" [ref=e10] [cursor=pointer]:
+            - img [ref=e11]
+            - text: Back to Dashboard
+          - heading "Flavor Wheels" [level=1] [ref=e14]
+        - generic [ref=e15]:
+          - generic [ref=e17]:
+            - img [ref=e19]
+            - paragraph [ref=e22]: Flavor wheels are AI-generated visualizations of your tasting notes. They analyze your reviews and tastings to reveal patterns in the flavors and aromas you experience.
+          - generic [ref=e23]:
+            - generic [ref=e24]:
+              - generic [ref=e25]:
+                - generic [ref=e26]: Wheel Type
+                - combobox [ref=e27]:
+                  - option "Aroma Wheel" [selected]
+                  - option "Flavor Wheel"
+                  - option "Combined (Aroma + Flavor)"
+                  - option "Metaphor Wheel"
+              - generic [ref=e28]:
+                - generic [ref=e29]: Scope
+                - combobox [ref=e30]:
+                  - option "My Flavor Wheel" [selected]
+                  - option "Universal (All Users)"
+              - generic [ref=e31]:
+                - button "Regenerate" [ref=e32] [cursor=pointer]:
+                  - img [ref=e33]
+                  - text: Regenerate
+                - button "Share" [ref=e38] [cursor=pointer]:
+                  - img [ref=e39]
+                  - text: Share
+                - button "Export" [ref=e45] [cursor=pointer]:
+                  - img [ref=e46]
+                  - text: Export
+            - generic [ref=e50]: Cached - Click "Regenerate" to update with latest data
+          - generic [ref=e52]:
+            - generic [ref=e54]:
+              - button "Mobile View" [ref=e55] [cursor=pointer]:
+                - img [ref=e56]
+                - text: Mobile View
+              - button "Wheel View" [ref=e57] [cursor=pointer]:
+                - img [ref=e58]
+                - text: Wheel View
+            - generic [ref=e61]:
+              - generic [ref=e62]:
+                - generic [ref=e63]:
+                  - heading "Aroma Wheel" [level=2] [ref=e64]
+                  - button "Export PDF" [ref=e65] [cursor=pointer]:
+                    - img [ref=e66]
+                    - text: Export PDF
+                - generic [ref=e69]:
+                  - generic [ref=e70]: "Total Descriptors: 18"
+                  - generic [ref=e71]: "Categories: 10"
+              - generic [ref=e72]:
+                - generic [ref=e73]:
+                  - img [ref=e74]
+                  - textbox "Search descriptors..." [ref=e77]
+                - generic [ref=e78]:
+                  - combobox [ref=e79]:
+                    - option "All Types" [selected]
+                    - option "Aroma"
+                    - option "Flavor"
+                    - option "Texture"
+                    - option "Metaphor"
+                  - combobox [ref=e80]:
+                    - option "Sort by Count" [selected]
+                    - option "Sort by Percentage"
+                    - option "Sort by Name"
+              - generic [ref=e82]:
+                - button "Spicy 4 descriptors (22.2%)" [ref=e84] [cursor=pointer]:
+                  - generic [ref=e85]:
+                    - img [ref=e87]
+                    - generic [ref=e90]:
+                      - heading "Spicy" [level=3] [ref=e91]
+                      - paragraph [ref=e92]: 4 descriptors (22.2%)
+                - button "Spice 4 descriptors (22.2%)" [ref=e94] [cursor=pointer]:
+                  - generic [ref=e95]:
+                    - img [ref=e97]
+                    - generic [ref=e100]:
+                      - heading "Spice" [level=3] [ref=e101]
+                      - paragraph [ref=e102]: 4 descriptors (22.2%)
+                - button "Roasted 3 descriptors (16.7%)" [ref=e104] [cursor=pointer]:
+                  - generic [ref=e105]:
+                    - img [ref=e107]
+                    - generic [ref=e110]:
+                      - heading "Roasted" [level=3] [ref=e111]
+                      - paragraph [ref=e112]: 3 descriptors (16.7%)
+                - button "Sweet 1 descriptors (5.6%)" [ref=e114] [cursor=pointer]:
+                  - generic [ref=e115]:
+                    - img [ref=e117]
+                    - generic [ref=e120]:
+                      - heading "Sweet" [level=3] [ref=e121]
+                      - paragraph [ref=e122]: 1 descriptors (5.6%)
+                - button "Aromatic 1 descriptors (5.6%)" [ref=e124] [cursor=pointer]:
+                  - generic [ref=e125]:
+                    - img [ref=e127]
+                    - generic [ref=e130]:
+                      - heading "Aromatic" [level=3] [ref=e131]
+                      - paragraph [ref=e132]: 1 descriptors (5.6%)
+                - button "Spicy/Pungent 1 descriptors (5.6%)" [ref=e134] [cursor=pointer]:
+                  - generic [ref=e135]:
+                    - img [ref=e137]
+                    - generic [ref=e140]:
+                      - heading "Spicy/Pungent" [level=3] [ref=e141]
+                      - paragraph [ref=e142]: 1 descriptors (5.6%)
+                - button "Herbal 1 descriptors (5.6%)" [ref=e144] [cursor=pointer]:
+                  - generic [ref=e145]:
+                    - img [ref=e147]
+                    - generic [ref=e150]:
+                      - heading "Herbal" [level=3] [ref=e151]
+                      - paragraph [ref=e152]: 1 descriptors (5.6%)
+                - button "Earthy 1 descriptors (5.6%)" [ref=e154] [cursor=pointer]:
+                  - generic [ref=e155]:
+                    - img [ref=e157]
+                    - generic [ref=e160]:
+                      - heading "Earthy" [level=3] [ref=e161]
+                      - paragraph [ref=e162]: 1 descriptors (5.6%)
+                - button "Floral 1 descriptors (5.6%)" [ref=e164] [cursor=pointer]:
+                  - generic [ref=e165]:
+                    - img [ref=e167]
+                    - generic [ref=e170]:
+                      - heading "Floral" [level=3] [ref=e171]
+                      - paragraph [ref=e172]: 1 descriptors (5.6%)
+                - button "Fruity 1 descriptors (5.6%)" [ref=e174] [cursor=pointer]:
+                  - generic [ref=e175]:
+                    - img [ref=e177]
+                    - generic [ref=e180]:
+                      - heading "Fruity" [level=3] [ref=e181]
+                      - paragraph [ref=e182]: 1 descriptors (5.6%)
+            - generic [ref=e183]:
+              - generic [ref=e184]: ✨
+              - generic [ref=e185]:
+                - generic [ref=e186]: AI-Enhanced Flavor Wheel
+                - generic [ref=e187]: 12 AI-extracted descriptors (67%)
+            - generic [ref=e188]:
+              - generic [ref=e189]:
+                - generic [ref=e190]: "10"
+                - generic [ref=e191]: Categories
+              - generic [ref=e192]:
+                - generic [ref=e193]: "13"
+                - generic [ref=e194]: Unique Descriptors
+              - generic [ref=e195]:
+                - generic [ref=e196]: "18"
+                - generic [ref=e197]: Total Notes
+            - generic [ref=e198]:
+              - heading "Categories" [level=3] [ref=e199]
+              - generic [ref=e200]:
+                - generic [ref=e201]:
+                  - generic [ref=e203]: Spicy
+                  - generic [ref=e204]: (4)
+                - generic [ref=e205]:
+                  - generic [ref=e207]: Spice
+                  - generic [ref=e208]: (4)
+                - generic [ref=e209]:
+                  - generic [ref=e211]: Roasted
+                  - generic [ref=e212]: (3)
+                - generic [ref=e213]:
+                  - generic [ref=e215]: Sweet
+                  - generic [ref=e216]: (1)
+                - generic [ref=e217]:
+                  - generic [ref=e219]: Aromatic
+                  - generic [ref=e220]: (1)
+                - generic [ref=e221]:
+                  - generic [ref=e223]: Spicy/Pungent
+                  - generic [ref=e224]: (1)
+                - generic [ref=e225]:
+                  - generic [ref=e227]: Herbal
+                  - generic [ref=e228]: (1)
+                - generic [ref=e229]:
+                  - generic [ref=e231]: Earthy
+                  - generic [ref=e232]: (1)
+                - generic [ref=e233]:
+                  - generic [ref=e235]: Floral
+                  - generic [ref=e236]: (1)
+                - generic [ref=e237]:
+                  - generic [ref=e239]: Fruity
+                  - generic [ref=e240]: (1)
+          - generic [ref=e243]:
+            - generic [ref=e245]: groups
+            - paragraph [ref=e246]: Cada día se descubren nuevos matices gracias a la comunidad.
+            - generic [ref=e247]: community highlights
+        - navigation "Main navigation" [ref=e249]:
+          - link "Home" [ref=e250] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e251]: home
+            - generic [ref=e252]: Home
+          - link "Taste" [ref=e253] [cursor=pointer]:
+            - /url: /taste
+            - generic [ref=e254]: restaurant
+            - generic [ref=e255]: Taste
+          - link "Review" [ref=e256] [cursor=pointer]:
+            - /url: /review
+            - generic [ref=e257]: reviews
+            - generic [ref=e258]: Review
+          - link "Wheels" [ref=e259] [cursor=pointer]:
+            - /url: /flavor-wheels
+            - generic [ref=e260]: donut_small
+            - generic [ref=e261]: Wheels
+    - status [ref=e262]
+    - alert [ref=e263]
+    - region "Notifications Alt+T"
+  - alert [ref=e264]
+```

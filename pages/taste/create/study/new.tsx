@@ -66,12 +66,13 @@ const NewStudyTastingPage: React.FC = () => {
   // Load template if templateId is provided
   useEffect(() => {
     if (templateId && typeof templateId === 'string') {
-      const template = getStudyModeTemplateById(templateId);
-      if (template) {
+      // First check static templates
+      const staticTemplate = getStudyModeTemplateById(templateId);
+      if (staticTemplate) {
         setForm({
-          name: template.name,
-          baseCategory: template.baseCategory,
-          categories: template.categories.map((cat, index) => ({
+          name: staticTemplate.name,
+          baseCategory: staticTemplate.baseCategory,
+          categories: staticTemplate.categories.map((cat, index) => ({
             id: `cat-${Date.now()}-${index}`,
             name: cat.name,
             hasText: cat.hasText,
@@ -81,7 +82,45 @@ const NewStudyTastingPage: React.FC = () => {
             rankInSummary: cat.rankInSummary
           }))
         });
+        return;
       }
+
+      // If not static, try loading from DB
+      const loadUserTemplate = async () => {
+        const { data, error } = await supabase
+          .from('study_templates')
+          .select('*')
+          .eq('id', templateId)
+          .single();
+
+        if (data) {
+           const templateData = data as any;
+           let categories = [];
+           try {
+             categories = typeof templateData.categories === 'string' 
+               ? JSON.parse(templateData.categories) 
+               : templateData.categories;
+           } catch (e) {
+             console.error('Error parsing template categories', e);
+             return;
+           }
+             
+           setForm({
+             name: templateData.name,
+             baseCategory: templateData.base_category,
+             categories: categories.map((cat: any, index: number) => ({
+               id: `cat-${Date.now()}-${index}`,
+               name: cat.name,
+               hasText: cat.hasText,
+               hasScale: cat.hasScale,
+               hasBoolean: cat.hasBoolean,
+               scaleMax: cat.scaleMax || 100,
+               rankInSummary: cat.rankInSummary
+             }))
+           });
+        }
+      };
+      loadUserTemplate();
     }
   }, [templateId]);
 
@@ -156,6 +195,57 @@ const NewStudyTastingPage: React.FC = () => {
         cat.id === id ? { ...cat, ...updates } : cat
       )
     }));
+  };
+
+  const handleSaveTemplate = async () => {
+    if (!user) {
+      toast.error('Please log in to save templates');
+      return;
+    }
+
+    if (!validateForm()) {
+      toast.error('Please fix form errors before saving template');
+      return;
+    }
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error('Session expired');
+        return;
+      }
+
+      const response = await fetch('/api/templates/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          name: form.name,
+          baseCategory: form.baseCategory,
+          categories: form.categories.map(cat => ({
+            name: cat.name,
+            hasText: cat.hasText,
+            hasScale: cat.hasScale,
+            hasBoolean: cat.hasBoolean,
+            scaleMax: cat.scaleMax,
+            rankInSummary: cat.rankInSummary
+          }))
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save template');
+      }
+
+      toast.success('Template saved successfully!');
+      setShowPreview(false);
+    } catch (error) {
+      console.error('Error saving template:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to save template');
+    }
   };
 
   const handleSubmit = async (saveForLater: boolean = false) => {
@@ -524,15 +614,7 @@ const NewStudyTastingPage: React.FC = () => {
               <h3 className="text-h3 font-heading font-semibold">Preview</h3>
               <div className="flex gap-sm">
                 <button
-                  onClick={async () => {
-                    try {
-                      // Save as template logic would go here
-                      toast.success('Template saved successfully!');
-                      setShowPreview(false);
-                    } catch (error) {
-                      toast.error('Failed to save template');
-                    }
-                  }}
+                  onClick={handleSaveTemplate}
                   className="btn-secondary text-small"
                 >
                   Save to My Templates

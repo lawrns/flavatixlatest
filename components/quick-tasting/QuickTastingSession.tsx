@@ -51,6 +51,7 @@ interface TastingItemData {
   include_in_ranking?: boolean;
   aroma?: string;
   flavor?: string;
+  study_category_data?: Record<string, any>;
 }
 
 interface QuickTastingSessionProps {
@@ -82,6 +83,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   const [isEditingSessionName, setIsEditingSessionName] = useState(false);
   const [editingSessionName, setEditingSessionName] = useState(session?.session_name || '');
   const [isChangingCategory, setIsChangingCategory] = useState(false);
+  const [studyCategories, setStudyCategories] = useState<any[]>([]);
   const supabase = getSupabaseClient() as any;
 
   // Ref for debouncing AI extraction
@@ -648,11 +650,26 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
 
     logger.debug('Tasting', `Loading session`, { sessionId: session.id, mode: session.mode });
     loadTastingItems();
+    
+    // Parse study metadata from notes field for study mode sessions
+    if (session.mode === 'study' && session.notes) {
+      try {
+        const studyMetadata = JSON.parse(session.notes);
+        if (studyMetadata.categories && Array.isArray(studyMetadata.categories)) {
+          logger.debug('Study Mode', `Loaded ${studyMetadata.categories.length} categories from metadata`);
+          setStudyCategories(studyMetadata.categories);
+        }
+      } catch (error) {
+        console.error('Failed to parse study metadata from notes:', error);
+        logger.error('Study Mode', 'Failed to parse study metadata', { notes: session.notes });
+      }
+    }
+    
     // Only load user roles for study mode sessions
     if (session.mode === 'study') {
       loadUserRole();
     }
-  }, [session?.id, session?.mode]);
+  }, [session?.id, session?.mode, session?.notes]);
 
   // Update local state when session name changes externally
   useEffect(() => {
@@ -896,6 +913,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
               showNotesFields={true}
               showFlavorWheel={false}
               itemIndex={currentItemIndex + 1}
+              studyCategories={studyCategories}
             />
           ) : (
             <div className="card p-lg text-center">
@@ -977,6 +995,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
           showEditControls={true}
           showPhotoControls={false}
           itemIndex={currentItemIndex + 1}
+          studyCategories={studyCategories}
         />
 
         {/* Item Navigation */}

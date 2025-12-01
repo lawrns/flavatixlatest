@@ -1,0 +1,993 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - button "Back" [ref=e8] [cursor=pointer]:
+              - img [ref=e9]
+              - text: Back
+            - heading "My Tastings" [level=1] [ref=e11]
+            - paragraph [ref=e12]: View and manage all your tasting sessions
+          - generic [ref=e13]:
+            - button "All" [ref=e14] [cursor=pointer]
+            - button "Completed" [ref=e15] [cursor=pointer]
+            - button "In Progress" [ref=e16] [cursor=pointer]
+          - generic [ref=e17]:
+            - generic [ref=e18]:
+              - generic [ref=e19]:
+                - generic [ref=e20]:
+                  - heading "Quick Tasting" [level=3] [ref=e21]
+                  - paragraph [ref=e22]: November 26, 2025
+                - generic [ref=e23]: In Progress
+              - generic [ref=e24]:
+                - generic [ref=e25]:
+                  - generic [ref=e26]: "0"
+                  - generic [ref=e27]: Items
+                - generic [ref=e28]:
+                  - generic [ref=e29]: "0"
+                  - generic [ref=e30]: Scored
+                - generic [ref=e31]:
+                  - generic [ref=e32]: N/A
+                  - generic [ref=e33]: Avg Score
+              - generic [ref=e34]:
+                - button "Continue" [ref=e35] [cursor=pointer]
+                - button "Delete" [ref=e36] [cursor=pointer]
+            - generic [ref=e37]:
+              - generic [ref=e38]:
+                - generic [ref=e39]:
+                  - heading "Quick Tasting" [level=3] [ref=e40]
+                  - paragraph [ref=e41]: November 26, 2025
+                - generic [ref=e42]: In Progress
+              - generic [ref=e43]:
+                - generic [ref=e44]:
+                  - generic [ref=e45]: "2"
+                  - generic [ref=e46]: Items
+                - generic [ref=e47]:
+                  - generic [ref=e48]: "0"
+                  - generic [ref=e49]: Scored
+                - generic [ref=e50]:
+                  - generic [ref=e51]: N/A
+                  - generic [ref=e52]: Avg Score
+              - generic [ref=e53]:
+                - button "Continue" [ref=e54] [cursor=pointer]
+                - button "Delete" [ref=e55] [cursor=pointer]
+            - generic [ref=e56]:
+              - generic [ref=e57]:
+                - generic [ref=e58]:
+                  - heading "Quick Tasting" [level=3] [ref=e59]
+                  - paragraph [ref=e60]: November 26, 2025
+                - generic [ref=e61]: In Progress
+              - generic [ref=e62]:
+                - generic [ref=e63]:
+                  - generic [ref=e64]: "1"
+                  - generic [ref=e65]: Items
+                - generic [ref=e66]:
+                  - generic [ref=e67]: "0"
+                  - generic [ref=e68]: Scored
+                - generic [ref=e69]:
+                  - generic [ref=e70]: N/A
+                  - generic [ref=e71]: Avg Score
+              - generic [ref=e72]:
+                - button "Continue" [ref=e73] [cursor=pointer]
+                - button "Delete" [ref=e74] [cursor=pointer]
+            - generic [ref=e75]:
+              - generic [ref=e76]:
+                - generic [ref=e77]:
+                  - heading "Quick Tasting" [level=3] [ref=e78]
+                  - paragraph [ref=e79]: November 26, 2025
+                - generic [ref=e80]: In Progress
+              - generic [ref=e81]:
+                - generic [ref=e82]:
+                  - generic [ref=e83]: "2"
+                  - generic [ref=e84]: Items
+                - generic [ref=e85]:
+                  - generic [ref=e86]: "0"
+                  - generic [ref=e87]: Scored
+                - generic [ref=e88]:
+                  - generic [ref=e89]: N/A
+                  - generic [ref=e90]: Avg Score
+              - generic [ref=e91]:
+                - button "Continue" [ref=e92] [cursor=pointer]
+                - button "Delete" [ref=e93] [cursor=pointer]
+            - generic [ref=e94]:
+              - generic [ref=e95]:
+                - generic [ref=e96]:
+                  - heading "Quick Tasting" [level=3] [ref=e97]
+                  - paragraph [ref=e98]: November 26, 2025
+                - generic [ref=e99]: In Progress
+              - generic [ref=e100]:
+                - generic [ref=e101]:
+                  - generic [ref=e102]: "1"
+                  - generic [ref=e103]: Items
+                - generic [ref=e104]:
+                  - generic [ref=e105]: "0"
+                  - generic [ref=e106]: Scored
+                - generic [ref=e107]:
+                  - generic [ref=e108]: N/A
+                  - generic [ref=e109]: Avg Score
+              - generic [ref=e110]:
+                - button "Continue" [ref=e111] [cursor=pointer]
+                - button "Delete" [ref=e112] [cursor=pointer]
+            - generic [ref=e113]:
+              - generic [ref=e114]:
+                - generic [ref=e115]:
+                  - heading "Quick Tasting" [level=3] [ref=e116]
+                  - paragraph [ref=e117]: November 26, 2025
+                - generic [ref=e118]: In Progress
+              - generic [ref=e119]:
+                - generic [ref=e120]:
+                  - generic [ref=e121]: "2"
+                  - generic [ref=e122]: Items
+                - generic [ref=e123]:
+                  - generic [ref=e124]: "0"
+                  - generic [ref=e125]: Scored
+                - generic [ref=e126]:
+                  - generic [ref=e127]: N/A
+                  - generic [ref=e128]: Avg Score
+              - generic [ref=e129]:
+                - button "Continue" [ref=e130] [cursor=pointer]
+                - button "Delete" [ref=e131] [cursor=pointer]
+            - generic [ref=e132]:
+              - generic [ref=e133]:
+                - generic [ref=e134]:
+                  - heading "Quick Tasting" [level=3] [ref=e135]
+                  - paragraph [ref=e136]: November 26, 2025
+                - generic [ref=e137]: In Progress
+              - generic [ref=e138]:
+                - generic [ref=e139]:
+                  - generic [ref=e140]: "2"
+                  - generic [ref=e141]: Items
+                - generic [ref=e142]:
+                  - generic [ref=e143]: "0"
+                  - generic [ref=e144]: Scored
+                - generic [ref=e145]:
+                  - generic [ref=e146]: N/A
+                  - generic [ref=e147]: Avg Score
+              - generic [ref=e148]:
+                - button "Continue" [ref=e149] [cursor=pointer]
+                - button "Delete" [ref=e150] [cursor=pointer]
+            - generic [ref=e151]:
+              - generic [ref=e152]:
+                - generic [ref=e153]:
+                  - heading "Quick Tasting" [level=3] [ref=e154]
+                  - paragraph [ref=e155]: November 26, 2025
+                - generic [ref=e156]: In Progress
+              - generic [ref=e157]:
+                - generic [ref=e158]:
+                  - generic [ref=e159]: "2"
+                  - generic [ref=e160]: Items
+                - generic [ref=e161]:
+                  - generic [ref=e162]: "0"
+                  - generic [ref=e163]: Scored
+                - generic [ref=e164]:
+                  - generic [ref=e165]: N/A
+                  - generic [ref=e166]: Avg Score
+              - generic [ref=e167]:
+                - button "Continue" [ref=e168] [cursor=pointer]
+                - button "Delete" [ref=e169] [cursor=pointer]
+            - generic [ref=e170]:
+              - generic [ref=e171]:
+                - generic [ref=e172]:
+                  - heading "Quick Tasting" [level=3] [ref=e173]
+                  - paragraph [ref=e174]: November 26, 2025
+                - generic [ref=e175]: In Progress
+              - generic [ref=e176]:
+                - generic [ref=e177]:
+                  - generic [ref=e178]: "2"
+                  - generic [ref=e179]: Items
+                - generic [ref=e180]:
+                  - generic [ref=e181]: "0"
+                  - generic [ref=e182]: Scored
+                - generic [ref=e183]:
+                  - generic [ref=e184]: N/A
+                  - generic [ref=e185]: Avg Score
+              - generic [ref=e186]:
+                - button "Continue" [ref=e187] [cursor=pointer]
+                - button "Delete" [ref=e188] [cursor=pointer]
+            - generic [ref=e189]:
+              - generic [ref=e190]:
+                - generic [ref=e191]:
+                  - heading "Quick Tasting" [level=3] [ref=e192]
+                  - paragraph [ref=e193]: November 26, 2025
+                - generic [ref=e194]: In Progress
+              - generic [ref=e195]:
+                - generic [ref=e196]:
+                  - generic [ref=e197]: "2"
+                  - generic [ref=e198]: Items
+                - generic [ref=e199]:
+                  - generic [ref=e200]: "0"
+                  - generic [ref=e201]: Scored
+                - generic [ref=e202]:
+                  - generic [ref=e203]: N/A
+                  - generic [ref=e204]: Avg Score
+              - generic [ref=e205]:
+                - button "Continue" [ref=e206] [cursor=pointer]
+                - button "Delete" [ref=e207] [cursor=pointer]
+            - generic [ref=e208]:
+              - generic [ref=e209]:
+                - generic [ref=e210]:
+                  - heading "Quick Tasting" [level=3] [ref=e211]
+                  - paragraph [ref=e212]: November 26, 2025
+                - generic [ref=e213]: In Progress
+              - generic [ref=e214]:
+                - generic [ref=e215]:
+                  - generic [ref=e216]: "2"
+                  - generic [ref=e217]: Items
+                - generic [ref=e218]:
+                  - generic [ref=e219]: "0"
+                  - generic [ref=e220]: Scored
+                - generic [ref=e221]:
+                  - generic [ref=e222]: N/A
+                  - generic [ref=e223]: Avg Score
+              - generic [ref=e224]:
+                - button "Continue" [ref=e225] [cursor=pointer]
+                - button "Delete" [ref=e226] [cursor=pointer]
+            - generic [ref=e227]:
+              - generic [ref=e228]:
+                - generic [ref=e229]:
+                  - heading "Quick Tasting" [level=3] [ref=e230]
+                  - paragraph [ref=e231]: November 26, 2025
+                - generic [ref=e232]: In Progress
+              - generic [ref=e233]:
+                - generic [ref=e234]:
+                  - generic [ref=e235]: "2"
+                  - generic [ref=e236]: Items
+                - generic [ref=e237]:
+                  - generic [ref=e238]: "0"
+                  - generic [ref=e239]: Scored
+                - generic [ref=e240]:
+                  - generic [ref=e241]: N/A
+                  - generic [ref=e242]: Avg Score
+              - generic [ref=e243]:
+                - button "Continue" [ref=e244] [cursor=pointer]
+                - button "Delete" [ref=e245] [cursor=pointer]
+            - generic [ref=e246]:
+              - generic [ref=e247]:
+                - generic [ref=e248]:
+                  - heading "Quick Tasting" [level=3] [ref=e249]
+                  - paragraph [ref=e250]: November 26, 2025
+                - generic [ref=e251]: In Progress
+              - generic [ref=e252]:
+                - generic [ref=e253]:
+                  - generic [ref=e254]: "2"
+                  - generic [ref=e255]: Items
+                - generic [ref=e256]:
+                  - generic [ref=e257]: "0"
+                  - generic [ref=e258]: Scored
+                - generic [ref=e259]:
+                  - generic [ref=e260]: N/A
+                  - generic [ref=e261]: Avg Score
+              - generic [ref=e262]:
+                - button "Continue" [ref=e263] [cursor=pointer]
+                - button "Delete" [ref=e264] [cursor=pointer]
+            - generic [ref=e265]:
+              - generic [ref=e266]:
+                - generic [ref=e267]:
+                  - heading "Quick Tasting" [level=3] [ref=e268]
+                  - paragraph [ref=e269]: November 26, 2025
+                - generic [ref=e270]: In Progress
+              - generic [ref=e271]:
+                - generic [ref=e272]:
+                  - generic [ref=e273]: "0"
+                  - generic [ref=e274]: Items
+                - generic [ref=e275]:
+                  - generic [ref=e276]: "0"
+                  - generic [ref=e277]: Scored
+                - generic [ref=e278]:
+                  - generic [ref=e279]: N/A
+                  - generic [ref=e280]: Avg Score
+              - generic [ref=e281]:
+                - button "Continue" [ref=e282] [cursor=pointer]
+                - button "Delete" [ref=e283] [cursor=pointer]
+            - generic [ref=e284]:
+              - generic [ref=e285]:
+                - generic [ref=e286]:
+                  - heading "Quick Tasting" [level=3] [ref=e287]
+                  - paragraph [ref=e288]: November 26, 2025
+                - generic [ref=e289]: In Progress
+              - generic [ref=e290]:
+                - generic [ref=e291]:
+                  - generic [ref=e292]: "2"
+                  - generic [ref=e293]: Items
+                - generic [ref=e294]:
+                  - generic [ref=e295]: "0"
+                  - generic [ref=e296]: Scored
+                - generic [ref=e297]:
+                  - generic [ref=e298]: N/A
+                  - generic [ref=e299]: Avg Score
+              - generic [ref=e300]:
+                - button "Continue" [ref=e301] [cursor=pointer]
+                - button "Delete" [ref=e302] [cursor=pointer]
+            - generic [ref=e303]:
+              - generic [ref=e304]:
+                - generic [ref=e305]:
+                  - heading "Quick Tasting" [level=3] [ref=e306]
+                  - paragraph [ref=e307]: November 26, 2025
+                - generic [ref=e308]: In Progress
+              - generic [ref=e309]:
+                - generic [ref=e310]:
+                  - generic [ref=e311]: "2"
+                  - generic [ref=e312]: Items
+                - generic [ref=e313]:
+                  - generic [ref=e314]: "0"
+                  - generic [ref=e315]: Scored
+                - generic [ref=e316]:
+                  - generic [ref=e317]: N/A
+                  - generic [ref=e318]: Avg Score
+              - generic [ref=e319]:
+                - button "Continue" [ref=e320] [cursor=pointer]
+                - button "Delete" [ref=e321] [cursor=pointer]
+            - generic [ref=e322]:
+              - generic [ref=e323]:
+                - generic [ref=e324]:
+                  - heading "Quick Tasting" [level=3] [ref=e325]
+                  - paragraph [ref=e326]: November 26, 2025
+                - generic [ref=e327]: In Progress
+              - generic [ref=e328]:
+                - generic [ref=e329]:
+                  - generic [ref=e330]: "2"
+                  - generic [ref=e331]: Items
+                - generic [ref=e332]:
+                  - generic [ref=e333]: "0"
+                  - generic [ref=e334]: Scored
+                - generic [ref=e335]:
+                  - generic [ref=e336]: N/A
+                  - generic [ref=e337]: Avg Score
+              - generic [ref=e338]:
+                - button "Continue" [ref=e339] [cursor=pointer]
+                - button "Delete" [ref=e340] [cursor=pointer]
+            - generic [ref=e341]:
+              - generic [ref=e342]:
+                - generic [ref=e343]:
+                  - heading "Quick Tasting" [level=3] [ref=e344]
+                  - paragraph [ref=e345]: November 24, 2025
+                - generic [ref=e346]: In Progress
+              - generic [ref=e347]:
+                - generic [ref=e348]:
+                  - generic [ref=e349]: "2"
+                  - generic [ref=e350]: Items
+                - generic [ref=e351]:
+                  - generic [ref=e352]: "0"
+                  - generic [ref=e353]: Scored
+                - generic [ref=e354]:
+                  - generic [ref=e355]: N/A
+                  - generic [ref=e356]: Avg Score
+              - generic [ref=e357]:
+                - button "Continue" [ref=e358] [cursor=pointer]
+                - button "Delete" [ref=e359] [cursor=pointer]
+            - generic [ref=e360]:
+              - generic [ref=e361]:
+                - generic [ref=e362]:
+                  - heading "Quick Tasting" [level=3] [ref=e363]
+                  - paragraph [ref=e364]: November 24, 2025
+                - generic [ref=e365]: In Progress
+              - generic [ref=e366]:
+                - generic [ref=e367]:
+                  - generic [ref=e368]: "1"
+                  - generic [ref=e369]: Items
+                - generic [ref=e370]:
+                  - generic [ref=e371]: "0"
+                  - generic [ref=e372]: Scored
+                - generic [ref=e373]:
+                  - generic [ref=e374]: N/A
+                  - generic [ref=e375]: Avg Score
+              - generic [ref=e376]:
+                - button "Continue" [ref=e377] [cursor=pointer]
+                - button "Delete" [ref=e378] [cursor=pointer]
+            - generic [ref=e379]:
+              - generic [ref=e380]:
+                - generic [ref=e381]:
+                  - heading "Quick Tasting" [level=3] [ref=e382]
+                  - paragraph [ref=e383]: November 24, 2025
+                - generic [ref=e384]: In Progress
+              - generic [ref=e385]:
+                - generic [ref=e386]:
+                  - generic [ref=e387]: "2"
+                  - generic [ref=e388]: Items
+                - generic [ref=e389]:
+                  - generic [ref=e390]: "0"
+                  - generic [ref=e391]: Scored
+                - generic [ref=e392]:
+                  - generic [ref=e393]: N/A
+                  - generic [ref=e394]: Avg Score
+              - generic [ref=e395]:
+                - button "Continue" [ref=e396] [cursor=pointer]
+                - button "Delete" [ref=e397] [cursor=pointer]
+            - generic [ref=e398]:
+              - generic [ref=e399]:
+                - generic [ref=e400]:
+                  - heading "Quick Tasting" [level=3] [ref=e401]
+                  - paragraph [ref=e402]: November 24, 2025
+                - generic [ref=e403]: In Progress
+              - generic [ref=e404]:
+                - generic [ref=e405]:
+                  - generic [ref=e406]: "2"
+                  - generic [ref=e407]: Items
+                - generic [ref=e408]:
+                  - generic [ref=e409]: "0"
+                  - generic [ref=e410]: Scored
+                - generic [ref=e411]:
+                  - generic [ref=e412]: N/A
+                  - generic [ref=e413]: Avg Score
+              - generic [ref=e414]:
+                - button "Continue" [ref=e415] [cursor=pointer]
+                - button "Delete" [ref=e416] [cursor=pointer]
+            - generic [ref=e417]:
+              - generic [ref=e418]:
+                - generic [ref=e419]:
+                  - heading "Quick Tasting" [level=3] [ref=e420]
+                  - paragraph [ref=e421]: November 24, 2025
+                - generic [ref=e422]: In Progress
+              - generic [ref=e423]:
+                - generic [ref=e424]:
+                  - generic [ref=e425]: "1"
+                  - generic [ref=e426]: Items
+                - generic [ref=e427]:
+                  - generic [ref=e428]: "0"
+                  - generic [ref=e429]: Scored
+                - generic [ref=e430]:
+                  - generic [ref=e431]: N/A
+                  - generic [ref=e432]: Avg Score
+              - generic [ref=e433]:
+                - button "Continue" [ref=e434] [cursor=pointer]
+                - button "Delete" [ref=e435] [cursor=pointer]
+            - generic [ref=e436]:
+              - generic [ref=e437]:
+                - generic [ref=e438]:
+                  - heading "Quick Tasting" [level=3] [ref=e439]
+                  - paragraph [ref=e440]: November 17, 2025
+                - generic [ref=e441]: In Progress
+              - generic [ref=e442]:
+                - generic [ref=e443]:
+                  - generic [ref=e444]: "2"
+                  - generic [ref=e445]: Items
+                - generic [ref=e446]:
+                  - generic [ref=e447]: "0"
+                  - generic [ref=e448]: Scored
+                - generic [ref=e449]:
+                  - generic [ref=e450]: N/A
+                  - generic [ref=e451]: Avg Score
+              - generic [ref=e452]:
+                - button "Continue" [ref=e453] [cursor=pointer]
+                - button "Delete" [ref=e454] [cursor=pointer]
+            - generic [ref=e455]:
+              - generic [ref=e456]:
+                - generic [ref=e457]:
+                  - heading "Quick Tasting" [level=3] [ref=e458]
+                  - paragraph [ref=e459]: November 17, 2025
+                - generic [ref=e460]: In Progress
+              - generic [ref=e461]:
+                - generic [ref=e462]:
+                  - generic [ref=e463]: "1"
+                  - generic [ref=e464]: Items
+                - generic [ref=e465]:
+                  - generic [ref=e466]: "0"
+                  - generic [ref=e467]: Scored
+                - generic [ref=e468]:
+                  - generic [ref=e469]: N/A
+                  - generic [ref=e470]: Avg Score
+              - generic [ref=e471]:
+                - button "Continue" [ref=e472] [cursor=pointer]
+                - button "Delete" [ref=e473] [cursor=pointer]
+            - generic [ref=e474]:
+              - generic [ref=e475]:
+                - generic [ref=e476]:
+                  - heading "Quick Tasting" [level=3] [ref=e477]
+                  - paragraph [ref=e478]: October 26, 2025
+                - generic [ref=e479]: In Progress
+              - generic [ref=e480]:
+                - generic [ref=e481]:
+                  - generic [ref=e482]: "1"
+                  - generic [ref=e483]: Items
+                - generic [ref=e484]:
+                  - generic [ref=e485]: "1"
+                  - generic [ref=e486]: Scored
+                - generic [ref=e487]:
+                  - generic [ref=e488]: "50.0"
+                  - generic [ref=e489]: Avg Score
+              - generic [ref=e490]:
+                - button "Continue" [ref=e491] [cursor=pointer]
+                - button "Delete" [ref=e492] [cursor=pointer]
+            - generic [ref=e493]:
+              - generic [ref=e494]:
+                - generic [ref=e495]:
+                  - heading "Quick Tasting" [level=3] [ref=e496]
+                  - paragraph [ref=e497]: October 20, 2025
+                - generic [ref=e498]: In Progress
+              - generic [ref=e499]:
+                - generic [ref=e500]:
+                  - generic [ref=e501]: "2"
+                  - generic [ref=e502]: Items
+                - generic [ref=e503]:
+                  - generic [ref=e504]: "0"
+                  - generic [ref=e505]: Scored
+                - generic [ref=e506]:
+                  - generic [ref=e507]: N/A
+                  - generic [ref=e508]: Avg Score
+              - generic [ref=e509]:
+                - button "Continue" [ref=e510] [cursor=pointer]
+                - button "Delete" [ref=e511] [cursor=pointer]
+            - generic [ref=e512]:
+              - generic [ref=e513]:
+                - generic [ref=e514]:
+                  - heading "Quick Tasting" [level=3] [ref=e515]
+                  - paragraph [ref=e516]: October 20, 2025
+                - generic [ref=e517]: In Progress
+              - generic [ref=e518]:
+                - generic [ref=e519]:
+                  - generic [ref=e520]: "1"
+                  - generic [ref=e521]: Items
+                - generic [ref=e522]:
+                  - generic [ref=e523]: "0"
+                  - generic [ref=e524]: Scored
+                - generic [ref=e525]:
+                  - generic [ref=e526]: N/A
+                  - generic [ref=e527]: Avg Score
+              - generic [ref=e528]:
+                - button "Continue" [ref=e529] [cursor=pointer]
+                - button "Delete" [ref=e530] [cursor=pointer]
+            - generic [ref=e531]:
+              - generic [ref=e532]:
+                - generic [ref=e533]:
+                  - heading "Quick Tasting" [level=3] [ref=e534]
+                  - paragraph [ref=e535]: October 20, 2025
+                - generic [ref=e536]: In Progress
+              - generic [ref=e537]:
+                - generic [ref=e538]:
+                  - generic [ref=e539]: "2"
+                  - generic [ref=e540]: Items
+                - generic [ref=e541]:
+                  - generic [ref=e542]: "0"
+                  - generic [ref=e543]: Scored
+                - generic [ref=e544]:
+                  - generic [ref=e545]: N/A
+                  - generic [ref=e546]: Avg Score
+              - generic [ref=e547]:
+                - button "Continue" [ref=e548] [cursor=pointer]
+                - button "Delete" [ref=e549] [cursor=pointer]
+            - generic [ref=e550]:
+              - generic [ref=e551]:
+                - generic [ref=e552]:
+                  - heading "Quick Tasting" [level=3] [ref=e553]
+                  - paragraph [ref=e554]: October 20, 2025
+                - generic [ref=e555]: In Progress
+              - generic [ref=e556]:
+                - generic [ref=e557]:
+                  - generic [ref=e558]: "1"
+                  - generic [ref=e559]: Items
+                - generic [ref=e560]:
+                  - generic [ref=e561]: "0"
+                  - generic [ref=e562]: Scored
+                - generic [ref=e563]:
+                  - generic [ref=e564]: N/A
+                  - generic [ref=e565]: Avg Score
+              - generic [ref=e566]:
+                - button "Continue" [ref=e567] [cursor=pointer]
+                - button "Delete" [ref=e568] [cursor=pointer]
+            - generic [ref=e569]:
+              - generic [ref=e570]:
+                - generic [ref=e571]:
+                  - heading "Quick Tasting" [level=3] [ref=e572]
+                  - paragraph [ref=e573]: October 20, 2025
+                - generic [ref=e574]: In Progress
+              - generic [ref=e575]:
+                - generic [ref=e576]:
+                  - generic [ref=e577]: "1"
+                  - generic [ref=e578]: Items
+                - generic [ref=e579]:
+                  - generic [ref=e580]: "0"
+                  - generic [ref=e581]: Scored
+                - generic [ref=e582]:
+                  - generic [ref=e583]: N/A
+                  - generic [ref=e584]: Avg Score
+              - generic [ref=e585]:
+                - button "Continue" [ref=e586] [cursor=pointer]
+                - button "Delete" [ref=e587] [cursor=pointer]
+            - generic [ref=e588]:
+              - generic [ref=e589]:
+                - generic [ref=e590]:
+                  - heading "Quick Tasting" [level=3] [ref=e591]
+                  - paragraph [ref=e592]: October 20, 2025
+                - generic [ref=e593]: In Progress
+              - generic [ref=e594]:
+                - generic [ref=e595]:
+                  - generic [ref=e596]: "1"
+                  - generic [ref=e597]: Items
+                - generic [ref=e598]:
+                  - generic [ref=e599]: "1"
+                  - generic [ref=e600]: Scored
+                - generic [ref=e601]:
+                  - generic [ref=e602]: "50.0"
+                  - generic [ref=e603]: Avg Score
+              - generic [ref=e604]:
+                - button "Continue" [ref=e605] [cursor=pointer]
+                - button "Delete" [ref=e606] [cursor=pointer]
+            - generic [ref=e607]:
+              - generic [ref=e608]:
+                - generic [ref=e609]:
+                  - heading "Quick Tasting" [level=3] [ref=e610]
+                  - paragraph [ref=e611]: October 20, 2025
+                - generic [ref=e612]: In Progress
+              - generic [ref=e613]:
+                - generic [ref=e614]:
+                  - generic [ref=e615]: "2"
+                  - generic [ref=e616]: Items
+                - generic [ref=e617]:
+                  - generic [ref=e618]: "0"
+                  - generic [ref=e619]: Scored
+                - generic [ref=e620]:
+                  - generic [ref=e621]: N/A
+                  - generic [ref=e622]: Avg Score
+              - generic [ref=e623]:
+                - button "Continue" [ref=e624] [cursor=pointer]
+                - button "Delete" [ref=e625] [cursor=pointer]
+            - generic [ref=e626]:
+              - generic [ref=e627]:
+                - generic [ref=e628]:
+                  - heading "Quick Tasting" [level=3] [ref=e629]
+                  - paragraph [ref=e630]: October 19, 2025
+                - generic [ref=e631]: In Progress
+              - generic [ref=e632]:
+                - generic [ref=e633]:
+                  - generic [ref=e634]: "2"
+                  - generic [ref=e635]: Items
+                - generic [ref=e636]:
+                  - generic [ref=e637]: "0"
+                  - generic [ref=e638]: Scored
+                - generic [ref=e639]:
+                  - generic [ref=e640]: N/A
+                  - generic [ref=e641]: Avg Score
+              - generic [ref=e642]:
+                - button "Continue" [ref=e643] [cursor=pointer]
+                - button "Delete" [ref=e644] [cursor=pointer]
+            - generic [ref=e645]:
+              - generic [ref=e646]:
+                - generic [ref=e647]:
+                  - heading "My Coffee Study" [level=3] [ref=e648]
+                  - paragraph [ref=e649]: October 19, 2025
+                - generic [ref=e650]: In Progress
+              - generic [ref=e651]:
+                - generic [ref=e652]:
+                  - generic [ref=e653]: "0"
+                  - generic [ref=e654]: Items
+                - generic [ref=e655]:
+                  - generic [ref=e656]: "0"
+                  - generic [ref=e657]: Scored
+                - generic [ref=e658]:
+                  - generic [ref=e659]: N/A
+                  - generic [ref=e660]: Avg Score
+              - generic [ref=e661]:
+                - button "Continue Study" [ref=e662] [cursor=pointer]
+                - button "Delete" [ref=e663] [cursor=pointer]
+            - generic [ref=e664]:
+              - generic [ref=e665]:
+                - generic [ref=e666]:
+                  - heading "Quick Tasting" [level=3] [ref=e667]
+                  - paragraph [ref=e668]: October 19, 2025
+                - generic [ref=e669]: In Progress
+              - generic [ref=e670]:
+                - generic [ref=e671]:
+                  - generic [ref=e672]: "3"
+                  - generic [ref=e673]: Items
+                - generic [ref=e674]:
+                  - generic [ref=e675]: "0"
+                  - generic [ref=e676]: Scored
+                - generic [ref=e677]:
+                  - generic [ref=e678]: N/A
+                  - generic [ref=e679]: Avg Score
+              - generic [ref=e680]:
+                - button "Continue" [ref=e681] [cursor=pointer]
+                - button "Delete" [ref=e682] [cursor=pointer]
+            - generic [ref=e683]:
+              - generic [ref=e684]:
+                - generic [ref=e685]:
+                  - heading "Test Preview Tasting" [level=3] [ref=e686]
+                  - paragraph [ref=e687]: October 18, 2025
+                - generic [ref=e688]: In Progress
+              - generic [ref=e689]:
+                - generic [ref=e690]:
+                  - generic [ref=e691]: "0"
+                  - generic [ref=e692]: Items
+                - generic [ref=e693]:
+                  - generic [ref=e694]: "0"
+                  - generic [ref=e695]: Scored
+                - generic [ref=e696]:
+                  - generic [ref=e697]: N/A
+                  - generic [ref=e698]: Avg Score
+              - generic [ref=e699]:
+                - button "Continue Study" [ref=e700] [cursor=pointer]
+                - button "Delete" [ref=e701] [cursor=pointer]
+            - generic [ref=e702]:
+              - generic [ref=e703]:
+                - generic [ref=e704]:
+                  - heading "Test Tasting" [level=3] [ref=e705]
+                  - paragraph [ref=e706]: October 18, 2025
+                - generic [ref=e707]: In Progress
+              - generic [ref=e708]:
+                - generic [ref=e709]:
+                  - generic [ref=e710]: "0"
+                  - generic [ref=e711]: Items
+                - generic [ref=e712]:
+                  - generic [ref=e713]: "0"
+                  - generic [ref=e714]: Scored
+                - generic [ref=e715]:
+                  - generic [ref=e716]: N/A
+                  - generic [ref=e717]: Avg Score
+              - generic [ref=e718]:
+                - button "Continue Study" [ref=e719] [cursor=pointer]
+                - button "Delete" [ref=e720] [cursor=pointer]
+            - generic [ref=e721]:
+              - generic [ref=e722]:
+                - generic [ref=e723]:
+                  - heading "Quick Tasting" [level=3] [ref=e724]
+                  - paragraph [ref=e725]: October 18, 2025
+                - generic [ref=e726]: In Progress
+              - generic [ref=e727]:
+                - generic [ref=e728]:
+                  - generic [ref=e729]: "2"
+                  - generic [ref=e730]: Items
+                - generic [ref=e731]:
+                  - generic [ref=e732]: "0"
+                  - generic [ref=e733]: Scored
+                - generic [ref=e734]:
+                  - generic [ref=e735]: N/A
+                  - generic [ref=e736]: Avg Score
+              - generic [ref=e737]:
+                - button "Continue" [ref=e738] [cursor=pointer]
+                - button "Delete" [ref=e739] [cursor=pointer]
+            - generic [ref=e740]:
+              - generic [ref=e741]:
+                - generic [ref=e742]:
+                  - heading "Test Study Session Production" [level=3] [ref=e743]
+                  - paragraph [ref=e744]: October 18, 2025
+                - generic [ref=e745]: In Progress
+              - generic [ref=e746]:
+                - generic [ref=e747]:
+                  - generic [ref=e748]: "0"
+                  - generic [ref=e749]: Items
+                - generic [ref=e750]:
+                  - generic [ref=e751]: "0"
+                  - generic [ref=e752]: Scored
+                - generic [ref=e753]:
+                  - generic [ref=e754]: N/A
+                  - generic [ref=e755]: Avg Score
+              - generic [ref=e756]:
+                - button "Continue Study" [ref=e757] [cursor=pointer]
+                - button "Delete" [ref=e758] [cursor=pointer]
+            - generic [ref=e759]:
+              - generic [ref=e760]:
+                - generic [ref=e761]:
+                  - heading "Quick Tasting" [level=3] [ref=e762]
+                  - paragraph [ref=e763]: October 18, 2025
+                - generic [ref=e764]: In Progress
+              - generic [ref=e765]:
+                - generic [ref=e766]:
+                  - generic [ref=e767]: "2"
+                  - generic [ref=e768]: Items
+                - generic [ref=e769]:
+                  - generic [ref=e770]: "0"
+                  - generic [ref=e771]: Scored
+                - generic [ref=e772]:
+                  - generic [ref=e773]: N/A
+                  - generic [ref=e774]: Avg Score
+              - generic [ref=e775]:
+                - button "Continue" [ref=e776] [cursor=pointer]
+                - button "Delete" [ref=e777] [cursor=pointer]
+            - generic [ref=e778]:
+              - generic [ref=e779]:
+                - generic [ref=e780]:
+                  - heading "Test Study Session" [level=3] [ref=e781]
+                  - paragraph [ref=e782]: October 18, 2025
+                - generic [ref=e783]: In Progress
+              - generic [ref=e784]:
+                - generic [ref=e785]:
+                  - generic [ref=e786]: "0"
+                  - generic [ref=e787]: Items
+                - generic [ref=e788]:
+                  - generic [ref=e789]: "0"
+                  - generic [ref=e790]: Scored
+                - generic [ref=e791]:
+                  - generic [ref=e792]: N/A
+                  - generic [ref=e793]: Avg Score
+              - generic [ref=e794]:
+                - button "Continue Study" [ref=e795] [cursor=pointer]
+                - button "Delete" [ref=e796] [cursor=pointer]
+            - generic [ref=e797]:
+              - generic [ref=e798]:
+                - generic [ref=e799]:
+                  - heading "Quick Tasting" [level=3] [ref=e800]
+                  - paragraph [ref=e801]: October 18, 2025
+                - generic [ref=e802]: In Progress
+              - generic [ref=e803]:
+                - generic [ref=e804]:
+                  - generic [ref=e805]: "2"
+                  - generic [ref=e806]: Items
+                - generic [ref=e807]:
+                  - generic [ref=e808]: "0"
+                  - generic [ref=e809]: Scored
+                - generic [ref=e810]:
+                  - generic [ref=e811]: N/A
+                  - generic [ref=e812]: Avg Score
+              - generic [ref=e813]:
+                - button "Continue" [ref=e814] [cursor=pointer]
+                - button "Delete" [ref=e815] [cursor=pointer]
+            - generic [ref=e816]:
+              - generic [ref=e817]:
+                - generic [ref=e818]:
+                  - heading "Quick Tasting" [level=3] [ref=e819]
+                  - paragraph [ref=e820]: October 16, 2025
+                - generic [ref=e821]: In Progress
+              - generic [ref=e822]:
+                - generic [ref=e823]:
+                  - generic [ref=e824]: "1"
+                  - generic [ref=e825]: Items
+                - generic [ref=e826]:
+                  - generic [ref=e827]: "0"
+                  - generic [ref=e828]: Scored
+                - generic [ref=e829]:
+                  - generic [ref=e830]: N/A
+                  - generic [ref=e831]: Avg Score
+              - generic [ref=e832]:
+                - button "Continue" [ref=e833] [cursor=pointer]
+                - button "Delete" [ref=e834] [cursor=pointer]
+            - generic [ref=e835]:
+              - generic [ref=e836]:
+                - generic [ref=e837]:
+                  - heading "Quick Tasting" [level=3] [ref=e838]
+                  - paragraph [ref=e839]: October 16, 2025
+                - generic [ref=e840]: In Progress
+              - generic [ref=e841]:
+                - generic [ref=e842]:
+                  - generic [ref=e843]: "2"
+                  - generic [ref=e844]: Items
+                - generic [ref=e845]:
+                  - generic [ref=e846]: "0"
+                  - generic [ref=e847]: Scored
+                - generic [ref=e848]:
+                  - generic [ref=e849]: N/A
+                  - generic [ref=e850]: Avg Score
+              - generic [ref=e851]:
+                - button "Continue" [ref=e852] [cursor=pointer]
+                - button "Delete" [ref=e853] [cursor=pointer]
+            - generic [ref=e854]:
+              - generic [ref=e855]:
+                - generic [ref=e856]:
+                  - heading "Quick Tasting" [level=3] [ref=e857]
+                  - paragraph [ref=e858]: October 15, 2025
+                - generic [ref=e859]: Completed
+              - generic [ref=e860]:
+                - generic [ref=e861]:
+                  - generic [ref=e862]: "1"
+                  - generic [ref=e863]: Items
+                - generic [ref=e864]:
+                  - generic [ref=e865]: "0"
+                  - generic [ref=e866]: Scored
+                - generic [ref=e867]:
+                  - generic [ref=e868]: N/A
+                  - generic [ref=e869]: Avg Score
+              - generic [ref=e870]:
+                - button "View Details" [ref=e871] [cursor=pointer]
+                - button "Delete" [ref=e872] [cursor=pointer]
+            - generic [ref=e873]:
+              - generic [ref=e874]:
+                - generic [ref=e875]:
+                  - heading "Quick Tasting" [level=3] [ref=e876]
+                  - paragraph [ref=e877]: October 15, 2025
+                - generic [ref=e878]: Completed
+              - generic [ref=e879]:
+                - generic [ref=e880]:
+                  - generic [ref=e881]: "2"
+                  - generic [ref=e882]: Items
+                - generic [ref=e883]:
+                  - generic [ref=e884]: "1"
+                  - generic [ref=e885]: Scored
+                - generic [ref=e886]:
+                  - generic [ref=e887]: "36.0"
+                  - generic [ref=e888]: Avg Score
+              - generic [ref=e889]:
+                - button "View Details" [ref=e890] [cursor=pointer]
+                - button "Delete" [ref=e891] [cursor=pointer]
+            - generic [ref=e892]:
+              - generic [ref=e893]:
+                - generic [ref=e894]:
+                  - heading "Quick Tasting" [level=3] [ref=e895]
+                  - paragraph [ref=e896]: October 14, 2025
+                - generic [ref=e897]: In Progress
+              - generic [ref=e898]:
+                - generic [ref=e899]:
+                  - generic [ref=e900]: "1"
+                  - generic [ref=e901]: Items
+                - generic [ref=e902]:
+                  - generic [ref=e903]: "0"
+                  - generic [ref=e904]: Scored
+                - generic [ref=e905]:
+                  - generic [ref=e906]: N/A
+                  - generic [ref=e907]: Avg Score
+              - generic [ref=e908]:
+                - button "Continue" [ref=e909] [cursor=pointer]
+                - button "Delete" [ref=e910] [cursor=pointer]
+            - generic [ref=e911]:
+              - generic [ref=e912]:
+                - generic [ref=e913]:
+                  - heading "Quick Tasting" [level=3] [ref=e914]
+                  - paragraph [ref=e915]: October 6, 2025
+                - generic [ref=e916]: In Progress
+              - generic [ref=e917]:
+                - generic [ref=e918]:
+                  - generic [ref=e919]: "1"
+                  - generic [ref=e920]: Items
+                - generic [ref=e921]:
+                  - generic [ref=e922]: "0"
+                  - generic [ref=e923]: Scored
+                - generic [ref=e924]:
+                  - generic [ref=e925]: N/A
+                  - generic [ref=e926]: Avg Score
+              - generic [ref=e927]:
+                - button "Continue" [ref=e928] [cursor=pointer]
+                - button "Delete" [ref=e929] [cursor=pointer]
+            - generic [ref=e930]:
+              - generic [ref=e931]:
+                - generic [ref=e932]:
+                  - heading "Quick Tasting" [level=3] [ref=e933]
+                  - paragraph [ref=e934]: October 6, 2025
+                - generic [ref=e935]: In Progress
+              - generic [ref=e936]:
+                - generic [ref=e937]:
+                  - generic [ref=e938]: "2"
+                  - generic [ref=e939]: Items
+                - generic [ref=e940]:
+                  - generic [ref=e941]: "0"
+                  - generic [ref=e942]: Scored
+                - generic [ref=e943]:
+                  - generic [ref=e944]: N/A
+                  - generic [ref=e945]: Avg Score
+              - generic [ref=e946]:
+                - button "Continue" [ref=e947] [cursor=pointer]
+                - button "Delete" [ref=e948] [cursor=pointer]
+            - generic [ref=e949]:
+              - generic [ref=e950]:
+                - generic [ref=e951]:
+                  - heading "Quick Tasting" [level=3] [ref=e952]
+                  - paragraph [ref=e953]: October 6, 2025
+                - generic [ref=e954]: Completed
+              - generic [ref=e955]:
+                - generic [ref=e956]:
+                  - generic [ref=e957]: "1"
+                  - generic [ref=e958]: Items
+                - generic [ref=e959]:
+                  - generic [ref=e960]: "1"
+                  - generic [ref=e961]: Scored
+                - generic [ref=e962]:
+                  - generic [ref=e963]: "90.0"
+                  - generic [ref=e964]: Avg Score
+              - generic [ref=e965]:
+                - button "View Details" [ref=e966] [cursor=pointer]
+                - button "Delete" [ref=e967] [cursor=pointer]
+        - navigation "Main navigation" [ref=e969]:
+          - link "Home" [ref=e970] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e971]: home
+            - generic [ref=e972]: Home
+          - link "Taste" [ref=e973] [cursor=pointer]:
+            - /url: /taste
+            - generic [ref=e974]: restaurant
+            - generic [ref=e975]: Taste
+          - link "Review" [ref=e976] [cursor=pointer]:
+            - /url: /review
+            - generic [ref=e977]: reviews
+            - generic [ref=e978]: Review
+          - link "Wheels" [ref=e979] [cursor=pointer]:
+            - /url: /flavor-wheels
+            - generic [ref=e980]: donut_small
+            - generic [ref=e981]: Wheels
+    - status [ref=e982]
+    - alert [ref=e983]
+    - region "Notifications Alt+T"
+  - alert [ref=e984]
+```
