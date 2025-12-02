@@ -1,0 +1,183 @@
+{
+  "_TOON_SCHEMA": {
+    "format": "Token-Optimized Object Notation v1.0",
+    "created": "2025-12-01T23:22:00Z",
+    "purpose": "Complete codebase state analysis for Flavatix study tasting system"
+  },
+
+  "PROJECT_STRUCTURE": {
+    "framework": "Next.js 14.0.4",
+    "language": "TypeScript 5.3.2",
+    "styling": "TailwindCSS 3.3.6",
+    "database": "Supabase (PostgreSQL)",
+    "deployment": "Netlify",
+    "package_manager": "npm"
+  },
+
+  "STUDY_TASTING_FILES": {
+    "_schema": ["path", "purpose", "lines", "last_modified", "health_status", "issues_count"],
+    "_rows": [
+      ["pages/taste/create/study/new.tsx", "Study session creation form", 649, "2025-12-01", "DEGRADED", 3],
+      ["pages/taste/create/study/templates.tsx", "Template selection page", 96, "2025-12-01", "HEALTHY", 0],
+      ["pages/taste/study/[id].tsx", "Active study session page", 165, "2025-11-26", "HEALTHY", 0],
+      ["pages/api/tastings/study/create.ts", "Study session creation API", 144, "2025-11-26", "HEALTHY", 0],
+      ["pages/api/templates/save.ts", "Template save API", 79, "2025-12-01", "HEALTHY", 0],
+      ["components/quick-tasting/QuickTastingSession.tsx", "Main session component", 1062, "2025-12-01", "DEGRADED", 2],
+      ["components/quick-tasting/TastingItem.tsx", "Individual item inputs", 540, "2025-12-01", "DEGRADED", 2],
+      ["components/ui/Combobox.tsx", "Dropdown combobox", 200, "2025-11-20", "BROKEN", 1],
+      ["lib/roleService.ts", "Role/permission management", 150, "2025-11-26", "BROKEN", 2]
+    ]
+  },
+
+  "DATABASE_SCHEMA": {
+    "tables": {
+      "_schema": ["table_name", "purpose", "key_columns", "has_rls", "status"],
+      "_rows": [
+        ["quick_tastings", "Tasting sessions", "id, user_id, mode, notes, category", true, "HEALTHY"],
+        ["quick_tasting_items", "Individual tasting items", "id, tasting_id, study_category_data", true, "HEALTHY"],
+        ["study_templates", "User-saved templates", "id, user_id, name, base_category, categories", true, "NEW"],
+        ["tasting_participants", "Multi-user participants", "id, tasting_id, user_id, role", true, "MISCONFIGURED"],
+        ["profiles", "User profiles", "user_id, username, full_name, avatar_url", true, "QUERY_ISSUES"]
+      ]
+    },
+    "recent_migrations": [
+      {"file": "migrations/add_study_category_data.sql", "applied": true, "date": "2025-12-01"},
+      {"file": "migrations/create_study_templates_table.sql", "applied": true, "date": "2025-12-01"}
+    ]
+  },
+
+  "COMPONENT_DEPENDENCIES": {
+    "QuickTastingSession": {
+      "imports": ["TastingItem", "FlavorWheel", "CompetitionRanking", "RoleIndicator", "EditTastingDashboard", "ItemSuggestions", "CategoryDropdown", "ItemNavigationDropdown"],
+      "hooks": ["useState", "useEffect", "useCallback", "useRef", "useRealtimeCollaboration"],
+      "services": ["supabase", "roleService", "studyModeService", "logger", "toast"],
+      "props": ["session", "userId", "onSessionComplete", "onSessionUpdate", "onSessionCreate"],
+      "state_count": 15,
+      "effect_count": 3
+    },
+    "TastingItem": {
+      "imports": ["FlavorWheel"],
+      "hooks": ["useState", "useRef", "useEffect"],
+      "services": ["supabase", "toast"],
+      "props": ["item", "category", "userId", "onUpdate", "studyCategories", "isBlindItems", "isBlindAttributes", "showOverallScore", "showFlavorWheel", "showEditControls", "showPhotoControls", "showNotesFields", "itemIndex"],
+      "state_count": 7,
+      "effect_count": 1
+    }
+  },
+
+  "INTERFACES": {
+    "TastingItemData": {
+      "_schema": ["field", "type", "optional", "purpose"],
+      "_rows": [
+        ["id", "string", false, "UUID primary key"],
+        ["tasting_id", "string", false, "FK to quick_tastings"],
+        ["item_name", "string", false, "Display name"],
+        ["notes", "string", true, "General notes"],
+        ["aroma", "string", true, "Aroma description"],
+        ["flavor", "string", true, "Flavor description"],
+        ["flavor_scores", "Record<string, number>", true, "Flavor wheel scores"],
+        ["overall_score", "number", true, "1-100 score"],
+        ["photo_url", "string", true, "Uploaded photo URL"],
+        ["study_category_data", "Record<string, any>", true, "Custom category responses"],
+        ["created_at", "string", false, "Timestamp"],
+        ["updated_at", "string", false, "Timestamp"]
+      ]
+    },
+    "QuickTasting": {
+      "_schema": ["field", "type", "optional", "purpose"],
+      "_rows": [
+        ["id", "string", false, "UUID primary key"],
+        ["user_id", "string", false, "Owner user ID"],
+        ["category", "string", false, "Base tasting category"],
+        ["custom_category_name", "string", true, "If category is 'other'"],
+        ["session_name", "string", true, "Display name"],
+        ["notes", "string", true, "JSON metadata for study mode"],
+        ["mode", "string", false, "quick|study|competition"],
+        ["study_approach", "string", true, "predefined|collaborative"],
+        ["rank_participants", "boolean", true, "Enable ranking"],
+        ["is_blind_items", "boolean", true, "Hide item names"],
+        ["total_items", "number", false, "Item count"],
+        ["completed_items", "number", false, "Scored item count"]
+      ]
+    }
+  },
+
+  "API_ENDPOINTS": {
+    "_schema": ["path", "method", "auth_required", "purpose", "status"],
+    "_rows": [
+      ["/api/tastings/study/create", "POST", true, "Create new study session", "WORKING"],
+      ["/api/templates/save", "POST", true, "Save user template", "WORKING"],
+      ["/api/tastings/study/[id]/items", "GET", true, "Get study items", "WORKING"],
+      ["/api/tastings/study/[id]/responses", "POST", true, "Submit responses", "WORKING"],
+      ["/api/tastings/study/[id]/summary", "GET", true, "Get session summary", "WORKING"]
+    ]
+  },
+
+  "SUPABASE_QUERIES": {
+    "problematic": {
+      "_schema": ["location", "table", "operation", "issue", "fix_needed"],
+      "_rows": [
+        ["roleService.getUserPermissions", "tasting_participants", "SELECT", "406 error - Accept header or RLS", "Add Accept header, check RLS"],
+        ["QuickTastingSession.loadUserRole", "profiles", "SELECT", "400 error - query syntax", "Verify column names"],
+        ["roleService.addParticipant", "tasting_participants", "INSERT", "May fail if FK constraint", "Check foreign key setup"]
+      ]
+    },
+    "working": {
+      "_schema": ["location", "table", "operation"],
+      "_rows": [
+        ["QuickTastingSession.loadTastingItems", "quick_tasting_items", "SELECT"],
+        ["QuickTastingSession.updateItem", "quick_tasting_items", "UPDATE"],
+        ["QuickTastingSession.addNewItem", "quick_tasting_items", "INSERT"],
+        ["templates.tsx.fetchUserTemplates", "study_templates", "SELECT"],
+        ["new.tsx.handleSaveTemplate", "study_templates", "INSERT"]
+      ]
+    }
+  },
+
+  "STYLING_SYSTEM": {
+    "tailwind_config": {
+      "custom_colors": ["primary", "background-light", "background-dark", "text-primary", "text-secondary", "border-default", "success", "error"],
+      "custom_spacing": ["xs", "sm", "md", "lg"],
+      "typography": ["font-heading", "font-body", "text-h1", "text-h2", "text-h3", "text-h4", "text-body", "text-small"]
+    },
+    "component_classes": {
+      "buttons": ["btn-primary", "btn-secondary"],
+      "cards": ["card", "card-premium"],
+      "forms": ["form-input", "form-checkbox"]
+    },
+    "broken_styles": [
+      {"selector": "input[type=range]", "issue": "Thumb not styled", "location": "TastingItem.tsx:361-371"},
+      {"selector": "Combobox dropdown", "issue": "No z-index", "location": "Combobox.tsx"}
+    ]
+  },
+
+  "RECENT_CHANGES": {
+    "_schema": ["date", "commit", "files_changed", "summary"],
+    "_rows": [
+      ["2025-12-01", "122e03e", 19, "Fix study tasting data loss and implement template saving"],
+      ["2025-12-01", "5fe4da5", 5, "Previous session changes"],
+      ["2025-11-26", "Various", 10, "Study mode implementation"]
+    ]
+  },
+
+  "CODE_QUALITY_METRICS": {
+    "typescript_errors": 0,
+    "eslint_warnings": 24,
+    "unused_dependencies": ["useRealtimeCollaboration dependencies"],
+    "missing_error_handling": ["roleService.getUserPermissions", "Combobox edge cases"],
+    "deprecated_patterns": ["any type usage in studyCategories", "inline async in onClick"]
+  },
+
+  "ENVIRONMENT": {
+    "variables": {
+      "_schema": ["name", "purpose", "set_in"],
+      "_rows": [
+        ["NEXT_PUBLIC_SUPABASE_URL", "Supabase project URL", ".env.local"],
+        ["NEXT_PUBLIC_SUPABASE_ANON_KEY", "Supabase anon key", ".env.local"],
+        ["SUPABASE_SERVICE_ROLE_KEY", "Supabase service key", ".env.local"]
+      ]
+    },
+    "production_url": "https://flavatix.netlify.app",
+    "database_url": "db.kobuclkvlacdwvxmakvq.supabase.co"
+  }
+}

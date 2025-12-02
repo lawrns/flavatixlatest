@@ -2,65 +2,27 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { getSupabaseClient } from '../../lib/supabase';
 import { roleService } from '../../lib/roleService';
 import { studyModeService } from '../../lib/studyModeService';
-import FlavorWheel from './FlavorWheel';
 import TastingItem from './TastingItem';
 import CompetitionRanking from './CompetitionRanking';
-import { RoleIndicator } from './RoleIndicator';
 import { EditTastingDashboard } from './EditTastingDashboard';
 import { ItemSuggestions } from './ItemSuggestions';
-import { CategoryDropdown, CATEGORIES } from './CategoryDropdown';
-import { ItemNavigationDropdown } from './ItemNavigationDropdown';
+import { CATEGORIES } from './CategoryDropdown';
+import { SessionHeader } from './SessionHeader';
+import { SessionNavigation } from './SessionNavigation';
 import { useRealtimeCollaboration, CollaboratorPresence } from '../../hooks/useRealtimeCollaboration';
 import { toast } from '../../lib/toast';
-import { Utensils, Settings, Play, Edit, Users } from 'lucide-react';
+import { Utensils } from 'lucide-react';
 import { logger } from '../../lib/logger';
+import { 
+  QuickTasting, 
+  TastingItemData, 
+  QuickTastingSessionProps,
+  UserPermissions,
+  NavigationItem,
+  getDisplayCategoryName 
+} from './types';
 
-interface QuickTasting {
-  id: string;
-  user_id: string;
-  category: string;
-  custom_category_name?: string | null;
-  session_name?: string;
-  notes?: string;
-  total_items: number;
-  completed_items: number;
-  average_score?: number;
-  created_at: string;
-  updated_at: string;
-  completed_at?: string;
-  mode: string;
-  study_approach?: string | null;
-  rank_participants?: boolean;
-  ranking_type?: string | null;
-  is_blind_participants?: boolean;
-  is_blind_items?: boolean;
-  is_blind_attributes?: boolean;
-}
-
-interface TastingItemData {
-  id: string;
-  tasting_id: string;
-  item_name: string;
-  notes?: string;
-  flavor_scores?: any;
-  overall_score?: number;
-  photo_url?: string;
-  created_at: string;
-  updated_at: string;
-  correct_answers?: any;
-  include_in_ranking?: boolean;
-  aroma?: string;
-  flavor?: string;
-  study_category_data?: Record<string, any>;
-}
-
-interface QuickTastingSessionProps {
-  session: QuickTasting | null;
-  userId: string;
-  onSessionComplete: (session: QuickTasting) => void;
-  onSessionUpdate?: (session: QuickTasting) => void;
-  onSessionCreate?: (session: QuickTasting) => void;
-}
+// Types imported from ./types.ts
 
 const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   session,
@@ -80,8 +42,6 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   const [showItemSuggestions, setShowItemSuggestions] = useState(false);
   const [showItemNavigation, setShowItemNavigation] = useState(false);
   const [phase, setPhase] = useState<'setup' | 'tasting'>(session?.mode === 'quick' ? 'tasting' : 'setup');
-  const [isEditingSessionName, setIsEditingSessionName] = useState(false);
-  const [editingSessionName, setEditingSessionName] = useState(session?.session_name || '');
   const [isChangingCategory, setIsChangingCategory] = useState(false);
   const [studyCategories, setStudyCategories] = useState<any[]>([]);
   const supabase = getSupabaseClient() as any;
@@ -489,43 +449,29 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     setShowEditTastingDashboard(false);
   };
 
-  const startEditingSessionName = () => {
-    if (!session) return;
-    setIsEditingSessionName(true);
-    setEditingSessionName(session.session_name || '');
-  };
-
-  const saveSessionName = async () => {
+  // Session name update handler for SessionHeader component
+  const handleSessionNameUpdate = async (newName: string) => {
     if (!session) return;
 
-    if (editingSessionName.trim() && editingSessionName.trim() !== session.session_name) {
-      try {
-        const { data, error } = await supabase
-          .from('quick_tastings')
-          .update({ session_name: editingSessionName.trim() })
-          .eq('id', session.id)
-          .select()
-          .single();
+    try {
+      const { data, error } = await supabase
+        .from('quick_tastings')
+        .update({ session_name: newName })
+        .eq('id', session.id)
+        .select()
+        .single();
 
-        if (error) throw error;
+      if (error) throw error;
 
-        const updatedSession = { ...session, session_name: editingSessionName.trim() };
-        if (onSessionUpdate) {
-          onSessionUpdate(updatedSession);
-        }
-        toast.success('Session name updated!');
-      } catch (error) {
-        console.error('Error updating session name:', error);
-        toast.error('Failed to update session name');
+      const updatedSession = { ...session, session_name: newName };
+      if (onSessionUpdate) {
+        onSessionUpdate(updatedSession);
       }
+      toast.success('Session name updated!');
+    } catch (error) {
+      console.error('Error updating session name:', error);
+      toast.error('Failed to update session name');
     }
-    setIsEditingSessionName(false);
-  };
-
-  const cancelEditingSessionName = () => {
-    if (!session) return;
-    setEditingSessionName(session.session_name || '');
-    setIsEditingSessionName(false);
   };
 
   const handleNextItem = () => {
@@ -671,11 +617,6 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     }
   }, [session?.id, session?.mode, session?.notes]);
 
-  // Update local state when session name changes externally
-  useEffect(() => {
-    setEditingSessionName(session?.session_name || '');
-  }, [session?.session_name]);
-
   const currentItem = items[currentItemIndex];
   const hasItems = items.length > 0;
   const completedItems = items.filter(item => item.overall_score !== null).length;
@@ -704,143 +645,22 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
       )}
 
       {/* Session Header */}
-      <div className="card p-md mb-lg">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-          <div>
-            {isEditingSessionName ? (
-              <div className="mb-2">
-                <div className="p-2 rounded-lg bg-background-app border-2 border-primary-300">
-                  <div className="text-xs font-medium text-text-secondary uppercase tracking-wider mb-1">
-                    Editing Session Name
-                  </div>
-                  <div className="flex items-center space-x-2">
-                <input
-                  type="text"
-                  value={editingSessionName}
-                  onChange={(e) => setEditingSessionName(e.target.value)}
-                  onBlur={saveSessionName}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') saveSessionName();
-                    if (e.key === 'Escape') cancelEditingSessionName();
-                  }}
-                      className="text-h2 font-heading font-bold text-text-primary bg-transparent border-none outline-none focus:ring-0 flex-1 placeholder-text-secondary/50"
-                      placeholder="Enter session name..."
-                  autoFocus
-                />
-                    <div className="flex items-center space-x-1 text-text-secondary text-xs">
-                      <span>Press Enter to save</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="mb-2">
-                <div
-                  className={`flex items-center space-x-2 p-2 rounded-lg bg-background-app border border-border-subtle ${items.length > 1 ? 'opacity-60 cursor-not-allowed' : 'hover:border-primary-300 hover:bg-primary-50/30 cursor-pointer'} transition-all duration-200 group`}
-                  onClick={items.length > 1 ? undefined : startEditingSessionName}
-                  title={items.length > 1 ? 'Cannot edit session name after adding items' : 'Click to edit session name'}
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs font-medium text-text-secondary uppercase tracking-wider mb-1">
-                      Session Name
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <h2 className="text-h2 font-heading font-bold text-text-primary truncate">
-                        {session.session_name || 'Quick Tasting'}
-                </h2>
-                      {items.length <= 1 && (
-                        <div className="flex items-center space-x-1 text-text-secondary">
-                          <Edit size={16} className="opacity-60 group-hover:opacity-100 transition-opacity" />
-                          <span className="text-xs font-medium opacity-60 group-hover:opacity-100 transition-opacity">
-                            Edit
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-            {phase === 'setup' && (
-              <div className="flex items-center space-x-4 mb-2">
-                <div className="flex items-center space-x-2">
-                  <label className="text-text-secondary font-medium">Category:</label>
-                  <select
-                    value={session.category}
-                    onChange={(e) => handleCategoryChange(e.target.value)}
-                    className="form-input text-sm"
-                  >
-                    {CATEGORIES.map(category => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            )}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-1 sm:space-y-0 text-text-secondary">
-              <span className="text-sm font-medium">Category:</span>
-              <CategoryDropdown
-                category={session.category}
-                onCategoryChange={handleCategoryChange}
-                className="text-sm w-full sm:w-auto"
-                isLoading={isChangingCategory}
-                disabled={items.length > 1}
-              />
-              <div className="flex flex-wrap items-center space-x-2 text-xs">
-                {session.mode === 'study' && session.study_approach && <span>• {session.study_approach.charAt(0).toUpperCase() + session.study_approach.slice(1)}</span>}
-                {session.rank_participants && <span>• Ranked Competition</span>}
-                {(session.is_blind_participants || session.is_blind_items || session.is_blind_attributes) && <span>• Blind Tasting</span>}
-              </div>
-            </div>
-            {userRole && session.mode !== 'quick' && (
-              <div className="mt-2">
-                <RoleIndicator
-                  role={userRole}
-                  userId={userId}
-                  currentUserId={userId}
-                  size="sm"
-                />
-              </div>
-            )}
-          </div>
-          <div className="mt-4 md:mt-0 flex items-center space-x-4">
-            {/* Edit Tasting Controls - Only show in setup phase */}
-            {phase === 'setup' && (
-              <button
-                onClick={() => setShowEditTastingDashboard(!showEditTastingDashboard)}
-                className="btn-secondary flex items-center gap-2"
-              >
-                <Settings size={16} />
-                Edit Tasting
-              </button>
-            )}
-
-            {/* Item Suggestions for Collaborative Study Mode */}
-            {session.mode === 'study' && session.study_approach === 'collaborative' && phase === 'setup' && (
-              <button
-                onClick={() => setShowItemSuggestions(!showItemSuggestions)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors ${
-                  showItemSuggestions
-                    ? 'bg-blue-100 text-blue-800'
-                    : 'bg-white dark:bg-zinc-800 text-blue-600 border border-blue-200 hover:bg-blue-50'
-                }`}
-              >
-                💡 Suggestions
-              </button>
-            )}
-            <div className="text-center">
-              <div className="text-h2 font-heading font-bold text-primary-600">{completedItems}</div>
-              <div className="text-small font-body text-text-secondary">Completed</div>
-            </div>
-            <div className="text-center">
-              <div className="text-h2 font-heading font-bold text-text-primary">{items.length}</div>
-              <div className="text-small font-body text-text-secondary">Total Items</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <SessionHeader
+        session={session}
+        userRole={userRole}
+        userPermissions={userPermissions as UserPermissions}
+        userId={userId}
+        itemsCount={items.length}
+        completedItems={completedItems}
+        phase={phase}
+        isChangingCategory={isChangingCategory}
+        showEditDashboard={showEditTastingDashboard}
+        showSuggestions={showItemSuggestions}
+        onSessionNameChange={handleSessionNameUpdate}
+        onCategoryChange={handleCategoryChange}
+        onToggleEditDashboard={() => setShowEditTastingDashboard(!showEditTastingDashboard)}
+        onToggleSuggestions={() => setShowItemSuggestions(!showItemSuggestions)}
+      />
 
       {/* Edit Tasting Dashboard - Only show in setup phase */}
       {showEditTastingDashboard && phase === 'setup' && (
@@ -982,6 +802,40 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     {phase === 'tasting' && currentItem && (
       <div className="max-w-4xl mx-auto">
 
+        {/* All Items Grid View - shown when showItemNavigation is true */}
+        {showItemNavigation && items.length > 1 && (
+          <div className="mb-6 p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl">
+            <h3 className="text-lg font-semibold mb-4 text-zinc-900 dark:text-zinc-50">
+              All Items ({items.length})
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {items.map((item, index) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setCurrentItemIndex(index);
+                    setShowItemNavigation(false);
+                  }}
+                  className={`p-3 rounded-lg text-left transition-all ${
+                    index === currentItemIndex
+                      ? 'bg-primary text-white ring-2 ring-primary ring-offset-2'
+                      : 'bg-white dark:bg-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-600 border border-zinc-200 dark:border-zinc-600'
+                  }`}
+                >
+                  <div className="font-medium text-sm truncate">
+                    {session.is_blind_items ? `Item ${index + 1}` : item.item_name || `Item ${index + 1}`}
+                  </div>
+                  {item.overall_score && (
+                    <div className={`text-xs mt-1 ${index === currentItemIndex ? 'text-white/80' : 'text-zinc-500'}`}>
+                      Score: {item.overall_score}/100
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Unified Tasting Item */}
         <TastingItem
           item={currentItem}
@@ -998,61 +852,18 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
           studyCategories={studyCategories}
         />
 
-        {/* Item Navigation */}
-        {items.length > 1 && (
-          <div className="flex justify-center mt-md">
-            <ItemNavigationDropdown
-              items={getNavigationItems()}
-              currentIndex={currentItemIndex}
-              onItemSelect={handleItemNavigation}
-              className="w-full max-w-sm"
-            />
-          </div>
-        )}
-
         {/* Navigation */}
-        <div className="flex flex-col items-center mt-lg px-4 gap-4">
-          {/* Navigation Controls */}
-          <div className="flex items-center justify-center gap-4">
-            <button
-              onClick={handlePreviousItem}
-              disabled={currentItemIndex === 0}
-              className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Previous
-            </button>
-
-            <span className="text-sm text-gray-500 px-2 min-w-20 text-center">
-              {currentItemIndex + 1} of {items.length}
-            </span>
-
-          <button
-            onClick={handleNextOrAdd}
-            className="btn-secondary"
-          >
-              {currentItemIndex < items.length - 1 ? 'Next Item' : 'Add Item'}
-            </button>
-          </div>
-
-          {/* Show/Hide Navigation Toggle */}
-          {items.length > 1 && (
-            <button
-              onClick={() => setShowItemNavigation(!showItemNavigation)}
-              className="text-sm text-primary-600 hover:text-primary-700 underline"
-            >
-              {showItemNavigation ? 'Hide' : 'Show'} All Items
-          </button>
-          )}
-
-          {/* Complete Tasting Button */}
-          <button
-            onClick={completeSession}
-            disabled={isLoading}
-            className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? 'Completing...' : 'Complete Tasting'}
-          </button>
-        </div>
+        <SessionNavigation
+          items={getNavigationItems()}
+          currentIndex={currentItemIndex}
+          isLoading={isLoading}
+          showAllItems={showItemNavigation}
+          onPrevious={handlePreviousItem}
+          onNext={handleNextOrAdd}
+          onItemSelect={handleItemNavigation}
+          onToggleShowAll={() => setShowItemNavigation(!showItemNavigation)}
+          onComplete={completeSession}
+        />
       </div>
     )}
     </div>

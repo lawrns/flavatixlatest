@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/SimpleAuthContext';
@@ -11,6 +10,8 @@ import { getUserTastingStats, getLatestTasting, getRecentTastings } from '../lib
 import SocialFeedWidget from '../components/social/SocialFeedWidget';
 import BottomNavigation from '../components/navigation/BottomNavigation';
 import NotificationSystem from '../components/notifications/NotificationSystem';
+import { cn } from '@/lib/utils';
+import { AvatarWithFallback } from '@/components/ui/AvatarWithFallback';
 
 export default function Dashboard() {
    const { user, loading, signOut } = useAuth();
@@ -78,99 +79,134 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FEF3E7] flex items-center justify-center">
-        <div className="flex flex-col items-center">
-          <div className="w-8 h-8 border-4 border-[#1F5D4C] border-t-transparent rounded-full animate-spin mb-sm"></div>
-          <div className="text-text-primary text-h4 font-body font-medium">Loading your dashboard...</div>
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 flex items-center justify-center">
+        <div className="flex flex-col items-center animate-fade-in">
+          <div className="relative">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-orange-500 animate-pulse" />
+            <div className="absolute inset-0 w-16 h-16 rounded-full border-4 border-primary/30 border-t-primary animate-spin" />
+          </div>
+          <p className="mt-4 text-zinc-600 dark:text-zinc-300 font-medium">Loading your dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
+    <div className={cn(
+      'min-h-screen font-display',
+      'bg-gradient-to-br from-orange-50/50 via-white to-amber-50/30',
+      'dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900',
+      'text-zinc-900 dark:text-zinc-50'
+    )}>
       <div className="flex h-screen flex-col">
-        <header className="flex items-center border-b border-zinc-200 dark:border-zinc-700 p-4">
-           <h1 className="flex-1 text-center text-xl font-bold">
-             {activeTab === 'home' ? 'Dashboard' : 'Profile'}
-           </h1>
-           <div className="flex items-center gap-4">
-             {user && <NotificationSystem userId={user.id} />}
-             <button
-               onClick={handleLogout}
-               className="text-sm text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100"
-             >
-               Logout
-             </button>
-           </div>
-         </header>
+        {/* Enhanced Header */}
+        <header className={cn(
+          'sticky top-0 z-40',
+          'bg-white/80 dark:bg-zinc-900/80',
+          'backdrop-blur-xl backdrop-saturate-150',
+          'border-b border-zinc-200/50 dark:border-zinc-700/50',
+          'px-4 py-3'
+        )}>
+          <div className="flex items-center justify-between max-w-4xl mx-auto">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">🍊</span>
+              <h1 className="text-lg font-bold bg-gradient-to-r from-primary to-orange-600 bg-clip-text text-transparent">
+                {activeTab === 'home' ? 'Dashboard' : 'Profile'}
+              </h1>
+            </div>
+            <div className="flex items-center gap-3">
+              {user && <NotificationSystem userId={user.id} />}
+              <button
+                onClick={handleLogout}
+                className={cn(
+                  'px-3 py-1.5 text-sm font-medium rounded-lg',
+                  'text-zinc-600 dark:text-zinc-300',
+                  'hover:bg-zinc-100 dark:hover:bg-zinc-800',
+                  'transition-colors duration-200'
+                )}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </header>
 
-        <main className="flex-1 overflow-y-auto pb-20">
-           {/* Main Tab Navigation */}
-           <div className="flex border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-700">
-             <button
-               onClick={() => setActiveTab('home')}
-               className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                 activeTab === 'home'
-                   ? 'border-primary text-primary'
-                   : 'border-transparent text-zinc-500 dark:text-zinc-300 hover:text-zinc-700 dark:hover:text-zinc-200'
-               }`}
-             >
-               Home
-             </button>
-             <button
-               onClick={() => setActiveTab('edit')}
-               className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                 activeTab === 'edit'
-                   ? 'border-primary text-primary'
-                   : 'border-transparent text-zinc-500 dark:text-zinc-300 hover:text-zinc-700 dark:hover:text-zinc-200'
-               }`}
-             >
-               Edit Profile
-             </button>
+        <main className="flex-1 overflow-y-auto pb-24">
+           {/* Enhanced Tab Navigation */}
+           <div className="sticky top-[57px] z-30 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-lg border-b border-zinc-200/50 dark:border-zinc-700/50">
+             <div className="flex max-w-4xl mx-auto">
+               <button
+                 onClick={() => setActiveTab('home')}
+                 className={cn(
+                   'relative px-6 py-3 text-sm font-semibold transition-colors',
+                   activeTab === 'home'
+                     ? 'text-primary'
+                     : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
+                 )}
+               >
+                 Home
+                 {activeTab === 'home' && (
+                   <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-primary to-orange-500 rounded-full" />
+                 )}
+               </button>
+               <button
+                 onClick={() => setActiveTab('edit')}
+                 className={cn(
+                   'relative px-6 py-3 text-sm font-semibold transition-colors',
+                   activeTab === 'edit'
+                     ? 'text-primary'
+                     : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
+                 )}
+               >
+                 Edit Profile
+                 {activeTab === 'edit' && (
+                   <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-primary to-orange-500 rounded-full" />
+                 )}
+               </button>
+             </div>
            </div>
 
            {activeTab === 'home' && (
-             <div className="p-6">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-primary mb-2">
-                Welcome back, {profile?.full_name || user?.email}!
-              </h2>
-              <p className="text-zinc-600 dark:text-zinc-300">
-                Ready to explore new flavors?
-              </p>
-            </div>
+             <div className="p-4 sm:p-6 max-w-4xl mx-auto animate-fade-in">
+               {/* Welcome Hero Section */}
+               <div className={cn(
+                 'relative overflow-hidden rounded-2xl p-6 sm:p-8 mb-6',
+                 'bg-gradient-to-br from-primary/10 via-orange-50 to-amber-50/50',
+                 'dark:from-primary/20 dark:via-zinc-800 dark:to-zinc-800',
+                 'border border-primary/10 dark:border-primary/20'
+               )}>
+                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/20 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
+                 <div className="relative z-10">
+                   <p className="text-sm font-medium text-primary mb-1">Welcome back</p>
+                   <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-white mb-2">
+                     {profile?.full_name || user?.email?.split('@')[0]}! 👋
+                   </h2>
+                   <p className="text-zinc-600 dark:text-zinc-300">
+                     Ready to discover new flavors today?
+                   </p>
+                 </div>
+               </div>
 
             {/* Profile Overview */}
             {profile && (
-              <div className="bg-white dark:bg-zinc-800 p-6 rounded-lg mb-6">
+              <div className={cn(
+                'rounded-2xl p-5 sm:p-6 mb-6',
+                'bg-white dark:bg-zinc-800/80',
+                'border border-zinc-200/80 dark:border-zinc-700/50',
+                'shadow-sm'
+              )}>
                 {/* Header with Avatar and Basic Info */}
                 <div className="flex items-start space-x-4 mb-6">
-                  <div className="flex-shrink-0 relative">
-                    {profile.avatar_url ? (
-                      <>
-                        <Image
-                          src={profile.avatar_url}
-                          alt={profile.full_name || 'Profile'}
-                          width={80}
-                          height={80}
-                          className="w-20 h-20 rounded-full object-cover border-2 border-primary"
-                          onError={(e) => {
-                            const target = e.currentTarget as HTMLImageElement;
-                            target.style.display = 'none';
-                            const fallback = target.nextElementSibling as HTMLElement;
-                            if (fallback) fallback.classList.remove('hidden');
-                          }}
-                        />
-                        <div className="hidden w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-white font-semibold text-xl">
-                          {(profile.full_name || user?.email || '?')[0].toUpperCase()}
-                        </div>
-                      </>
-                    ) : (
-                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-white font-semibold text-xl">
-                        {(profile.full_name || user?.email || '?')[0].toUpperCase()}
-                      </div>
-                    )}
+                  <div className={cn(
+                    'flex-shrink-0 relative',
+                    'shadow-lg shadow-primary/20'
+                  )}>
+                    <AvatarWithFallback
+                      src={profile.avatar_url}
+                      alt={profile.full_name || 'Profile'}
+                      fallback={(profile.full_name || user?.email || '?')[0].toUpperCase()}
+                      size={64}
+                    />
                   </div>
 
                   <div className="flex-1 min-w-0">

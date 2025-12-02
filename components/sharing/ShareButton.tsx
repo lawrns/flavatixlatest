@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Share2, Copy, Check, X } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 interface ShareButtonProps {
   disabled?: boolean;

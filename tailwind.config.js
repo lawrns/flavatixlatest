@@ -313,18 +313,8 @@ module.exports = {
         'gradient-subtle': 'radial-gradient(90% 120% at 0% 0%, #FDF4E6 0%, #F7E9D6 60%, #F4E3CC 100%)',
         'gradient-tasting': 'linear-gradient(135deg, #FEF3E7 0%, #F7F3EA 100%)',
         'gradient-warm': 'linear-gradient(135deg, #FEF3E7 0%, #FCE4C8 50%, #F8C794 100%)',
-        // Radial gradients
+        // Radial gradient (base only - variants removed as unused)
         'gradient-radial': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
-        'gradient-radial-at-t': 'radial-gradient(circle at top, var(--tw-gradient-stops))',
-        'gradient-radial-at-b': 'radial-gradient(circle at bottom, var(--tw-gradient-stops))',
-        'gradient-radial-at-l': 'radial-gradient(circle at left, var(--tw-gradient-stops))',
-        'gradient-radial-at-r': 'radial-gradient(circle at right, var(--tw-gradient-stops))',
-        // Conic gradients
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'gradient-conic-to-t': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'gradient-conic-to-b': 'conic-gradient(from 0deg at 50% 50%, var(--tw-gradient-stops))',
-        'gradient-conic-to-l': 'conic-gradient(from 90deg at 50% 50%, var(--tw-gradient-stops))',
-        'gradient-conic-to-r': 'conic-gradient(from 270deg at 50% 50%, var(--tw-gradient-stops))',
       },
       backdropBlur: {
         none: '0',
@@ -370,11 +360,9 @@ module.exports = {
         'slide-in-right': 'slideInRight 0.3s ease-out',
         'scale-in': 'scaleIn 0.3s ease-out',
         'scale-out': 'scaleOut 0.3s ease-in',
-        'rotate-in': 'rotateIn 0.3s ease-out',
         'float': 'float 3s ease-in-out infinite',
         'glow': 'glow 2s ease-in-out infinite alternate',
         'shimmer': 'shimmer 2s linear infinite',
-        'wheel-spin': 'wheelSpin 0.6s ease-out',
       },
       keyframes: {
         fadeIn: {
@@ -409,10 +397,6 @@ module.exports = {
           '0%': { transform: 'scale(1)', opacity: '1' },
           '100%': { transform: 'scale(0.9)', opacity: '0' },
         },
-        rotateIn: {
-          '0%': { transform: 'rotate(-180deg) scale(0.9)', opacity: '0' },
-          '100%': { transform: 'rotate(0deg) scale(1)', opacity: '1' },
-        },
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-10px)' },
@@ -424,10 +408,6 @@ module.exports = {
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
-        },
-        wheelSpin: {
-          '0%': { transform: 'rotate(0deg)' },
-          '100%': { transform: 'rotate(360deg)' },
         },
       },
       transitionDuration: {

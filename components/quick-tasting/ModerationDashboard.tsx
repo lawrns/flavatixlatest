@@ -3,7 +3,7 @@ import { studyModeService, SuggestionWithParticipant } from '@/lib/studyModeServ
 import { roleService, ParticipantWithRole, ParticipantRole } from '@/lib/roleService';
 import { studyModeRealtime } from '@/lib/studyModeRealtime';
 import { RoleIndicator } from './RoleIndicator';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 /**
  * ModerationDashboard Component

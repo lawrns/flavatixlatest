@@ -24,7 +24,7 @@ const BASE_CATEGORIES = [
   'Other'
 ];
 
-type ParameterType = 'multiple_choice' | 'true_false' | 'contains' | 'exact_match' | 'range';
+type ParameterType = 'multiple_choice' | 'true_false' | 'contains' | 'exact_match' | 'range' | 'numeric';
 
 interface Parameter {
   id: string;
@@ -39,6 +39,7 @@ interface Parameter {
   correctValueBoolean?: boolean; // For true_false
   correctValueMin?: number; // For range
   correctValueMax?: number; // For range
+  correctValueNumeric?: number; // For numeric
 }
 
 interface CompetitionItem {
@@ -55,6 +56,8 @@ interface CreateCompetitionForm {
   items: CompetitionItem[];
   rankParticipants: boolean;
   rankingType: 'accuracy' | 'points' | 'weighted';
+  /** Session-level blind setting - applies to all items */
+  isBlindTasting: boolean;
 }
 
 const NewCompetitionPage: React.FC = () => {
@@ -67,7 +70,8 @@ const NewCompetitionPage: React.FC = () => {
     baseCategory: '',
     items: [],
     rankParticipants: true,
-    rankingType: 'points'
+    rankingType: 'points',
+    isBlindTasting: false
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -217,7 +221,7 @@ const NewCompetitionPage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Create competition session
+      // Create competition session with session-level settings
       const { data: session, error: sessionError } = await supabase
         .from('quick_tastings')
         .insert({
@@ -228,7 +232,9 @@ const NewCompetitionPage: React.FC = () => {
           rank_participants: form.rankParticipants,
           ranking_type: form.rankingType,
           total_items: form.items.length,
-          completed_items: 0
+          completed_items: 0,
+          // Session-level blind setting (applies to all items by default)
+          is_blind_items: form.isBlindTasting
         } as any)
         .select()
         .single() as { data: { id: string } | null, error: any };
@@ -244,7 +250,7 @@ const NewCompetitionPage: React.FC = () => {
           .insert({
             tasting_id: session.id,
             item_name: item.name,
-            item_number: item.number
+            item_order: item.number
           } as any)
           .select()
           .single() as { data: { id: string } | null, error: any };
@@ -253,43 +259,53 @@ const NewCompetitionPage: React.FC = () => {
         if (!tastingItem) throw new Error('Failed to create tasting item');
 
         // Create competition item metadata
+        // Per-item is_blind uses session setting by default, with optional per-item override
         const { error: metadataError } = await supabase
           .from('competition_item_metadata')
           .insert({
-            tasting_item_id: tastingItem.id,
-            competition_id: session.id,
-            item_number: item.number,
-            is_blind: item.isBlind
+            item_id: tastingItem.id,
+            tasting_id: session.id,
+            item_order: item.number,
+            is_blind: form.isBlindTasting || item.isBlind  // Session-level OR per-item override
           } as any);
 
         if (metadataError) throw metadataError;
 
         // Create answer keys for each parameter
         for (const param of item.parameters) {
-          const answerKey: any = {
-            tasting_item_id: tastingItem.id,
-            parameter_name: param.name,
-            answer_type: param.type,
-            points: param.points
-          };
-
-          // Set correct answer based on type
+          // Build correct_answer as JSONB based on parameter type
+          let correctAnswer: any = {};
+          let answerOptions: any = null;
+          
           switch (param.type) {
             case 'multiple_choice':
-              answerKey.correct_value_options = param.correctOptions;
+              correctAnswer = { options: param.correctOptions };
+              answerOptions = param.options || [];
               break;
             case 'true_false':
-              answerKey.correct_value_boolean = param.correctValueBoolean;
+              correctAnswer = { value: param.correctValueBoolean };
               break;
             case 'exact_match':
             case 'contains':
-              answerKey.correct_value_text = param.correctValueText;
+              correctAnswer = { text: param.correctValueText };
               break;
             case 'range':
-              answerKey.correct_value_min = param.correctValueMin;
-              answerKey.correct_value_max = param.correctValueMax;
+              correctAnswer = { min: param.correctValueMin, max: param.correctValueMax };
+              break;
+            case 'numeric':
+              correctAnswer = { value: param.correctValueNumeric };
               break;
           }
+
+          const answerKey: any = {
+            tasting_id: session.id,
+            item_id: tastingItem.id,
+            parameter_name: param.name,
+            parameter_type: param.type,
+            correct_answer: correctAnswer,
+            answer_options: answerOptions,
+            points: param.points || 1
+          };
 
           const { error: answerError } = await supabase
             .from('competition_answer_keys')
@@ -410,6 +426,22 @@ const NewCompetitionPage: React.FC = () => {
                   </select>
                 </div>
               )}
+
+              {/* Session-level Blind Tasting Toggle */}
+              <div className="pt-4 border-t border-zinc-200 dark:border-zinc-700">
+                <label className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={form.isBlindTasting}
+                    onChange={(e) => setForm({ ...form, isBlindTasting: e.target.checked })}
+                    className="w-5 h-5 rounded text-primary focus:ring-primary"
+                  />
+                  <div>
+                    <span className="text-sm font-medium block">Blind Tasting</span>
+                    <span className="text-xs text-text-secondary">Hide all item names from participants during the competition</span>
+                  </div>
+                </label>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -443,6 +475,7 @@ const NewCompetitionPage: React.FC = () => {
                     onRemoveParameter={(paramId) => removeParameter(item.id, paramId)}
                     onUpdateParameter={(paramId, updates) => updateParameter(item.id, paramId, updates)}
                     errors={errors}
+                    sessionIsBlind={form.isBlindTasting}
                   />
                 ))}
               </div>
@@ -517,6 +550,8 @@ interface CompetitionItemCardProps {
   onRemoveParameter: (paramId: string) => void;
   onUpdateParameter: (paramId: string, updates: Partial<Parameter>) => void;
   errors: Record<string, string>;
+  /** Session-level blind setting - when true, all items are blind */
+  sessionIsBlind?: boolean;
 }
 
 const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
@@ -528,7 +563,8 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
   onAddParameter,
   onRemoveParameter,
   onUpdateParameter,
-  errors
+  errors,
+  sessionIsBlind = false
 }) => {
   return (
     <div className="border rounded-lg p-4">
@@ -537,7 +573,7 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
           onClick={onToggle}
           className="flex items-center gap-2 text-lg font-display font-semibold hover:text-primary transition-colors"
         >
-          {item.isBlind ? <EyeOff size={20} className="text-amber-600" /> : <Package size={20} className="text-primary" />}
+          {(sessionIsBlind || item.isBlind) ? <EyeOff size={20} className="text-amber-600" /> : <Package size={20} className="text-primary" />}
           <span>{item.name}</span>
           <span className="text-sm font-body text-text-secondary">
             ({item.parameters.length} parameters)
@@ -565,18 +601,29 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
             />
           </div>
 
-          <div>
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={item.isBlind}
-                onChange={(e) => onUpdate({ isBlind: e.target.checked })}
-                className="rounded"
-              />
-              <span className="text-sm font-medium">Blind Tasting</span>
-              <span className="text-xs text-text-secondary">(Hide item name from participants)</span>
-            </label>
-          </div>
+          {/* Per-item blind override - hidden when session-level blind is enabled */}
+          {!sessionIsBlind && (
+            <div>
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={item.isBlind}
+                  onChange={(e) => onUpdate({ isBlind: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="text-sm font-medium">Blind for this item</span>
+                <span className="text-xs text-text-secondary">(Override session setting)</span>
+              </label>
+            </div>
+          )}
+          {sessionIsBlind && (
+            <div className="bg-amber-50 dark:bg-amber-900/20 p-2 rounded-md">
+              <span className="text-sm text-amber-800 dark:text-amber-200 flex items-center gap-2">
+                <EyeOff size={16} />
+                This item is blind (session-level setting)
+              </span>
+            </div>
+          )}
 
           {/* Parameters */}
           <div className="border-t pt-4">

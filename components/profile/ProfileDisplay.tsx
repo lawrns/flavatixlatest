@@ -2,6 +2,7 @@ import { UserProfile } from '../../lib/profileService';
 import { getUserTastingStats, TastingStats } from '../../lib/historyService';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/SimpleAuthContext';
+import { AvatarWithFallback } from '../ui/AvatarWithFallback';
 
 interface ProfileDisplayProps {
   profile: UserProfile | null;
@@ -90,28 +91,12 @@ export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayPro
       {/* Header with Avatar and Basic Info */}
       <div className="flex items-start space-x-sm mb-md">
         <div className="flex-shrink-0 relative">
-          {profile.avatar_url ? (
-            <>
-              <img
-                src={profile.avatar_url}
-                alt={profile.full_name || 'Profile'}
-                className="w-16 h-16 rounded-full object-cover border-2 border-[#F4E3CC]"
-                onError={(e) => {
-                  const target = e.currentTarget as HTMLImageElement;
-                  target.style.display = 'none';
-                  const fallback = target.nextElementSibling as HTMLElement;
-                  if (fallback) fallback.classList.remove('hidden');
-                }}
-              />
-              <div className="hidden w-16 h-16 rounded-full bg-gradient-to-br from-[#1F5D4C] to-[#2E7D32] flex items-center justify-center text-white font-semibold text-h4">
-                {getInitials(profile.full_name)}
-              </div>
-            </>
-          ) : (
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#1F5D4C] to-[#2E7D32] flex items-center justify-center text-white font-body font-semibold text-h4">
-              {getInitials(profile.full_name)}
-            </div>
-          )}
+          <AvatarWithFallback
+            src={profile.avatar_url}
+            alt={profile.full_name || 'Profile'}
+            fallback={getInitials(profile.full_name)}
+            size={64}
+          />
         </div>
         
         <div className="flex-1 min-w-0">

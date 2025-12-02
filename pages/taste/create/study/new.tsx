@@ -13,15 +13,27 @@ import Combobox from '@/components/ui/Combobox';
 import BottomNavigation from '@/components/navigation/BottomNavigation';
 
 const BASE_CATEGORIES = [
+  'Coffee',
+  'Tea',
   'Red Wine',
   'White Wine',
-  'Coffee',
+  'Wine (Other)',
   'Beer',
-  'Mezcal',
   'Whiskey',
-  'Spirits',
-  'Tea',
+  'Mezcal',
+  'Tequila',
+  'Rum',
+  'Gin',
+  'Vodka',
+  'Brandy',
+  'Spirits (Other)',
   'Chocolate',
+  'Cheese',
+  'Olive Oil',
+  'Honey',
+  'Hot Sauce',
+  'Perfume',
+  'Cigars',
   'Other'
 ];
 
@@ -431,7 +443,7 @@ const NewStudyTastingPage: React.FC = () => {
                             type="text"
                             value={category.name}
                             onChange={(e) => updateCategory(category.id, { name: e.target.value })}
-                            placeholder="e.g., Aroma Intensity"
+                            placeholder="e.g., Aroma Intensity, Sweetness, Body"
                             className={`form-input w-full ${errors[`category-${index}-name`] ? 'border-error' : ''}`}
                           />
                           {errors[`category-${index}-name`] && (
@@ -443,7 +455,7 @@ const NewStudyTastingPage: React.FC = () => {
 
                         <div>
                           <label className="block text-small font-body font-medium text-text-primary mb-xs">
-                            Parameter Types *
+                            Parameter *
                           </label>
                           <div className="space-y-sm">
                             <label className="flex items-center">

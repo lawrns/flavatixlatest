@@ -1,10 +1,48 @@
+/**
+ * Supabase Client Configuration
+ * 
+ * This module provides the primary interface for all Supabase interactions in Flavatix.
+ * 
+ * ## Architecture
+ * - Uses singleton pattern for client-side to prevent multiple GoTrue instances
+ * - Server-side API routes get fresh clients with auth context from headers/cookies
+ * - All database operations respect Row Level Security (RLS) policies
+ * 
+ * ## Auth Flow
+ * - Client-side: Uses persistent session with auto-refresh
+ * - Server-side: Extracts JWT from Authorization header or cookies
+ * 
+ * ## RLS Expectations
+ * - All tables have RLS enabled
+ * - Users can only access their own data (profiles, tastings, reviews)
+ * - Some tables allow public read (e.g., profiles for social features)
+ * 
+ * ## Usage
+ * ```ts
+ * // Client-side (components, hooks)
+ * import { supabase } from '@/lib/supabase';
+ * const { data } = await supabase.from('profiles').select('*');
+ * 
+ * // Server-side (API routes)
+ * import { getSupabaseClient } from '@/lib/supabase';
+ * const supabase = getSupabaseClient(req, res);
+ * ```
+ * 
+ * @module lib/supabase
+ */
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+/** Supabase project URL from environment */
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://127.0.0.1:54321';
+
+/** Supabase anonymous key - safe to expose client-side, RLS handles security */
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
 
-// Singleton pattern for Supabase client
+/**
+ * Singleton class for managing the Supabase client instance.
+ * Prevents multiple GoTrue (auth) instances which can cause session conflicts.
+ */
 class SupabaseClientSingleton {
   private static instance: SupabaseClient<Database> | null = null;
 
@@ -31,13 +69,29 @@ class SupabaseClientSingleton {
   }
 }
 
-// Export the singleton instance
+/**
+ * Default Supabase client instance for client-side usage.
+ * Uses singleton pattern - safe to import in multiple components.
+ */
 export const supabase = SupabaseClientSingleton.getInstance();
 
-// Export the class for advanced usage
+/** Export singleton class for testing or advanced use cases */
 export { SupabaseClientSingleton };
 
-// Helper function to get a Supabase client for server-side API routes
+/**
+ * Get a Supabase client with proper auth context for API routes.
+ * 
+ * @param req - Next.js API request (optional for client-side)
+ * @param res - Next.js API response (optional for client-side)
+ * @returns Supabase client with auth context from headers/cookies
+ * 
+ * @example
+ * // In an API route
+ * export default async function handler(req, res) {
+ *   const supabase = getSupabaseClient(req, res);
+ *   const { data } = await supabase.from('quick_tastings').select('*');
+ * }
+ */
 export const getSupabaseClient = (req?: NextApiRequest, res?: NextApiResponse) => {
   if (req && res) {
     // Server-side: Create client with cookies for auth context

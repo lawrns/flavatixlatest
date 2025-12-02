@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { studyModeService, SuggestionWithParticipant } from '@/lib/studyModeService';
 import { roleService } from '@/lib/roleService';
 import { getSupabaseClient } from '@/lib/supabase';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 interface ItemSuggestionsProps {
   tastingId: string;

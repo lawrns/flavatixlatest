@@ -1,0 +1,94 @@
+{
+  "_TOON_SCHEMA": {
+    "format": "Token-Optimized Object Notation v1.0",
+    "created": "2025-12-01T23:22:00Z",
+    "purpose": "Document all current production issues in Flavatix study tasting flow"
+  },
+
+  "CRITICAL_UI_BUGS": {
+    "_schema": ["id", "component", "file_path", "line_range", "severity", "description", "root_cause", "fix_approach"],
+    "_rows": [
+      ["UI-001", "Combobox", "components/ui/Combobox.tsx", "1-200", "HIGH", "Base Category dropdown renders behind Categories card", "Missing z-index on dropdown popover", "Add z-50 class to dropdown container"],
+      ["UI-002", "TastingItem", "components/quick-tasting/TastingItem.tsx", "355-375", "HIGH", "Scale slider thumb not visible/draggable", "Custom styling overrides browser defaults, accent-primary not working", "Use explicit thumb pseudo-elements with Tailwind"],
+      ["UI-003", "StudyNew", "pages/taste/create/study/new.tsx", "478-514", "MEDIUM", "Save Template button hidden in Preview modal only", "User expects inline save option, not modal-gated", "Add prominent Save Template button to main form"],
+      ["UI-004", "StudyNew", "pages/taste/create/study/new.tsx", "256-292", "MEDIUM", "Cards overlap when dropdown is open", "Parent card has no relative positioning, no z-index stacking", "Add relative z-10 to Basic Information card"]
+    ]
+  },
+
+  "CONSOLE_ERRORS": {
+    "_schema": ["id", "error_type", "endpoint", "http_status", "message", "root_cause", "affected_table", "fix_approach"],
+    "_rows": [
+      ["ERR-001", "Supabase Query", "/rest/v1/profiles", 400, "Failed to load resource", "Query syntax error - select clause malformed or missing Accept header", "profiles", "Add proper Accept: application/json header and verify select syntax"],
+      ["ERR-002", "Supabase Query", "/rest/v1/tasting_participants", 406, "Not Acceptable", "Missing Accept header or content negotiation failed", "tasting_participants", "Add Accept: application/vnd.pgrst.object+json header"],
+      ["ERR-003", "RoleService", "roleService.getUserPermissions", null, "User is not a participant in this tasting", "Study mode tries to load participant roles but user not in tasting_participants table", "tasting_participants", "Auto-add user as participant on first access OR skip role check for session owner"],
+      ["ERR-004", "Next.js Router", "getRouteInfo", null, "Loading initial props cancelled", "Navigation interrupted during async data fetch", "N/A", "Handle navigation cancellation gracefully in component unmount"]
+    ]
+  },
+
+  "MISSING_FEATURES": {
+    "_schema": ["id", "feature", "expected_location", "current_state", "user_impact", "priority"],
+    "_rows": [
+      ["MF-001", "Inline Save Template", "Study creation form bottom", "Only in Preview modal", "Users can't find save functionality", "HIGH"],
+      ["MF-002", "Template confirmation toast", "After template save", "Toast shows but no redirect/refresh", "Users unsure if save worked", "MEDIUM"],
+      ["MF-003", "My Templates section", "Templates page", "Shows but may be empty if DB query fails", "Users can't access saved templates", "HIGH"]
+    ]
+  },
+
+  "DATABASE_ISSUES": {
+    "_schema": ["id", "table", "column", "issue", "query_affected", "fix_required"],
+    "_rows": [
+      ["DB-001", "tasting_participants", "N/A", "406 error suggests RLS policy blocking or table structure mismatch", "getUserPermissions", "Verify RLS policies allow authenticated reads"],
+      ["DB-002", "profiles", "N/A", "400 error on select query", "Profile fetch in study session", "Check column names and query syntax"],
+      ["DB-003", "study_templates", "categories", "Stored as text but should be jsonb", "Template loading may fail on JSON.parse", "Verify column type and update save API"]
+    ]
+  },
+
+  "STYLING_DEFECTS": {
+    "_schema": ["id", "element", "css_class", "current_behavior", "expected_behavior", "tailwind_fix"],
+    "_rows": [
+      ["STY-001", "range input thumb", "accent-primary", "Thumb invisible or mispositioned", "Orange circular thumb, draggable", "Add [&::-webkit-slider-thumb] and [&::-moz-range-thumb] pseudo-element styles"],
+      ["STY-002", "range input track", "bg-zinc-200", "Track shows but thumb clip/overflow issue", "Full width track with proper padding", "Add appearance-none and explicit height"],
+      ["STY-003", "Combobox dropdown", "absolute", "Renders behind sibling cards", "Floats above all content", "Add z-50 and ensure parent has relative"],
+      ["STY-004", "Category card", "card p-md", "No z-index stacking context", "Proper layering with dropdowns above", "Add relative z-0 to card, z-50 to dropdown"]
+    ]
+  },
+
+  "ERROR_CHAIN_ANALYSIS": {
+    "trigger": "User creates study session and navigates to /taste/study/[id]",
+    "sequence": [
+      {"step": 1, "action": "QuickTastingSession mounts", "result": "loadUserRole() called"},
+      {"step": 2, "action": "roleService.getUserPermissions()", "result": "Queries tasting_participants table"},
+      {"step": 3, "action": "Supabase returns 406", "result": "Accept header missing or RLS blocks"},
+      {"step": 4, "action": "getUserPermissions throws", "result": "User is not a participant error"},
+      {"step": 5, "action": "Component tries addParticipant", "result": "May also fail if table structure wrong"},
+      {"step": 6, "action": "Navigation continues", "result": "Props loading cancelled error"}
+    ],
+    "root_cause": "Study mode role system expects tasting_participants table but session creator is never added as participant on session creation"
+  },
+
+  "REPRODUCTION_STEPS": {
+    "ui_bugs": [
+      "1. Go to /taste/create/study/new",
+      "2. Enter tasting name",
+      "3. Click Base Category dropdown - observe it appears BEHIND Categories card",
+      "4. Add a category with Scale input",
+      "5. Create & Start the session",
+      "6. Navigate to the study session page",
+      "7. Add an item and observe slider - thumb is invisible or stuck",
+      "8. Open browser console - observe 400, 406 errors and role loading failure"
+    ],
+    "expected_vs_actual": {
+      "dropdown": {"expected": "Floats above all content", "actual": "Hidden behind sibling card"},
+      "slider": {"expected": "Orange thumb moves smoothly", "actual": "No visible thumb or stuck"},
+      "save_template": {"expected": "Visible button on main form", "actual": "Hidden inside Preview modal"}
+    }
+  },
+
+  "PRIORITY_RANKING": [
+    {"rank": 1, "issue_id": "ERR-003", "reason": "Blocks all study session functionality"},
+    {"rank": 2, "issue_id": "UI-001", "reason": "Critical UX - users can't select category"},
+    {"rank": 3, "issue_id": "UI-002", "reason": "Core input broken - ratings unusable"},
+    {"rank": 4, "issue_id": "MF-001", "reason": "Key feature inaccessible"},
+    {"rank": 5, "issue_id": "ERR-001", "reason": "Profile data missing in UI"}
+  ]
+}

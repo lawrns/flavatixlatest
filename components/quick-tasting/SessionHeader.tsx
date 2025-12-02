@@ -1,0 +1,215 @@
+/**
+ * SessionHeader Component
+ * 
+ * Displays and manages the header section of a tasting session including:
+ * - Editable session name
+ * - Category selector
+ * - Role indicator (for study mode)
+ * - Session statistics
+ * - Action buttons (Edit, Suggestions)
+ */
+import React, { useState } from 'react';
+import { Settings, Edit } from 'lucide-react';
+import { CategoryDropdown } from './CategoryDropdown';
+import { RoleIndicator } from './RoleIndicator';
+import { QuickTasting, UserPermissions } from './types';
+
+interface SessionHeaderProps {
+  session: QuickTasting;
+  userRole: 'host' | 'participant' | 'both' | null;
+  userPermissions: UserPermissions;
+  userId: string;
+  itemsCount: number;
+  completedItems: number;
+  phase: 'setup' | 'tasting';
+  isChangingCategory: boolean;
+  showEditDashboard: boolean;
+  showSuggestions: boolean;
+  onSessionNameChange: (name: string) => Promise<void>;
+  onCategoryChange: (category: string) => Promise<void>;
+  onToggleEditDashboard: () => void;
+  onToggleSuggestions: () => void;
+}
+
+export const SessionHeader: React.FC<SessionHeaderProps> = ({
+  session,
+  userRole,
+  userPermissions,
+  userId,
+  itemsCount,
+  completedItems,
+  phase,
+  isChangingCategory,
+  showEditDashboard,
+  showSuggestions,
+  onSessionNameChange,
+  onCategoryChange,
+  onToggleEditDashboard,
+  onToggleSuggestions,
+}) => {
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editingName, setEditingName] = useState(session.session_name || '');
+
+  const canEditName = itemsCount <= 1;
+
+  const startEditing = () => {
+    if (!canEditName) return;
+    setIsEditingName(true);
+    setEditingName(session.session_name || '');
+  };
+
+  const saveName = async () => {
+    if (editingName.trim() && editingName.trim() !== session.session_name) {
+      await onSessionNameChange(editingName.trim());
+    }
+    setIsEditingName(false);
+  };
+
+  const cancelEditing = () => {
+    setEditingName(session.session_name || '');
+    setIsEditingName(false);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') saveName();
+    if (e.key === 'Escape') cancelEditing();
+  };
+
+  return (
+    <div className="card p-md mb-lg">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+        <div>
+          {/* Session Name */}
+          {isEditingName ? (
+            <div className="mb-2">
+              <div className="p-2 rounded-lg bg-background-app border-2 border-primary-300">
+                <div className="text-xs font-medium text-text-secondary uppercase tracking-wider mb-1">
+                  Editing Session Name
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="text"
+                    value={editingName}
+                    onChange={(e) => setEditingName(e.target.value)}
+                    onBlur={saveName}
+                    onKeyDown={handleKeyPress}
+                    className="text-h2 font-heading font-bold text-text-primary bg-transparent border-none outline-none focus:ring-0 flex-1 placeholder-text-secondary/50"
+                    placeholder="Enter session name..."
+                    autoFocus
+                  />
+                  <div className="flex items-center space-x-1 text-text-secondary text-xs">
+                    <span>Press Enter to save</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="mb-2">
+              <div
+                className={`flex items-center space-x-2 p-2 rounded-lg bg-background-app border border-border-subtle ${
+                  canEditName 
+                    ? 'hover:border-primary-300 hover:bg-primary-50/30 cursor-pointer' 
+                    : 'opacity-60 cursor-not-allowed'
+                } transition-all duration-200 group`}
+                onClick={canEditName ? startEditing : undefined}
+                title={canEditName ? 'Click to edit session name' : 'Cannot edit session name after adding items'}
+              >
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-medium text-text-secondary uppercase tracking-wider mb-1">
+                    Session Name
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <h2 className="text-h2 font-heading font-bold text-text-primary truncate">
+                      {session.session_name || 'Quick Tasting'}
+                    </h2>
+                    {canEditName && (
+                      <div className="flex items-center space-x-1 text-text-secondary">
+                        <Edit size={16} className="opacity-60 group-hover:opacity-100 transition-opacity" />
+                        <span className="text-xs font-medium opacity-60 group-hover:opacity-100 transition-opacity">
+                          Edit
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Category & Mode Info */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-1 sm:space-y-0 text-text-secondary">
+            <span className="text-sm font-medium">Category:</span>
+            <CategoryDropdown
+              category={session.category}
+              onCategoryChange={onCategoryChange}
+              className="text-sm w-full sm:w-auto"
+              isLoading={isChangingCategory}
+              disabled={itemsCount > 1}
+            />
+            <div className="flex flex-wrap items-center space-x-2 text-xs">
+              {session.mode === 'study' && session.study_approach && (
+                <span>• {session.study_approach.charAt(0).toUpperCase() + session.study_approach.slice(1)}</span>
+              )}
+              {session.rank_participants && <span>• Ranked Competition</span>}
+              {(session.is_blind_participants || session.is_blind_items || session.is_blind_attributes) && (
+                <span>• Blind Tasting</span>
+              )}
+            </div>
+          </div>
+
+          {/* Role Indicator */}
+          {userRole && session.mode !== 'quick' && (
+            <div className="mt-2">
+              <RoleIndicator
+                role={userRole}
+                userId={userId}
+                currentUserId={userId}
+                size="sm"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Right Side: Actions & Stats */}
+        <div className="mt-4 md:mt-0 flex items-center space-x-4">
+          {/* Edit Tasting Button - Setup phase only */}
+          {phase === 'setup' && (
+            <button
+              onClick={onToggleEditDashboard}
+              className="btn-secondary flex items-center gap-2"
+            >
+              <Settings size={16} />
+              Edit Tasting
+            </button>
+          )}
+
+          {/* Suggestions Button - Collaborative study mode only */}
+          {session.mode === 'study' && session.study_approach === 'collaborative' && phase === 'setup' && (
+            <button
+              onClick={onToggleSuggestions}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors ${
+                showSuggestions
+                  ? 'bg-blue-100 text-blue-800'
+                  : 'bg-white dark:bg-zinc-800 text-blue-600 border border-blue-200 hover:bg-blue-50'
+              }`}
+            >
+              💡 Suggestions
+            </button>
+          )}
+
+          {/* Stats */}
+          <div className="text-center">
+            <div className="text-h2 font-heading font-bold text-primary-600">{completedItems}</div>
+            <div className="text-small font-body text-text-secondary">Completed</div>
+          </div>
+          <div className="text-center">
+            <div className="text-h2 font-heading font-bold text-text-primary">{itemsCount}</div>
+            <div className="text-small font-body text-text-secondary">Total Items</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SessionHeader;

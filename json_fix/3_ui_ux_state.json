@@ -1,0 +1,179 @@
+{
+  "_TOON_SCHEMA": {
+    "format": "Token-Optimized Object Notation v1.0",
+    "created": "2025-12-01T23:22:00Z",
+    "purpose": "Complete UI/UX state analysis for Flavatix study tasting system"
+  },
+
+  "SCREENSHOT_ANALYSIS": {
+    "image_1": {
+      "page": "/taste/create/study/new",
+      "viewport": "desktop",
+      "visible_elements": ["Header", "Basic Information card", "Base Category dropdown OPEN", "Categories card BEHIND dropdown"],
+      "issues_detected": [
+        {"element": "Base Category dropdown", "issue": "Dropdown menu appears BEHIND Categories card", "severity": "CRITICAL"},
+        {"element": "Dropdown options", "issue": "Only partially visible - Red Wine, White Wine cut off", "severity": "HIGH"},
+        {"element": "Card stacking", "issue": "No z-index management between sibling cards", "severity": "HIGH"}
+      ],
+      "z_index_problem": {
+        "expected_order": ["Background", "Basic Information card (z-10)", "Categories card (z-0)", "Dropdown (z-50)"],
+        "actual_order": ["Background", "Basic Information card", "Dropdown", "Categories card (overlapping)"]
+      }
+    },
+    "image_2": {
+      "page": "/taste/study/[id]",
+      "viewport": "desktop",
+      "visible_elements": ["Photo section", "Evaluation Categories header", "Category 1 input", "Category 2 input", "Scale sliders", "Overall Score section"],
+      "issues_detected": [
+        {"element": "Scale slider thumb", "issue": "Orange dot appears but may not be draggable, positioned incorrectly", "severity": "HIGH"},
+        {"element": "Slider track", "issue": "Gray fill doesn't match thumb position", "severity": "MEDIUM"},
+        {"element": "Rating labels", "issue": "32/100 shown but slider thumb at different position", "severity": "MEDIUM"},
+        {"element": "Category layout", "issue": "No visual separation between categories", "severity": "LOW"}
+      ],
+      "slider_problem": {
+        "expected": "Thumb at 32% of track, smooth drag interaction",
+        "actual": "Thumb appears at ~35% but value shows 32/100, drag may not work"
+      }
+    }
+  },
+
+  "USER_FLOWS": {
+    "study_session_creation": {
+      "_schema": ["step", "action", "expected_result", "actual_result", "status"],
+      "_rows": [
+        [1, "Navigate to /taste/create/study/templates", "See template options", "Templates load correctly", "PASS"],
+        [2, "Click Create New", "Navigate to /taste/create/study/new", "Navigates correctly", "PASS"],
+        [3, "Enter tasting name", "Input accepts text", "Works correctly", "PASS"],
+        [4, "Click Base Category dropdown", "Dropdown floats above content", "Dropdown hidden behind Categories card", "FAIL"],
+        [5, "Select a category", "Category selected, dropdown closes", "May work if user scrolls down to see options", "DEGRADED"],
+        [6, "Add evaluation categories", "Categories added to list", "Works correctly", "PASS"],
+        [7, "Configure scale inputs", "Slider visible and functional", "Slider thumb styling broken", "FAIL"],
+        [8, "Click Preview", "Modal shows configuration", "Works correctly", "PASS"],
+        [9, "Look for Save Template button", "Visible in main form", "Only in Preview modal", "FAIL"],
+        [10, "Click Create & Start", "Session created, navigate to session", "Creates but errors on load", "DEGRADED"]
+      ]
+    },
+    "study_session_usage": {
+      "_schema": ["step", "action", "expected_result", "actual_result", "status"],
+      "_rows": [
+        [1, "Load session page", "Session data loads", "406/400 errors in console", "FAIL"],
+        [2, "View evaluation categories", "Custom categories displayed", "Categories show correctly", "PASS"],
+        [3, "Enter text feedback", "Text saved", "Works correctly", "PASS"],
+        [4, "Adjust scale slider", "Drag thumb to set value", "Thumb may not drag properly", "FAIL"],
+        [5, "Set overall score", "Score saved", "Works but slider styling poor", "DEGRADED"],
+        [6, "Navigate items", "Item data persists", "Data persists correctly", "PASS"]
+      ]
+    }
+  },
+
+  "COMPONENT_UI_AUDIT": {
+    "Combobox": {
+      "_schema": ["aspect", "current_state", "expected_state", "fix_priority"],
+      "_rows": [
+        ["z-index", "No z-index set", "z-50 on dropdown container", "CRITICAL"],
+        ["positioning", "absolute", "absolute with proper stacking context", "CRITICAL"],
+        ["backdrop", "None", "Optional backdrop click to close", "LOW"],
+        ["keyboard nav", "Implemented", "Working correctly", "NONE"],
+        ["search filter", "Implemented", "Working correctly", "NONE"]
+      ]
+    },
+    "TastingItem_Slider": {
+      "_schema": ["aspect", "current_state", "expected_state", "fix_priority"],
+      "_rows": [
+        ["thumb visibility", "Minimal/invisible", "Orange circle, 20px, visible", "CRITICAL"],
+        ["thumb draggable", "May not respond", "Smooth drag interaction", "CRITICAL"],
+        ["track styling", "Gray bar", "Gray with orange fill to thumb", "HIGH"],
+        ["value sync", "Shows correct value", "Thumb position matches value", "MEDIUM"],
+        ["touch targets", "Default browser", "Min 44px for mobile", "MEDIUM"]
+      ]
+    },
+    "StudyCreationForm": {
+      "_schema": ["aspect", "current_state", "expected_state", "fix_priority"],
+      "_rows": [
+        ["save_template_button", "In Preview modal only", "Visible in main form actions", "HIGH"],
+        ["card_stacking", "No z-index management", "Proper z-index layering", "CRITICAL"],
+        ["category_validation", "Works", "Working correctly", "NONE"],
+        ["form_submission", "Works", "Working correctly", "NONE"]
+      ]
+    }
+  },
+
+  "CSS_FIXES_REQUIRED": {
+    "combobox_dropdown": {
+      "file": "components/ui/Combobox.tsx",
+      "current_classes": "absolute mt-1 w-full bg-white dark:bg-zinc-800 border rounded-lg shadow-lg max-h-60 overflow-auto",
+      "add_classes": "z-50",
+      "parent_fix": "Add relative to parent if missing"
+    },
+    "range_slider": {
+      "file": "components/quick-tasting/TastingItem.tsx",
+      "current_classes": "w-full h-2 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-primary",
+      "replacement": "w-full h-2 rounded-lg appearance-none cursor-pointer bg-transparent [&::-webkit-slider-runnable-track]:h-2 [&::-webkit-slider-runnable-track]:rounded-lg [&::-webkit-slider-runnable-track]:bg-zinc-200 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:-mt-1.5 [&::-moz-range-track]:h-2 [&::-moz-range-track]:rounded-lg [&::-moz-range-track]:bg-zinc-200 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+    },
+    "basic_info_card": {
+      "file": "pages/taste/create/study/new.tsx",
+      "location": "Card component wrapping Basic Information",
+      "add_classes": "relative z-10"
+    }
+  },
+
+  "ACCESSIBILITY_ISSUES": {
+    "_schema": ["element", "wcag_criterion", "current_state", "required_fix"],
+    "_rows": [
+      ["range slider", "2.1.1 Keyboard", "May not respond to arrow keys", "Ensure native input behavior preserved"],
+      ["range slider", "1.4.11 Non-text Contrast", "Thumb may be invisible", "Ensure 3:1 contrast ratio"],
+      ["dropdown", "2.4.7 Focus Visible", "Focus ring present", "No fix needed"],
+      ["dropdown", "1.4.13 Content on Hover", "Content hidden behind other elements", "Fix z-index stacking"]
+    ]
+  },
+
+  "RESPONSIVE_ISSUES": {
+    "_schema": ["breakpoint", "component", "issue", "severity"],
+    "_rows": [
+      ["mobile (<640px)", "Combobox", "Same z-index issue", "CRITICAL"],
+      ["mobile (<640px)", "Slider", "Touch target may be too small", "MEDIUM"],
+      ["tablet (640-1024px)", "Form layout", "Works correctly", "NONE"],
+      ["desktop (>1024px)", "All components", "Issues as documented", "VARIES"]
+    ]
+  },
+
+  "DESIGN_SYSTEM_VIOLATIONS": {
+    "_schema": ["component", "violation", "design_system_rule", "fix"],
+    "_rows": [
+      ["Slider", "Custom styling breaks functionality", "Use Tailwind pseudo-element utilities", "Refactor with [&::-webkit-*] classes"],
+      ["Dropdown", "No elevation on overlay", "Overlays should use z-50+", "Add z-50 class"],
+      ["Cards", "No stacking context", "Cards should establish stacking context", "Add relative positioning"],
+      ["Form buttons", "Save Template hidden", "Primary actions should be visible", "Move to main form"]
+    ]
+  },
+
+  "USER_FEEDBACK_GAPS": {
+    "_schema": ["action", "current_feedback", "expected_feedback", "priority"],
+    "_rows": [
+      ["Save template", "Toast only", "Toast + visual confirmation + possible redirect", "MEDIUM"],
+      ["Slider drag", "Value updates", "Visual thumb movement should match", "HIGH"],
+      ["Session creation error", "Console only", "User-facing error message", "HIGH"],
+      ["Role loading failure", "Console only", "Graceful degradation or error state", "HIGH"]
+    ]
+  },
+
+  "RECOMMENDED_FIXES_ORDER": [
+    {"priority": 1, "fix": "Combobox z-index", "effort": "5 min", "impact": "CRITICAL - unblocks category selection"},
+    {"priority": 2, "fix": "Slider thumb styling", "effort": "15 min", "impact": "HIGH - enables rating functionality"},
+    {"priority": 3, "fix": "Role service error handling", "effort": "30 min", "impact": "HIGH - prevents console errors"},
+    {"priority": 4, "fix": "Add inline Save Template button", "effort": "10 min", "impact": "MEDIUM - improves discoverability"},
+    {"priority": 5, "fix": "Profile query fix", "effort": "15 min", "impact": "MEDIUM - shows user info correctly"}
+  ],
+
+  "TESTING_CHECKLIST": {
+    "after_fixes": [
+      "[ ] Dropdown floats above all content on all viewport sizes",
+      "[ ] Slider thumb visible, draggable, positioned correctly",
+      "[ ] No console errors on study session load",
+      "[ ] Save Template button visible in main form",
+      "[ ] Template appears in My Templates after save",
+      "[ ] Study category data persists after page reload",
+      "[ ] All user flows complete without errors"
+    ]
+  }
+}

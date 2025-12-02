@@ -269,6 +269,22 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
                       </div>
                     )}
                     
+                    {/* Aroma */}
+                    {item.aroma && (
+                      <div>
+                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">Aroma</h5>
+                        <p className="text-text-primary text-small font-body leading-relaxed">{item.aroma}</p>
+                      </div>
+                    )}
+                    
+                    {/* Flavor */}
+                    {item.flavor && (
+                      <div>
+                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">Flavor</h5>
+                        <p className="text-text-primary text-small font-body leading-relaxed">{item.flavor}</p>
+                      </div>
+                    )}
+                    
                     {/* Notes */}
                     {item.notes && (
                       <div>

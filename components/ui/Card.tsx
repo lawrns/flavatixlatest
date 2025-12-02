@@ -2,9 +2,13 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'tasting' | 'elevated' | 'outlined';
+  variant?: 'default' | 'tasting' | 'elevated' | 'outlined' | 'glass' | 'gradient' | 'social';
   hover?: boolean;
-  padding?: 'sm' | 'md' | 'lg';
+  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
+  /** Add animated gradient border */
+  glowBorder?: boolean;
+  /** Animation on mount */
+  animate?: boolean;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -13,24 +17,72 @@ const Card: React.FC<CardProps> = ({
   variant = 'default',
   hover = true,
   padding = 'md',
+  glowBorder = false,
+  animate = false,
   ...props
 }) => {
-  const baseClasses = 'rounded-lg transition-all duration-200';
+  const baseClasses = cn(
+    'rounded-2xl transition-all duration-300 ease-out',
+    animate && 'animate-scale-in'
+  );
   
   const variantClasses = {
-    default: 'bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 shadow-sm',
-    tasting: 'bg-zinc-50 dark:bg-zinc-800/50 border border-primary/10 shadow-sm',
-    elevated: 'bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-md',
-    outlined: 'bg-transparent border-2 border-zinc-300 dark:border-zinc-600'
+    default: cn(
+      'bg-white dark:bg-zinc-800/90 border border-zinc-200/80 dark:border-zinc-700/80',
+      'shadow-sm dark:shadow-zinc-900/20'
+    ),
+    tasting: cn(
+      'bg-gradient-to-br from-orange-50/80 to-white dark:from-zinc-800 dark:to-zinc-800/80',
+      'border border-primary/10 dark:border-primary/20',
+      'shadow-lg shadow-orange-500/5 dark:shadow-orange-500/10',
+      'relative overflow-hidden',
+      // Top accent bar
+      'before:absolute before:inset-x-0 before:top-0 before:h-1',
+      'before:bg-gradient-to-r before:from-primary before:via-orange-400 before:to-amber-400'
+    ),
+    elevated: cn(
+      'bg-white dark:bg-zinc-800',
+      'border border-zinc-100 dark:border-zinc-700',
+      'shadow-xl shadow-zinc-200/50 dark:shadow-zinc-900/50'
+    ),
+    outlined: cn(
+      'bg-transparent border-2 border-zinc-300 dark:border-zinc-600',
+      'hover:border-primary/50'
+    ),
+    glass: cn(
+      'bg-white/70 dark:bg-zinc-800/70',
+      'backdrop-blur-xl backdrop-saturate-150',
+      'border border-white/50 dark:border-zinc-700/50',
+      'shadow-xl shadow-black/5'
+    ),
+    gradient: cn(
+      'bg-gradient-to-br from-primary/5 via-white to-amber-50/50',
+      'dark:from-primary/10 dark:via-zinc-800 dark:to-amber-900/10',
+      'border border-primary/10 dark:border-primary/20',
+      'shadow-lg shadow-primary/5'
+    ),
+    social: cn(
+      'bg-white dark:bg-zinc-800',
+      'border border-zinc-100 dark:border-zinc-700/50',
+      'shadow-sm hover:shadow-md'
+    ),
   };
 
   const paddingClasses = {
+    none: '',
     sm: 'p-3',
-    md: 'p-4',
-    lg: 'p-6'
+    md: 'p-4 sm:p-5',
+    lg: 'p-5 sm:p-6',
+    xl: 'p-6 sm:p-8',
   };
 
-  const hoverClasses = hover ? 'hover:shadow-lg hover:-translate-y-0.5 hover:scale-[1.01]' : '';
+  const hoverClasses = hover 
+    ? 'hover:shadow-xl hover:-translate-y-1 hover:scale-[1.01] active:scale-[0.99]' 
+    : '';
+  
+  const glowBorderClasses = glowBorder
+    ? 'ring-2 ring-primary/20 ring-offset-2 ring-offset-white dark:ring-offset-zinc-900'
+    : '';
 
   return (
     <div
@@ -39,6 +91,7 @@ const Card: React.FC<CardProps> = ({
         variantClasses[variant],
         paddingClasses[padding],
         hoverClasses,
+        glowBorderClasses,
         className
       )}
       {...props}

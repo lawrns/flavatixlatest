@@ -77,16 +77,19 @@ export default function App({ Component, pageProps }: AppProps) {
           </ErrorBoundary>
         </LiveRegionProvider>
         <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
+          position="bottom-center"
+          autoClose={3000}
+          hideProgressBar
+          newestOnTop
           closeOnClick
           rtl={false}
-          pauseOnFocusLoss
+          pauseOnFocusLoss={false}
           draggable
-          pauseOnHover
+          pauseOnHover={false}
           theme={isDark ? 'dark' : 'light'}
+          limit={2}
+          className="!mb-20"
+          toastClassName="!rounded-xl !shadow-lg"
         />
       </AuthProvider>
     </QueryProvider>
