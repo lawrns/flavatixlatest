@@ -100,13 +100,15 @@ export default function Dashboard() {
     )}>
       <div className="flex h-screen flex-col">
         {/* Enhanced Header */}
-        <header className={cn(
-          'sticky top-0 z-40',
-          'bg-white/80 dark:bg-zinc-900/80',
-          'backdrop-blur-xl backdrop-saturate-150',
-          'border-b border-zinc-200/50 dark:border-zinc-700/50',
-          'px-4 py-3'
-        )}>
+        <header
+          className={cn(
+            'sticky top-0 z-40',
+            'bg-white/80 dark:bg-zinc-900/80',
+            'backdrop-blur-xl backdrop-saturate-150',
+            'border-b border-zinc-200/50 dark:border-zinc-700/50',
+            'px-4 pt-3 pb-0'
+          )}
+        >
           <div className="flex items-center justify-between max-w-4xl mx-auto">
             <div className="flex items-center gap-3">
               <span className="text-2xl">🍊</span>
@@ -129,43 +131,43 @@ export default function Dashboard() {
               </button>
             </div>
           </div>
+
+          {/* Tab Navigation (Home / Edit Profile) */}
+          <div className="mt-3 border-t border-zinc-200/50 dark:border-zinc-800/80">
+            <div className="flex max-w-4xl mx-auto">
+              <button
+                onClick={() => setActiveTab('home')}
+                className={cn(
+                  'relative px-6 py-3 text-sm font-semibold transition-colors',
+                  activeTab === 'home'
+                    ? 'text-primary'
+                    : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
+                )}
+              >
+                Home
+                {activeTab === 'home' && (
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-primary to-orange-500 rounded-full" />
+                )}
+              </button>
+              <button
+                onClick={() => setActiveTab('edit')}
+                className={cn(
+                  'relative px-6 py-3 text-sm font-semibold transition-colors',
+                  activeTab === 'edit'
+                    ? 'text-primary'
+                    : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
+                )}
+              >
+                Edit Profile
+                {activeTab === 'edit' && (
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-primary to-orange-500 rounded-full" />
+                )}
+              </button>
+            </div>
+          </div>
         </header>
 
         <main className="flex-1 overflow-y-auto pb-24">
-           {/* Enhanced Tab Navigation */}
-           <div className="sticky top-[57px] z-30 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-lg border-b border-zinc-200/50 dark:border-zinc-700/50">
-             <div className="flex max-w-4xl mx-auto">
-               <button
-                 onClick={() => setActiveTab('home')}
-                 className={cn(
-                   'relative px-6 py-3 text-sm font-semibold transition-colors',
-                   activeTab === 'home'
-                     ? 'text-primary'
-                     : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
-                 )}
-               >
-                 Home
-                 {activeTab === 'home' && (
-                   <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-primary to-orange-500 rounded-full" />
-                 )}
-               </button>
-               <button
-                 onClick={() => setActiveTab('edit')}
-                 className={cn(
-                   'relative px-6 py-3 text-sm font-semibold transition-colors',
-                   activeTab === 'edit'
-                     ? 'text-primary'
-                     : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
-                 )}
-               >
-                 Edit Profile
-                 {activeTab === 'edit' && (
-                   <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-primary to-orange-500 rounded-full" />
-                 )}
-               </button>
-             </div>
-           </div>
-
            {activeTab === 'home' && (
              <div className="p-4 sm:p-6 max-w-4xl mx-auto animate-fade-in">
                {/* Welcome Hero Section */}
