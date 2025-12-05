@@ -12,11 +12,12 @@ import React, { useState } from 'react';
 import Image, { ImageProps } from 'next/image';
 import { cn } from '@/lib/utils';
 
-interface OptimizedImageProps extends Omit<ImageProps, 'onError'> {
+interface OptimizedImageProps extends Omit<ImageProps, 'onError' | 'fetchPriority'> {
   fallbackSrc?: string;
   fallbackComponent?: React.ReactNode;
   variant?: 'default' | 'avatar' | 'thumbnail' | 'cover';
   showLoadingState?: boolean;
+  fetchPriority?: 'high' | 'low' | 'auto';
 }
 
 // Default fallback images
@@ -38,6 +39,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   variant = 'default',
   showLoadingState = true,
   className,
+  fetchPriority,
   ...props
 }) => {
   const [error, setError] = useState(false);
@@ -95,6 +97,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         onLoad={handleLoad}
         placeholder="blur"
         blurDataURL={BLUR_DATA_URL}
+        fetchPriority={fetchPriority}
         className={cn(
           loading ? 'opacity-0' : 'opacity-100',
           'transition-opacity duration-300'

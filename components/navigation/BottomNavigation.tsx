@@ -27,11 +27,11 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath }) => {
       testId: 'nav-taste'
     },
     {
-      path: '/social',
-      label: 'Feed',
-      icon: 'group',
-      activeIcon: 'group',
-      testId: 'nav-social'
+      path: '/review',
+      label: 'Review',
+      icon: 'rate_review',
+      activeIcon: 'rate_review',
+      testId: 'nav-review'
     },
     {
       path: '/flavor-wheels',

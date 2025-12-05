@@ -1,15 +1,37 @@
+// Webpack moduleId: 7093 (for crash tracing)
+// SSR-safe flavor wheels page - D3 loaded dynamically via visualization component
+
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../contexts/SimpleAuthContext';
 import { supabase } from '../lib/supabase';
 import dynamic from 'next/dynamic';
-import * as d3 from 'd3';
 import { FlavorWheelData } from '@/lib/flavorWheelGenerator';
 import { Download, RefreshCw, Info, List } from 'lucide-react';
 import ShareButton from '../components/sharing/ShareButton';
 import BottomNavigation from '../components/navigation/BottomNavigation';
 import FlavorWheelListView from '../components/flavor-wheels/FlavorWheelListView';
 import { FlavorWheelPDFExporter } from '../lib/flavorWheelPDFExporter';
+import FlavorWheelErrorBoundary from '../components/flavor-wheels/FlavorWheelErrorBoundary';
+
+// Color palette for categories (matches D3 visualization)
+const CATEGORY_COLORS = [
+  '#ef4444', // Red - Fruity
+  '#f59e0b', // Orange - Sweet
+  '#eab308', // Yellow - Citrus
+  '#10b981', // Green - Herbal
+  '#059669', // Dark Green - Earthy
+  '#3b82f6', // Blue - Floral
+  '#8b5cf6', // Purple - Spicy
+  '#d97706', // Brown - Woody/Nutty
+  '#6b7280', // Gray - Mineral
+  '#ec4899'  // Pink - Other
+];
+
+// Helper to get category color by index
+const getCategoryColor = (index: number): string => {
+  return CATEGORY_COLORS[index % CATEGORY_COLORS.length];
+};
 
 // Dynamically import to avoid SSR issues
 const InspirationBox = dynamic(() => import('../components/ui/inspiration-box'), {
@@ -416,18 +438,20 @@ export default function FlavorWheelsPage() {
                   className="w-full"
                 />
               ) : (
-                <div className="w-full flex justify-center items-center min-h-[300px]">
-                  <div className="relative" style={{ width: wheelSize, height: wheelSize }}>
-                    <FlavorWheelVisualization
-                      wheelData={wheelData}
-                      width={wheelSize}
-                      height={wheelSize}
-                      showLabels={true}
-                      interactive={true}
-                      onSegmentClick={handleSegmentClick}
-                    />
+                <FlavorWheelErrorBoundary onRetry={() => loadWheel(true)}>
+                  <div className="w-full flex justify-center items-center min-h-[300px]">
+                    <div className="relative" style={{ width: wheelSize, height: wheelSize }}>
+                      <FlavorWheelVisualization
+                        wheelData={wheelData}
+                        width={wheelSize}
+                        height={wheelSize}
+                        showLabels={true}
+                        interactive={true}
+                        onSegmentClick={handleSegmentClick}
+                      />
+                    </div>
                   </div>
-                </div>
+                </FlavorWheelErrorBoundary>
               )}
 
               {/* AI Badge */}
@@ -473,17 +497,12 @@ export default function FlavorWheelsPage() {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {wheelData.categories.map((category, idx) => (
                     <div key={idx} className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded-full" style={{
-                        backgroundColor: d3.scaleOrdinal<string>()
-                          .domain(wheelData.categories.map(c => c.name))
-                          .range([
-                            '#ef4444', '#f59e0b', '#eab308', '#10b981',
-                            '#059669', '#3b82f6', '#8b5cf6', '#d97706',
-                            '#6b7280', '#ec4899'
-                          ])(category.name)
-                      }}></div>
+                      <div 
+                        className="w-4 h-4 rounded-full" 
+                        style={{ backgroundColor: getCategoryColor(idx) }}
+                      />
                       <span className="text-sm text-gray-700 dark:text-gray-200">{category.name}</span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-300">({category.count})</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">({category.count})</span>
                     </div>
                   ))}
                 </div>

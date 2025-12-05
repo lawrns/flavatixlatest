@@ -59,9 +59,11 @@
   --color-neutral-900: #171717;
   
   /* Background Colors */
-  --color-background-app: #FEF3E7;
+  --color-background-app: #f8f7f6;
   --color-background-surface: #FFFFFF;
   --color-background-surface-secondary: #F7F3EA;
+  --color-background-surface-elevated: #FFFFFF;
+  --color-background-surface-subtle: #F2ECE6;
   --color-background-muted: #F4E3CC;
   
   /* Text Colors */
@@ -71,7 +73,7 @@
   --color-text-inverse: #FFFFFF;
   
   /* Border Colors */
-  --color-border-subtle: rgba(0, 0, 0, 0.08);
+  --color-border-subtle: rgba(0, 0, 0, 0.04);
   --color-border-default: rgba(0, 0, 0, 0.12);
   --color-border-strong: rgba(0, 0, 0, 0.20);
   --color-border-focus: var(--color-primary-500);

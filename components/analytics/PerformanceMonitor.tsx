@@ -46,12 +46,28 @@ export const PerformanceMonitor: React.FC = () => {
 
     // Log metrics after page load
     const logMetrics = () => {
+      // Format metric value with fallback for undefined
+      const formatMetric = (value: number | undefined, suffix = 'ms'): string => {
+        if (value === undefined || value === null) {
+          return `N/A`;
+        }
+        return `${value.toFixed(2)}${suffix}`;
+      };
+
+      // CLS uses different formatting (no 'ms', 4 decimal places)
+      const formatCLS = (value: number | undefined): string => {
+        if (value === undefined || value === null) {
+          return '0.0000 (no layout shifts detected)';
+        }
+        return value.toFixed(4);
+      };
+
       console.group('🚀 Performance Metrics');
-      console.log('Load Time:', `${metrics.loadTime?.toFixed(2)}ms`);
-      console.log('First Contentful Paint:', `${metrics.firstContentfulPaint?.toFixed(2)}ms`);
-      console.log('Largest Contentful Paint:', `${metrics.largestContentfulPaint?.toFixed(2)}ms`);
-      console.log('First Input Delay:', `${metrics.firstInputDelay?.toFixed(2)}ms`);
-      console.log('Cumulative Layout Shift:', metrics.cumulativeLayoutShift?.toFixed(4));
+      console.log('Load Time:', formatMetric(metrics.loadTime));
+      console.log('First Contentful Paint:', formatMetric(metrics.firstContentfulPaint));
+      console.log('Largest Contentful Paint:', formatMetric(metrics.largestContentfulPaint));
+      console.log('First Input Delay:', formatMetric(metrics.firstInputDelay));
+      console.log('Cumulative Layout Shift:', formatCLS(metrics.cumulativeLayoutShift));
       console.groupEnd();
 
       // Send to analytics (if implemented)

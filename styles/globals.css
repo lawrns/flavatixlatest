@@ -893,9 +893,8 @@ input[type="range"]::-moz-range-track {
   animation: scaleIn 0.3s ease-out forwards;
 }
 
-/* Stagger children animations */
+/* Stagger children animations - no initial opacity to avoid hydration mismatch */
 .stagger-children > * {
-  opacity: 0;
   animation: slideUp 0.4s ease-out forwards;
 }
 
