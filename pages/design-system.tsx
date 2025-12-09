@@ -790,11 +790,15 @@ export default function DesignSystemPage() {
                   </Card>
 
                   {/* Interactive Card */}
-                  <Card variant="default" interactive onClick={() => alert('Card clicked!')}>
+                  <Card
+                    variant="default"
+                    onClick={() => alert('Card clicked!')}
+                    className="cursor-pointer transition hover:shadow-lg"
+                  >
                     <CardHeader title="Interactive Card" subtitle="Click me!" />
                     <CardContent>
                       <p className="text-zinc-600 dark:text-zinc-400">
-                        Cards can be made clickable with keyboard support.
+                        Cards can be made clickable.
                       </p>
                     </CardContent>
                   </Card>
