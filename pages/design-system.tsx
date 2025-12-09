@@ -472,29 +472,29 @@ export default function DesignSystemPage() {
                 {/* Domain-Specific Text Patterns */}
                 <SubSection title="Domain-Specific Text Patterns">
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <Card variant="gemini" padding="md">
+                    <Card variant="default" padding="md">
                       <p className="text-xs text-zinc-500 mb-1">Tasting ID</p>
                       <p className="font-mono text-sm text-zinc-900 dark:text-white">TST-2024-001234</p>
                     </Card>
-                    <Card variant="gemini" padding="md">
+                    <Card variant="default" padding="md">
                       <p className="text-xs text-zinc-500 mb-1">Score Display</p>
                       <p className="text-3xl font-bold text-primary tabular-nums">92<span className="text-lg text-zinc-400">/100</span></p>
                     </Card>
-                    <Card variant="gemini" padding="md">
+                    <Card variant="default" padding="md">
                       <p className="text-xs text-zinc-500 mb-1">Spirit Name</p>
                       <p className="text-lg font-semibold text-zinc-900 dark:text-white">Casa Noble Añejo</p>
                       <p className="text-sm text-zinc-500">Jalisco, Mexico</p>
                     </Card>
-                    <Card variant="gemini" padding="md">
+                    <Card variant="default" padding="md">
                       <p className="text-xs text-zinc-500 mb-1">Date/Time</p>
                       <p className="text-sm text-zinc-900 dark:text-white">December 9, 2024</p>
                       <p className="text-xs text-zinc-500">2:30 PM</p>
                     </Card>
-                    <Card variant="gemini" padding="md">
+                    <Card variant="default" padding="md">
                       <p className="text-xs text-zinc-500 mb-1">Price Display</p>
                       <p className="text-xl font-semibold text-zinc-900 dark:text-white">$89<span className="text-sm text-zinc-400">.99</span></p>
                     </Card>
-                    <Card variant="gemini" padding="md">
+                    <Card variant="default" padding="md">
                       <p className="text-xs text-zinc-500 mb-1">Status Label</p>
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
                         Completed
@@ -726,7 +726,7 @@ export default function DesignSystemPage() {
                   </Card>
 
                   {/* Gemini Card */}
-                  <Card variant="gemini">
+                  <Card variant="default">
                     <CardHeader title="Gemini Card" subtitle="Explicit Gemini styling" />
                     <CardContent>
                       <p className="text-zinc-600 dark:text-zinc-400">
@@ -931,7 +931,7 @@ export default function DesignSystemPage() {
                 {/* Empty States */}
                 <SubSection title="Empty States">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Card variant="gemini">
+                    <Card variant="default">
                       <EmptyState
                         icon="🍷"
                         title="No tastings yet"
@@ -940,7 +940,7 @@ export default function DesignSystemPage() {
                         size="sm"
                       />
                     </Card>
-                    <Card variant="gemini">
+                    <Card variant="default">
                       <EmptyState
                         icon="search_off"
                         title="No results found"
@@ -1036,7 +1036,7 @@ export default function DesignSystemPage() {
                   <div className="space-y-8">
                     <div>
                       <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-4">Full Variant (with labels)</p>
-                      <Card variant="gemini" className="max-w-2xl">
+                      <Card variant="default" className="max-w-2xl">
                         <FormStepperProvider steps={demoSteps} initialStep={1}>
                           <StepperProgress variant="full" showLabels />
                         </FormStepperProvider>
@@ -1045,7 +1045,7 @@ export default function DesignSystemPage() {
 
                     <div>
                       <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-4">Numbers Variant</p>
-                      <Card variant="gemini" className="max-w-md">
+                      <Card variant="default" className="max-w-md">
                         <FormStepperProvider steps={demoSteps} initialStep={1}>
                           <StepperProgress variant="numbers" />
                         </FormStepperProvider>
@@ -1054,7 +1054,7 @@ export default function DesignSystemPage() {
 
                     <div>
                       <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-4">Dots Variant</p>
-                      <Card variant="gemini" className="max-w-xs">
+                      <Card variant="default" className="max-w-xs">
                         <FormStepperProvider steps={demoSteps} initialStep={1}>
                           <StepperProgress variant="dots" />
                         </FormStepperProvider>
