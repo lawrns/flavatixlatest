@@ -552,12 +552,6 @@ export default function DesignSystemPage() {
                     <Button variant="secondary" loading>Loading</Button>
                   </Showcase>
 
-                  <Showcase title="Outline - Tertiary actions">
-                    <Button variant="outline">Outline Button</Button>
-                    <Button variant="outline" disabled>Disabled</Button>
-                    <Button variant="outline" loading>Loading</Button>
-                  </Showcase>
-
                   <Showcase title="Ghost - Subtle actions, inline">
                     <Button variant="ghost">Ghost Button</Button>
                     <Button variant="ghost" disabled>Disabled</Button>
@@ -598,7 +592,7 @@ export default function DesignSystemPage() {
                   <Showcase title="Icon positions">
                     <Button icon={<Search className="w-4 h-4" />} iconPosition="left">Search</Button>
                     <Button icon={<ChevronRight className="w-4 h-4" />} iconPosition="right">Continue</Button>
-                    <Button icon={<Heart className="w-4 h-4" />} variant="outline">Like</Button>
+                    <Button icon={<Heart className="w-4 h-4" />} variant="secondary">Like</Button>
                     <Button icon={<Share2 className="w-4 h-4" />} variant="ghost">Share</Button>
                   </Showcase>
                 </SubSection>
@@ -608,7 +602,7 @@ export default function DesignSystemPage() {
                   <Showcase title="Rounded full">
                     <Button pill>Pill Button</Button>
                     <Button pill variant="secondary">Secondary Pill</Button>
-                    <Button pill variant="outline" icon={<Star className="w-4 h-4" />}>Rate</Button>
+                    <Button pill variant="secondary" icon={<Star className="w-4 h-4" />}>Rate</Button>
                   </Showcase>
                 </SubSection>
 
@@ -617,7 +611,7 @@ export default function DesignSystemPage() {
                   <div className="max-w-md space-y-3">
                     <Button fullWidth>Full Width Primary</Button>
                     <Button fullWidth variant="secondary">Full Width Secondary</Button>
-                    <Button fullWidth variant="outline">Full Width Outline</Button>
+                    <Button fullWidth variant="ghost">Full Width Ghost</Button>
                   </div>
                 </SubSection>
               </Section>
