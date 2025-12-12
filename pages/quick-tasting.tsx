@@ -6,7 +6,8 @@ import QuickTastingSession from '@/components/quick-tasting/QuickTastingSession'
 import CategorySelector from '@/components/quick-tasting/CategorySelector';
 import QuickTastingSummary from '@/components/quick-tasting/QuickTastingSummary';
 import { toast } from '@/lib/toast';
-import BottomNavigation from '@/components/navigation/BottomNavigation';
+import PageLayout from '@/components/layout/PageLayout';
+import Container from '@/components/layout/Container';
 import { logger } from '@/lib/logger';
 
 type QuickTasting = Database['public']['Tables']['quick_tastings']['Row'];
@@ -88,14 +89,14 @@ const QuickTastingPage: React.FC = () => {
             .single();
 
           if (error) {
-            logger.error('❌ QuickTastingPage: Error creating session:', error);
+            logger.error('[ERROR] QuickTastingPage: Error creating session:', error);
             throw error;
           }
 
-          logger.debug('✅ QuickTastingPage: Session created:', data.id);
+          logger.debug('[SUCCESS] QuickTastingPage: Session created:', data.id);
           setCurrentSession(data);
         } catch (error) {
-          logger.error('❌ QuickTastingPage: Error in createDefaultSession:', error);
+          logger.error('[ERROR] QuickTastingPage: Error in createDefaultSession:', error);
           toast.error('Failed to start tasting session');
         } finally {
           setIsLoading(false);
@@ -216,28 +217,14 @@ const QuickTastingPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
-      <main id="main-content">
-        <div className="container mx-auto px-md py-lg">
-          <div className="mb-lg">
-            <button
-              onClick={() => router.back()}
-              className="flex items-center text-text-secondary hover:text-text-primary mb-sm transition-colors font-body"
-            >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Back
-            </button>
-            <h1 className="text-h1 font-heading font-bold text-text-primary mb-xs">
-              Quick Tasting
-            </h1>
-            <p className="text-body font-body text-text-secondary">
-              Start a quick tasting session to explore flavors and record your impressions
-            </p>
-          </div>
-
-          <div className="mb-lg">
+    <PageLayout
+      title="Quick Tasting"
+      subtitle="Start a quick tasting session to explore flavors and record your impressions"
+      showBack
+      containerSize="md"
+    >
+      {/* Step indicator */}
+      <div className="mb-6 mt-2">
             <div className="flex items-center justify-center space-x-sm">
               <div className={`flex items-center ${
                 currentStep === 'session' ? 'text-neutral-800' :
@@ -269,30 +256,25 @@ const QuickTastingPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="max-w-4xl mx-auto">
-            {currentStep === 'session' && (
-              <QuickTastingSession
-                session={currentSession as any}
-                userId={user!.id}
-                onSessionComplete={(data) => handleSessionComplete(data as any)}
-                onSessionUpdate={(data) => setCurrentSession(data as any)}
-                onSessionCreate={(data) => setCurrentSession(data as any)}
-              />
-            )}
+      <Container size="2xl">
+        {currentStep === 'session' && (
+          <QuickTastingSession
+            session={currentSession as any}
+            userId={user!.id}
+            onSessionComplete={(data) => handleSessionComplete(data as any)}
+            onSessionUpdate={(data) => setCurrentSession(data as any)}
+            onSessionCreate={(data) => setCurrentSession(data as any)}
+          />
+        )}
 
-            {currentStep === 'summary' && currentSession && (
-              <QuickTastingSummary
-                session={currentSession as any}
-                onStartNewSession={handleStartNewSession}
-              />
-            )}
-          </div>
-        </div>
-      </main>
-
-      {/* Bottom Navigation */}
-      <BottomNavigation />
-    </div>
+        {currentStep === 'summary' && currentSession && (
+          <QuickTastingSummary
+            session={currentSession as any}
+            onStartNewSession={handleStartNewSession}
+          />
+        )}
+      </Container>
+    </PageLayout>
   );
 };
 

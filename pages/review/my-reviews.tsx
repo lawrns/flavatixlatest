@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
@@ -23,15 +23,7 @@ const MyReviewsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const supabase = getSupabaseClient() as any;
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/auth');
-    } else if (user) {
-      loadReviews();
-    }
-  }, [user, loading, router]);
-
-  const loadReviews = async () => {
+  const loadReviews = useCallback(async () => {
     if (!user) return;
 
     setIsLoading(true);
@@ -62,7 +54,15 @@ const MyReviewsPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user, supabase]);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/auth');
+    } else if (user) {
+      loadReviews();
+    }
+  }, [user, loading, router, loadReviews]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

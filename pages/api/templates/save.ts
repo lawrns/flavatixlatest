@@ -1,85 +1,90 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '@/lib/supabase';
+import {
+  createApiHandler,
+  withAuth,
+  withValidation,
+  sendError,
+  sendSuccess,
+  requireUser,
+  type ApiContext,
+} from '@/lib/api/middleware';
+import { z } from 'zod';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+const categoryInputSchema = z.object({
+  name: z.string().min(1, 'Category name is required'),
+  hasText: z.boolean(),
+  hasScale: z.boolean(),
+  hasBoolean: z.boolean(),
+  scaleMax: z.number().min(5).max(100).optional(),
+  rankInSummary: z.boolean(),
+});
 
-interface CategoryInput {
-  name: string;
-  hasText: boolean;
-  hasScale: boolean;
-  hasBoolean: boolean;
-  scaleMax?: number;
-  rankInSummary: boolean;
-}
+const saveTemplateSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(120, 'Name must be 120 characters or less'),
+  baseCategory: z.string().min(1, 'Base category is required'),
+  categories: z.array(categoryInputSchema).min(1, 'At least one category is required').max(20, 'Maximum 20 categories allowed'),
+});
 
-interface SaveTemplateRequest {
-  name: string;
-  baseCategory: string;
-  categories: CategoryInput[];
-}
+async function saveTemplateHandler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  context: ApiContext
+) {
+  // Get authenticated user ID from context (set by withAuth middleware)
+  const user_id = requireUser(context).id;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  // Request body is already validated by withValidation middleware
+  const { name, baseCategory, categories } = req.body as {
+    name: string;
+    baseCategory: string;
+    categories: Array<{
+      name: string;
+      hasText: boolean;
+      hasScale: boolean;
+      hasBoolean: boolean;
+      scaleMax?: number;
+      rankInSummary: boolean;
+    }>;
+  };
+
+  // Get Supabase client with user context (RLS will enforce permissions)
+  const supabase = getSupabaseClient(req, res);
+
+  // Normalize categories structure
+  const normalizedCategories = categories.map((cat, index) => ({
+    name: cat.name,
+    hasText: cat.hasText,
+    hasScale: cat.hasScale,
+    hasBoolean: cat.hasBoolean,
+    scaleMax: cat.hasScale ? (cat.scaleMax || 100) : null,
+    rankInSummary: cat.rankInSummary,
+    sortOrder: index
+  }));
+
+  const { data, error } = await supabase
+    .from('study_templates')
+    .insert({
+      user_id,
+      name,
+      base_category: baseCategory,
+      categories: JSON.stringify(normalizedCategories)
+    })
+    .select()
+    .single();
+
+  if (error) {
+    return sendError(res, 'INTERNAL_ERROR', `Failed to save template: ${error.message}`, 500);
   }
 
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-
-    if (authError || !user) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    const { name, baseCategory, categories }: SaveTemplateRequest = req.body;
-
-    // Validation
-    if (!name || !baseCategory || !categories || categories.length === 0) {
-      return res.status(400).json({ error: 'Missing required fields' });
-    }
-
-    // Normalize categories structure
-    const normalizedCategories = categories.map((cat, index) => ({
-      name: cat.name,
-      hasText: cat.hasText,
-      hasScale: cat.hasScale,
-      hasBoolean: cat.hasBoolean,
-      scaleMax: cat.hasScale ? (cat.scaleMax || 100) : null,
-      rankInSummary: cat.rankInSummary,
-      sortOrder: index
-    }));
-
-    const { data, error } = await supabase
-      .from('study_templates')
-      .insert({
-        user_id: user.id,
-        name,
-        base_category: baseCategory,
-        categories: JSON.stringify(normalizedCategories)
-      })
-      .select()
-      .single();
-
-    if (error) {
-      console.error('[Template Save API] Error saving template:', error);
-      return res.status(500).json({ error: 'Failed to save template', details: error.message });
-    }
-
-    res.status(201).json({
-      message: 'Template saved successfully',
-      templateId: data.id,
-      template: data
-    });
-
-  } catch (error) {
-    console.error('Unexpected error:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
+  return sendSuccess(
+    res,
+    { templateId: data.id, template: data },
+    'Template saved successfully',
+    201
+  );
 }
+
+export default createApiHandler({
+  POST: withAuth(withValidation(saveTemplateSchema, saveTemplateHandler)),
+});

@@ -101,10 +101,10 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'pending': return '⏳';
-      case 'approved': return '✅';
-      case 'rejected': return '❌';
-      default: return '❓';
+      case 'pending': return <span className="material-symbols-outlined text-sm align-middle">hourglass_empty</span>;
+      case 'approved': return <span className="material-symbols-outlined text-sm align-middle text-green-600">check_circle</span>;
+      case 'rejected': return <span className="material-symbols-outlined text-sm align-middle text-red-600">cancel</span>;
+      default: return <span className="material-symbols-outlined text-sm align-middle">help</span>;
     }
   };
 
@@ -162,7 +162,7 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
           </div>
         ) : suggestions.length === 0 ? (
           <div className="text-center py-8 text-text-secondary">
-            <div className="text-4xl mb-2">💡</div>
+            <span className="material-symbols-outlined text-4xl text-yellow-500 mb-2 block">lightbulb</span>
             <p>No suggestions yet</p>
             {canAddItems && !canModerate && (
               <p className="text-sm mt-1">Be the first to suggest an item!</p>

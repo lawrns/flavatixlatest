@@ -200,7 +200,7 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
 
             {stats.pending === 0 ? (
               <div className="text-center py-8 text-text-secondary">
-                <div className="text-4xl mb-2">✅</div>
+                <span className="material-symbols-outlined text-4xl text-green-600 mb-2 block">check_circle</span>
                 <p>All caught up! No pending suggestions.</p>
               </div>
             ) : (
@@ -298,7 +298,7 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
             <div className="space-y-4">
               <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-yellow-600">⚠️</span>
+                  <span className="material-symbols-outlined text-yellow-600">warning</span>
                   <h4 className="font-medium text-yellow-800">Host Unresponsiveness</h4>
                 </div>
                 <p className="text-sm text-yellow-700 mb-3">

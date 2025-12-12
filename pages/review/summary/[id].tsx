@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { toast } from '@/lib/toast';
@@ -57,15 +58,7 @@ const ReviewSummaryPage: React.FC = () => {
 
   const isProse = router.query.type === 'prose';
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/auth');
-    } else if (user && id) {
-      loadReview();
-    }
-  }, [user, loading, id, router]);
-
-  const loadReview = async () => {
+  const loadReview = useCallback(async () => {
     if (!id || typeof id !== 'string') return;
 
     setIsLoading(true);
@@ -86,7 +79,15 @@ const ReviewSummaryPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [id, isProse, supabase, router]);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/auth');
+    } else if (user && id) {
+      loadReview();
+    }
+  }, [user, loading, id, router, loadReview]);
 
   const handlePublish = async () => {
     if (!review) return;
@@ -171,11 +172,13 @@ const ReviewSummaryPage: React.FC = () => {
             <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">Item Information</h2>
             
             {review.picture_url && (
-              <div className="mb-md">
-                <img
+              <div className="relative mb-md w-full h-64">
+                <Image
                   src={review.picture_url}
                   alt={review.item_name}
-                  className="w-full h-64 object-cover rounded-lg"
+                  fill
+                  className="object-cover rounded-lg"
+                  sizes="100vw"
                 />
               </div>
             )}

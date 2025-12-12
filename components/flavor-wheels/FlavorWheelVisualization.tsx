@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as d3 from 'd3';
 import { FlavorWheelData, WheelCategory } from '@/lib/flavorWheelGenerator';
 import { Card, CardContent, CardHeader } from '../ui/Card';
 import Button from '../ui/Button';
-import { Download, Share2, Info } from 'lucide-react';
+import { Download, Share2, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 
 interface FlavorWheelVisualizationProps {
   wheelData: FlavorWheelData;
@@ -40,8 +40,11 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
   onSegmentClick
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
   const [hoveredSegment, setHoveredSegment] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ text: string; x: number; y: number } | null>(null);
+  const [currentZoom, setCurrentZoom] = useState(1);
 
   // Export functionality
   const handleExport = (format: 'png' | 'svg') => {
@@ -344,26 +347,116 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
 
   }, [wheelData, width, height, showLabels, interactive, onSegmentClick, colorScale]);
 
+  // Set up zoom behavior after wheel is rendered
+  useEffect(() => {
+    if (!svgRef.current || !interactive) return;
+
+    const svg = d3.select(svgRef.current);
+    const g = svg.select('g');
+    
+    if (g.empty()) return;
+
+    // Create zoom behavior
+    const zoom = d3.zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.5, 4]) // Min 0.5x, max 4x zoom
+      .on('zoom', (event) => {
+        g.attr('transform', event.transform.toString());
+        setCurrentZoom(event.transform.k);
+      });
+
+    // Apply zoom to SVG
+    svg.call(zoom);
+    
+    // Store zoom ref for external controls
+    zoomRef.current = zoom;
+
+    // Reset to initial state
+    svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2));
+
+    return () => {
+      svg.on('.zoom', null); // Clean up zoom listeners
+    };
+  }, [wheelData, width, height, interactive]);
+
+  // Zoom control handlers
+  const handleZoomIn = useCallback(() => {
+    if (!svgRef.current || !zoomRef.current) return;
+    const svg = d3.select(svgRef.current);
+    svg.transition().duration(300).call(zoomRef.current.scaleBy, 1.5);
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    if (!svgRef.current || !zoomRef.current) return;
+    const svg = d3.select(svgRef.current);
+    svg.transition().duration(300).call(zoomRef.current.scaleBy, 0.67);
+  }, []);
+
+  const handleResetZoom = useCallback(() => {
+    if (!svgRef.current || !zoomRef.current) return;
+    const svg = d3.select(svgRef.current);
+    svg.transition().duration(300).call(
+      zoomRef.current.transform,
+      d3.zoomIdentity.translate(width / 2, height / 2)
+    );
+  }, [width, height]);
+
   return (
-    <div className="relative overflow-auto touch-pan-x touch-pan-y" style={{ maxHeight: '80vh' }}>
-      <svg
-        ref={svgRef}
-        width={width}
-        height={height}
-        className="flavor-wheel-svg mx-auto"
-        style={{ minWidth: '600px', touchAction: 'pinch-zoom' }}
-      />
-      {tooltip && (
-        <div
-          className="absolute bg-gray-900 text-white px-3 py-2 rounded-md text-sm pointer-events-none shadow-lg z-10"
-          style={{
-            left: tooltip.x + 10,
-            top: tooltip.y + 10,
-          }}
-        >
-          {tooltip.text}
+    <div className="relative w-full">
+      {/* Aspect-ratio container ensures the wheel stays square and scales responsively */}
+      <div 
+        ref={containerRef}
+        className="w-full aspect-square max-w-[600px] mx-auto relative overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-zinc-800"
+      >
+        <svg
+          ref={svgRef}
+          viewBox={`0 0 ${width} ${height}`}
+          className="flavor-wheel-svg w-full h-full block"
+          style={{ touchAction: 'none' }} // Allow D3 to handle all touch events
+          preserveAspectRatio="xMidYMid meet"
+        />
+        
+        {/* Zoom Controls */}
+        <div className="absolute bottom-3 right-3 flex flex-col gap-1 bg-white/90 dark:bg-zinc-800/90 rounded-lg shadow-md p-1">
+          <button
+            onClick={handleZoomIn}
+            className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded transition-colors"
+            aria-label="Zoom in"
+          >
+            <ZoomIn size={18} className="text-gray-600 dark:text-gray-300" />
+          </button>
+          <button
+            onClick={handleZoomOut}
+            className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded transition-colors"
+            aria-label="Zoom out"
+          >
+            <ZoomOut size={18} className="text-gray-600 dark:text-gray-300" />
+          </button>
+          <button
+            onClick={handleResetZoom}
+            className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded transition-colors"
+            aria-label="Reset zoom"
+          >
+            <RotateCcw size={18} className="text-gray-600 dark:text-gray-300" />
+          </button>
         </div>
-      )}
+
+        {/* Zoom indicator */}
+        <div className="absolute top-3 left-3 bg-white/90 dark:bg-zinc-800/90 px-2 py-1 rounded text-xs text-gray-600 dark:text-gray-300 font-medium">
+          {Math.round(currentZoom * 100)}%
+        </div>
+
+        {tooltip && (
+          <div
+            className="absolute bg-gray-900 text-white px-3 py-2 rounded-md text-sm pointer-events-none shadow-lg z-10"
+            style={{
+              left: tooltip.x + 10,
+              top: tooltip.y + 10,
+            }}
+          >
+            {tooltip.text}
+          </div>
+        )}
+      </div>
       
       {/* Enhanced Descriptor List with Actions */}
       {wheelData.categories.length > 0 && (
@@ -371,7 +464,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
           <CardHeader 
             title={`Extracted Descriptors (${wheelData.totalDescriptors})`}
             action={
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2 justify-end">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -418,16 +511,20 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
                         </div>
                         <div className="ml-2 space-y-1">
                           {subcategory.descriptors.slice(0, 3).map(descriptor => (
-                            <div 
+                            <button 
                               key={descriptor.text} 
-                              className="text-xs text-gray-500 dark:text-gray-500 hover:text-primary cursor-pointer transition-colors"
-                              onClick={() => onSegmentClick?.(category.name, subcategory.name, descriptor.text)}
+                              type="button"
+                              className="block w-full text-left text-xs text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-400 active:text-primary-600 cursor-pointer transition-colors py-1 min-h-[32px] touch-manipulation"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onSegmentClick?.(category.name, subcategory.name, descriptor.text);
+                              }}
                             >
                               • {descriptor.text} ({descriptor.count})
-                            </div>
+                            </button>
                           ))}
                           {subcategory.descriptors.length > 3 && (
-                            <div className="text-xs text-gray-400 dark:text-gray-600">
+                            <div className="text-xs text-gray-400 dark:text-gray-600 py-1">
                               +{subcategory.descriptors.length - 3} more...
                             </div>
                           )}

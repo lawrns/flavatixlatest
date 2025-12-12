@@ -231,7 +231,11 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
                   : 'bg-gray-100 text-gray-800'
               }`}
             >
-              {isBlindTasting ? '🕶️ On' : '👁️ Off'}
+              {isBlindTasting ? (
+                <><span className="material-symbols-outlined text-base mr-1 align-middle">visibility_off</span>On</>
+              ) : (
+                <><span className="material-symbols-outlined text-base mr-1 align-middle">visibility</span>Off</>
+              )}
             </button>
           </div>
         )}

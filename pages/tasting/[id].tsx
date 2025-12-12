@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { getSupabaseClient } from '@/lib/supabase';
 import { useAuth } from '@/contexts/SimpleAuthContext';
@@ -37,18 +37,7 @@ const TastingSessionPage: React.FC = () => {
   const [hasAccess, setHasAccess] = useState(false);
   const supabase = getSupabaseClient();
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/auth');
-      return;
-    }
-
-    if (id && user) {
-      loadSession();
-    }
-  }, [id, user, loading, router]);
-
-  const loadSession = async () => {
+  const loadSession = useCallback(async () => {
     if (!id || typeof id !== 'string' || !user) return;
 
     // Validate UUID format
@@ -142,7 +131,18 @@ const TastingSessionPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [id, user, supabase]);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/auth');
+      return;
+    }
+
+    if (id && user) {
+      loadSession();
+    }
+  }, [id, user, loading, router, loadSession]);
 
   const handleSessionComplete = (completedSession: QuickTasting) => {
     setSession(completedSession);

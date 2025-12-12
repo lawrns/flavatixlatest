@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useId } from 'react';
 import { cn } from '@/lib/utils';
 
 interface RippleEffect {
@@ -8,7 +8,7 @@ interface RippleEffect {
 }
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success' | 'gradient';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success' | 'gradient' | 'outline';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   loading?: boolean;
   icon?: React.ReactNode;
@@ -18,6 +18,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   ripple?: boolean;
   /** Rounded pill style */
   pill?: boolean;
+  /** Loading text for screen readers */
+  loadingText?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -31,12 +33,15 @@ const Button: React.FC<ButtonProps> = ({
   fullWidth = false,
   ripple = true,
   pill = false,
+  loadingText = 'Loading...',
   disabled,
   onClick,
+  'aria-label': ariaLabel,
   ...props
 }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [ripples, setRipples] = useState<RippleEffect[]>([]);
+  const loadingId = useId();
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (ripple && buttonRef.current) {
@@ -58,47 +63,52 @@ const Button: React.FC<ButtonProps> = ({
 
   const baseClasses = cn(
     'relative inline-flex items-center justify-center font-semibold overflow-hidden',
-    'transition-all duration-300 ease-out',
+    'transition-all duration-200 ease-out',
     'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
     'disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
-    'active:scale-[0.98] hover:-translate-y-0.5',
-    pill ? 'rounded-full' : 'rounded-xl'
+    'active:scale-[0.98]',
+    pill ? 'rounded-full' : 'rounded-[14px]'
   );
   
   const variantClasses = {
+    // Gemini-style primary button - solid rust red
     primary: cn(
-      'bg-gradient-to-br from-primary to-orange-600 text-white',
-      'shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30',
-      'focus-visible:ring-primary/50',
-      'before:absolute before:inset-0 before:bg-white/20 before:opacity-0 hover:before:opacity-100 before:transition-opacity'
+      'bg-primary text-white',
+      'shadow-sm hover:opacity-90',
+      'focus-visible:ring-primary/50'
     ),
+    // Gemini-style secondary button - soft gray background
     secondary: cn(
-      'bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700',
-      'text-zinc-900 dark:text-white',
-      'hover:border-primary/50 hover:bg-zinc-50 dark:hover:bg-zinc-700/50',
-      'shadow-sm hover:shadow-md',
+      'bg-gemini-card dark:bg-zinc-800 text-gemini-text-dark dark:text-white',
+      'hover:bg-gray-200 dark:hover:bg-zinc-700',
       'focus-visible:ring-zinc-400'
     ),
+    // Gemini-style outline button
+    outline: cn(
+      'bg-transparent border border-gemini-border text-gemini-text-dark dark:text-white',
+      'hover:bg-gray-50 dark:hover:bg-zinc-800',
+      'focus-visible:ring-primary/30'
+    ),
+    // Gemini-style ghost button
     ghost: cn(
       'bg-transparent text-primary',
-      'hover:bg-primary/10 active:bg-primary/20',
+      'hover:bg-gray-50 dark:hover:bg-zinc-800',
       'focus-visible:ring-primary/30'
     ),
     danger: cn(
-      'bg-gradient-to-br from-red-500 to-red-600 text-white',
-      'shadow-lg shadow-red-500/25 hover:shadow-xl hover:shadow-red-500/30',
+      'bg-red-500 text-white',
+      'shadow-sm hover:bg-red-600',
       'focus-visible:ring-red-500/50'
     ),
     success: cn(
-      'bg-gradient-to-br from-green-500 to-emerald-600 text-white',
-      'shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30',
+      'bg-gemini-success text-white',
+      'shadow-sm hover:opacity-90',
       'focus-visible:ring-green-500/50'
     ),
     gradient: cn(
-      'bg-gradient-to-r from-primary via-orange-500 to-amber-500 text-white',
-      'shadow-lg hover:shadow-xl',
-      'focus-visible:ring-primary/50',
-      'bg-[length:200%_auto] hover:bg-right-bottom transition-[background-position] duration-500'
+      'bg-gradient-to-r from-primary to-red-600 text-white',
+      'shadow-sm hover:opacity-90',
+      'focus-visible:ring-primary/50'
     ),
   };
 
@@ -123,44 +133,50 @@ const Button: React.FC<ButtonProps> = ({
       )}
       disabled={disabled || loading}
       onClick={handleClick}
+      aria-label={ariaLabel}
+      aria-busy={loading}
+      aria-describedby={loading ? loadingId : undefined}
       {...props}
     >
       {/* Ripple effects */}
-      {ripples.map(ripple => (
+      {ripples.map(r => (
         <span
-          key={ripple.id}
+          key={r.id}
           className="absolute rounded-full bg-white/30 animate-ripple pointer-events-none"
           style={{
-            left: ripple.x,
-            top: ripple.y,
+            left: r.x,
+            top: r.y,
             transform: 'translate(-50%, -50%)',
           }}
         />
       ))}
       
-      {/* Loading spinner */}
+      {/* Loading spinner with screen reader text */}
       {loading && (
-        <svg
-          className="animate-spin h-5 w-5 mr-2"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          />
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          />
-        </svg>
+        <>
+          <svg
+            className="animate-spin h-5 w-5 mr-2"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+          </svg>
+          <span id={loadingId} className="sr-only">{loadingText}</span>
+        </>
       )}
       
       {/* Left icon */}

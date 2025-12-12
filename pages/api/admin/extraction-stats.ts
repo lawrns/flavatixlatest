@@ -37,7 +37,18 @@ export default async function handler(
   }
 
   try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const token = authHeader.replace('Bearer ', '');
     const supabase = getSupabaseClient(req, res);
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
     const period = (req.query.period as string) || '7d';
 
     // Calculate date range

@@ -169,7 +169,9 @@ export function measureBetweenMarks(
       recordMetric(name, measure.duration);
       return measure.duration;
     } catch (error) {
-      logger.warn('Performance', `Failed to measure ${name}`, { error });
+      logger.warn('Performance', `Failed to measure ${name}`, {
+        error: error instanceof Error ? error : new Error(String(error)),
+      });
       return null;
     }
   }

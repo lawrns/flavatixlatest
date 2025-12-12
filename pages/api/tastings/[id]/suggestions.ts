@@ -1,92 +1,68 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { studyModeService } from '@/lib/studyModeService';
 import { getSupabaseClient } from '@/lib/supabase';
+import {
+  createApiHandler,
+  withOptionalAuth,
+  withAuth,
+  withValidation,
+  sendError,
+  sendSuccess,
+  type ApiContext,
+} from '@/lib/api/middleware';
+import { z } from 'zod';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { id: tastingId } = req.query;
-
-  if (!tastingId || typeof tastingId !== 'string') {
-    return res.status(400).json({ error: 'Invalid tasting ID' });
-  }
-
-  // Get user_id from request body (following existing API pattern)
-  const userId = req.body?.user_id || req.query?.user_id;
-
-  if (!userId) {
-    return res.status(400).json({ error: 'user_id is required' });
-  }
-
-  try {
-    switch (req.method) {
-      case 'GET':
-        return await handleGetSuggestions(tastingId, userId, req, res);
-      case 'POST':
-        return await handlePostSuggestion(tastingId, userId, req, res);
-      default:
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
-  } catch (error: any) {
-    console.error('API Error:', error);
-    return res.status(500).json({
-      error: error.message || 'Internal server error'
-    });
-  }
-}
+const submitSuggestionSchema = z.object({
+  participant_id: z.string().uuid('Invalid participant ID'),
+  item_name: z
+    .string()
+    .min(1, 'item_name must be a non-empty string')
+    .max(100, 'item_name must be 100 characters or less'),
+});
 
 async function handleGetSuggestions(
   tastingId: string,
-  userId: string,
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
+  context: ApiContext
 ) {
   const { status } = req.query;
+
+  // userId is optional for GET - allows viewing suggestions without auth
+  // but if provided, filters to user's own suggestions if not moderator
+  const userId = context.user?.id || null;
 
   try {
     const suggestions = await studyModeService.getSuggestions(
       tastingId,
-      userId,
+      userId || undefined,
       status as 'pending' | 'approved' | 'rejected' | undefined
     );
 
-    return res.status(200).json(suggestions);
+    return sendSuccess(res, suggestions);
   } catch (error: any) {
-    console.error('Error getting suggestions:', error);
-    return res.status(500).json({
-      error: error.message || 'Failed to get suggestions'
-    });
+    return sendError(res, 'INTERNAL_ERROR', error.message || 'Failed to get suggestions', 500);
   }
 }
 
 async function handlePostSuggestion(
   tastingId: string,
-  userId: string,
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
+  context: ApiContext
 ) {
-  const { participant_id, item_name } = req.body;
-
-  // Validate required fields
-  if (!participant_id || !item_name) {
-    return res.status(400).json({
-      error: 'participant_id and item_name are required'
-    });
+  // POST requires authentication - get user_id from authenticated context
+  // NEVER trust user_id from client - always use authenticated context
+  const userId = context.user?.id;
+  if (!userId) {
+    return sendError(res, 'AUTH_REQUIRED', 'Authentication required', 401);
   }
 
-  // Validate item_name constraints
-  if (typeof item_name !== 'string' || item_name.trim().length === 0) {
-    return res.status(400).json({
-      error: 'item_name must be a non-empty string'
-    });
-  }
-
-  if (item_name.length > 100) {
-    return res.status(400).json({
-      error: 'item_name must be 100 characters or less'
-    });
-  }
+  // Request body is already validated by withValidation middleware
+  const { participant_id, item_name } = req.body as { participant_id: string; item_name: string };
 
   // Verify the participant_id belongs to the current user
-  const supabase = getSupabaseClient();
+  const supabase = getSupabaseClient(req, res);
   const { data: participant, error: participantError } = await supabase
     .from('tasting_participants')
     .select('user_id, tasting_id')
@@ -95,13 +71,11 @@ async function handlePostSuggestion(
     .single();
 
   if (participantError || !participant) {
-    return res.status(404).json({ error: 'Participant not found' });
+    return sendError(res, 'NOT_FOUND', 'Participant not found', 404);
   }
 
   if ((participant as any).user_id !== userId) {
-    return res.status(403).json({
-      error: 'You can only submit suggestions for yourself'
-    });
+    return sendError(res, 'FORBIDDEN', 'You can only submit suggestions for yourself', 403);
   }
 
   try {
@@ -111,23 +85,40 @@ async function handlePostSuggestion(
       item_name.trim()
     );
 
-    return res.status(201).json({
-      message: 'Suggestion submitted successfully',
-      suggestion
-    });
+    return sendSuccess(
+      res,
+      { suggestion },
+      'Suggestion submitted successfully',
+      201
+    );
   } catch (error: any) {
-    console.error('Error submitting suggestion:', error);
-
     // Handle specific error cases
     if (error.message.includes('Suggestions only allowed')) {
-      return res.status(404).json({ error: error.message });
+      return sendError(res, 'NOT_FOUND', error.message, 404);
     }
     if (error.message.includes('does not have permission')) {
-      return res.status(403).json({ error: error.message });
+      return sendError(res, 'FORBIDDEN', error.message, 403);
     }
 
-    return res.status(500).json({
-      error: error.message || 'Failed to submit suggestion'
-    });
+    return sendError(res, 'INTERNAL_ERROR', error.message || 'Failed to submit suggestion', 500);
   }
 }
+
+export default createApiHandler({
+  GET: withOptionalAuth(async (req, res, context) => {
+    const { id: tastingId } = req.query;
+    if (!tastingId || typeof tastingId !== 'string') {
+      return sendError(res, 'INVALID_INPUT', 'Invalid tasting ID', 400);
+    }
+    return handleGetSuggestions(tastingId, req, res, context);
+  }),
+  POST: withAuth(withValidation(submitSuggestionSchema, async (req, res, context) => {
+    const { id: tastingId } = req.query;
+    if (!tastingId || typeof tastingId !== 'string') {
+      return sendError(res, 'INVALID_INPUT', 'Invalid tasting ID', 400);
+    }
+    return handlePostSuggestion(tastingId, req, res, context);
+  })),
+});
+
+

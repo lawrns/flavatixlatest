@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
@@ -76,6 +76,41 @@ const NewStudyTastingPage: React.FC = () => {
   }, [user, loading, router]);
 
   // Load template if templateId is provided
+  const loadUserTemplate = useCallback(async (templateId: string) => {
+    const { data, error } = await supabase
+      .from('study_templates')
+      .select('*')
+      .eq('id', templateId)
+      .single();
+
+    if (data) {
+       const templateData = data as any;
+       let categories = [];
+       try {
+         categories = typeof templateData.categories === 'string'
+           ? JSON.parse(templateData.categories)
+           : templateData.categories;
+       } catch (e) {
+         console.error('Error parsing template categories', e);
+         return;
+       }
+
+       setForm({
+         name: templateData.name,
+         baseCategory: templateData.base_category,
+         categories: categories.map((cat: any, index: number) => ({
+           id: `cat-${Date.now()}-${index}`,
+           name: cat.name,
+           hasText: cat.hasText,
+           hasScale: cat.hasScale,
+           hasBoolean: cat.hasBoolean,
+           scaleMax: cat.scaleMax || 100,
+           rankInSummary: cat.rankInSummary
+         }))
+       });
+    }
+  }, [supabase]);
+
   useEffect(() => {
     if (templateId && typeof templateId === 'string') {
       // First check static templates
@@ -98,43 +133,9 @@ const NewStudyTastingPage: React.FC = () => {
       }
 
       // If not static, try loading from DB
-      const loadUserTemplate = async () => {
-        const { data, error } = await supabase
-          .from('study_templates')
-          .select('*')
-          .eq('id', templateId)
-          .single();
-
-        if (data) {
-           const templateData = data as any;
-           let categories = [];
-           try {
-             categories = typeof templateData.categories === 'string' 
-               ? JSON.parse(templateData.categories) 
-               : templateData.categories;
-           } catch (e) {
-             console.error('Error parsing template categories', e);
-             return;
-           }
-             
-           setForm({
-             name: templateData.name,
-             baseCategory: templateData.base_category,
-             categories: categories.map((cat: any, index: number) => ({
-               id: `cat-${Date.now()}-${index}`,
-               name: cat.name,
-               hasText: cat.hasText,
-               hasScale: cat.hasScale,
-               hasBoolean: cat.hasBoolean,
-               scaleMax: cat.scaleMax || 100,
-               rankInSummary: cat.rankInSummary
-             }))
-           });
-        }
-      };
-      loadUserTemplate();
+      loadUserTemplate(templateId);
     }
-  }, [templateId]);
+  }, [templateId, loadUserTemplate]);
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -552,7 +553,7 @@ const NewStudyTastingPage: React.FC = () => {
                         {category.hasScale && (
                           <div className="p-sm bg-blue-50 border border-blue-200 rounded-lg">
                             <p className="text-small text-blue-800">
-                              ✓ This category will be included in ranking summary automatically
+                              <span className="material-symbols-outlined text-sm align-middle mr-1">check</span>This category will be included in ranking summary automatically
                             </p>
                           </div>
                         )}

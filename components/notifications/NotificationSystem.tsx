@@ -1,19 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/router';
 import { Card, CardContent, CardHeader } from '../ui/Card';
 import Button from '../ui/Button';
 import { Modal, ModalBody, ModalFooter } from '../ui/Modal';
-import { Bell, X, CheckCircle, AlertCircle, Info, Star } from 'lucide-react';
-
-interface Notification {
-  id: string;
-  type: 'success' | 'error' | 'info' | 'achievement';
-  title: string;
-  message: string;
-  timestamp: Date;
-  read: boolean;
-  actionUrl?: string;
-  actionText?: string;
-}
+import { Bell, X, CheckCircle, AlertCircle, Info, Star, UserPlus, Heart, MessageCircle, Users } from 'lucide-react';
+import notificationService, { Notification, NotificationType } from '@/lib/notificationService';
 
 interface NotificationSystemProps {
   userId: string;
@@ -23,104 +14,126 @@ export const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  const loadNotifications = useCallback(async () => {
+    if (!userId) return;
+    
+    try {
+      setLoading(true);
+      const [notifs, count] = await Promise.all([
+        notificationService.getNotifications(userId),
+        notificationService.getUnreadCount(userId),
+      ]);
+      setNotifications(notifs);
+      setUnreadCount(count);
+    } catch (error) {
+      console.error('Error loading notifications:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [userId]);
 
   useEffect(() => {
     loadNotifications();
-  }, [userId]);
 
-  const loadNotifications = async () => {
-    try {
-      // Mock notifications - replace with actual API call
-      const mockNotifications: Notification[] = [
-        {
-          id: '1',
-          type: 'achievement',
-          title: 'Tasting Master!',
-          message: 'You\'ve completed your 50th tasting session. Keep up the great work!',
-          timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
-          read: false,
-          actionUrl: '/achievements',
-          actionText: 'View Achievement'
-        },
-        {
-          id: '2',
-          type: 'info',
-          title: 'New Feature Available',
-          message: 'Check out our new flavor wheel visualization tool!',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-          read: false,
-          actionUrl: '/flavor-wheels',
-          actionText: 'Try It Now'
-        },
-        {
-          id: '3',
-          type: 'success',
-          title: 'Review Published',
-          message: 'Your review for "Colombian Coffee Blend" has been published successfully.',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
-          read: true
-        }
-      ];
+    // Subscribe to real-time notifications
+    const unsubscribe = notificationService.subscribeToNotifications(
+      userId,
+      (newNotification) => {
+        setNotifications(prev => [newNotification, ...prev]);
+        setUnreadCount(prev => prev + 1);
+      }
+    );
 
-      setNotifications(mockNotifications);
-      setUnreadCount(mockNotifications.filter(n => !n.read).length);
-    } catch (error) {
-      console.error('Error loading notifications:', error);
-    }
-  };
+    return () => {
+      unsubscribe();
+    };
+  }, [userId, loadNotifications]);
 
   const markAsRead = async (notificationId: string) => {
-    setNotifications(prev => 
-      prev.map(n => 
-        n.id === notificationId ? { ...n, read: true } : n
-      )
-    );
-    setUnreadCount(prev => Math.max(0, prev - 1));
-  };
-
-  const markAllAsRead = async () => {
-    setNotifications(prev => 
-      prev.map(n => ({ ...n, read: true }))
-    );
-    setUnreadCount(0);
-  };
-
-  const deleteNotification = async (notificationId: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== notificationId));
-    const notification = notifications.find(n => n.id === notificationId);
-    if (notification && !notification.read) {
+    const success = await notificationService.markAsRead(notificationId);
+    if (success) {
+      setNotifications(prev => 
+        prev.map(n => 
+          n.id === notificationId ? { ...n, read: true } : n
+        )
+      );
       setUnreadCount(prev => Math.max(0, prev - 1));
     }
   };
 
-  const getNotificationIcon = (type: Notification['type']) => {
+  const markAllAsRead = async () => {
+    const success = await notificationService.markAllAsRead(userId);
+    if (success) {
+      setNotifications(prev => 
+        prev.map(n => ({ ...n, read: true }))
+      );
+      setUnreadCount(0);
+    }
+  };
+
+  const deleteNotification = async (notificationId: string) => {
+    const notification = notifications.find(n => n.id === notificationId);
+    const success = await notificationService.deleteNotification(notificationId);
+    if (success) {
+      setNotifications(prev => prev.filter(n => n.id !== notificationId));
+      if (notification && !notification.read) {
+        setUnreadCount(prev => Math.max(0, prev - 1));
+      }
+    }
+  };
+
+  const handleNotificationClick = (notification: Notification) => {
+    if (!notification.read) {
+      markAsRead(notification.id);
+    }
+    if (notification.action_url) {
+      setShowModal(false);
+      router.push(notification.action_url);
+    }
+  };
+
+  const getNotificationIcon = (type: NotificationType) => {
     switch (type) {
-      case 'success':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
-      case 'error':
-        return <AlertCircle className="h-5 w-5 text-red-500" />;
-      case 'info':
-        return <Info className="h-5 w-5 text-blue-500" />;
+      case 'follow':
+        return <UserPlus className="h-5 w-5 text-blue-500" />;
+      case 'like':
+        return <Heart className="h-5 w-5 text-red-500" />;
+      case 'comment':
+        return <MessageCircle className="h-5 w-5 text-green-500" />;
+      case 'tasting_invite':
+        return <Users className="h-5 w-5 text-purple-500" />;
       case 'achievement':
         return <Star className="h-5 w-5 text-yellow-500" />;
+      case 'system':
+        return <Info className="h-5 w-5 text-blue-500" />;
+      case 'review':
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
       default:
         return <Info className="h-5 w-5 text-gray-500" />;
     }
   };
 
-  const formatTimestamp = (timestamp: Date) => {
+  const formatTimestamp = (timestamp: string) => {
     const now = new Date();
-    const diff = now.getTime() - timestamp.getTime();
+    const date = new Date(timestamp);
+    const diff = now.getTime() - date.getTime();
     const minutes = Math.floor(diff / (1000 * 60));
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-    if (minutes < 60) {
+    if (minutes < 1) {
+      return 'Just now';
+    } else if (minutes < 60) {
       return `${minutes}m ago`;
     } else if (hours < 24) {
       return `${hours}h ago`;
-    } else {
+    } else if (days < 7) {
       return `${days}d ago`;
+    } else {
+      return date.toLocaleDateString();
     }
   };
 
@@ -193,7 +206,7 @@ export const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }
                                   {notification.message}
                                 </p>
                                 <p className="text-xs text-gray-500 mt-2">
-                                  {formatTimestamp(notification.timestamp)}
+                                  {formatTimestamp(notification.created_at)}
                                 </p>
                               </div>
                               <div className="flex items-center gap-1 ml-2">
@@ -217,17 +230,14 @@ export const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }
                                 </Button>
                               </div>
                             </div>
-                            {notification.actionUrl && notification.actionText && (
+                            {notification.action_url && notification.action_text && (
                               <div className="mt-3">
                                 <Button
                                   variant="primary"
                                   size="sm"
-                                  onClick={() => {
-                                    // Navigate to action URL
-                                    window.location.href = notification.actionUrl!;
-                                  }}
+                                  onClick={() => handleNotificationClick(notification)}
                                 >
-                                  {notification.actionText}
+                                  {notification.action_text}
                                 </Button>
                               </div>
                             )}

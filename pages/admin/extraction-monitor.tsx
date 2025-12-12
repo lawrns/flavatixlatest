@@ -3,7 +3,7 @@
  * Real-time view of descriptor extraction performance in production
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { useRouter } from 'next/router';
 import { Activity, TrendingUp, AlertTriangle, CheckCircle, RefreshCw } from 'lucide-react';
@@ -36,7 +36,7 @@ export default function ExtractionMonitor() {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
   // Fetch extraction stats
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/extraction-stats?period=${period}`);
       if (!response.ok) throw new Error('Failed to fetch stats');
@@ -48,11 +48,11 @@ export default function ExtractionMonitor() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [period]);
 
   useEffect(() => {
     fetchStats();
-  }, [period]);
+  }, [fetchStats]);
 
   // Auto-refresh every 30 seconds
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function ExtractionMonitor() {
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [autoRefresh, period]);
+  }, [autoRefresh, fetchStats]);
 
   // Check authentication
   useEffect(() => {

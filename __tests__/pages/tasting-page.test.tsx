@@ -5,13 +5,19 @@ import TastingSessionPage from '@/pages/tasting/[id]';
 import { getSupabaseClient } from '@/lib/supabase';
 import { useRouter } from 'next/router';
 
+// Mock the heavy session component to keep page tests focused
+jest.mock('@/components/quick-tasting/QuickTastingSession', () => ({
+  __esModule: true,
+  default: () => <div>QuickTastingSession</div>,
+}));
+
 // Mock dependencies - useRouter is already mocked in jest.setup.js
 const mockPush = jest.fn();
 const mockBack = jest.fn();
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
-    query: { id: 'test-session-id' },
+    query: { id: '11111111-1111-4111-8111-111111111111' },
     push: mockPush,
     back: mockBack,
     isReady: true,
@@ -48,7 +54,7 @@ describe('TastingSessionPage - Mobile Navigation', () => {
   };
 
   const mockSession = {
-    id: 'test-session-id',
+    id: '11111111-1111-4111-8111-111111111111',
     user_id: 'test-user-id',
     category: 'coffee',
     session_name: 'Test Session',
@@ -60,55 +66,86 @@ describe('TastingSessionPage - Mobile Navigation', () => {
     mode: 'quick',
   };
 
-  const mockSupabase = {
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => ({
-          single: jest.fn(() => Promise.resolve({ data: mockSession, error: null })),
-          order: jest.fn(() => Promise.resolve({ data: [], error: null })),
-        })),
-      })),
-    })),
-  };
+  let mockSupabase: any;
 
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseAuth.mockReturnValue({ user: mockUser, loading: false });
-    (getSupabaseClient as jest.Mock).mockReturnValue(mockSupabase);
+    
+    // Create fresh mock Supabase that returns stable chain
+    // Use mockImplementation to ensure same instance returned each time
+    mockSupabase = {
+      from: jest.fn((table: string) => {
+        if (table === 'quick_tastings') {
+          return {
+            select: jest.fn(() => ({
+              eq: jest.fn(() => ({
+                single: jest.fn().mockResolvedValue({ data: mockSession, error: null }),
+              })),
+            })),
+          };
+        }
+        // For other tables (e.g., tasting_participants)
+        return {
+          select: jest.fn(() => ({
+            eq: jest.fn(() => ({
+              eq: jest.fn(() => ({
+                single: jest.fn().mockResolvedValue({ data: null, error: { message: 'No rows found' } }),
+              })),
+            })),
+          })),
+        };
+      }),
+    };
+    // Always return the same mock instance
+    (getSupabaseClient as jest.Mock).mockImplementation(() => mockSupabase);
   });
 
   it('should render bottom navigation menu', async () => {
     render(<TastingSessionPage />);
 
+    // Wait for session to load (QuickTastingSession component appears)
+    // This confirms the session loaded and hasAccess is true
     await waitFor(() => {
-      // Check for bottom navigation
+      expect(screen.getByText('QuickTastingSession')).toBeInTheDocument();
+    }, { timeout: 5000 });
+
+    // Footer should be present once session loads
+    // Use queryByRole first to check if it exists, then getByRole
+    await waitFor(() => {
       const footer = screen.queryByRole('contentinfo');
+      if (!footer) {
+        // Debug: check what's actually rendered
+        const homeLink = screen.queryByText('Home');
+        throw new Error(`Footer not found. Home link exists: ${!!homeLink}`);
+      }
       expect(footer).toBeInTheDocument();
-    });
+    }, { timeout: 2000 });
 
     // Check for navigation links
     expect(screen.getByText('Home')).toBeInTheDocument();
-    expect(screen.getByText('Create')).toBeInTheDocument();
+    expect(screen.getByText('Taste')).toBeInTheDocument();
     expect(screen.getByText('Review')).toBeInTheDocument();
-    expect(screen.getByText('Social')).toBeInTheDocument();
     expect(screen.getByText('Wheels')).toBeInTheDocument();
   });
 
   it('should have correct navigation links', async () => {
     render(<TastingSessionPage />);
 
+    // Wait for session to load
+    await waitFor(() => {
+      expect(screen.getByText('QuickTastingSession')).toBeInTheDocument();
+    }, { timeout: 3000 });
+
     await waitFor(() => {
       const homeLink = screen.getByText('Home').closest('a');
       expect(homeLink).toHaveAttribute('href', '/dashboard');
 
-      const createLink = screen.getByText('Create').closest('a');
-      expect(createLink).toHaveAttribute('href', '/create-tasting');
+      const tasteLink = screen.getByText('Taste').closest('a');
+      expect(tasteLink).toHaveAttribute('href', '/taste');
 
       const reviewLink = screen.getByText('Review').closest('a');
       expect(reviewLink).toHaveAttribute('href', '/review');
-
-      const socialLink = screen.getByText('Social').closest('a');
-      expect(socialLink).toHaveAttribute('href', '/social');
 
       const wheelsLink = screen.getByText('Wheels').closest('a');
       expect(wheelsLink).toHaveAttribute('href', '/flavor-wheels');
@@ -118,8 +155,14 @@ describe('TastingSessionPage - Mobile Navigation', () => {
   it('should have fixed positioning for mobile nav', async () => {
     render(<TastingSessionPage />);
 
+    // Wait for session to load
     await waitFor(() => {
-      const footer = screen.queryByRole('contentinfo');
+      expect(screen.getByText('QuickTastingSession')).toBeInTheDocument();
+    }, { timeout: 3000 });
+
+    // Wait for footer and check classes
+    await waitFor(() => {
+      const footer = screen.getByRole('contentinfo');
       expect(footer).toHaveClass('fixed', 'bottom-0', 'left-0', 'right-0');
     });
   });
@@ -127,7 +170,7 @@ describe('TastingSessionPage - Mobile Navigation', () => {
 
 describe('TastingSessionPage - Session Completion Redirect', () => {
   const mockRouter = {
-    query: { id: 'test-session-id' },
+    query: { id: '11111111-1111-4111-8111-111111111111' },
     push: jest.fn(),
     back: jest.fn(),
     isReady: true,
@@ -139,7 +182,7 @@ describe('TastingSessionPage - Session Completion Redirect', () => {
   };
 
   const mockSession = {
-    id: 'test-session-id',
+    id: '11111111-1111-4111-8111-111111111111',
     user_id: 'test-user-id',
     category: 'coffee',
     session_name: 'Test Session',
@@ -262,8 +305,15 @@ describe('TastingSessionPage - Error Handling', () => {
   });
 
   it('should show error message for unauthorized access', async () => {
+    (useRouter as jest.Mock).mockReturnValue({
+      query: { id: '11111111-1111-4111-8111-111111111111' },
+      push: jest.fn(),
+      back: jest.fn(),
+      isReady: true,
+    });
+
     const mockSession = {
-      id: 'test-session-id',
+      id: '11111111-1111-4111-8111-111111111111',
       user_id: 'different-user-id', // Different from logged-in user
       category: 'coffee',
       mode: 'quick',

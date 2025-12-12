@@ -1,13 +1,35 @@
 /**
  * Tastings Repository
- * 
+ *
  * Encapsulates all database operations related to quick tastings.
  * Components should use these functions instead of calling supabase directly.
  */
 import { getSupabaseClient } from '../supabase';
+import { databaseLogger } from '../loggers';
 
 // Type alias for supabase client with any to work around type inference issues
 type SupabaseAny = ReturnType<typeof getSupabaseClient> & { from: (table: string) => any };
+
+/**
+ * Helper to log database query duration
+ */
+async function withQueryLogging<T>(
+  operation: string,
+  table: string,
+  queryFn: () => Promise<T>
+): Promise<T> {
+  const startTime = performance.now();
+  try {
+    const result = await queryFn();
+    const duration = Math.round(performance.now() - startTime);
+    databaseLogger.query(operation, table, duration);
+    return result;
+  } catch (error) {
+    const duration = Math.round(performance.now() - startTime);
+    databaseLogger.query(operation, table, duration);
+    throw error;
+  }
+}
 
 // Types for tastings (matches schema)
 export interface QuickTasting {
@@ -68,18 +90,20 @@ export interface TastingWithItems extends QuickTasting {
  * Get a single tasting by ID
  */
 export async function getTastingById(id: string): Promise<QuickTasting | null> {
-  const supabase = getSupabaseClient() as any;
-  const { data, error } = await supabase
-    .from('quick_tastings')
-    .select('*')
-    .eq('id', id)
-    .single();
+  return withQueryLogging('SELECT', 'quick_tastings', async () => {
+    const supabase = getSupabaseClient() as any;
+    const { data, error } = await supabase
+      .from('quick_tastings')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  if (error) {
-    console.error('Error fetching tasting:', error);
-    return null;
-  }
-  return data;
+    if (error) {
+      databaseLogger.connectionError(error);
+      return null;
+    }
+    return data;
+  });
 }
 
 /**
@@ -94,7 +118,7 @@ export async function getTastingWithItems(id: string): Promise<TastingWithItems 
   ]);
 
   if (tastingResult.error) {
-    console.error('Error fetching tasting:', tastingResult.error);
+    databaseLogger.connectionError(tastingResult.error);
     return null;
   }
 
@@ -141,7 +165,7 @@ export async function getUserTastings(
   const { data, error } = await query;
 
   if (error) {
-    console.error('Error fetching user tastings:', error);
+    databaseLogger.connectionError(error);
     return [];
   }
   return data || [];
@@ -151,6 +175,7 @@ export async function getUserTastings(
  * Create a new tasting
  */
 export async function createTasting(tasting: QuickTastingInsert): Promise<QuickTasting | null> {
+  const startTime = performance.now();
   const supabase = getSupabaseClient() as any;
   const { data, error } = await supabase
     .from('quick_tastings')
@@ -158,10 +183,17 @@ export async function createTasting(tasting: QuickTastingInsert): Promise<QuickT
     .select()
     .single();
 
+  const duration = Math.round(performance.now() - startTime);
+
   if (error) {
-    console.error('Error creating tasting:', error);
+    databaseLogger.mutation('create', 'quick_tastings', '', duration);
     throw error;
   }
+
+  databaseLogger.mutation('create', 'quick_tastings', data.id, duration, {
+    userId: tasting.user_id,
+  });
+
   return data;
 }
 
@@ -169,9 +201,10 @@ export async function createTasting(tasting: QuickTastingInsert): Promise<QuickT
  * Update a tasting
  */
 export async function updateTasting(
-  id: string, 
+  id: string,
   updates: QuickTastingUpdate
 ): Promise<QuickTasting | null> {
+  const startTime = performance.now();
   const supabase = getSupabaseClient() as any;
   const { data, error } = await supabase
     .from('quick_tastings')
@@ -180,10 +213,14 @@ export async function updateTasting(
     .select()
     .single();
 
+  const duration = Math.round(performance.now() - startTime);
+
   if (error) {
-    console.error('Error updating tasting:', error);
+    databaseLogger.mutation('update', 'quick_tastings', id, duration);
     throw error;
   }
+
+  databaseLogger.mutation('update', 'quick_tastings', id, duration);
   return data;
 }
 
@@ -201,14 +238,18 @@ export async function completeTasting(id: string, notes?: string): Promise<Quick
  * Delete a tasting (and its items via cascade)
  */
 export async function deleteTasting(id: string): Promise<boolean> {
+  const startTime = performance.now();
   const supabase = getSupabaseClient() as any;
   const { error } = await supabase
     .from('quick_tastings')
     .delete()
     .eq('id', id);
 
+  const duration = Math.round(performance.now() - startTime);
+  databaseLogger.mutation('delete', 'quick_tastings', id, duration);
+
   if (error) {
-    console.error('Error deleting tasting:', error);
+    databaseLogger.connectionError(error);
     return false;
   }
   return true;
@@ -222,24 +263,27 @@ export async function deleteTasting(id: string): Promise<boolean> {
  * Get items for a tasting
  */
 export async function getTastingItems(tastingId: string): Promise<TastingItem[]> {
-  const supabase = getSupabaseClient() as any;
-  const { data, error } = await supabase
-    .from('quick_tasting_items')
-    .select('*')
-    .eq('tasting_id', tastingId)
-    .order('created_at', { ascending: true });
+  return withQueryLogging('SELECT', 'quick_tasting_items', async () => {
+    const supabase = getSupabaseClient() as any;
+    const { data, error } = await supabase
+      .from('quick_tasting_items')
+      .select('*')
+      .eq('tasting_id', tastingId)
+      .order('created_at', { ascending: true });
 
-  if (error) {
-    console.error('Error fetching tasting items:', error);
-    return [];
-  }
-  return data || [];
+    if (error) {
+      databaseLogger.connectionError(error);
+      return [];
+    }
+    return data || [];
+  });
 }
 
 /**
  * Add an item to a tasting
  */
 export async function addTastingItem(item: TastingItemInsert): Promise<TastingItem | null> {
+  const startTime = performance.now();
   const supabase = getSupabaseClient() as any;
   const { data, error } = await supabase
     .from('quick_tasting_items')
@@ -247,10 +291,14 @@ export async function addTastingItem(item: TastingItemInsert): Promise<TastingIt
     .select()
     .single();
 
+  const duration = Math.round(performance.now() - startTime);
+
   if (error) {
-    console.error('Error adding tasting item:', error);
+    databaseLogger.mutation('create', 'quick_tasting_items', '', duration);
     throw error;
   }
+
+  databaseLogger.mutation('create', 'quick_tasting_items', data.id, duration);
   return data;
 }
 
@@ -258,9 +306,10 @@ export async function addTastingItem(item: TastingItemInsert): Promise<TastingIt
  * Update a tasting item
  */
 export async function updateTastingItem(
-  id: string, 
+  id: string,
   updates: TastingItemUpdate
 ): Promise<TastingItem | null> {
+  const startTime = performance.now();
   const supabase = getSupabaseClient() as any;
   const { data, error } = await supabase
     .from('quick_tasting_items')
@@ -269,10 +318,14 @@ export async function updateTastingItem(
     .select()
     .single();
 
+  const duration = Math.round(performance.now() - startTime);
+
   if (error) {
-    console.error('Error updating tasting item:', error);
+    databaseLogger.mutation('update', 'quick_tasting_items', id, duration);
     throw error;
   }
+
+  databaseLogger.mutation('update', 'quick_tasting_items', id, duration);
   return data;
 }
 
@@ -280,14 +333,18 @@ export async function updateTastingItem(
  * Delete a tasting item
  */
 export async function deleteTastingItem(id: string): Promise<boolean> {
+  const startTime = performance.now();
   const supabase = getSupabaseClient() as any;
   const { error } = await supabase
     .from('quick_tasting_items')
     .delete()
     .eq('id', id);
 
+  const duration = Math.round(performance.now() - startTime);
+  databaseLogger.mutation('delete', 'quick_tasting_items', id, duration);
+
   if (error) {
-    console.error('Error deleting tasting item:', error);
+    databaseLogger.connectionError(error);
     return false;
   }
   return true;
@@ -310,7 +367,7 @@ export async function getUserTastingStats(userId: string) {
     .not('completed_at', 'is', null);
 
   if (error) {
-    console.error('Error fetching tasting stats:', error);
+    databaseLogger.connectionError(error);
     return null;
   }
 

@@ -931,7 +931,7 @@ export default function DesignSystemPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Card variant="default">
                       <EmptyState
-                        icon="🍷"
+                        icon="wine_bar"
                         title="No tastings yet"
                         description="Start your first tasting session to begin exploring flavors!"
                         action={{ label: 'Start Tasting', onClick: () => {} }}

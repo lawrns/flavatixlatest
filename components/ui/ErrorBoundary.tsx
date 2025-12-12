@@ -2,6 +2,7 @@ import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Card, CardContent, CardHeader } from './Card';
 import Button from './Button';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import * as Sentry from '@sentry/nextjs';
 
 interface Props {
   children: ReactNode;
@@ -31,11 +32,22 @@ class ErrorBoundary extends Component<Props, State> {
       errorInfo
     });
 
-    // Log error to analytics service
-    if (process.env.NODE_ENV === 'production') {
-      // TODO: Send error to error tracking service
-      // errorTrackingService.captureException(error, { extra: errorInfo });
-    }
+    // Send error to Sentry with additional context
+    Sentry.captureException(error, {
+      contexts: {
+        react: {
+          componentStack: errorInfo.componentStack,
+        },
+      },
+      tags: {
+        errorBoundary: true,
+      },
+      level: 'error',
+      extra: {
+        errorInfo,
+        timestamp: new Date().toISOString(),
+      },
+    });
   }
 
   handleRetry = () => {

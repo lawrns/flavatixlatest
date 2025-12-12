@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../contexts/SimpleAuthContext';
 import { getSupabaseClient } from '../lib/supabase';
 import { toast } from '../lib/toast';
+import PageLayout from '../components/layout/PageLayout';
 
 export default function JoinTastingPage() {
   const router = useRouter();
@@ -89,28 +90,20 @@ export default function JoinTastingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background-light font-display text-zinc-900 dark:text-zinc-50 pb-20">
-      <div className="max-w-lg mx-auto px-4 py-8">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:text-zinc-50 mb-6 transition-colors"
-        >
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back
-        </button>
-
-        <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700 p-8">
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-            </div>
-            <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50 mb-2">Join a Tasting</h1>
-            <p className="text-zinc-600 dark:text-zinc-300">Enter the tasting code to join a collaborative session</p>
+    <PageLayout
+      title="Join a Tasting"
+      subtitle="Enter the tasting code to join a collaborative session"
+      showBack
+      containerSize="md"
+    >
+      <div className="bg-white dark:bg-zinc-800 rounded-[22px] shadow-sm border border-zinc-200 dark:border-zinc-700 p-8 mt-2">
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
           </div>
+        </div>
 
           <form onSubmit={handleJoinTasting} className="space-y-6">
             <div>
@@ -159,38 +152,15 @@ export default function JoinTastingPage() {
           </div>
         </div>
 
-        <div className="mt-6 text-center">
-          <button
-            onClick={() => router.push('/create-tasting')}
-            className="text-primary hover:underline text-sm font-medium"
-          >
-            Or create your own tasting session
-          </button>
-        </div>
+      <div className="mt-6 text-center">
+        <button
+          onClick={() => router.push('/create-tasting')}
+          className="text-primary hover:underline text-sm font-medium"
+        >
+          Or create your own tasting session
+        </button>
       </div>
-
-      {/* Bottom Navigation */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
-        <nav className="flex justify-around p-2">
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
-            <span className="material-symbols-outlined">home</span>
-            <span className="text-xs font-medium">Home</span>
-          </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/taste">
-            <span className="material-symbols-outlined">restaurant</span>
-            <span className="text-xs font-medium">Taste</span>
-          </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
-            <span className="material-symbols-outlined">reviews</span>
-            <span className="text-xs font-medium">Review</span>
-          </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
-            <span className="material-symbols-outlined">donut_small</span>
-            <span className="text-xs font-medium">Wheels</span>
-          </a>
-        </nav>
-      </footer>
-    </div>
+    </PageLayout>
   );
 }
 

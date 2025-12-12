@@ -1,5 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { getSupabaseClient } from '../supabase';
+import { getSupabaseClient } from '@/lib/supabase';
+import { logger } from '@/lib/logger';
+import { aiLogger } from '@/lib/loggers';
 
 interface PredefinedCategory {
   id: string;
@@ -21,9 +23,14 @@ interface AIExtractionResult {
   processingTimeMs: number;
 }
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
+function getAnthropicClient(): Anthropic {
+  // Lazily create the client to avoid import-time side effects in tests.
+  return new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY || '',
+    // In Jest (jsdom) we may be in a browser-like environment; this prevents the SDK from throwing.
+    dangerouslyAllowBrowser: process.env.NODE_ENV === 'test',
+  });
+}
 
 async function getPredefinedCategories(): Promise<{
   flavorCategories: PredefinedCategory[];
@@ -51,7 +58,7 @@ async function getPredefinedCategories(): Promise<{
       metaphorCategories: metaphorResult.data || []
     };
   } catch (error) {
-    console.error('Error fetching predefined categories:', error);
+    logger.error('DescriptorExtraction', 'Error fetching predefined categories', error);
     // Return empty arrays as fallback
     return {
       flavorCategories: [],
@@ -114,8 +121,10 @@ export async function extractDescriptorsWithAI(
   taxonomyContext?: any
 ): Promise<AIExtractionResult> {
   const startTime = Date.now();
+  logger.debug('DescriptorExtraction', 'Starting AI extraction', { category, textLength: text.length });
 
   if (!process.env.ANTHROPIC_API_KEY) {
+    logger.error('DescriptorExtraction', 'ANTHROPIC_API_KEY not configured');
     throw new Error('ANTHROPIC_API_KEY environment variable is not set');
   }
 
@@ -165,8 +174,16 @@ Return a JSON array with this exact structure:
 Extract ALL descriptors, even if confidence is medium. Be thorough.`;
 
   try {
+    const apiStartTime = Date.now();
+    const model = 'claude-3-haiku-20240307';
+    const anthropic = getAnthropicClient();
+
+    aiLogger.apiCall('Anthropic', model, 'descriptor_extraction', {
+      metadata: { textLength: text.length, category }
+    });
+
     const response = await anthropic.messages.create({
-      model: 'claude-3-haiku-20240307', // Fast and cheap
+      model,
       max_tokens: 2048,
       system: systemPrompt,
       messages: [
@@ -176,6 +193,17 @@ Extract ALL descriptors, even if confidence is medium. Be thorough.`;
         },
       ],
     });
+
+    const apiDuration = Date.now() - apiStartTime;
+    const totalTokens = response.usage.input_tokens + response.usage.output_tokens;
+
+    // Estimate cost (Claude Haiku pricing: $0.25/MTok input, $1.25/MTok output)
+    const estimatedCost =
+      (response.usage.input_tokens / 1_000_000 * 0.25) +
+      (response.usage.output_tokens / 1_000_000 * 1.25);
+
+    aiLogger.completion('Anthropic', model, totalTokens, apiDuration, estimatedCost);
+    aiLogger.tokenUsage('Anthropic', model, response.usage.input_tokens, response.usage.output_tokens, estimatedCost);
 
     const content = response.content[0];
     if (content.type !== 'text') {
@@ -216,13 +244,28 @@ Extract ALL descriptors, even if confidence is medium. Be thorough.`;
     
     const processingTimeMs = Date.now() - startTime;
 
+    logger.info('DescriptorExtraction', 'AI extraction completed', {
+      descriptorCount: processedDescriptors.length,
+      tokensUsed: response.usage.input_tokens + response.usage.output_tokens,
+      processingTimeMs
+    });
+
     return {
       descriptors: processedDescriptors,
       tokensUsed: response.usage.input_tokens + response.usage.output_tokens,
       processingTimeMs,
     };
   } catch (error) {
-    console.error('AI extraction failed:', error);
+    // Check if it's a rate limit error
+    if (error instanceof Error && error.message.includes('rate limit')) {
+      aiLogger.rateLimited('Anthropic', 'claude-3-haiku-20240307');
+    }
+
+    aiLogger.error('Anthropic', 'claude-3-haiku-20240307', error as Error, {
+      metadata: { textLength: text.length, category }
+    });
+
+    logger.error('DescriptorExtraction', 'AI extraction failed', error);
     throw error;
   }
 }

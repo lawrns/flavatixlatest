@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { generateReviewId } from '@/lib/reviewIdGenerator';
@@ -36,18 +37,7 @@ const MyReviewsPage: React.FC = () => {
   const [drafts, setDrafts] = useState<(Review | ProseReview)[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/auth');
-      return;
-    }
-
-    if (user) {
-      loadReviews();
-    }
-  }, [user, loading, router]);
-
-  const loadReviews = async () => {
+  const loadReviews = useCallback(async () => {
     if (!user) return;
 
     setIsLoading(true);
@@ -87,7 +77,18 @@ const MyReviewsPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user, supabase]);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/auth');
+      return;
+    }
+
+    if (user) {
+      loadReviews();
+    }
+  }, [user, loading, router, loadReviews]);
 
   const formatReviewId = (review: Review | ProseReview) => {
     return generateReviewId(
@@ -249,22 +250,22 @@ const MyReviewsPage: React.FC = () => {
         {/* Bottom Navigation */}
         <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
           <nav className="flex justify-around p-2">
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
+            <Link href="/dashboard" className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300">
               <span className="material-symbols-outlined">home</span>
               <span className="text-xs font-medium">Home</span>
-            </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/taste">
+            </Link>
+            <Link href="/taste" className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300">
               <span className="material-symbols-outlined">restaurant</span>
               <span className="text-xs font-medium">Taste</span>
-            </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-primary" href="/review">
+            </Link>
+            <Link href="/review" className="flex flex-col items-center gap-1 p-2 text-primary">
               <span className="material-symbols-outlined">reviews</span>
               <span className="text-xs font-bold">Review</span>
-            </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
+            </Link>
+            <Link href="/flavor-wheels" className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300">
               <span className="material-symbols-outlined">donut_small</span>
               <span className="text-xs font-medium">Wheels</span>
-            </a>
+            </Link>
           </nav>
         </footer>
       </div>

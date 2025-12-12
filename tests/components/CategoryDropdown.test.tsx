@@ -27,8 +27,10 @@ describe('CategoryDropdown', () => {
 
     expect(screen.getByText('Coffee')).toBeInTheDocument()
     expect(screen.getByText('Tea')).toBeInTheDocument()
-    expect(screen.getByText('Wine')).toBeInTheDocument()
-    expect(screen.getByText('Spirits')).toBeInTheDocument()
+    expect(screen.getByText('Red Wine')).toBeInTheDocument()
+    expect(screen.getByText('White Wine')).toBeInTheDocument()
+    expect(screen.getByText('Wine (Other)')).toBeInTheDocument()
+    expect(screen.getByText('Spirits (Other)')).toBeInTheDocument()
     expect(screen.getByText('Beer')).toBeInTheDocument()
     expect(screen.getByText('Chocolate')).toBeInTheDocument()
     expect(screen.getByText('Other')).toBeInTheDocument()
@@ -45,7 +47,7 @@ describe('CategoryDropdown', () => {
 
   it('shows correct display names for categories', () => {
     render(<CategoryDropdown {...defaultProps} category="spirits" />)
-    expect(screen.getByDisplayValue('Spirits')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('Spirits (Other)')).toBeInTheDocument()
   })
 
   it('handles custom category name for "other" category', () => {
@@ -72,6 +74,6 @@ describe('CategoryDropdown', () => {
     expect(screen.getByDisplayValue('Coffee')).toBeInTheDocument()
 
     rerender(<CategoryDropdown {...defaultProps} category="wine" />)
-    expect(screen.getByDisplayValue('Wine')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('Wine (Other)')).toBeInTheDocument()
   })
 })

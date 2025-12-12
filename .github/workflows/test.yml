@@ -144,12 +144,59 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Full history for secret scanning
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
+
+      - name: Check for exposed secrets
+        run: |
+          # Check for common secret patterns in code
+          if grep -rE "(sk-ant-api03-|sk-[a-zA-Z0-9]{32,}|SUPABASE_SERVICE_ROLE_KEY\s*=\s*[^'\"].*[^'\"])" \
+            --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+            --exclude-dir=node_modules --exclude-dir=.next \
+            . | grep -vE "(\.test\.|\.spec\.|\.env\.example|your-.*-here|placeholder|example|NEXT_PUBLIC_SUPABASE_ANON_KEY|NEXT_PUBLIC_SUPABASE_URL)"; then
+            echo "❌ Potential secrets detected in code!"
+            echo "Please review and remove any hardcoded secrets."
+            exit 1
+          fi
+          echo "✅ No exposed secrets found"
+
+      - name: Check environment variable usage
+        run: |
+          # Ensure NEXT_PUBLIC_* vars don't contain secrets
+          if grep -rE "NEXT_PUBLIC.*(API.*KEY|SECRET|TOKEN)" \
+            --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+            --exclude-dir=node_modules --exclude-dir=.next \
+            . | grep -vE "(NEXT_PUBLIC_SUPABASE_ANON_KEY|NEXT_PUBLIC_SUPABASE_URL|\.test\.|\.spec\.|\.env\.example)"; then
+            echo "⚠️ Warning: NEXT_PUBLIC_* variables should not contain secrets"
+            echo "Review the following files:"
+            grep -rE "NEXT_PUBLIC.*(API.*KEY|SECRET|TOKEN)" \
+              --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+              --exclude-dir=node_modules --exclude-dir=.next \
+              . | grep -vE "(NEXT_PUBLIC_SUPABASE_ANON_KEY|NEXT_PUBLIC_SUPABASE_URL|\.test\.|\.spec\.|\.env\.example)" || true
+          fi
+
+      - name: Verify .env.example exists
+        run: |
+          if [ ! -f .env.example ]; then
+            echo "❌ .env.example file is missing!"
+            exit 1
+          fi
+          echo "✅ .env.example exists"
+
+      - name: Check .env.example for placeholder values
+        run: |
+          # Ensure .env.example doesn't contain actual secrets
+          if grep -E "(sk-ant-api03-|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9)" .env.example 2>/dev/null | grep -vE "(your-.*-here|placeholder|example)"; then
+            echo "❌ .env.example contains potential secrets!"
+            exit 1
+          fi
+          echo "✅ .env.example uses placeholder values"
 
       - name: Run npm audit
         run: npm audit --audit-level=moderate

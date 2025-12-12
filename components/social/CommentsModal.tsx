@@ -3,17 +3,19 @@ import { getSupabaseClient } from '@/lib/supabase';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { toast } from '@/lib/toast';
 import { CommentWithUser } from '@/lib/types/comments';
+import notificationService from '@/lib/notificationService';
 
 type Comment = CommentWithUser;
 
 type CommentsModalProps = {
   tastingId: string;
+  tastingOwnerId?: string;
   isOpen: boolean;
   onClose: () => void;
   initialCommentCount: number;
 };
 
-export default function CommentsModal({ tastingId, isOpen, onClose, initialCommentCount }: CommentsModalProps) {
+export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClose, initialCommentCount }: CommentsModalProps) {
   const { user } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -139,6 +141,25 @@ export default function CommentsModal({ tastingId, isOpen, onClose, initialComme
         console.error('Error posting comment:', error);
         toast.error('Comments system not yet set up. Please run the database migration.');
         return;
+      }
+
+      // Send notification to tasting owner (if not commenting on own tasting)
+      if (tastingOwnerId && tastingOwnerId !== user.id) {
+        const { data: currentUser } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('user_id', user.id)
+          .single();
+
+        const commenterName = currentUser?.full_name || 'Someone';
+        await notificationService.notifyComment(
+          user.id,
+          tastingOwnerId,
+          commenterName,
+          'tasting',
+          tastingId,
+          commentText.trim()
+        );
       }
 
       setCommentText('');

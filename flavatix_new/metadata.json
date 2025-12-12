@@ -1,0 +1,7 @@
+{
+  "name": "Flavatix",
+  "description": "Discover your flavor universe. A flavor profiling and tasting journal app.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

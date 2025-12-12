@@ -4,12 +4,11 @@ import { useAuth } from '@/contexts/SimpleAuthContext';
 import { 
   Zap, 
   Users, 
-  ChevronLeft, 
   ChevronRight,
   UserPlus, 
   History 
 } from 'lucide-react';
-import BottomNavigation from '@/components/navigation/BottomNavigation';
+import PageLayout from '@/components/layout/PageLayout';
 
 // Taste mode card component with motion
 interface TasteModeCardProps {
@@ -34,38 +33,35 @@ const TasteModeCard: React.FC<TasteModeCardProps> = ({
   return (
     <button
       onClick={onClick}
-      className="group w-full text-left bg-white dark:bg-zinc-800/90 border border-zinc-200/80 dark:border-zinc-700/60 
-                 rounded-2xl p-5 sm:p-6 transition-all duration-300 ease-out
-                 hover:shadow-xl hover:-translate-y-1 hover:border-primary/30
-                 active:scale-[0.98] active:shadow-lg
-                 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2
-                 opacity-100"
+      className="group w-full text-left bg-gemini-card dark:bg-zinc-800/90
+                 rounded-[22px] p-5 transition-all duration-200 ease-out
+                 shadow-[0_1px_2px_rgba(0,0,0,0.06)]
+                 hover:shadow-md active:scale-[0.98]
+                 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
     >
-      <div className="flex items-start gap-4">
+      <div className="flex items-center gap-4">
         {/* Icon Badge */}
         <div 
-          className={`flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full ${iconBgColor} 
-                      flex items-center justify-center transition-transform duration-300
-                      group-hover:scale-110`}
+          className={`flex-shrink-0 w-12 h-12 rounded-full ${iconBgColor} 
+                      flex items-center justify-center`}
         >
-          <Icon className={`w-6 h-6 sm:w-7 sm:h-7 ${iconColor}`} />
+          <Icon className={`w-6 h-6 ${iconColor}`} />
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-lg sm:text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-1">
+          <h3 className="text-base font-semibold text-gemini-text-dark dark:text-zinc-50">
             {title}
           </h3>
-          <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 line-clamp-2">
+          <p className="text-sm text-gemini-text-gray dark:text-zinc-400 line-clamp-1">
             {description}
           </p>
         </div>
 
         {/* Chevron */}
-        <div className="flex-shrink-0 self-center">
+        <div className="flex-shrink-0">
           <ChevronRight 
-            className="w-5 h-5 text-zinc-400 dark:text-zinc-500 transition-transform duration-300
-                       group-hover:translate-x-1 group-hover:text-primary" 
+            className="w-5 h-5 text-gemini-text-muted dark:text-zinc-500" 
           />
         </div>
       </div>
@@ -134,48 +130,14 @@ const TastePage: React.FC = () => {
   ];
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-safe">
-      <main id="main-content" className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-4xl">
-        {/* Header */}
-        <div className="mb-8">
-          {/* Back button with underline animation */}
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="group flex items-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 
-                       mb-4 transition-colors font-medium text-sm"
-          >
-            <ChevronLeft className="w-5 h-5 mr-1 transition-transform group-hover:-translate-x-0.5" />
-            <span className="relative">
-              Back to dashboard
-              <span className="absolute left-0 -bottom-0.5 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
-            </span>
-          </button>
-
-          {/* Hero header */}
-          <div className="relative">
-            {/* Decorative dots */}
-            <div className="absolute -top-2 -left-2 flex gap-1.5 opacity-60">
-              <span className="w-2 h-2 rounded-full bg-primary" />
-              <span className="w-2 h-2 rounded-full bg-blue-500" />
-              <span className="w-2 h-2 rounded-full bg-green-500" />
-            </div>
-
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-50 mb-2">
-                Taste
-              </h1>
-              <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-md">
-                Choose how you want to capture your tasting experience.
-              </p>
-            </div>
-
-            {/* Subtle gradient underline */}
-            <div className="mt-4 h-1 w-24 rounded-full bg-gradient-to-r from-primary via-blue-500 to-green-500 opacity-70" />
-          </div>
-        </div>
-
-        {/* Taste Options Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 stagger-children">
+    <PageLayout
+      title="Taste"
+      subtitle="Choose how you want to capture your tasting experience."
+      showBack
+      backUrl="/dashboard"
+    >
+      {/* Taste Options */}
+      <div className="flex flex-col gap-3 mt-2">
           {tasteOptions.map((option, index) => (
             <TasteModeCard
               key={option.path}
@@ -190,18 +152,13 @@ const TastePage: React.FC = () => {
           ))}
         </div>
 
-        {/* Value proposition */}
-        <div className="mt-8 p-4 rounded-xl bg-gradient-to-r from-primary/5 via-blue-500/5 to-green-500/5 
-                        border border-zinc-200/50 dark:border-zinc-700/50">
-          <p className="text-sm text-center text-zinc-600 dark:text-zinc-400">
-            Every tasting builds your flavor wheels and creates a personal archive of your palate.
-          </p>
-        </div>
-      </main>
-
-      {/* Bottom Navigation */}
-      <BottomNavigation />
-    </div>
+      {/* Value proposition */}
+      <div className="mt-8 p-4 rounded-[22px] bg-gemini-card dark:bg-zinc-800">
+        <p className="text-sm text-center text-gemini-text-gray dark:text-zinc-400">
+          Every tasting builds your flavor wheels and creates a personal archive of your palate.
+        </p>
+      </div>
+    </PageLayout>
   );
 };
 

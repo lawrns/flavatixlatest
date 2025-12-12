@@ -1,15 +1,8 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Inter, Crimson_Text } from 'next/font/google'
 import styles from './HeroSection.module.css'
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-const crimsonText = Crimson_Text({ 
-  subsets: ['latin'], 
-  weight: ['400', '600', '700'],
-  variable: '--font-crimson'
-})
+import Container from '@/components/layout/Container'
 
 export default function Home() {
   return (
@@ -17,17 +10,17 @@ export default function Home() {
       <Head>
         <title>Flavatix - The one place for all your tasting needs</title>
         <meta name="description" content="The world's most pivotal tasting app for anything with flavor or aroma. Discover, analyze, and share your tasting experiences with our user-friendly platform." />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
         <link rel="icon" href="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png" />
         <link rel="apple-touch-icon" href="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png" />
       </Head>
 
-      <main className={`${inter.variable} ${crimsonText.variable} min-h-screen`}>
+      <main className="min-h-screen">
         {/* Hero Section */}
         <div className={`${styles.hero} relative overflow-hidden`}>
           
           {/* Content Container */}
-          <div className="relative z-10 px-md py-2xl mx-auto max-w-4xl text-center">
+          <Container size="md" className="relative z-10 py-2xl text-center">
             {/* Logo/Brand Area */}
             <div className="mb-lg">
               <Image
@@ -114,12 +107,12 @@ export default function Home() {
                 Join thousands of tasters discovering new flavors every day
               </p>
             </div>
-          </div>
+          </Container>
         </div>
         
         {/* Value Proposition Section */}
-        <section className="py-2xl px-md">
-          <div className="max-w-4xl mx-auto text-center">
+        <section className="py-2xl">
+          <Container size="md" className="text-center">
             <h2 className="font-heading font-bold text-h2 text-text-primary mb-lg">
               Why Flavatix?
             </h2>
@@ -165,12 +158,12 @@ export default function Home() {
                 </p>
               </div>
             </div>
-          </div>
+          </Container>
         </section>
         
         {/* Footer */}
-        <footer className="bg-primary text-white py-xl px-md">
-          <div className="max-w-4xl mx-auto text-center">
+        <footer className="bg-primary text-white py-xl">
+          <Container size="md" className="text-center">
             <h3 className="font-heading font-bold text-h3 mb-sm">
               Ready to Transform Your Tasting Experience?
             </h3>
@@ -186,7 +179,7 @@ export default function Home() {
                 © 2025 Flavatix. The one place for all your tasting needs.
               </p>
             </div>
-          </div>
+          </Container>
         </footer>
       </main>
     </div>

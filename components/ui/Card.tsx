@@ -2,13 +2,17 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'tasting' | 'elevated' | 'outlined' | 'glass' | 'gradient' | 'social';
+  variant?: 'default' | 'tasting' | 'elevated' | 'outlined' | 'glass' | 'gradient' | 'social' | 'gemini';
   hover?: boolean;
   padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
   /** Add animated gradient border */
   glowBorder?: boolean;
   /** Animation on mount */
   animate?: boolean;
+  /** Make card interactive (clickable) */
+  interactive?: boolean;
+  /** Accessible label for interactive cards */
+  'aria-label'?: string;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -19,70 +23,89 @@ const Card: React.FC<CardProps> = ({
   padding = 'md',
   glowBorder = false,
   animate = false,
+  interactive = false,
+  'aria-label': ariaLabel,
+  onClick,
   ...props
 }) => {
   const baseClasses = cn(
-    'rounded-2xl transition-all duration-300 ease-out',
+    'rounded-[22px] transition-all duration-300 ease-out',
     animate && 'animate-scale-in'
   );
   
   const variantClasses = {
+    // Gemini-style default card - clean, minimal, soft gray background
     default: cn(
-      'bg-white dark:bg-zinc-800/90 border border-zinc-200/80 dark:border-zinc-700/80',
-      'shadow-sm dark:shadow-zinc-900/20'
+      'bg-gemini-card dark:bg-zinc-800/90',
+      'shadow-[0_1px_2px_rgba(0,0,0,0.06)]'
+    ),
+    // Gemini variant - explicit Gemini styling
+    gemini: cn(
+      'bg-gemini-card dark:bg-zinc-800/90',
+      'shadow-[0_1px_2px_rgba(0,0,0,0.06)]'
     ),
     tasting: cn(
-      'bg-gradient-to-br from-orange-50/80 to-white dark:from-zinc-800 dark:to-zinc-800/80',
+      'bg-gemini-card dark:from-zinc-800 dark:to-zinc-800/80',
       'border border-primary/10 dark:border-primary/20',
-      'shadow-lg shadow-orange-500/5 dark:shadow-orange-500/10',
+      'shadow-[0_1px_2px_rgba(0,0,0,0.06)]',
       'relative overflow-hidden',
       // Top accent bar
       'before:absolute before:inset-x-0 before:top-0 before:h-1',
-      'before:bg-gradient-to-r before:from-primary before:via-orange-400 before:to-amber-400'
+      'before:bg-primary'
     ),
     elevated: cn(
       'bg-white dark:bg-zinc-800',
-      'border border-zinc-100 dark:border-zinc-700',
-      'shadow-xl shadow-zinc-200/50 dark:shadow-zinc-900/50'
+      'shadow-lg'
     ),
     outlined: cn(
-      'bg-transparent border-2 border-zinc-300 dark:border-zinc-600',
+      'bg-transparent border-2 border-gemini-border dark:border-zinc-600',
       'hover:border-primary/50'
     ),
     glass: cn(
       'bg-white/70 dark:bg-zinc-800/70',
       'backdrop-blur-xl backdrop-saturate-150',
       'border border-white/50 dark:border-zinc-700/50',
-      'shadow-xl shadow-black/5'
+      'shadow-lg shadow-black/5'
     ),
     gradient: cn(
-      'bg-gradient-to-br from-primary/5 via-white to-amber-50/50',
-      'dark:from-primary/10 dark:via-zinc-800 dark:to-amber-900/10',
+      'bg-gradient-to-br from-primary/5 via-white to-red-50/50',
+      'dark:from-primary/10 dark:via-zinc-800 dark:to-red-900/10',
       'border border-primary/10 dark:border-primary/20',
-      'shadow-lg shadow-primary/5'
+      'shadow-[0_1px_2px_rgba(0,0,0,0.06)]'
     ),
     social: cn(
-      'bg-white dark:bg-zinc-800',
-      'border border-zinc-100 dark:border-zinc-700/50',
-      'shadow-sm hover:shadow-md'
+      'bg-gemini-card dark:bg-zinc-800',
+      'shadow-[0_1px_2px_rgba(0,0,0,0.06)]'
     ),
   };
 
   const paddingClasses = {
     none: '',
     sm: 'p-3',
-    md: 'p-4 sm:p-5',
-    lg: 'p-5 sm:p-6',
-    xl: 'p-6 sm:p-8',
+    md: 'p-5',
+    lg: 'p-6',
+    xl: 'p-8',
   };
 
   const hoverClasses = hover 
-    ? 'hover:shadow-xl hover:-translate-y-1 hover:scale-[1.01] active:scale-[0.99]' 
+    ? 'hover:shadow-md active:scale-[0.98] transition-transform' 
+    : '';
+  
+  const interactiveClasses = interactive
+    ? 'cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2'
     : '';
   
   const glowBorderClasses = glowBorder
     ? 'ring-2 ring-primary/20 ring-offset-2 ring-offset-white dark:ring-offset-zinc-900'
     : '';
+
+  // Handle keyboard navigation for interactive cards
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (interactive && onClick && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      onClick(e as unknown as React.MouseEvent<HTMLDivElement>);
+    }
+  };
 
   return (
     <div
@@ -92,8 +115,14 @@ const Card: React.FC<CardProps> = ({
         paddingClasses[padding],
         hoverClasses,
         glowBorderClasses,
+        interactiveClasses,
         className
       )}
+      role={interactive ? 'button' : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      aria-label={ariaLabel}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
       {...props}
     >
       {children}

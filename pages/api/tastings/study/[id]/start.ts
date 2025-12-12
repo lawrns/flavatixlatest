@@ -1,57 +1,56 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '@/lib/supabase';
+import {
+  createApiHandler,
+  withAuth,
+  sendError,
+  sendSuccess,
+  requireUser,
+  type ApiContext,
+} from '@/lib/api/middleware';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+async function startSessionHandler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  context: ApiContext
+) {
+  const { id } = req.query;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (!id || typeof id !== 'string') {
+    return sendError(res, 'INVALID_INPUT', 'Invalid session ID', 400);
   }
 
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+  // Get authenticated user ID from context (set by withAuth middleware)
+  const user_id = requireUser(context).id;
 
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+  // Get Supabase client with user context (RLS will enforce permissions)
+  const supabase = getSupabaseClient(req, res);
 
-    if (authError || !user) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+  // Verify user is host
+  const { data: session, error: sessionError } = await supabase
+    .from('study_sessions')
+    .select('*')
+    .eq('id', id)
+    .eq('host_id', user_id)
+    .single();
 
-    const { id } = req.query;
-
-    // Verify user is host
-    const { data: session, error: sessionError } = await supabase
-      .from('study_sessions')
-      .select('*')
-      .eq('id', id)
-      .eq('host_id', user.id)
-      .single();
-
-    if (sessionError || !session) {
-      return res.status(404).json({ error: 'Session not found or access denied' });
-    }
-
-    // Update session status to active
-    const { error: updateError } = await supabase
-      .from('study_sessions')
-      .update({ status: 'active', updated_at: new Date().toISOString() })
-      .eq('id', id);
-
-    if (updateError) {
-      console.error('Error starting session:', updateError);
-      return res.status(500).json({ error: 'Failed to start session' });
-    }
-
-    res.status(200).json({ status: 'active', message: 'Session started successfully' });
-
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+  if (sessionError || !session) {
+    return sendError(res, 'NOT_FOUND', 'Session not found or access denied', 404);
   }
+
+  // Update session status to active
+  const { error: updateError } = await supabase
+    .from('study_sessions')
+    .update({ status: 'active', updated_at: new Date().toISOString() })
+    .eq('id', id);
+
+  if (updateError) {
+    return sendError(res, 'INTERNAL_ERROR', `Failed to start session: ${updateError.message}`, 500);
+  }
+
+  return sendSuccess(res, { status: 'active' }, 'Session started successfully');
 }
+
+export default createApiHandler({
+  POST: withAuth(startSessionHandler),
+});

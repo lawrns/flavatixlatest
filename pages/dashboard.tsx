@@ -10,13 +10,14 @@ import { getUserTastingStats, getLatestTasting, getRecentTastings } from '../lib
 import SocialFeedWidget from '../components/social/SocialFeedWidget';
 import BottomNavigation from '../components/navigation/BottomNavigation';
 import NotificationSystem from '../components/notifications/NotificationSystem';
+import Container from '../components/layout/Container';
 import { cn } from '@/lib/utils';
 import { AvatarWithFallback } from '@/components/ui/AvatarWithFallback';
+import UserAvatarMenu from '@/components/navigation/UserAvatarMenu';
 
 export default function Dashboard() {
    const { user, loading, signOut } = useAuth();
    const [profile, setProfile] = useState<UserProfile | null>(null);
-   const [activeTab, setActiveTab] = useState<'home' | 'edit'>('home');
    const [tastingStats, setTastingStats] = useState<any>(null);
    const [latestTasting, setLatestTasting] = useState<any>(null);
    const [recentTastings, setRecentTastings] = useState<any[]>([]);
@@ -69,7 +70,6 @@ export default function Dashboard() {
 
   const handleProfileUpdate = async (updatedProfile: UserProfile) => {
     setProfile(updatedProfile);
-    setActiveTab('home');
     toast.success('Profile updated successfully!');
   };
 
@@ -93,116 +93,60 @@ export default function Dashboard() {
 
   return (
     <div className={cn(
-      'min-h-screen font-display',
-      'bg-gradient-to-br from-orange-50/50 via-white to-amber-50/30',
-      'dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900',
-      'text-zinc-900 dark:text-zinc-50'
+      'min-h-screen font-sans',
+      'bg-white dark:bg-zinc-900',
+      'text-gemini-text-dark dark:text-zinc-50'
     )}>
       <div className="flex h-screen flex-col">
-        {/* Enhanced Header */}
+        {/* Gemini-style Header */}
         <header
           className={cn(
             'sticky top-0 z-40',
-            'bg-white/80 dark:bg-zinc-900/80',
-            'backdrop-blur-xl backdrop-saturate-150',
-            'border-b border-zinc-200/50 dark:border-zinc-700/50',
-            'px-4 pt-3 pb-0'
+            'bg-white dark:bg-zinc-900',
+            'border-b border-gemini-border dark:border-zinc-700/50',
+            'pt-4 pb-0'
           )}
         >
-          <div className="flex items-center justify-between max-w-4xl mx-auto">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">🍊</span>
-              <h1 className="text-lg font-bold bg-gradient-to-r from-primary to-orange-600 bg-clip-text text-transparent">
-                {activeTab === 'home' ? 'Dashboard' : 'Profile'}
+          <Container size="md" className="flex items-center justify-between pb-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gemini-text-dark dark:text-white tracking-tight">
+                Dashboard
               </h1>
             </div>
             <div className="flex items-center gap-3">
               {user && <NotificationSystem userId={user.id} />}
-              <button
-                onClick={handleLogout}
-                className={cn(
-                  'px-3 py-1.5 text-sm font-medium rounded-lg',
-                  'text-zinc-600 dark:text-zinc-300',
-                  'hover:bg-zinc-100 dark:hover:bg-zinc-800',
-                  'transition-colors duration-200'
-                )}
-              >
-                Logout
-              </button>
+              <UserAvatarMenu
+                avatarUrl={profile?.avatar_url}
+                displayName={profile?.full_name}
+                email={user?.email}
+                size={40}
+              />
             </div>
-          </div>
-
-          {/* Tab Navigation (Home / Edit Profile) */}
-          <div className="mt-3 border-t border-zinc-200/50 dark:border-zinc-800/80">
-            <div className="flex max-w-4xl mx-auto">
-              <button
-                onClick={() => setActiveTab('home')}
-                className={cn(
-                  'relative px-6 py-3 text-sm font-semibold transition-colors',
-                  activeTab === 'home'
-                    ? 'text-primary'
-                    : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
-                )}
-              >
-                Home
-                {activeTab === 'home' && (
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-primary to-orange-500 rounded-full" />
-                )}
-              </button>
-              <button
-                onClick={() => setActiveTab('edit')}
-                className={cn(
-                  'relative px-6 py-3 text-sm font-semibold transition-colors',
-                  activeTab === 'edit'
-                    ? 'text-primary'
-                    : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
-                )}
-              >
-                Edit Profile
-                {activeTab === 'edit' && (
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-primary to-orange-500 rounded-full" />
-                )}
-              </button>
-            </div>
-          </div>
+          </Container>
         </header>
 
         <main className="flex-1 overflow-y-auto pb-24">
-           {activeTab === 'home' && (
-             <div className="p-4 sm:p-6 max-w-4xl mx-auto animate-fade-in">
-               {/* Welcome Hero Section */}
-               <div className={cn(
-                 'relative overflow-hidden rounded-2xl p-6 sm:p-8 mb-6',
-                 'bg-gradient-to-br from-primary/10 via-orange-50 to-amber-50/50',
-                 'dark:from-primary/20 dark:via-zinc-800 dark:to-zinc-800',
-                 'border border-primary/10 dark:border-primary/20'
-               )}>
-                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/20 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
-                 <div className="relative z-10">
-                   <p className="text-sm font-medium text-primary mb-1">Welcome back</p>
-                   <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-white mb-2">
-                     {profile?.full_name || user?.email?.split('@')[0]}! 👋
+             <Container size="md" className="pt-6 animate-fade-in flex flex-col gap-8">
+               {/* Welcome Hero Section - Gemini Style */}
+               <header className="flex justify-between items-start">
+                 <div>
+                   <p className="text-gemini-text-gray text-lg">Welcome back,</p>
+                   <h2 className="text-2xl font-bold text-gemini-text-dark dark:text-white">
+                     {profile?.full_name || user?.email?.split('@')[0]}
                    </h2>
-                   <p className="text-zinc-600 dark:text-zinc-300">
-                     Ready to discover new flavors today?
-                   </p>
                  </div>
-               </div>
+               </header>
 
-            {/* Profile Overview */}
+            {/* Profile Overview - Gemini Style */}
             {profile && (
               <div className={cn(
-                'rounded-2xl p-5 sm:p-6 mb-6',
-                'bg-white dark:bg-zinc-800/80',
-                'border border-zinc-200/80 dark:border-zinc-700/50',
-                'shadow-sm'
+                'rounded-[22px] p-5',
+                'bg-gemini-card dark:bg-zinc-800/80',
+                'shadow-[0_1px_2px_rgba(0,0,0,0.06)]'
               )}>
                 {/* Header with Avatar and Basic Info */}
-                <div className="flex items-start space-x-4 mb-6">
-                  <div className={cn(
-                    'flex-shrink-0 relative',
-                    'shadow-lg shadow-primary/20'
-                  )}>
+                <div className="flex items-start gap-4 mb-5">
+                  <div className="flex-shrink-0">
                     <AvatarWithFallback
                       src={profile.avatar_url}
                       alt={profile.full_name || 'Profile'}
@@ -212,61 +156,59 @@ export default function Dashboard() {
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 truncate">
+                    <h3 className="text-lg font-bold text-gemini-text-dark dark:text-zinc-50 truncate">
                       {profile.full_name || 'No name set'}
                     </h3>
                     {profile.username && (
-                      <p className="text-zinc-600 dark:text-zinc-300 mb-1">@{profile.username}</p>
+                      <p className="text-gemini-text-gray dark:text-zinc-300 text-sm">@{profile.username}</p>
                     )}
-                    <p className="text-zinc-500 text-sm">{user?.email}</p>
                     {profile.preferred_category && (
-                      <span className="inline-block px-3 py-1 rounded-full text-sm font-medium mt-2 bg-primary/10 text-primary">
+                      <span className="inline-block px-3 py-1 rounded-full text-xs font-medium mt-2 bg-primary/10 text-primary">
                         {profile.preferred_category}
                       </span>
                     )}
                   </div>
                   <button
-                    onClick={() => setActiveTab('edit')}
-                    className="text-primary hover:underline text-sm font-medium"
+                    onClick={() => router.push('/profile/edit')}
+                    className="text-primary text-sm font-medium hover:opacity-80 transition-opacity"
                   >
-                    Edit Profile
+                    Edit
                   </button>
                 </div>
 
                 {/* Bio */}
                 {profile.bio && (
-                  <div className="mb-6">
-                    <h4 className="text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-2">About</h4>
-                    <p className="text-zinc-900 dark:text-zinc-50 leading-relaxed">{profile.bio}</p>
+                  <div className="mb-5 p-3 bg-white dark:bg-zinc-700 rounded-xl">
+                    <p className="text-gemini-text-dark dark:text-zinc-50 text-sm leading-relaxed">{profile.bio}</p>
                   </div>
                 )}
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="bg-zinc-50 dark:bg-zinc-700 p-4 text-center rounded-lg">
-                    <div className="text-2xl font-bold text-primary">{tastingStats?.totalTastings || profile.tastings_count || 0}</div>
-                    <div className="text-sm text-zinc-600 dark:text-zinc-300">Tastings</div>
+                {/* Stats Grid - Gemini Style */}
+                <div className="grid grid-cols-4 gap-3">
+                  <div className="bg-white dark:bg-zinc-700 p-3 text-center rounded-2xl">
+                    <div className="text-xl font-bold text-primary">{tastingStats?.totalTastings || profile.tastings_count || 0}</div>
+                    <div className="text-xs text-gemini-text-gray dark:text-zinc-300">Tastings</div>
                   </div>
 
-                  <div className="bg-zinc-50 dark:bg-zinc-700 p-4 text-center rounded-lg">
-                    <div className="text-2xl font-bold text-primary">{profile.reviews_count || 0}</div>
-                    <div className="text-sm text-zinc-600 dark:text-zinc-300">Reviews</div>
+                  <div className="bg-white dark:bg-zinc-700 p-3 text-center rounded-2xl">
+                    <div className="text-xl font-bold text-primary">{profile.reviews_count || 0}</div>
+                    <div className="text-xs text-gemini-text-gray dark:text-zinc-300">Reviews</div>
                   </div>
 
                   <button
                     onClick={() => router.push(`/profile/${profile.username}/followers`)}
-                    className="bg-zinc-50 dark:bg-zinc-700 p-4 text-center rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors cursor-pointer"
+                    className="bg-white dark:bg-zinc-700 p-3 text-center rounded-2xl hover:bg-gray-50 dark:hover:bg-zinc-600 transition-colors cursor-pointer"
                   >
-                    <div className="text-2xl font-bold text-primary">{profile.followers_count || 0}</div>
-                    <div className="text-sm text-zinc-600 dark:text-zinc-300">Followers</div>
+                    <div className="text-xl font-bold text-primary">{profile.followers_count || 0}</div>
+                    <div className="text-xs text-gemini-text-gray dark:text-zinc-300">Followers</div>
                   </button>
 
                   <button
                     onClick={() => router.push(`/profile/${profile.username}/following`)}
-                    className="bg-zinc-50 dark:bg-zinc-700 p-4 text-center rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors cursor-pointer"
+                    className="bg-white dark:bg-zinc-700 p-3 text-center rounded-2xl hover:bg-gray-50 dark:hover:bg-zinc-600 transition-colors cursor-pointer"
                   >
-                    <div className="text-2xl font-bold text-primary">{profile.following_count || 0}</div>
-                    <div className="text-sm text-zinc-600 dark:text-zinc-300">Following</div>
+                    <div className="text-xl font-bold text-primary">{profile.following_count || 0}</div>
+                    <div className="text-xs text-gemini-text-gray dark:text-zinc-300">Following</div>
                   </button>
                 </div>
 
@@ -420,19 +362,7 @@ export default function Dashboard() {
               {/* Social Feed Widget */}
               {user && <SocialFeedWidget userId={user.id} limit={5} />}
             </div>
-            </div>
-          )}
-
-          {activeTab === 'edit' && (
-            <div className="p-6">
-              <div className="max-w-2xl mx-auto">
-                <ProfileEditForm
-                  profile={profile}
-                  onProfileUpdate={handleProfileUpdate}
-                />
-              </div>
-            </div>
-          )}
+            </Container>
         </main>
 
         {/* Bottom Navigation */}

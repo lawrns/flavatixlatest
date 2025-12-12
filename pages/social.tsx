@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../contexts/SimpleAuthContext';
 import { getSupabaseClient } from '../lib/supabase';
@@ -6,6 +6,7 @@ import { toast } from '../lib/toast';
 import CommentsModal from '../components/social/CommentsModal';
 import { SocialPostCard, TastingPost, TastingItem, getCategoryColor, formatTimeAgo } from '../components/social/SocialPostCard';
 import { SocialFeedFilters } from '../components/social/SocialFeedFilters';
+import notificationService from '@/lib/notificationService';
 
 export default function SocialPage() {
   const { user, loading } = useAuth();
@@ -25,37 +26,7 @@ export default function SocialPage() {
 
   const POSTS_PER_PAGE = 10;
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/auth');
-      return;
-    }
-
-    if (user) {
-      setPage(0);
-      setHasMore(true);
-      loadSocialFeed(0, false);
-    }
-  }, [user, loading, router]);
-
-  // Filter posts based on active tab and category
-  useEffect(() => {
-    let filtered = [...posts];
-
-    // Filter by tab (all or following)
-    if (activeTab === 'following') {
-      filtered = filtered.filter(post => post.isFollowed);
-    }
-
-    // Filter by category
-    if (categoryFilter !== 'all') {
-      filtered = filtered.filter(post => post.category.toLowerCase() === categoryFilter.toLowerCase());
-    }
-
-    setFilteredPosts(filtered);
-  }, [posts, activeTab, categoryFilter]);
-
-  const loadSocialFeed = async (pageNum: number = 0, append: boolean = false) => {
+  const loadSocialFeed = useCallback(async (pageNum: number = 0, append: boolean = false) => {
     if (!user?.id) return;
 
     try {
@@ -228,7 +199,37 @@ export default function SocialPage() {
       setLoadingPosts(false);
       setLoadingMore(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/auth');
+      return;
+    }
+
+    if (user) {
+      setPage(0);
+      setHasMore(true);
+      loadSocialFeed(0, false);
+    }
+  }, [user, loading, router, loadSocialFeed]);
+
+  // Filter posts based on active tab and category
+  useEffect(() => {
+    let filtered = [...posts];
+
+    // Filter by tab (all or following)
+    if (activeTab === 'following') {
+      filtered = filtered.filter(post => post.isFollowed);
+    }
+
+    // Filter by category
+    if (categoryFilter !== 'all') {
+      filtered = filtered.filter(post => post.category.toLowerCase() === categoryFilter.toLowerCase());
+    }
+
+    setFilteredPosts(filtered);
+  }, [posts, activeTab, categoryFilter]);
 
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
@@ -377,6 +378,16 @@ export default function SocialPage() {
             });
 
           if (error) throw error;
+
+          // Send notification to the followed user
+          const { data: currentUser } = await supabase
+            .from('profiles')
+            .select('full_name')
+            .eq('user_id', user.id)
+            .single();
+
+          const followerName = currentUser?.full_name || 'Someone';
+          await notificationService.notifyFollow(user.id, targetUserId, followerName);
         } catch (dbError) {
           console.log('Follows table not available, using local state only');
         }
@@ -408,13 +419,13 @@ export default function SocialPage() {
     loadSocialFeed(0, false);
   };
 
-  const loadMorePosts = () => {
+  const loadMorePosts = useCallback(() => {
     if (!loadingMore && hasMore) {
       const nextPage = page + 1;
       setPage(nextPage);
       loadSocialFeed(nextPage, true);
     }
-  };
+  }, [loadingMore, hasMore, page, loadSocialFeed]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
@@ -437,7 +448,7 @@ export default function SocialPage() {
         observer.unobserve(sentinel);
       }
     };
-  }, [hasMore, loadingMore, loadingPosts, page]);
+  }, [hasMore, loadingMore, loadingPosts, page, loadMorePosts]);
 
   const handleShare = async (postId: string) => {
     if (!user?.id) {
@@ -653,6 +664,7 @@ export default function SocialPage() {
       {activePostId && (
         <CommentsModal
           tastingId={activePostId}
+          tastingOwnerId={posts.find(p => p.id === activePostId)?.user_id}
           isOpen={commentsModalOpen}
           onClose={handleCloseComments}
           initialCommentCount={posts.find(p => p.id === activePostId)?.stats.comments || 0}

@@ -6,12 +6,13 @@
 import { getSupabaseClient } from '../supabase';
 
 // OpenAI configuration
-// IMPORTANT: Set OPENAI_API_KEY in your environment variables
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY || process.env.NEXT_PUBLIC_OPENAI_API_KEY || '';
+// IMPORTANT: Set OPENAI_API_KEY in your environment variables (server-side only)
+// NEVER use NEXT_PUBLIC_OPENAI_API_KEY - API keys must never be exposed to the client
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 const OPENAI_EMBEDDING_MODEL = 'text-embedding-3-small';
 const OPENAI_COMPLETION_MODEL = 'gpt-3.5-turbo';
 
-// Warn if API key is missing
+// Warn if API key is missing (server-side only)
 if (!OPENAI_API_KEY && typeof window === 'undefined') {
   console.warn('⚠️ OpenAI API key not configured. Set OPENAI_API_KEY environment variable.');
 }
@@ -53,8 +54,22 @@ export class EmbeddingService {
 
   /**
    * Generate embedding for text using OpenAI
+   * IMPORTANT: This method can only be called server-side (API routes, server components)
+   * Client-side calls will automatically fall back to generateFallbackEmbedding
    */
   async generateEmbedding(text: string): Promise<EmbeddingResult> {
+    // Ensure this is only called server-side
+    if (typeof window !== 'undefined') {
+      console.warn('generateEmbedding called from client-side - using fallback embedding');
+      return this.generateFallbackEmbedding(text);
+    }
+
+    // Check if API key is configured
+    if (!OPENAI_API_KEY) {
+      console.warn('OPENAI_API_KEY not configured - using fallback embedding');
+      return this.generateFallbackEmbedding(text);
+    }
+
     // Check cache first
     const cacheKey = `embed:${text}`;
     if (this.embeddingCache.has(cacheKey)) {

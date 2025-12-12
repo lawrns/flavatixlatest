@@ -54,8 +54,21 @@ module.exports = {
           900: 'var(--color-accent-900)',
           hover: 'var(--color-accent-hover)',
         },
-        'background-light': '#f8f7f6',
-        'background-dark': '#221810',
+        'background-light': '#FFFFFF',
+        'background-dark': '#18181b',
+        // Gemini Design System Colors
+        'gemini': {
+          primary: '#C63C22',
+          'primary-hover': '#b3351e',
+          bg: '#FFFFFF',
+          card: '#F6F6F6',
+          'text-dark': '#111111',
+          'text-gray': '#6A6A6A',
+          'text-muted': '#A8A8A8',
+          border: '#E6E6E6',
+          success: '#2E8B57',
+          warning: '#E7A32B',
+        },
         zinc: {
           50: '#fafafa',
           100: '#f4f4f5',
@@ -115,8 +128,8 @@ module.exports = {
         info: 'var(--color-info)',
       },
       fontFamily: {
-        display: ['Space Grotesk', 'sans-serif'],
-        sans: ['Space Grotesk', 'sans-serif'],
+        display: ['Inter', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
       },
       fontSize: {
         'xs': ['clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem)', { lineHeight: '1.5' }],
@@ -223,16 +236,16 @@ module.exports = {
         lg: '0.5rem', // 8px
         xl: '0.75rem', // 12px
         '2xl': '1rem', // 16px
-        '3xl': '1.5rem', // 24px
+        '3xl': '1.375rem', // 22px - Gemini card radius
         full: '9999px',
-        // Component-specific
-        'button': '12px',
-        'card': '16px',
-        'input': '12px',
-        // Tier system
-        'small': '8px',
-        'medium': '12px',
-        'large': '16px',
+        // Component-specific - Gemini Style
+        'button': '14px',
+        'card': '22px',
+        'input': '14px',
+        // Tier system - Gemini Style
+        'small': '10px',
+        'medium': '14px',
+        'large': '22px',
       },
       maxWidth: {
         none: 'none',
@@ -354,15 +367,21 @@ module.exports = {
         // Custom animations
         'fade-in': 'fadeIn 0.3s ease-in-out',
         'fade-out': 'fadeOut 0.3s ease-in-out',
+        'fade-in-up': 'fadeInUp 0.5s ease-out',
         'slide-in-up': 'slideInUp 0.3s ease-out',
         'slide-in-down': 'slideInDown 0.3s ease-out',
         'slide-in-left': 'slideInLeft 0.3s ease-out',
         'slide-in-right': 'slideInRight 0.3s ease-out',
+        'slide-up': 'slideUp 0.4s ease-out forwards',
         'scale-in': 'scaleIn 0.3s ease-out',
         'scale-out': 'scaleOut 0.3s ease-in',
+        'bounce-in': 'bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
         'float': 'float 3s ease-in-out infinite',
         'glow': 'glow 2s ease-in-out infinite alternate',
+        'glow-pulse': 'glowPulse 2s ease-in-out infinite',
         'shimmer': 'shimmer 2s linear infinite',
+        'ripple': 'ripple 0.6s linear forwards',
+        'gentle-pulse': 'gentlePulse 2s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -408,6 +427,32 @@ module.exports = {
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
+        },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        bounceIn: {
+          '0%': { opacity: '0', transform: 'scale(0.3)' },
+          '50%': { opacity: '1', transform: 'scale(1.05)' },
+          '70%': { transform: 'scale(0.9)' },
+          '100%': { transform: 'scale(1)' },
+        },
+        glowPulse: {
+          '0%, 100%': { boxShadow: '0 0 5px rgba(236, 120, 19, 0.2)' },
+          '50%': { boxShadow: '0 0 20px rgba(236, 120, 19, 0.4)' },
+        },
+        ripple: {
+          '0%': { width: '0', height: '0', opacity: '0.5' },
+          '100%': { width: '500px', height: '500px', opacity: '0' },
+        },
+        gentlePulse: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.7' },
         },
       },
       transitionDuration: {

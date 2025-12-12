@@ -167,7 +167,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
  */
 export const NoTastingsEmpty: React.FC<{ onStart?: () => void }> = ({ onStart }) => (
   <EmptyState
-    icon="🍷"
+    icon="wine_bar"
     title="No tastings yet"
     description="Start your first tasting session to begin exploring flavors!"
     action={onStart ? { label: 'Start Tasting', onClick: onStart } : undefined}
@@ -185,7 +185,7 @@ export const NoResultsEmpty: React.FC<{ query?: string }> = ({ query }) => (
 
 export const NoPostsEmpty: React.FC<{ onRefresh?: () => void }> = ({ onRefresh }) => (
   <EmptyState
-    icon="🍊"
+    icon="nutrition"
     title="No posts yet"
     description="Be the first to share your tasting experience with the community!"
     action={onRefresh ? { label: 'Refresh', onClick: onRefresh, variant: 'secondary' } : undefined}

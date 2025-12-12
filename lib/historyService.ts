@@ -397,7 +397,13 @@ export async function getRecentTastings(
       return { data: null, error };
     }
 
-    return { data: data as TastingHistory[], error: null };
+    // Transform `quick_tasting_items` -> `items` to match TastingHistory type
+    const transformedData: TastingHistory[] = (data || []).map((tasting: any) => ({
+      ...tasting,
+      items: tasting.quick_tasting_items || [],
+    }));
+
+    return { data: transformedData, error: null };
   } catch (error) {
     console.error('Unexpected error in getRecentTastings:', error);
     return { data: null, error };

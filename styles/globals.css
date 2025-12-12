@@ -1,29 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 @import './design-tokens.css';
 @import './component-tokens.css';
 
-/* Legacy CSS variables for backward compatibility */
+/* ============================================================================
+   LEGACY COMPATIBILITY LAYER
+   Maps old variable names to new design tokens for backward compatibility.
+   New code should use design-tokens.css variables directly.
+   ============================================================================ */
 :root {
-  /* Legacy Colors - mapped to new design tokens */
-  --primary: #ec7813;
-  --primary-hover: #d66a11;
-  --secondary: #ec7813;
-  --accent: #ec7813;
+  /* Legacy Colors - use --color-primary-500 etc. in new code */
+  --primary: var(--color-primary-500);
+  --primary-hover: var(--color-primary-600);
+  --secondary: var(--color-secondary-500);
+  --accent: var(--color-accent-500);
   --background: var(--color-background-app);
   --surface: var(--color-background-surface);
   --text-primary: var(--color-text-primary);
   --text-secondary: var(--color-text-secondary);
   --border: var(--color-border-default);
 
-  /* Legacy Typography - mapped to new design tokens */
-  --font-heading: var(--font-heading);
-  --font-body: var(--font-body);
-  --text-h1: var(--font-size-h1);
-  --text-body: var(--font-size-base);
-
-  /* Legacy Spacing - mapped to new design tokens */
+  /* Legacy Spacing - use --spacing-* in new code */
   --space-2: var(--spacing-2);
   --space-3: var(--spacing-3);
   --space-4: var(--spacing-4);
@@ -40,7 +40,7 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--background);
   color: var(--text-primary);
   line-height: 1.6;
@@ -63,7 +63,7 @@ body {
 }
 
 body {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--background);
   color: var(--text-primary);
   line-height: 1.6;
@@ -78,11 +78,11 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 button, input, select, textarea {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 a {
@@ -420,35 +420,6 @@ textarea {
   transition: transform 0.2s ease;
 }
 
-/* 3D Flavor Wheel Styles */
-.preserve-3d {
-  transform-style: preserve-3d;
-}
-
-.backface-hidden {
-  backface-visibility: hidden;
-}
-
-.rotate-y-180 {
-  transform: rotateY(180deg);
-}
-
-/* Animation utilities */
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.5s ease-out;
-}
-
 /* Ultra-thin slider styles for overall score */
 .slider-ultra-thin {
   -webkit-appearance: none;
@@ -532,22 +503,6 @@ textarea {
 
 .rotate-y-180 {
   transform: rotateY(180deg);
-}
-
-/* Animation utilities */
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.5s ease-out;
 }
 
 /* Mobile-optimized styles */

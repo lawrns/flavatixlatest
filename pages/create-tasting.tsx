@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { getSupabaseClient } from '@/lib/supabase';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { toast } from '@/lib/toast';
-import { ChevronLeft, Users, Trophy, BookOpen, Eye, EyeOff, Plus, Trash2, FileText } from 'lucide-react';
+import { Users, Trophy, BookOpen, Eye, EyeOff, Plus, Trash2, FileText } from 'lucide-react';
+import PageLayout from '@/components/layout/PageLayout';
 import { StudyModeSelector, StudyApproach } from '@/components/quick-tasting/StudyModeSelector';
 import { TemplateSelector } from '@/components/templates/TemplateSelector';
 import { TastingTemplate } from '@/lib/templates/tastingTemplates';
@@ -195,28 +195,14 @@ const CreateTastingPage: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
-      <main id="main-content" className="pb-20">
-        <div className="container mx-auto px-md py-lg max-w-4xl">
-          {/* Header */}
-          <div className="mb-lg">
-            <button
-              onClick={() => router.back()}
-              className="flex items-center text-text-secondary hover:text-text-primary mb-sm transition-colors font-body"
-            >
-              <ChevronLeft size={20} className="mr-2" />
-              Back
-            </button>
-            <h1 className="text-h1 font-heading font-bold text-text-primary mb-xs">
-              Create Tasting Session
-            </h1>
-            <p className="text-body font-body text-text-secondary">
-              Set up a new tasting session with your preferred mode and settings
-            </p>
-          </div>
-
-          {/* Mode Selection */}
-          <div className="card p-md">
+    <PageLayout
+      title="Create Tasting Session"
+      subtitle="Set up a new tasting session with your preferred mode and settings"
+      showBack
+      containerSize="2xl"
+    >
+      {/* Mode Selection */}
+      <div className="bg-gemini-card dark:bg-zinc-800 rounded-[22px] p-6 mt-2">
             <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">Choose Mode</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
               <button
@@ -243,32 +229,8 @@ const CreateTastingPage: React.FC = () => {
                 </p>
               </button>
             </div>
-          </div>
-        </div>
-      </main>
-
-      {/* Bottom Navigation */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
-        <nav className="flex justify-around p-2">
-          <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
-            <span className="material-symbols-outlined">home</span>
-            <span className="text-xs font-medium">Home</span>
-          </Link>
-          <Link className="flex flex-col items-center gap-1 p-2 text-primary" href="/taste">
-            <span className="material-symbols-outlined">restaurant</span>
-            <span className="text-xs font-bold">Taste</span>
-          </Link>
-          <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
-            <span className="material-symbols-outlined">reviews</span>
-            <span className="text-xs font-medium">Review</span>
-          </Link>
-          <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
-            <span className="material-symbols-outlined">donut_small</span>
-            <span className="text-xs font-medium">Wheels</span>
-          </Link>
-        </nav>
-      </footer>
-    </div>
+      </div>
+    </PageLayout>
   );
 };
 

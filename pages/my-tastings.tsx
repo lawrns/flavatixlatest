@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/SimpleAuthContext';
 import { getSupabaseClient } from '../lib/supabase';
 import { getUserTastingHistory, TastingHistory } from '../lib/historyService';
 import { toast } from '../lib/toast';
-import BottomNavigation from '../components/navigation/BottomNavigation';
+import PageLayout from '../components/layout/PageLayout';
 
 export default function MyTastingsPage() {
   const router = useRouter();
@@ -87,24 +87,13 @@ export default function MyTastingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background-light font-display text-zinc-900 dark:text-zinc-50 pb-40 md:pb-20">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="mb-6">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:text-zinc-50 mb-4 transition-colors"
-          >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back
-          </button>
-
-          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50 mb-2">My Tastings</h1>
-          <p className="text-zinc-600 dark:text-zinc-300">View and manage all your tasting sessions</p>
-        </div>
-
-        {/* Filters */}
+    <PageLayout
+      title="My Tastings"
+      subtitle="View and manage all your tasting sessions"
+      showBack
+      containerSize="2xl"
+    >
+      {/* Filters */}
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setFilter('all')}
@@ -251,11 +240,7 @@ export default function MyTastingsPage() {
             ))}
           </div>
         )}
-      </div>
-
-      {/* Bottom Navigation */}
-      <BottomNavigation />
-    </div>
+    </PageLayout>
   );
 }
 

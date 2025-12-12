@@ -14,9 +14,13 @@ interface CategoryTaxonomy {
   };
 }
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
+function getAnthropicClient(): Anthropic {
+  // Lazily create the client to avoid import-time side effects in tests (jsdom).
+  return new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY || '',
+    dangerouslyAllowBrowser: process.env.NODE_ENV === 'test',
+  });
+}
 
 export async function generateCategoryTaxonomy(
   categoryName: string
@@ -49,6 +53,7 @@ Return JSON with this structure:
 Be creative and accurate. Consider the item's cultural context, production method, and sensory characteristics.`;
 
   try {
+    const anthropic = getAnthropicClient();
     const response = await anthropic.messages.create({
       model: 'claude-3-haiku-20240307',
       max_tokens: 1024,

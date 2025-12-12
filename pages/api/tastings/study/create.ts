@@ -1,9 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+import { getSupabaseClient } from '@/lib/supabase';
+import {
+  createApiHandler,
+  withAuth,
+  withValidation,
+  sendError,
+  sendSuccess,
+  requireUser,
+  type ApiContext,
+} from '@/lib/api/middleware';
+import { z } from 'zod';
 
 interface CategoryInput {
   name: string;
@@ -20,54 +26,37 @@ interface CreateStudySessionRequest {
   categories: CategoryInput[];
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+const categoryInputSchema = z.object({
+  name: z.string().min(1, 'Category name is required'),
+  hasText: z.boolean(),
+  hasScale: z.boolean(),
+  hasBoolean: z.boolean(),
+  scaleMax: z.number().min(5).max(100).optional(),
+  rankInSummary: z.boolean(),
+}).refine(
+  (data) => data.hasText || data.hasScale || data.hasBoolean,
+  { message: 'Each category must have at least one parameter type' }
+);
 
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+const createStudySessionSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(120, 'Name must be between 1 and 120 characters'),
+  baseCategory: z.string().min(1, 'Base category is required'),
+  categories: z.array(categoryInputSchema).min(1, 'At least one category is required').max(20, 'Maximum 20 categories allowed'),
+});
 
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+async function createStudySessionHandler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  context: ApiContext
+) {
+  // Get authenticated user ID from context (set by withAuth middleware)
+  const user_id = requireUser(context).id;
 
-    if (authError || !user) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+  // Request body is already validated by withValidation middleware
+  const { name, baseCategory, categories } = req.body as CreateStudySessionRequest;
 
-    const { name, baseCategory, categories }: CreateStudySessionRequest = req.body;
-
-    // Validation
-    if (!name || !baseCategory || !categories || categories.length === 0) {
-      return res.status(400).json({ error: 'Missing required fields' });
-    }
-
-    if (name.length < 1 || name.length > 120) {
-      return res.status(400).json({ error: 'Name must be between 1 and 120 characters' });
-    }
-
-    if (categories.length > 20) {
-      return res.status(400).json({ error: 'Maximum 20 categories allowed' });
-    }
-
-    // Validate each category
-    for (const category of categories) {
-      if (!category.name) {
-        return res.status(400).json({ error: 'Category name is required' });
-      }
-      if (!category.hasText && !category.hasScale && !category.hasBoolean) {
-        return res.status(400).json({ error: 'Each category must have at least one parameter type' });
-      }
-      if (category.hasScale) {
-        const scaleMax = category.scaleMax || 100;
-        if (scaleMax < 5 || scaleMax > 100) {
-          return res.status(400).json({ error: 'Scale max must be between 5 and 100' });
-        }
-      }
-    }
+  // Get Supabase client with user context (RLS will enforce permissions)
+  const supabase = getSupabaseClient(req, res);
 
     // Normalize base category to lowercase for consistency
     const normalizedCategory = baseCategory.toLowerCase().replace(/\s+/g, '_');
@@ -87,57 +76,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       studyMode: true
     };
 
-    // Create study session in quick_tastings table
-    console.log('[Study Create API] Creating session with metadata:', {
-      name,
-      baseCategory,
-      categoriesCount: categories.length,
-      studyMetadata
-    });
+  const { data: session, error: sessionError } = await supabase
+    .from('quick_tastings')
+    .insert({
+      user_id,
+      session_name: name,
+      category: normalizedCategory === 'other' ? 'other' : normalizedCategory,
+      custom_category_name: normalizedCategory === 'other' ? baseCategory : null,
+      mode: 'study',
+      study_approach: 'predefined',
+      notes: JSON.stringify(studyMetadata),
+      total_items: 0,
+      completed_items: 0
+    })
+    .select()
+    .single();
 
-    const { data: session, error: sessionError } = await supabase
-      .from('quick_tastings')
-      .insert({
-        user_id: user.id,
-        session_name: name,
-        category: normalizedCategory === 'other' ? 'other' : normalizedCategory,
-        custom_category_name: normalizedCategory === 'other' ? baseCategory : null,
-        mode: 'study',
-        study_approach: 'predefined',
-        notes: JSON.stringify(studyMetadata),
-        total_items: 0,
-        completed_items: 0
-      })
-      .select()
-      .single();
-
-    if (sessionError) {
-      console.error('[Study Create API] Error creating study session:', sessionError);
-
-      // Check if it's a column not found error (migration not applied)
-      if (sessionError.message?.includes('column') && (sessionError.message?.includes('mode') || sessionError.message?.includes('study_approach'))) {
-        return res.status(500).json({
-          error: 'Database migration required. Please run flavorwheel_upgrade_migration.sql on your database.',
-          details: sessionError.message
-        });
-      }
-
-      return res.status(500).json({ error: 'Failed to create study session', details: sessionError.message });
+  if (sessionError) {
+    // Check if it's a column not found error (migration not applied)
+    if (sessionError.message?.includes('column') && (sessionError.message?.includes('mode') || sessionError.message?.includes('study_approach'))) {
+      return sendError(
+        res,
+        'INTERNAL_ERROR',
+        'Database migration required. Please run flavorwheel_upgrade_migration.sql on your database.',
+        500,
+        { details: sessionError.message }
+      );
     }
 
-    console.log('[Study Create API] Session created successfully:', {
-      sessionId: session.id,
-      hasNotes: !!session.notes,
-      notesLength: session.notes?.length || 0
-    });
-
-    res.status(201).json({
-      sessionId: session.id,
-      session
-    });
-
-  } catch (error) {
-    console.error('Unexpected error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    return sendError(res, 'INTERNAL_ERROR', `Failed to create study session: ${sessionError.message}`, 500);
   }
+
+  return sendSuccess(
+    res,
+    { sessionId: session.id, session },
+    'Study session created successfully',
+    201
+  );
 }
+
+export default createApiHandler({
+  POST: withAuth(withValidation(createStudySessionSchema, createStudySessionHandler)),
+});

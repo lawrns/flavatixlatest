@@ -193,7 +193,8 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
                   : 'bg-white dark:bg-zinc-800 text-blue-600 border border-blue-200 hover:bg-blue-50'
               }`}
             >
-              💡 Suggestions
+              <span className="material-symbols-outlined text-base">lightbulb</span>
+              Suggestions
             </button>
           )}
 

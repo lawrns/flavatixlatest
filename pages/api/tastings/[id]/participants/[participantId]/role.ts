@@ -1,35 +1,43 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { roleService, ParticipantRole } from '@/lib/roleService';
+import {
+  createApiHandler,
+  withAuth,
+  withValidation,
+  sendError,
+  sendSuccess,
+  requireUser,
+  type ApiContext,
+} from '@/lib/api/middleware';
+import { z } from 'zod';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+const updateRoleSchema = z.object({
+  role: z.enum(['host', 'participant', 'both'], {
+    errorMap: () => ({ message: 'role must be one of: host, participant, both' }),
+  }),
+});
+
+async function updateRoleHandler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  context: ApiContext
+) {
   const { id: tastingId, participantId } = req.query;
 
   if (!tastingId || typeof tastingId !== 'string') {
-    return res.status(400).json({ error: 'Invalid tasting ID' });
+    return sendError(res, 'INVALID_INPUT', 'Invalid tasting ID', 400);
   }
 
   if (!participantId || typeof participantId !== 'string') {
-    return res.status(400).json({ error: 'Invalid participant ID' });
+    return sendError(res, 'INVALID_INPUT', 'Invalid participant ID', 400);
   }
 
-  if (req.method !== 'PUT') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  // Get authenticated user ID from context (set by withAuth middleware)
+  // NEVER trust user_id from client - always use authenticated context
+  const user_id = requireUser(context).id;
 
-  // Get user_id from request body (following existing API pattern)
-  const { user_id, role } = req.body;
-
-  if (!user_id) {
-    return res.status(400).json({ error: 'user_id is required' });
-  }
-
-  // Validate role
-  const validRoles: ParticipantRole[] = ['host', 'participant', 'both'];
-  if (!role || !validRoles.includes(role)) {
-    return res.status(400).json({
-      error: `role must be one of: ${validRoles.join(', ')}`
-    });
-  }
+  // Request body is already validated by withValidation middleware
+  const { role } = req.body as { role: ParticipantRole };
 
   try {
     const updatedParticipant = await roleService.updateParticipantRole(
@@ -39,28 +47,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       user_id
     );
 
-    return res.status(200).json({
-      message: 'Participant role updated successfully',
-      participant: updatedParticipant
-    });
+    return sendSuccess(
+      res,
+      { participant: updatedParticipant },
+      'Participant role updated successfully'
+    );
   } catch (error: any) {
-    console.error('Error updating participant role:', error);
-
     // Handle specific error cases
     if (error.message.includes('does not have permission')) {
-      return res.status(403).json({ error: error.message });
+      return sendError(res, 'FORBIDDEN', error.message, 403);
     }
     if (error.message.includes('not found')) {
-      return res.status(404).json({ error: error.message });
+      return sendError(res, 'NOT_FOUND', error.message, 404);
     }
     if (error.message.includes('Only one host allowed')) {
-      return res.status(409).json({ error: error.message });
+      return sendError(res, 'CONFLICT', error.message, 409);
     }
 
-    return res.status(500).json({
-      error: error.message || 'Failed to update participant role'
-    });
+    return sendError(res, 'INTERNAL_ERROR', error.message || 'Failed to update participant role', 500);
   }
 }
+
+export default createApiHandler({
+  PUT: withAuth(withValidation(updateRoleSchema, updateRoleHandler)),
+});
 
 

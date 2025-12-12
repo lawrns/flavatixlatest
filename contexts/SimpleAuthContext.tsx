@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { getSupabaseClient } from '../lib/supabase';
 import { logger } from '../lib/logger';
+import { authLogger } from '../lib/loggers';
 
 interface AuthContextType {
   user: User | null;
@@ -51,6 +52,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         logger.debug('Auth', 'Auth state changed', { event, email: session?.user?.email });
+
+        // Log specific auth events
+        if (event === 'SIGNED_IN' && session?.user) {
+          authLogger.login(session.user.id, 'session', true);
+        } else if (event === 'SIGNED_OUT') {
+          authLogger.logout(user?.id || 'unknown');
+        } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+          authLogger.tokenRefresh(session.user.id, true);
+        } else if (event === 'USER_UPDATED' && session?.user) {
+          logger.info('Auth', 'User updated', { userId: session.user.id });
+        }
+
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -62,9 +75,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
+      const userId = user?.id || 'unknown';
       const { error } = await supabase.auth.signOut();
       if (error) {
         logger.error('Auth', 'Error signing out', error);
+        authLogger.logout(userId);
+      } else {
+        authLogger.logout(userId);
       }
     } catch (error) {
       logger.error('Auth', 'Error in signOut', error);
@@ -76,12 +93,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { data: { session }, error } = await supabase.auth.refreshSession();
       if (error) {
         logger.error('Auth', 'Error refreshing session', error);
+        authLogger.tokenRefresh(user?.id || 'unknown', false);
       } else {
         setSession(session);
         setUser(session?.user ?? null);
+        if (session?.user) {
+          authLogger.tokenRefresh(session.user.id, true);
+        }
       }
     } catch (error) {
       logger.error('Auth', 'Error in refreshSession', error);
+      authLogger.tokenRefresh(user?.id || 'unknown', false);
     }
   };
 

@@ -16,6 +16,7 @@ import {
   withValidation,
   sendSuccess,
   sendServerError,
+  sendUnauthorized,
   type ApiContext,
 } from '@/lib/api/middleware';
 
@@ -27,7 +28,6 @@ async function createTastingHandler(
 ) {
   // Request body is already validated by withValidation middleware
   const {
-    user_id,
     mode,
     study_approach,
     category,
@@ -41,7 +41,14 @@ async function createTastingHandler(
     items,
   } = req.body as CreateTastingInput;
 
-  // Get Supabase client with service role for admin operations
+  // Get authenticated user ID from context (set by withAuth middleware)
+  // NEVER trust user_id from client - always use authenticated context
+  const user_id = context.user?.id;
+  if (!user_id) {
+    return sendUnauthorized(res, 'Authentication required');
+  }
+
+  // Get Supabase client with user context (RLS will enforce permissions)
   const supabase = getSupabaseClient(req, res) as any;
 
   // Generate default session name if not provided
@@ -50,6 +57,8 @@ async function createTastingHandler(
   }`;
 
   // Create the tasting session
+  logger.mutation('quick_tastings', 'create', undefined, user_id, { category, mode });
+
   const { data: tasting, error: tastingError } = await supabase
     .from('quick_tastings')
     .insert({
@@ -72,6 +81,8 @@ async function createTastingHandler(
     logger.error('Tasting', 'Error creating tasting', tastingError, { user_id, category, mode });
     return sendServerError(res, tastingError, 'Failed to create tasting session');
   }
+
+  logger.mutation('quick_tastings', 'create', tasting.id, user_id, { category, mode });
 
   let createdItems: any[] = [];
 

@@ -62,6 +62,9 @@ jest.mock('@/lib/toast', () => ({
 }));
 
 jest.mock('@/lib/logger', () => ({
+  generateRequestId: jest.fn(() => 'req_test'),
+  setRequestId: jest.fn(),
+  clearRequestId: jest.fn(),
   logger: {
     debug: jest.fn(),
     info: jest.fn(),

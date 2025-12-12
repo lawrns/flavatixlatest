@@ -1,34 +1,47 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { studyModeService } from '@/lib/studyModeService';
+import {
+  createApiHandler,
+  withAuth,
+  sendError,
+  sendSuccess,
+  requireUser,
+  type ApiContext,
+} from '@/lib/api/middleware';
+import { z } from 'zod';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+const moderateSuggestionSchema = z.object({
+  action: z.enum(['approve', 'reject'], {
+    errorMap: () => ({ message: 'action must be either "approve" or "reject"' }),
+  }),
+});
+
+async function moderateSuggestionHandler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  context: ApiContext
+) {
   const { id: tastingId, suggestionId } = req.query;
 
   if (!tastingId || typeof tastingId !== 'string') {
-    return res.status(400).json({ error: 'Invalid tasting ID' });
+    return sendError(res, 'INVALID_INPUT', 'Invalid tasting ID', 400);
   }
 
   if (!suggestionId || typeof suggestionId !== 'string') {
-    return res.status(400).json({ error: 'Invalid suggestion ID' });
+    return sendError(res, 'INVALID_INPUT', 'Invalid suggestion ID', 400);
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  // Get authenticated user ID from context (set by withAuth middleware)
+  // NEVER trust user_id from client - always use authenticated context
+  const actingUserId = requireUser(context).id;
+
+  // Validate action from request body
+  const validationResult = moderateSuggestionSchema.safeParse(req.body);
+  if (!validationResult.success) {
+    return sendError(res, 'VALIDATION_FAILED', 'action must be either "approve" or "reject"', 400);
   }
 
-  // Get user_id from request body (following existing API pattern)
-  const { user_id, moderator_id, action } = req.body;
-
-  if (!user_id && !moderator_id) {
-    return res.status(400).json({ error: 'user_id or moderator_id is required' });
-  }
-
-  // Use moderator_id if provided, otherwise use user_id
-  const actingUserId = moderator_id || user_id;
-
-  if (!actingUserId) {
-    return res.status(400).json({ error: 'No valid user ID provided' });
-  }
+  const { action } = validationResult.data;
 
   // Validate action
   if (!action || !['approve', 'reject'].includes(action)) {
@@ -45,25 +58,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       tastingId
     );
 
-    return res.status(200).json({
-      message: `Suggestion ${action}d successfully`,
-      suggestion: updatedSuggestion
-    });
+    return sendSuccess(
+      res,
+      { suggestion: updatedSuggestion },
+      `Suggestion ${action}d successfully`
+    );
   } catch (error: any) {
-    console.error('Error moderating suggestion:', error);
-
     // Handle specific error cases
     if (error.message.includes('does not have permission')) {
-      return res.status(403).json({ error: error.message });
+      return sendError(res, 'FORBIDDEN', error.message, 403);
     }
     if (error.message.includes('not found') || error.message.includes('already been moderated')) {
-      return res.status(409).json({ error: error.message });
+      return sendError(res, 'CONFLICT', error.message, 409);
     }
 
-    return res.status(500).json({
-      error: error.message || 'Failed to moderate suggestion'
-    });
+    return sendError(res, 'INTERNAL_ERROR', error.message || 'Failed to moderate suggestion', 500);
   }
 }
+
+export default createApiHandler({
+  POST: withAuth(moderateSuggestionHandler),
+});
 
 

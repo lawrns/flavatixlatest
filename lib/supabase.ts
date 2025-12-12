@@ -33,34 +33,62 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-/** Supabase project URL from environment */
+/**
+ * Supabase project URL from environment.
+ *
+ * NOTE: We intentionally do NOT throw at import-time if these are missing, because:
+ * - Jest/unit tests often mock Supabase and don't set env vars
+ * - Builds (CI) may run without real Supabase credentials
+ *
+ * In production, you should set real values via environment variables.
+ */
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://127.0.0.1:54321';
 
-/** Supabase anonymous key - safe to expose client-side, RLS handles security */
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
+/**
+ * Supabase anonymous key - safe to expose client-side, RLS handles security.
+ *
+ * IMPORTANT: This is a placeholder fallback (NOT a real JWT) to avoid crashing tests/builds.
+ */
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key';
+
+if (process.env.NODE_ENV === 'production') {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    // eslint-disable-next-line no-console
+    console.warn('NEXT_PUBLIC_SUPABASE_URL is not set; using localhost fallback (likely misconfigured production env)');
+  }
+  if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    // eslint-disable-next-line no-console
+    console.warn('NEXT_PUBLIC_SUPABASE_ANON_KEY is not set; using placeholder key (likely misconfigured production env)');
+  }
+}
+
+type PublicSchema = 'public';
 
 /**
  * Singleton class for managing the Supabase client instance.
  * Prevents multiple GoTrue (auth) instances which can cause session conflicts.
  */
 class SupabaseClientSingleton {
-  private static instance: SupabaseClient<Database> | null = null;
+  // NOTE: This project does not use fully generated Supabase types (with Relationships, etc.)
+  // Using SupabaseClient<any> avoids "never" inference issues in postgrest-js typings.
+  private static instance: SupabaseClient<any> | null = null;
 
-  public static getInstance(): SupabaseClient<Database> {
+  public static getInstance(): SupabaseClient<any> {
     if (!SupabaseClientSingleton.instance) {
-      SupabaseClientSingleton.instance = createClient<Database>(
-        supabaseUrl,
-        supabaseAnonKey,
+      // Explicitly specify schema to avoid supabase-js generic inference issues
+      SupabaseClientSingleton.instance = createClient<Database, PublicSchema>(
+        supabaseUrl as string,
+        supabaseAnonKey as string,
         {
           auth: {
             persistSession: true,
             autoRefreshToken: true,
-            detectSessionInUrl: true
-          }
+            detectSessionInUrl: true,
+          },
         }
-      );
+      ) as unknown as SupabaseClient<any>;
     }
-    return SupabaseClientSingleton.instance;
+    return SupabaseClientSingleton.instance!;
   }
 
   // Method to reset the instance (useful for testing or logout)
@@ -92,20 +120,20 @@ export { SupabaseClientSingleton };
  *   const { data } = await supabase.from('quick_tastings').select('*');
  * }
  */
-export const getSupabaseClient = (req?: NextApiRequest, res?: NextApiResponse) => {
+export const getSupabaseClient = (req?: NextApiRequest, res?: NextApiResponse): SupabaseClient<any> => {
   if (req && res) {
     // Server-side: Create client with cookies for auth context
     const authHeader = req.headers.authorization;
 
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.replace('Bearer ', '');
-      return createClient<Database>(supabaseUrl, supabaseAnonKey, {
+      return createClient<Database, PublicSchema>(supabaseUrl as string, supabaseAnonKey as string, {
         global: {
           headers: {
             Authorization: `Bearer ${token}`
           }
         }
-      });
+      }) as unknown as SupabaseClient<any>;
     }
 
     // Try to get token from cookies
@@ -113,13 +141,13 @@ export const getSupabaseClient = (req?: NextApiRequest, res?: NextApiResponse) =
     const accessToken = cookies['sb-access-token'] || cookies['supabase-auth-token'];
 
     if (accessToken) {
-      return createClient<Database>(supabaseUrl, supabaseAnonKey, {
+      return createClient<Database, PublicSchema>(supabaseUrl as string, supabaseAnonKey as string, {
         global: {
           headers: {
             Authorization: `Bearer ${accessToken}`
           }
         }
-      });
+      }) as unknown as SupabaseClient<any>;
     }
   }
 
@@ -680,6 +708,40 @@ export type Database = {
           created_at?: string;
         };
       };
+      study_templates: {
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          base_category: string;
+          categories: any;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          name: string;
+          base_category: string;
+          categories: any;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          name?: string;
+          base_category?: string;
+          categories?: any;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
     };
+    // supabase-js type helpers expect these schema keys to exist
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
   };
 };

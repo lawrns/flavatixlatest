@@ -173,7 +173,7 @@ const TastingHistoryDetail: React.FC<TastingHistoryDetailProps> = ({
                 {format(new Date(tasting.created_at), 'dd/MM/yyyy HH:mm', { locale: es })}
               </span>
               {tasting.completed_at && (
-                <span className="text-sm text-green-600 font-medium">✓ Completada</span>
+                <span className="text-sm text-green-600 font-medium flex items-center gap-1"><span className="material-symbols-outlined text-sm">check</span>Completada</span>
               )}
             </div>
           </div>

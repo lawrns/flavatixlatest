@@ -1,9 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { getSupabaseClient } from '../../lib/supabase';
 import { useAuth } from '../../contexts/SimpleAuthContext';
 import { toast } from '../../lib/toast';
 import { z } from 'zod';
+import Container from '../layout/Container';
 
 const AuthSection = () => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
@@ -112,8 +114,11 @@ const AuthSection = () => {
   // Removed mounted check to prevent indefinite loading
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 dark:text-zinc-50">
-      <div className="flex h-screen flex-col">
+    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50">
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+      </Head>
+      <div className="flex min-h-screen flex-col">
         <div className="flex-1">
           <div className="relative h-64 w-full">
             <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1558221525-4b07c87c713b?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }} />
@@ -126,12 +131,12 @@ const AuthSection = () => {
               />
             </div>
           </div>
-          <div className="px-6 py-8 text-center">
-            <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50 dark:text-zinc-50">Flavatix</h1>
-            <p className="mt-2 text-zinc-600 dark:text-zinc-300 dark:text-zinc-200">The one place for all your tasting needs</p>
-          </div>
+          <Container size="md" className="py-8 text-center">
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">Flavatix</h1>
+            <p className="mt-2 text-zinc-600 dark:text-zinc-300">The one place for all your tasting needs</p>
+          </Container>
 
-          <div className="space-y-4 px-6">
+          <Container size="md" className="space-y-4">
             {!showEmailForm ? (
               <>
                 <button
@@ -241,7 +246,7 @@ const AuthSection = () => {
                 {mode === 'login' ? 'Create new account' : 'Already have an account? Log in'}
               </button>
             </div>
-          </div>
+          </Container>
         </div>
       </div>
     </div>

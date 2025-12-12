@@ -9,7 +9,8 @@ import dynamic from 'next/dynamic';
 import { FlavorWheelData } from '@/lib/flavorWheelGenerator';
 import { Download, RefreshCw, Info, List } from 'lucide-react';
 import ShareButton from '../components/sharing/ShareButton';
-import BottomNavigation from '../components/navigation/BottomNavigation';
+import PageLayout from '../components/layout/PageLayout';
+import Container from '../components/layout/Container';
 import FlavorWheelListView from '../components/flavor-wheels/FlavorWheelListView';
 import { FlavorWheelPDFExporter } from '../lib/flavorWheelPDFExporter';
 import FlavorWheelErrorBoundary from '../components/flavor-wheels/FlavorWheelErrorBoundary';
@@ -228,7 +229,7 @@ export default function FlavorWheelsPage() {
       .slice(0, 5)
       .join(', ') || 'amazing flavors';
 
-    const shareText = `Check out my ${wheelType} taste profile on Flavatix! Top notes: ${topDescriptors} 🎨✨`;
+    const shareText = `Check out my ${wheelType} taste profile on Flavatix! Top notes: ${topDescriptors}`;
 
     return {
       text: shareText,
@@ -244,10 +245,10 @@ export default function FlavorWheelsPage() {
 
   if (authLoading) {
     return (
-      <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen flex items-center justify-center">
+      <div className="bg-white dark:bg-zinc-900 font-sans text-gemini-text-dark dark:text-zinc-50 min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-text-secondary">Loading...</p>
+          <p className="text-gemini-text-gray">Loading...</p>
         </div>
       </div>
     );
@@ -258,30 +259,15 @@ export default function FlavorWheelsPage() {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-safe">
-      {/* Header */}
-      <div className="bg-white dark:bg-zinc-800 shadow-sm border-b border-orange-100 dark:border-zinc-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="flex items-center text-gray-600 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                Back to Dashboard
-              </button>
-              <div className="h-6 w-px bg-gray-300 dark:bg-gray-600"></div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">Flavor Wheels</h1>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <PageLayout
+      title="Flavor Wheels"
+      subtitle="Explore & create flavor profiles"
+      showBack
+      backUrl="/dashboard"
+      containerSize="md"
+    >
+      {/* Wide content area for controls and visualization */}
+      <Container size="4xl" className="mt-2">
         {/* Info Banner */}
         <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 dark:border-blue-500 p-4 mb-6">
           <div className="flex">
@@ -298,8 +284,9 @@ export default function FlavorWheelsPage() {
         </div>
 
         {/* Controls */}
-        <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6 mb-6">
+          {/* Selectors row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             {/* Wheel Type Selector */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
@@ -331,30 +318,31 @@ export default function FlavorWheelsPage() {
                 <option value="universal">Universal (All Users)</option>
               </select>
             </div>
+          </div>
 
-            {/* Actions */}
-            <div className="flex items-end gap-2">
-              <button
-                onClick={handleRegenerateWheel}
-                disabled={loading}
-                className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-              >
-                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-                Regenerate
-              </button>
-              <ShareButton
-                disabled={!wheelData || loading}
-                onShare={handleShareWheel}
-              />
-              <button
-                onClick={handleExportWheel}
-                disabled={!wheelData || loading}
-                className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed transition-colors"
-              >
-                <Download className="w-4 h-4" />
-                Export
-              </button>
-            </div>
+          {/* Actions row - wraps on mobile */}
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={handleRegenerateWheel}
+              disabled={loading}
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors min-w-[120px]"
+            >
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              Regenerate
+            </button>
+            <ShareButton
+              disabled={!wheelData || loading}
+              onShare={handleShareWheel}
+              className="flex-1 sm:flex-none min-w-[100px]"
+            />
+            <button
+              onClick={handleExportWheel}
+              disabled={!wheelData || loading}
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed transition-colors min-w-[100px]"
+            >
+              <Download className="w-4 h-4" />
+              Export
+            </button>
           </div>
 
           {/* Cache Info */}
@@ -457,7 +445,7 @@ export default function FlavorWheelsPage() {
               {/* AI Badge */}
               {wheelData.aiMetadata?.hasAIDescriptors && (
                 <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 border border-purple-200 dark:border-purple-700 rounded-full">
-                  <span className="text-2xl">✨</span>
+                  <span className="material-symbols-outlined text-2xl text-purple-600 dark:text-purple-400">auto_awesome</span>
                   <div className="text-left">
                     <div className="text-sm font-semibold text-purple-900 dark:text-purple-200">
                       AI-Enhanced Flavor Wheel
@@ -470,21 +458,21 @@ export default function FlavorWheelsPage() {
               )}
 
               {/* Stats */}
-              <div className="mt-8 grid grid-cols-3 gap-6 text-center">
-                <div>
-                  <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">
+              <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-center w-full max-w-md sm:max-w-none">
+                <div className="bg-gray-50 dark:bg-zinc-700/50 rounded-lg p-3 sm:p-4">
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-600 dark:text-orange-400">
                     {wheelData.categories.length}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Categories</div>
                 </div>
-                <div>
-                  <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">
+                <div className="bg-gray-50 dark:bg-zinc-700/50 rounded-lg p-3 sm:p-4">
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-600 dark:text-orange-400">
                     {wheelData.uniqueDescriptors}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Unique Descriptors</div>
                 </div>
-                <div>
-                  <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">
+                <div className="bg-gray-50 dark:bg-zinc-700/50 rounded-lg p-3 sm:p-4">
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-600 dark:text-orange-400">
                     {wheelData.totalDescriptors}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Total Notes</div>
@@ -492,9 +480,9 @@ export default function FlavorWheelsPage() {
               </div>
 
               {/* Legend */}
-              <div className="mt-8 w-full max-w-2xl">
+              <div className="mt-8 w-full">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Categories</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                   {wheelData.categories.map((category, idx) => (
                     <div key={idx} className="flex items-center gap-2">
                       <div 
@@ -515,11 +503,8 @@ export default function FlavorWheelsPage() {
         <div className="mt-8">
           <InspirationBox />
         </div>
-      </div>
-
-      {/* Bottom Navigation */}
-      <BottomNavigation />
-    </div>
+      </Container>
+    </PageLayout>
   );
 }
 // Disable static generation for this page

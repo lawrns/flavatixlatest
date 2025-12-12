@@ -1,5 +1,19 @@
 import '@testing-library/jest-dom'
 
+// Mock Sentry
+jest.mock('@sentry/nextjs', () => ({
+  captureException: jest.fn(),
+  captureMessage: jest.fn(),
+  setUser: jest.fn(),
+  setContext: jest.fn(),
+  BrowserTracing: jest.fn(),
+  Replay: jest.fn(),
+  Integrations: {
+    Http: jest.fn(),
+  },
+  init: jest.fn(),
+}))
+
 // Mock Supabase
 jest.mock('@supabase/supabase-js', () => ({
   createClient: jest.fn(() => ({

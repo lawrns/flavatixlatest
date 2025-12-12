@@ -176,30 +176,30 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   const addNewItem = async () => {
     if (!session) return;
 
-    logger.debug('➕ QuickTastingSession: addNewItem called for session:', session.id);
+    logger.debug('[ADD] QuickTastingSession: addNewItem called for session:', session.id);
 
     // Wait for permissions to load for study mode
     if (session.mode === 'study' && (!userPermissions || !userRole)) {
-      logger.debug('⏳ QuickTastingSession: Waiting for permissions to load...');
+      logger.debug('[WAIT] QuickTastingSession: Waiting for permissions to load...');
       return;
     }
 
     // Check permissions based on mode
     if (session.mode === 'competition') {
-      logger.debug('❌ QuickTastingSession: Cannot add items in competition mode');
+      logger.debug('[BLOCKED] QuickTastingSession: Cannot add items in competition mode');
       toast.error('Cannot add items in competition mode');
       return;
     }
 
     if (session.mode === 'study' && session.study_approach === 'collaborative') {
-      logger.debug('❌ QuickTastingSession: Collaborative mode - showing suggestions');
+      logger.debug('[BLOCKED] QuickTastingSession: Collaborative mode - showing suggestions');
       toast.error('In collaborative mode, suggest items instead of adding them directly');
       setShowItemSuggestions(true);
       return;
     }
 
     if (session.mode === 'study' && !userPermissions.canAddItems) {
-      logger.debug('❌ QuickTastingSession: No permission to add items');
+      logger.debug('[BLOCKED] QuickTastingSession: No permission to add items');
       toast.error('You do not have permission to add items');
       return;
     }
@@ -219,11 +219,11 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         .single();
 
       if (error) {
-        console.error('❌ QuickTastingSession: Error inserting item:', error);
+        console.error('[ERROR] QuickTastingSession: Error inserting item:', error);
         throw error;
       }
 
-      logger.debug('✅ QuickTastingSession: Item created successfully:', data.id);
+      logger.debug('[SUCCESS] QuickTastingSession: Item created successfully:', data.id);
       setItems(prev => [...prev, data]);
       setCurrentItemIndex(newIndex);
       toast.success('New item added!');
@@ -242,7 +242,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         }
       }, 100);
     } catch (error) {
-      console.error('❌ QuickTastingSession: Error adding new item:', error);
+      console.error('[ERROR] QuickTastingSession: Error adding new item:', error);
       toast.error('Failed to add new item');
     }
   };
@@ -272,11 +272,11 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         .single();
 
       if (error) {
-        console.error('❌ QuickTastingSession: Error updating item:', error);
+        console.error('[ERROR] QuickTastingSession: Error updating item:', error);
         throw error;
       }
 
-      logger.debug('✅ QuickTastingSession: Item updated successfully:', data.id);
+      logger.debug('[SUCCESS] QuickTastingSession: Item updated successfully:', data.id);
 
       const updatedItems = items.map(item =>
         item.id === itemId ? { ...item, ...data } : item
@@ -320,11 +320,11 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
       // Only extract if there's meaningful content
       const hasContent = itemData.notes?.trim() || itemData.aroma?.trim() || itemData.flavor?.trim();
       if (!hasContent) {
-        logger.debug('⏭️ Skipping extraction - no content to extract from');
+        logger.debug('[SKIP] Skipping extraction - no content to extract from');
         return;
       }
 
-      logger.debug('🔍 Extracting flavor descriptors from item:', itemId, {
+      logger.debug('[EXTRACT] Extracting flavor descriptors from item:', itemId, {
         hasNotes: !!itemData.notes,
         hasAroma: !!itemData.aroma,
         hasFlavor: !!itemData.flavor
@@ -350,19 +350,19 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
       // Get current session for auth token
       const { data: { session: authSession } } = await supabase.auth.getSession();
       if (!authSession) {
-        console.error('❌ No active auth session for descriptor extraction');
+        console.error('[ERROR] No active auth session for descriptor extraction');
         // Try to refresh the session
         const { data: { session: refreshedSession } } = await supabase.auth.refreshSession();
         if (!refreshedSession) {
-          console.error('❌ Failed to refresh auth session');
+          console.error('[ERROR] Failed to refresh auth session');
           return;
         }
-        logger.debug('✅ Auth session refreshed successfully');
+        logger.debug('[SUCCESS] Auth session refreshed successfully');
       }
 
       const token = authSession?.access_token || (await supabase.auth.getSession()).data.session?.access_token;
       if (!token) {
-        console.error('❌ No auth token available for extraction');
+        console.error('[ERROR] No auth token available for extraction');
         return;
       }
 
@@ -381,12 +381,12 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
       try {
         result = JSON.parse(responseText);
       } catch (parseError) {
-        console.error('❌ Failed to parse extraction response:', responseText);
+        console.error('[ERROR] Failed to parse extraction response:', responseText);
         return;
       }
 
       if (!response.ok) {
-        console.error('❌ Descriptor extraction failed:', {
+        console.error('[ERROR] Descriptor extraction failed:', {
           status: response.status,
           error: result,
           payload: extractionPayload
@@ -395,13 +395,13 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
       }
 
       if (result.success && result.savedCount > 0) {
-        logger.debug(`✅ Successfully extracted ${result.savedCount} flavor descriptors from item ${itemId}`);
+        logger.debug(`[SUCCESS] Successfully extracted ${result.savedCount} flavor descriptors from item ${itemId}`);
         // Success notifications removed for better UX
       } else if (result.success && result.savedCount === 0) {
-        logger.debug('ℹ️ No descriptors found in the content');
+        logger.debug('[INFO] No descriptors found in the content');
       }
     } catch (error) {
-      console.error('❌ Error extracting descriptors:', error);
+      console.error('[ERROR] Error extracting descriptors:', error);
 
       // Error handling without toast notifications
 
@@ -565,7 +565,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
 
       // Wait for all extractions to complete (but don't fail the session if extraction fails)
       await Promise.allSettled(extractionPromises);
-      logger.debug('✅ Descriptor extraction batch completed');
+      logger.debug('[SUCCESS] Descriptor extraction batch completed');
 
       const { data, error } = await supabase
         .from('quick_tastings')
@@ -579,11 +579,11 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
 
       if (error) throw error;
 
-      logger.debug('✅ QuickTastingSession: Session completed successfully');
+      logger.debug('[SUCCESS] QuickTastingSession: Session completed successfully');
       toast.success('Tasting session completed!');
       onSessionComplete(data);
     } catch (error) {
-      console.error('❌ QuickTastingSession: Error completing session:', error);
+      console.error('[ERROR] QuickTastingSession: Error completing session:', error);
       toast.error('Failed to complete session');
     } finally {
       setIsLoading(false);
@@ -712,7 +712,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
                   >
                     {item.item_name}
                     {item.overall_score !== null && (
-                      <span className="ml-xs">✓</span>
+                      <span className="material-symbols-outlined text-sm ml-xs align-middle">check</span>
                     )}
                   </button>
                 ))}

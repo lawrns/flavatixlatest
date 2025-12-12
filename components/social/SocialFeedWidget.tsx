@@ -5,6 +5,7 @@ import { Heart, MessageCircle, Share2, User } from 'lucide-react';
 import { Card, CardContent } from '../ui/Card';
 import Button from '../ui/Button';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import notificationService from '@/lib/notificationService';
 
 type TastingPost = {
   id: string;
@@ -146,6 +147,25 @@ export default function SocialFeedWidget({ userId, limit = 5 }: SocialFeedWidget
             ? { ...p, isLiked: true, stats: { ...p.stats, likes: p.stats.likes + 1 } }
             : p
         ));
+
+        // Send notification to post owner (if not liking own post)
+        if (post.user_id !== userId) {
+          // Get current user's name for the notification
+          const { data: currentUser } = await supabase
+            .from('profiles')
+            .select('full_name')
+            .eq('user_id', userId)
+            .single();
+
+          const likerName = currentUser?.full_name || 'Someone';
+          await notificationService.notifyLike(
+            userId,
+            post.user_id,
+            likerName,
+            'tasting',
+            postId
+          );
+        }
       }
     } catch (error) {
       console.error('Error toggling like:', error);
@@ -233,7 +253,7 @@ export default function SocialFeedWidget({ userId, limit = 5 }: SocialFeedWidget
                 </div>
                 <p className="text-sm text-zinc-600 dark:text-zinc-200 truncate">
                   {post.session_name || `${post.category} tasting`} • {post.total_items} items
-                  {post.average_score && ` • ${post.average_score.toFixed(1)}⭐`}
+                  {post.average_score && <> • {post.average_score.toFixed(1)}<span className="material-symbols-outlined text-xs align-middle ml-0.5">star</span></>}
                 </p>
               </div>
 

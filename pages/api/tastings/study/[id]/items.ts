@@ -1,88 +1,103 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '@/lib/supabase';
+import {
+  createApiHandler,
+  withOptionalAuth,
+  withAuth,
+  withValidation,
+  sendError,
+  sendSuccess,
+  requireUser,
+  type ApiContext,
+} from '@/lib/api/middleware';
+import { z } from 'zod';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+const addItemsSchema = z.object({
+  items: z.array(z.object({
+    label: z.string().min(1, 'Item label is required').max(200, 'Item label too long'),
+    sortOrder: z.number().optional(),
+  })).min(1, 'At least one item is required'),
+});
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function getItemsHandler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  context: ApiContext
+) {
   const { id } = req.query;
 
-  if (req.method === 'GET') {
-    try {
-      const { data: items, error } = await supabase
-        .from('study_items')
-        .select('*')
-        .eq('session_id', id)
-        .order('sort_order');
-
-      if (error) {
-        console.error('Error fetching items:', error);
-        return res.status(500).json({ error: 'Failed to fetch items' });
-      }
-
-      res.status(200).json({ items });
-
-    } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  } else if (req.method === 'POST') {
-    try {
-      const authHeader = req.headers.authorization;
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ error: 'Unauthorized' });
-      }
-
-      const token = authHeader.replace('Bearer ', '');
-      const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-
-      if (authError || !user) {
-        return res.status(401).json({ error: 'Unauthorized' });
-      }
-
-      const { items } = req.body;
-
-      if (!items || !Array.isArray(items)) {
-        return res.status(400).json({ error: 'Items array is required' });
-      }
-
-      // Verify user is host
-      const { data: session, error: sessionError } = await supabase
-        .from('study_sessions')
-        .select('host_id')
-        .eq('id', id)
-        .single();
-
-      if (sessionError || !session || session.host_id !== user.id) {
-        return res.status(403).json({ error: 'Only the host can add items' });
-      }
-
-      // Prepare items for insertion
-      const itemsData = items.map((item: any, index: number) => ({
-        session_id: id,
-        label: item.label,
-        sort_order: item.sortOrder ?? index,
-        created_by: user.id
-      }));
-
-      const { data: createdItems, error: itemsError } = await supabase
-        .from('study_items')
-        .insert(itemsData)
-        .select();
-
-      if (itemsError) {
-        console.error('Error creating items:', itemsError);
-        return res.status(500).json({ error: 'Failed to create items' });
-      }
-
-      res.status(201).json({ items: createdItems });
-
-    } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  } else {
-    res.status(405).json({ error: 'Method not allowed' });
+  if (!id || typeof id !== 'string') {
+    return sendError(res, 'INVALID_INPUT', 'Invalid session ID', 400);
   }
+
+  // Get Supabase client with optional user context
+  const supabase = getSupabaseClient(req, res);
+
+  const { data: items, error } = await supabase
+    .from('study_items')
+    .select('*')
+    .eq('session_id', id)
+    .order('sort_order');
+
+  if (error) {
+    return sendError(res, 'INTERNAL_ERROR', `Failed to fetch items: ${error.message}`, 500);
+  }
+
+  return sendSuccess(res, { items: items || [] });
 }
+
+async function addItemsHandler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  context: ApiContext
+) {
+  const { id } = req.query;
+
+  if (!id || typeof id !== 'string') {
+    return sendError(res, 'INVALID_INPUT', 'Invalid session ID', 400);
+  }
+
+  // Get authenticated user ID from context (set by withAuth middleware)
+  const user_id = requireUser(context).id;
+
+  // Request body is already validated by withValidation middleware
+  const { items } = req.body as { items: Array<{ label: string; sortOrder?: number }> };
+
+  // Get Supabase client with user context (RLS will enforce permissions)
+  const supabase = getSupabaseClient(req, res);
+
+  // Verify user is host
+  const { data: session, error: sessionError } = await supabase
+    .from('study_sessions')
+    .select('host_id')
+    .eq('id', id)
+    .single();
+
+  if (sessionError || !session || session.host_id !== user_id) {
+    return sendError(res, 'FORBIDDEN', 'Only the host can add items', 403);
+  }
+
+  // Prepare items for insertion
+  const itemsData = items.map((item, index) => ({
+    session_id: id,
+    label: item.label,
+    sort_order: item.sortOrder ?? index,
+    created_by: user_id
+  }));
+
+  const { data: createdItems, error: itemsError } = await supabase
+    .from('study_items')
+    .insert(itemsData)
+    .select();
+
+  if (itemsError) {
+    return sendError(res, 'INTERNAL_ERROR', `Failed to create items: ${itemsError.message}`, 500);
+  }
+
+  return sendSuccess(res, { items: createdItems || [] }, 'Items added successfully', 201);
+}
+
+export default createApiHandler({
+  GET: withOptionalAuth(getItemsHandler),
+  POST: withAuth(withValidation(addItemsSchema, addItemsHandler)),
+});

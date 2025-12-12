@@ -1,90 +1,112 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '@/lib/supabase';
+import {
+  createApiHandler,
+  withAuth,
+  withValidation,
+  sendError,
+  sendSuccess,
+  requireUser,
+  type ApiContext,
+} from '@/lib/api/middleware';
+import { z } from 'zod';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+const saveResponsesSchema = z.object({
+  itemId: z.string().uuid('Invalid item ID'),
+  responses: z.array(z.object({
+    categoryId: z.string().uuid('Invalid category ID'),
+    textValue: z.string().optional().nullable(),
+    scaleValue: z.number().min(0).max(100).optional().nullable(),
+    boolValue: z.boolean().optional().nullable(),
+  })).min(1, 'At least one response is required'),
+});
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+async function saveResponsesHandler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  context: ApiContext
+) {
+  const { id } = req.query;
+
+  if (!id || typeof id !== 'string') {
+    return sendError(res, 'INVALID_INPUT', 'Invalid session ID', 400);
   }
 
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+  // Get authenticated user ID from context (set by withAuth middleware)
+  const user_id = requireUser(context).id;
 
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+  // Request body is already validated by withValidation middleware
+  const { itemId, responses } = req.body as {
+    itemId: string;
+    responses: Array<{
+      categoryId: string;
+      textValue?: string | null;
+      scaleValue?: number | null;
+      boolValue?: boolean | null;
+    }>;
+  };
 
-    if (authError || !user) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+  // Get Supabase client with user context (RLS will enforce permissions)
+  const supabase = getSupabaseClient(req, res);
 
-    const { id } = req.query;
-    const { itemId, responses } = req.body;
+  // Get participant ID for this user in this session
+  const { data: participant, error: participantError } = await supabase
+    .from('study_participants')
+    .select('id')
+    .eq('session_id', id)
+    .eq('user_id', user_id)
+    .single();
 
-    if (!itemId || !responses || !Array.isArray(responses)) {
-      return res.status(400).json({ error: 'Item ID and responses array are required' });
-    }
-
-    // Get participant ID for this user in this session
-    const { data: participant, error: participantError } = await supabase
-      .from('study_participants')
-      .select('id')
-      .eq('session_id', id)
-      .eq('user_id', user.id)
-      .single();
-
-    if (participantError || !participant) {
-      return res.status(403).json({ error: 'Not a participant in this session' });
-    }
-
-    // Prepare responses for insertion
-    const responsesData = responses.map((r: any) => ({
-      session_id: id,
-      item_id: itemId,
-      participant_id: participant.id,
-      category_id: r.categoryId,
-      text_value: r.textValue || null,
-      scale_value: r.scaleValue ?? null,
-      bool_value: r.boolValue ?? null
-    }));
-
-    const { error: responsesError } = await supabase
-      .from('study_responses')
-      .insert(responsesData);
-
-    if (responsesError) {
-      console.error('Error saving responses:', responsesError);
-      return res.status(500).json({ error: 'Failed to save responses' });
-    }
-
-    // Update participant progress
-    const { data: totalItems } = await supabase
-      .from('study_items')
-      .select('id', { count: 'exact' })
-      .eq('session_id', id);
-
-    const { data: completedItems } = await supabase
-      .from('study_responses')
-      .select('item_id', { count: 'exact', head: true })
-      .eq('session_id', id)
-      .eq('participant_id', participant.id);
-
-    const progress = totalItems ? (completedItems || 0) : 0;
-
-    await supabase
-      .from('study_participants')
-      .update({ progress })
-      .eq('id', participant.id);
-
-    res.status(200).json({ saved: true, progress });
-
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+  if (participantError || !participant) {
+    return sendError(res, 'FORBIDDEN', 'Not a participant in this session', 403);
   }
+
+  // Prepare responses for insertion
+  const responsesData = responses.map((r) => ({
+    session_id: id,
+    item_id: itemId,
+    participant_id: participant.id,
+    category_id: r.categoryId,
+    text_value: r.textValue || null,
+    scale_value: r.scaleValue ?? null,
+    bool_value: r.boolValue ?? null
+  }));
+
+  const { error: responsesError } = await supabase
+    .from('study_responses')
+    .insert(responsesData);
+
+  if (responsesError) {
+    return sendError(res, 'INTERNAL_ERROR', `Failed to save responses: ${responsesError.message}`, 500);
+  }
+
+  // Update participant progress - FIX: Use count property, not data
+  const { count: totalItems } = await supabase
+    .from('study_items')
+    .select('id', { count: 'exact', head: true })
+    .eq('session_id', id);
+
+  const { count: completedItems } = await supabase
+    .from('study_responses')
+    .select('item_id', { count: 'exact', head: true })
+    .eq('session_id', id)
+    .eq('participant_id', participant.id);
+
+  const progress = totalItems ? (completedItems || 0) : 0;
+
+  const { error: updateError } = await supabase
+    .from('study_participants')
+    .update({ progress })
+    .eq('id', participant.id);
+
+  if (updateError) {
+    // Log but don't fail - responses were saved successfully
+    console.error('Error updating participant progress:', updateError);
+  }
+
+  return sendSuccess(res, { saved: true, progress }, 'Responses saved successfully');
 }
+
+export default createApiHandler({
+  POST: withAuth(withValidation(saveResponsesSchema, saveResponsesHandler)),
+});

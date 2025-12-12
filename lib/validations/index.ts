@@ -74,7 +74,7 @@ export const scopeTypeSchema = z.enum(SCOPE_TYPES, {
 // ============================================================================
 
 export const createTastingSchema = z.object({
-  user_id: uuidSchema,
+  // user_id is NOT accepted from client - it must be derived from authenticated user context
   category: categorySchema,
   mode: modeSchema,
   session_name: z
