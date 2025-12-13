@@ -3,7 +3,8 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { toast } from '@/lib/toast';
-import { ChevronLeft, FileText, PenTool, Clock } from 'lucide-react';
+import { FileText, PenTool, Clock } from 'lucide-react';
+import { PageLayout } from '@/components/layout/PageLayout';
 
 interface Review {
   id: string;
@@ -75,9 +76,9 @@ const MyReviewsPage: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      completed: { label: 'Completed', color: 'bg-green-100 text-green-800' },
-      in_progress: { label: 'In Progress', color: 'bg-yellow-100 text-yellow-800' },
-      published: { label: 'Published', color: 'bg-blue-100 text-blue-800' }
+      completed: { label: 'Completed', color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
+      in_progress: { label: 'In Progress', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
+      published: { label: 'Published', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' }
     };
 
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.in_progress;
@@ -96,12 +97,14 @@ const MyReviewsPage: React.FC = () => {
 
   if (loading || isLoading) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
-        <div className="flex flex-col items-center">
-          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-sm"></div>
-          <div className="text-text-primary text-h4 font-body font-medium">Loading reviews...</div>
+      <PageLayout title="My Reviews" showBack backUrl="/review">
+        <div className="flex items-center justify-center py-12">
+          <div className="flex flex-col items-center">
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+            <div className="text-zinc-600 dark:text-zinc-400 font-medium">Loading reviews...</div>
+          </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
@@ -110,195 +113,177 @@ const MyReviewsPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
-      <main id="main-content">
-        <div className="container mx-auto px-md py-lg max-w-6xl">
-          {/* Header */}
-          <div className="mb-lg">
-            <button
-              onClick={() => router.push('/review')}
-              className="flex items-center text-text-secondary hover:text-text-primary mb-sm transition-colors font-body"
-            >
-              <ChevronLeft size={20} className="mr-2" />
-              Back to Reviews
-            </button>
-            <h1 className="text-h1 font-heading font-bold text-text-primary mb-xs">
-              My Reviews
-            </h1>
-            <p className="text-body font-body text-text-secondary">
-              All review history
+    <PageLayout
+      title="My Reviews"
+      subtitle="All review history"
+      showBack
+      backUrl="/review"
+    >
+      {/* Reviews Section */}
+      <div className="space-y-6">
+        {/* Completed Reviews */}
+        <div className="bg-white dark:bg-zinc-800/50 rounded-[22px] border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
+          <div className="flex items-center mb-4">
+            <FileText size={24} className="text-primary mr-2" />
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
+              Reviews
+            </h2>
+            <span className="ml-auto text-sm text-zinc-500 dark:text-zinc-400">
+              {completedReviews.length} {completedReviews.length === 1 ? 'review' : 'reviews'}
+            </span>
+          </div>
+
+          {completedReviews.length === 0 ? (
+            <p className="text-zinc-500 dark:text-zinc-400 text-center py-8">
+              No completed reviews yet
             </p>
-          </div>
-
-          {/* Reviews Section */}
-          <div className="space-y-lg">
-            {/* Completed Reviews */}
-            <div className="card p-md">
-              <div className="flex items-center mb-md">
-                <FileText size={24} className="text-primary mr-2" />
-                <h2 className="text-h3 font-heading font-semibold text-text-primary">
-                  Reviews
-                </h2>
-                <span className="ml-auto text-sm text-text-secondary">
-                  {completedReviews.length} {completedReviews.length === 1 ? 'review' : 'reviews'}
-                </span>
-              </div>
-
-              {completedReviews.length === 0 ? (
-                <p className="text-text-secondary text-center py-lg">
-                  No completed reviews yet
-                </p>
-              ) : (
-                <div className="space-y-sm">
-                  {completedReviews.map((review) => (
-                    <button
-                      key={review.id}
-                      onClick={() => router.push(`/review/summary/${review.id}`)}
-                      className="w-full text-left p-md bg-background-surface hover:bg-background-app rounded-lg transition-colors border border-border-default"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <div className="font-medium text-text-primary mb-1">
-                            {review.review_id || review.item_name}
-                          </div>
-                          <div className="text-sm text-text-secondary">
-                            {review.item_name} • {review.category}
-                          </div>
-                          <div className="text-xs text-text-secondary mt-1">
-                            {formatDate(review.created_at)}
-                          </div>
-                        </div>
-                        {getStatusBadge(review.status)}
+          ) : (
+            <div className="space-y-3">
+              {completedReviews.map((review) => (
+                <button
+                  key={review.id}
+                  onClick={() => router.push(`/review/summary/${review.id}`)}
+                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-[14px] transition-colors border border-zinc-200 dark:border-zinc-700"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-zinc-900 dark:text-white mb-1 truncate">
+                        {review.review_id || review.item_name}
                       </div>
-                    </button>
-                  ))}
-                </div>
-              )}
+                      <div className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
+                        {review.item_name} • {review.category}
+                      </div>
+                      <div className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+                        {formatDate(review.created_at)}
+                      </div>
+                    </div>
+                    <div className="ml-3 flex-shrink-0">
+                      {getStatusBadge(review.status)}
+                    </div>
+                  </div>
+                </button>
+              ))}
             </div>
-
-            {/* Prose Reviews */}
-            <div className="card p-md">
-              <div className="flex items-center mb-md">
-                <PenTool size={24} className="text-primary mr-2" />
-                <h2 className="text-h3 font-heading font-semibold text-text-primary">
-                  Prose Reviews
-                </h2>
-                <span className="ml-auto text-sm text-text-secondary">
-                  {completedProseReviews.length} {completedProseReviews.length === 1 ? 'review' : 'reviews'}
-                </span>
-              </div>
-
-              {completedProseReviews.length === 0 ? (
-                <p className="text-text-secondary text-center py-lg">
-                  No completed prose reviews yet
-                </p>
-              ) : (
-                <div className="space-y-sm">
-                  {completedProseReviews.map((review) => (
-                    <button
-                      key={review.id}
-                      onClick={() => router.push(`/review/summary/${review.id}?type=prose`)}
-                      className="w-full text-left p-md bg-background-surface hover:bg-background-app rounded-lg transition-colors border border-border-default"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <div className="font-medium text-text-primary mb-1">
-                            {review.review_id || review.item_name}
-                          </div>
-                          <div className="text-sm text-text-secondary">
-                            {review.item_name} • {review.category}
-                          </div>
-                          <div className="text-xs text-text-secondary mt-1">
-                            {formatDate(review.created_at)}
-                          </div>
-                        </div>
-                        {getStatusBadge(review.status)}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Reviews in Progress */}
-            <div className="card p-md">
-              <div className="flex items-center mb-md">
-                <Clock size={24} className="text-primary mr-2" />
-                <h2 className="text-h3 font-heading font-semibold text-text-primary">
-                  Reviews in Progress
-                </h2>
-                <span className="ml-auto text-sm text-text-secondary">
-                  {inProgressReviews.length + inProgressProseReviews.length} {inProgressReviews.length + inProgressProseReviews.length === 1 ? 'review' : 'reviews'}
-                </span>
-              </div>
-
-              {inProgressReviews.length === 0 && inProgressProseReviews.length === 0 ? (
-                <p className="text-text-secondary text-center py-lg">
-                  No reviews in progress
-                </p>
-              ) : (
-                <div className="space-y-sm">
-                  {inProgressReviews.map((review) => (
-                    <button
-                      key={review.id}
-                      onClick={() => router.push(`/review/structured?id=${review.id}`)}
-                      className="w-full text-left p-md bg-background-surface hover:bg-background-app rounded-lg transition-colors border border-border-default"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <div className="font-medium text-text-primary mb-1">
-                            {review.review_id || review.item_name}
-                          </div>
-                          <div className="text-sm text-text-secondary">
-                            {review.item_name} • {review.category} • Review
-                          </div>
-                          <div className="text-xs text-text-secondary mt-1">
-                            Last updated: {formatDate(review.updated_at)}
-                          </div>
-                        </div>
-                        {getStatusBadge(review.status)}
-                      </div>
-                    </button>
-                  ))}
-                  {inProgressProseReviews.map((review) => (
-                    <button
-                      key={review.id}
-                      onClick={() => router.push(`/review/prose?id=${review.id}`)}
-                      className="w-full text-left p-md bg-background-surface hover:bg-background-app rounded-lg transition-colors border border-border-default"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <div className="font-medium text-text-primary mb-1">
-                            {review.review_id || review.item_name}
-                          </div>
-                          <div className="text-sm text-text-secondary">
-                            {review.item_name} • {review.category} • Prose Review
-                          </div>
-                          <div className="text-xs text-text-secondary mt-1">
-                            Last updated: {formatDate(review.updated_at)}
-                          </div>
-                        </div>
-                        {getStatusBadge(review.status)}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Back Button */}
-          <div className="mt-lg text-center">
-            <button
-              onClick={() => router.push('/review')}
-              className="btn-secondary"
-            >
-              Back
-            </button>
-          </div>
+          )}
         </div>
-      </main>
-    </div>
+
+        {/* Prose Reviews */}
+        <div className="bg-white dark:bg-zinc-800/50 rounded-[22px] border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
+          <div className="flex items-center mb-4">
+            <PenTool size={24} className="text-primary mr-2" />
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
+              Prose Reviews
+            </h2>
+            <span className="ml-auto text-sm text-zinc-500 dark:text-zinc-400">
+              {completedProseReviews.length} {completedProseReviews.length === 1 ? 'review' : 'reviews'}
+            </span>
+          </div>
+
+          {completedProseReviews.length === 0 ? (
+            <p className="text-zinc-500 dark:text-zinc-400 text-center py-8">
+              No completed prose reviews yet
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {completedProseReviews.map((review) => (
+                <button
+                  key={review.id}
+                  onClick={() => router.push(`/review/summary/${review.id}?type=prose`)}
+                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-[14px] transition-colors border border-zinc-200 dark:border-zinc-700"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-zinc-900 dark:text-white mb-1 truncate">
+                        {review.review_id || review.item_name}
+                      </div>
+                      <div className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
+                        {review.item_name} • {review.category}
+                      </div>
+                      <div className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+                        {formatDate(review.created_at)}
+                      </div>
+                    </div>
+                    <div className="ml-3 flex-shrink-0">
+                      {getStatusBadge(review.status)}
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Reviews in Progress */}
+        <div className="bg-white dark:bg-zinc-800/50 rounded-[22px] border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
+          <div className="flex items-center mb-4">
+            <Clock size={24} className="text-primary mr-2" />
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
+              Reviews in Progress
+            </h2>
+            <span className="ml-auto text-sm text-zinc-500 dark:text-zinc-400">
+              {inProgressReviews.length + inProgressProseReviews.length} {inProgressReviews.length + inProgressProseReviews.length === 1 ? 'review' : 'reviews'}
+            </span>
+          </div>
+
+          {inProgressReviews.length === 0 && inProgressProseReviews.length === 0 ? (
+            <p className="text-zinc-500 dark:text-zinc-400 text-center py-8">
+              No reviews in progress
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {inProgressReviews.map((review) => (
+                <button
+                  key={review.id}
+                  onClick={() => router.push(`/review/structured?id=${review.id}`)}
+                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-[14px] transition-colors border border-zinc-200 dark:border-zinc-700"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-zinc-900 dark:text-white mb-1 truncate">
+                        {review.review_id || review.item_name}
+                      </div>
+                      <div className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
+                        {review.item_name} • {review.category} • Review
+                      </div>
+                      <div className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+                        Last updated: {formatDate(review.updated_at)}
+                      </div>
+                    </div>
+                    <div className="ml-3 flex-shrink-0">
+                      {getStatusBadge(review.status)}
+                    </div>
+                  </div>
+                </button>
+              ))}
+              {inProgressProseReviews.map((review) => (
+                <button
+                  key={review.id}
+                  onClick={() => router.push(`/review/prose?id=${review.id}`)}
+                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-[14px] transition-colors border border-zinc-200 dark:border-zinc-700"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-zinc-900 dark:text-white mb-1 truncate">
+                        {review.review_id || review.item_name}
+                      </div>
+                      <div className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
+                        {review.item_name} • {review.category} • Prose Review
+                      </div>
+                      <div className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+                        Last updated: {formatDate(review.updated_at)}
+                      </div>
+                    </div>
+                    <div className="ml-3 flex-shrink-0">
+                      {getStatusBadge(review.status)}
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </PageLayout>
   );
 };
 
