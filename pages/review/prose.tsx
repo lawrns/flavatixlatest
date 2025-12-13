@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { toast } from '@/lib/toast';
-import { ChevronLeft } from 'lucide-react';
 import ProseReviewForm, { ProseReviewFormData } from '@/components/review/ProseReviewForm';
 import { generateReviewId } from '@/lib/reviewIdGenerator';
+import { PageLayout } from '@/components/layout/PageLayout';
 
 const ProseReviewPage: React.FC = () => {
   const router = useRouter();
@@ -209,14 +208,16 @@ const ProseReviewPage: React.FC = () => {
     }
   };
 
-  if (loading) {
+  if (loading || isLoadingReview) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
-        <div className="flex flex-col items-center">
-          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-sm"></div>
-          <div className="text-text-primary text-h4 font-body font-medium">Loading...</div>
+      <PageLayout title="Prose Review" showBack backUrl="/review">
+        <div className="flex items-center justify-center py-12">
+          <div className="flex flex-col items-center">
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+            <div className="text-zinc-600 dark:text-zinc-400 font-medium">Loading...</div>
+          </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
@@ -225,58 +226,20 @@ const ProseReviewPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
-      <main id="main-content" className="pb-32">
-        <div className="container mx-auto px-md py-lg max-w-4xl">
-          {/* Header */}
-          <div className="mb-lg">
-            <button
-              onClick={() => router.push('/review')}
-              className="flex items-center text-text-secondary hover:text-text-primary mb-sm transition-colors font-body"
-            >
-              <ChevronLeft size={20} className="mr-2" />
-              Back to Reviews
-            </button>
-            <h1 className="text-h1 font-heading font-bold text-text-primary mb-xs">
-              Prose Review
-            </h1>
-            <p className="text-body font-body text-text-secondary">
-              Write your review in your own words
-            </p>
-          </div>
-
-          {/* Prose Review Form */}
-          <ProseReviewForm
-            initialData={existingReview || undefined}
-            onSubmit={handleSubmit}
-            onPhotoUpload={handlePhotoUpload}
-            isSubmitting={isSubmitting}
-          />
-        </div>
-      </main>
-
-      {/* Bottom Navigation */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
-        <nav className="flex justify-around p-2">
-          <Link href="/dashboard" className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300">
-            <span className="material-symbols-outlined">home</span>
-            <span className="text-xs font-medium">Home</span>
-          </Link>
-          <Link href="/taste" className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300">
-            <span className="material-symbols-outlined">restaurant</span>
-            <span className="text-xs font-medium">Taste</span>
-          </Link>
-          <Link href="/review" className="flex flex-col items-center gap-1 p-2 text-primary">
-            <span className="material-symbols-outlined">reviews</span>
-            <span className="text-xs font-bold">Review</span>
-          </Link>
-          <Link href="/flavor-wheels" className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300">
-            <span className="material-symbols-outlined">donut_small</span>
-            <span className="text-xs font-medium">Wheels</span>
-          </Link>
-        </nav>
-      </footer>
-    </div>
+    <PageLayout
+      title="Prose Review"
+      subtitle="Write your review in your own words"
+      showBack
+      backUrl="/review"
+      containerSize="lg"
+    >
+      <ProseReviewForm
+        initialData={existingReview || undefined}
+        onSubmit={handleSubmit}
+        onPhotoUpload={handlePhotoUpload}
+        isSubmitting={isSubmitting}
+      />
+    </PageLayout>
   );
 };
 
@@ -288,4 +251,3 @@ export async function getServerSideProps() {
     props: {}
   };
 }
-

@@ -3,11 +3,9 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { toast } from '@/lib/toast';
-import { ChevronLeft } from 'lucide-react';
 import ReviewForm, { ReviewFormData } from '@/components/review/ReviewForm';
 import { generateReviewId } from '@/lib/reviewIdGenerator';
-import BottomNavigation from '@/components/navigation/BottomNavigation';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { PageLayout } from '@/components/layout/PageLayout';
 
 const CreateReviewPage: React.FC = () => {
   const router = useRouter();
@@ -131,9 +129,14 @@ const CreateReviewPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center">
-        <LoadingSpinner size="lg" text="Loading..." />
-      </div>
+      <PageLayout title="Create Review" showBack backUrl="/review">
+        <div className="flex items-center justify-center py-12">
+          <div className="flex flex-col items-center">
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+            <div className="text-zinc-600 dark:text-zinc-400 font-medium">Loading...</div>
+          </div>
+        </div>
+      </PageLayout>
     );
   }
 
@@ -142,39 +145,20 @@ const CreateReviewPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
-      <main id="main-content" className="pb-24">
-        <div className="container mx-auto px-md py-lg max-w-4xl">
-          {/* Header */}
-          <div className="mb-lg">
-            <button
-              onClick={() => router.push('/review')}
-              className="flex items-center text-text-secondary hover:text-text-primary mb-sm transition-colors font-body"
-            >
-              <ChevronLeft size={20} className="mr-2" />
-              Back to Reviews
-            </button>
-            <h1 className="text-h1 font-heading font-bold text-text-primary mb-xs">
-              Create Review
-            </h1>
-            <p className="text-body font-body text-text-secondary">
-              In-depth analysis of flavor characteristics
-            </p>
-          </div>
-
-          {/* Review Form */}
-          <ReviewForm
-            onSubmit={handleSubmit}
-            onPhotoUpload={handlePhotoUpload}
-            isSubmitting={isSubmitting}
-            onReset={handleReset}
-          />
-        </div>
-      </main>
-
-      {/* Bottom Navigation */}
-      <BottomNavigation />
-    </div>
+    <PageLayout
+      title="Create Review"
+      subtitle="In-depth analysis of flavor characteristics"
+      showBack
+      backUrl="/review"
+      containerSize="lg"
+    >
+      <ReviewForm
+        onSubmit={handleSubmit}
+        onPhotoUpload={handlePhotoUpload}
+        isSubmitting={isSubmitting}
+        onReset={handleReset}
+      />
+    </PageLayout>
   );
 };
 
