@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
+import { FileText, Users, PieChart } from 'lucide-react'
 import styles from './HeroSection.module.css'
 import Container from '@/components/layout/Container'
 
@@ -50,49 +51,40 @@ export default function Home() {
             </div>
             
             {/* Key Features Preview */}
-            <div className="grid grid-cols-1 tablet:grid-cols-3 gap-md mb-xl max-w-3xl mx-auto">
-              <div className={`${styles.card} card-tasting p-md text-center`}>
-                <div className="w-12 h-12 bg-flavor-fruity rounded-full mx-auto mb-sm flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" style={{display: 'block'}}>
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M8 12h8M12 8v8"/>
-                  </svg>
+            <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-xl max-w-2xl mx-auto">
+              <div className="text-center">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-sm rounded-full mx-auto mb-3 flex items-center justify-center border border-white/30">
+                  <FileText className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                 </div>
-                <h3 className="font-heading font-semibold text-h3 text-text-primary mb-xs">
+                <h3 className="font-semibold text-sm sm:text-base text-white mb-1">
                   Tasting Notes
                 </h3>
-                <p className="text-small text-text-secondary">
-                  On-the-fly tasting note storage and analysis
+                <p className="text-xs sm:text-sm text-white/80 hidden sm:block">
+                  Capture and analyze flavors
                 </p>
               </div>
-              
-              <div className={`${styles.card} card-tasting p-md text-center`}>
-                <div className="w-12 h-12 bg-flavor-vegetal rounded-full mx-auto mb-sm flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" style={{display: 'block'}}>
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                  </svg>
+
+              <div className="text-center">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-sm rounded-full mx-auto mb-3 flex items-center justify-center border border-white/30">
+                  <Users className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                 </div>
-                <h3 className="font-heading font-semibold text-h3 text-text-primary mb-xs">
-                  Create Tastings
+                <h3 className="font-semibold text-sm sm:text-base text-white mb-1">
+                  Group Tastings
                 </h3>
-                <p className="text-small text-text-secondary">
-                  Customizable study sessions and competitions for groups
+                <p className="text-xs sm:text-sm text-white/80 hidden sm:block">
+                  Studies and competitions
                 </p>
               </div>
-              
-              <div className={`${styles.card} card-tasting p-md text-center`}>
-                <div className="w-12 h-12 bg-flavor-roasted rounded-full mx-auto mb-sm flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" style={{display: 'block'}}>
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                  </svg>
+
+              <div className="text-center">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-sm rounded-full mx-auto mb-3 flex items-center justify-center border border-white/30">
+                  <PieChart className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                 </div>
-                <h3 className="font-heading font-semibold text-h3 text-text-primary mb-xs">
+                <h3 className="font-semibold text-sm sm:text-base text-white mb-1">
                   Flavor Wheels
                 </h3>
-                <p className="text-small text-text-secondary">
-                  AI-generated visualizations from your tasting data
+                <p className="text-xs sm:text-sm text-white/80 hidden sm:block">
+                  AI-generated visualizations
                 </p>
               </div>
             </div>
