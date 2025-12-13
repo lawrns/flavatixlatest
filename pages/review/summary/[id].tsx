@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { toast } from '@/lib/toast';
-import { ChevronLeft, Share2 } from 'lucide-react';
-import BottomNavigation from '@/components/navigation/BottomNavigation';
+import { Share2 } from 'lucide-react';
+import { PageLayout } from '@/components/layout/PageLayout';
 
 interface ReviewData {
   id: string;
@@ -124,12 +124,14 @@ const ReviewSummaryPage: React.FC = () => {
 
   if (loading || isLoading) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
-        <div className="flex flex-col items-center">
-          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-sm"></div>
-          <div className="text-text-primary text-h4 font-body font-medium">Loading review...</div>
+      <PageLayout title="Review Summary" showBack backUrl="/review/history">
+        <div className="flex items-center justify-center py-12">
+          <div className="flex flex-col items-center">
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+            <div className="text-zinc-600 dark:text-zinc-400 font-medium">Loading review...</div>
+          </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
@@ -138,25 +140,13 @@ const ReviewSummaryPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
-      <main id="main-content">
-        <div className="container mx-auto px-md py-lg max-w-4xl">
-          {/* Header */}
-          <div className="mb-lg">
-            <button
-              onClick={() => router.push('/review/my-reviews')}
-              className="flex items-center text-text-secondary hover:text-text-primary mb-sm transition-colors font-body"
-            >
-              <ChevronLeft size={20} className="mr-2" />
-              Back to My Reviews
-            </button>
-            <h1 className="text-h1 font-heading font-bold text-text-primary mb-xs">
-              Review Summary
-            </h1>
-            <p className="text-body font-body text-text-secondary">
-              {formatDate(review.created_at)}
-            </p>
-          </div>
+    <PageLayout
+      title="Review Summary"
+      subtitle={formatDate(review.created_at)}
+      showBack
+      backUrl="/review/history"
+    >
+      <div className="space-y-6">
 
           {/* Review ID */}
           <div className="card p-md mb-lg bg-primary/5 border-primary/20">
@@ -429,11 +419,7 @@ const ReviewSummaryPage: React.FC = () => {
             </button>
           </div>
         </div>
-      </main>
-
-      {/* Bottom Navigation */}
-      <BottomNavigation />
-    </div>
+    </PageLayout>
   );
 };
 

@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { toast } from '@/lib/toast';
 import { REVIEW_CATEGORIES, COUNTRIES, US_STATES, MEXICAN_STATES } from '@/lib/reviewCategories';
+import { PageLayout } from '@/components/layout/PageLayout';
 
 const StructuredReviewPage: React.FC = () => {
   const router = useRouter();
@@ -298,31 +298,14 @@ const StructuredReviewPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
-      <div className="flex flex-col min-h-screen">
-        {/* Header */}
-        <header className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-700 p-4 bg-background-light sticky top-0 z-10">
-          <button
-            onClick={() => router.back()}
-            className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100"
-          >
-            <span className="material-symbols-outlined">arrow_back</span>
-          </button>
-          <h1 className="text-xl font-bold">Review</h1>
-          <div className="w-10"></div>
-        </header>
-
-        {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-4">
-          <div className="max-w-2xl mx-auto space-y-6">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-text-primary mb-2">
-                Structured Review
-              </h2>
-              <p className="text-text-secondary">
-                In-depth analysis of flavor characteristics
-              </p>
-            </div>
+    <PageLayout
+      title="Structured Review"
+      subtitle="In-depth analysis of flavor characteristics"
+      showBack
+      backUrl="/review"
+      containerSize="lg"
+    >
+      <div className="space-y-6">
 
             {/* ITEM ID Section */}
             <div className="card p-6">
@@ -734,31 +717,7 @@ const StructuredReviewPage: React.FC = () => {
               </div>
             </div>
           </div>
-        </main>
-
-        {/* Bottom Navigation */}
-        <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
-          <nav className="flex justify-around p-2">
-            <Link href="/dashboard" className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300">
-              <span className="material-symbols-outlined">home</span>
-              <span className="text-xs font-medium">Home</span>
-            </Link>
-            <Link href="/taste" className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300">
-              <span className="material-symbols-outlined">restaurant</span>
-              <span className="text-xs font-medium">Taste</span>
-            </Link>
-            <Link href="/review" className="flex flex-col items-center gap-1 p-2 text-primary">
-              <span className="material-symbols-outlined">reviews</span>
-              <span className="text-xs font-bold">Review</span>
-            </Link>
-            <Link href="/flavor-wheels" className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300">
-              <span className="material-symbols-outlined">donut_small</span>
-              <span className="text-xs font-medium">Wheels</span>
-            </Link>
-          </nav>
-        </footer>
-      </div>
-    </div>
+    </PageLayout>
   );
 };
 

@@ -218,9 +218,10 @@ const TastingItem: React.FC<TastingItemProps> = ({
     }
   };
 
-  const getCategoryIcon = (category: string) => {
+  const getCategoryIcon = (cat: string) => {
     const iconProps = { size: 24, className: "text-primary-600" };
-    switch (category) {
+    const normalizedCategory = cat?.toLowerCase() || '';
+    switch (normalizedCategory) {
       case 'coffee':
         return <Coffee {...iconProps} />;
       case 'tea':
@@ -239,7 +240,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
       case 'chocolate':
         return <Candy {...iconProps} />;
       default:
-        return <Coffee {...iconProps} />;
+        return <Martini {...iconProps} />;
     }
   };
 
@@ -419,7 +420,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
               {/* Default Aroma Section */}
               <div className="mb-5">
                 <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
-                  <Flower2 size={20} className="text-pink-500" />
+                  <Flower2 size={20} className="text-primary" />
                   Aroma
                 </label>
                 <textarea
@@ -447,7 +448,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
               {/* Other Notes Section */}
               <div>
                 <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
-                  <FileText size={20} className="text-blue-500" />
+                  <FileText size={20} className="text-primary" />
                   Other Notes
                 </label>
                 <textarea

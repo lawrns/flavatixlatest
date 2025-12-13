@@ -90,46 +90,37 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
         </p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {categories.map((category) => (
           <button
             key={category.id}
             onClick={() => onCategorySelect(category.id)}
             disabled={isLoading}
             className={`
-              relative p-3 sm:p-4 rounded-xl border-2 border-border-primary
-              bg-background-surface hover:bg-background-app
-              transition-all duration-200 transform hover:scale-[1.02]
-              focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
-              disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
-              group
+              relative p-4 rounded-[22px] border border-zinc-200 dark:border-zinc-700
+              bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700
+              transition-all duration-200
+              focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+              disabled:opacity-50 disabled:cursor-not-allowed
+              group text-center
             `}
           >
             {/* Category Icon */}
-            <div className="text-center mb-2 sm:mb-3">
+            <div className="mb-3">
               <div className={`
-                inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full
-                ${getIconColors(category.id).bg} ${getIconColors(category.id).hover}
-                text-white
-                transition-colors duration-200
-                group-hover:scale-110 transform
+                inline-flex items-center justify-center w-14 h-14 rounded-full
+                ${getIconColors(category.id).bg}
+                transition-transform duration-200
+                group-hover:scale-105
               `}>
-                <category.Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                <category.Icon className="w-6 h-6 text-white" />
               </div>
             </div>
 
-            {/* Category Info */}
-            <div className="text-center">
-              <h3 className="text-sm sm:text-base font-heading font-semibold text-text-primary mb-0.5">
-                {category.name}
-              </h3>
-              <p className="text-xs sm:text-sm font-body text-text-secondary leading-snug hidden sm:block">
-                {category.description}
-              </p>
-            </div>
-
-            {/* Hover Effect */}
-            <div className="absolute inset-0 rounded-xl bg-primary-500 opacity-0 group-hover:opacity-5 transition-opacity duration-200"></div>
+            {/* Category Name Only - no description to prevent overflow */}
+            <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
+              {category.name}
+            </h3>
           </button>
         ))}
       </div>
