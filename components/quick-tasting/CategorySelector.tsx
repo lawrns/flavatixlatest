@@ -1,5 +1,5 @@
 import React from 'react';
-import { Beer, Coffee, GlassWater, Sprout, Utensils, Wine } from 'lucide-react';
+import { Beer, Coffee, GlassWater, Sprout, Wine, Leaf, Martini, Candy } from 'lucide-react';
 
 interface CategorySelectorProps {
   onCategorySelect: (category: string) => void;
@@ -23,55 +23,55 @@ function getIconColors(categoryId: string) {
   return CATEGORY_ICON_COLORS[categoryId] || { bg: 'bg-zinc-600', hover: 'hover:bg-zinc-700' };
 }
 
-// Category configurations using centralized color system
+// Category configurations with semantically appropriate icons
 const categories = [
   {
     id: 'coffee',
     name: 'Coffee',
-    description: 'Explore coffee beans, roasts, and brewing methods',
+    description: 'Beans, roasts, and brewing',
     icon: <Coffee size={24} className="text-white" />,
   },
   {
     id: 'whisky',
     name: 'Whisky',
-    description: 'Nose, palate, and finish — capture what you taste.',
+    description: 'Nose, palate, and finish',
     icon: <GlassWater size={24} className="text-white" />,
   },
   {
     id: 'mezcal',
     name: 'Mezcal',
-    description: 'Agave, smoke, minerality — track your profile.',
+    description: 'Agave, smoke, minerality',
     icon: <Sprout size={24} className="text-white" />,
   },
   {
     id: 'tea',
     name: 'Tea',
-    description: 'Discover tea varieties and flavor profiles',
-    icon: <Coffee size={24} className="text-white" />,
+    description: 'Varieties and flavor profiles',
+    icon: <Leaf size={24} className="text-white" />,
   },
   {
     id: 'wine',
     name: 'Wine',
-    description: 'Taste wines and learn about terroir',
+    description: 'Taste and terroir',
     icon: <Wine size={24} className="text-white" />,
   },
   {
     id: 'spirits',
-    name: 'Spirits (Other)',
+    name: 'Spirits',
     description: 'Rum, gin, tequila, and more',
-    icon: <Wine size={24} className="text-white" />,
+    icon: <Martini size={24} className="text-white" />,
   },
   {
     id: 'beer',
     name: 'Beer',
-    description: 'Sample craft beers and brewing styles',
+    description: 'Craft beers and styles',
     icon: <Beer size={24} className="text-white" />,
   },
   {
     id: 'chocolate',
     name: 'Chocolate',
-    description: 'Taste chocolate and cacao varieties',
-    icon: <Utensils size={24} className="text-white" />,
+    description: 'Cacao and confectionery',
+    icon: <Candy size={24} className="text-white" />,
   },
 ];
 
@@ -90,7 +90,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-sm md:gap-md">
         {categories.map((category) => (
           <button
             key={category.id}

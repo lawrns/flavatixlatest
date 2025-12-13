@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { getSupabaseClient } from '../../lib/supabase';
 import { toast } from '../../lib/toast';
-import { Coffee, Wine, Beer, Utensils, Star, Camera, Edit, Flower2, Droplet, FileText } from 'lucide-react';
+import { Coffee, Wine, Beer, Star, Camera, Edit, Flower2, Droplet, FileText, GlassWater, Sprout, Leaf, Martini, Candy } from 'lucide-react';
 import FlavorWheel from './FlavorWheel';
 
 interface TastingItemData {
@@ -222,16 +222,24 @@ const TastingItem: React.FC<TastingItemProps> = ({
     const iconProps = { size: 24, className: "text-primary-600" };
     switch (category) {
       case 'coffee':
-      case 'tea':
         return <Coffee {...iconProps} />;
+      case 'tea':
+        return <Leaf {...iconProps} />;
       case 'wine':
         return <Wine {...iconProps} />;
       case 'beer':
         return <Beer {...iconProps} />;
+      case 'whisky':
       case 'whiskey':
+        return <GlassWater {...iconProps} />;
+      case 'mezcal':
+        return <Sprout {...iconProps} />;
+      case 'spirits':
+        return <Martini {...iconProps} />;
       case 'chocolate':
+        return <Candy {...iconProps} />;
       default:
-        return <Utensils {...iconProps} />;
+        return <Coffee {...iconProps} />;
     }
   };
 
@@ -417,7 +425,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
                 <textarea
                   value={localAroma}
                   onChange={(e) => handleAromaChange(e.target.value)}
-                  placeholder={`Describe the ${category}'s aroma...`}
+                  placeholder={`Describe the aroma...`}
                   className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-[14px] text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
                 />
               </div>
@@ -431,7 +439,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
                 <textarea
                   value={localFlavor}
                   onChange={(e) => handleFlavorChange(e.target.value)}
-                  placeholder={`Describe the ${category}'s flavor, taste, and mouthfeel...`}
+                  placeholder={`Describe the flavor, taste, and mouthfeel...`}
                   className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-[14px] text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
                 />
               </div>
@@ -445,7 +453,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
                 <textarea
                   value={localNotes}
                   onChange={(e) => handleNotesChange(e.target.value)}
-                  placeholder={`Additional notes about the ${category}...`}
+                  placeholder={`Additional notes...`}
                   className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-[14px] text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
                 />
               </div>
