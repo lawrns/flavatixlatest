@@ -43,9 +43,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
   };
 
   const sizeClasses = {
-    sm: 'px-3 py-2 text-sm min-h-[36px] rounded-lg',
-    md: 'px-4 py-3 text-base min-h-[44px] rounded-xl',
-    lg: 'px-5 py-4 text-lg min-h-[52px] rounded-xl',
+    sm: 'px-3 py-2 text-sm min-h-[36px] rounded-[14px]',
+    md: 'px-4 py-3 text-base min-h-[44px] rounded-[14px]',
+    lg: 'px-5 py-4 text-lg min-h-[52px] rounded-[14px]',
   };
 
   const baseClasses = cn(

@@ -95,7 +95,7 @@ export default function SettingsPage() {
               onClick={toggleDarkMode}
               className={cn(
                 'relative w-12 h-7 rounded-full transition-colors',
-                isDarkMode ? 'bg-primary' : 'bg-gray-300 dark:bg-zinc-600'
+                isDarkMode ? 'bg-primary' : 'bg-zinc-300 dark:bg-zinc-600'
               )}
             >
               <span
@@ -121,7 +121,7 @@ export default function SettingsPage() {
               onClick={toggleNotifications}
               className={cn(
                 'relative w-12 h-7 rounded-full transition-colors',
-                notificationsEnabled ? 'bg-primary' : 'bg-gray-300 dark:bg-zinc-600'
+                notificationsEnabled ? 'bg-primary' : 'bg-zinc-300 dark:bg-zinc-600'
               )}
             >
               <span
@@ -142,7 +142,7 @@ export default function SettingsPage() {
           icon: Shield,
           label: 'Privacy Settings',
           description: 'Manage your data and privacy preferences',
-          action: <ChevronRight size={20} className="text-gray-400" />,
+          action: <ChevronRight size={20} className="text-zinc-400" />,
           onClick: () => toast.info('Privacy settings coming soon'),
         },
       ],
@@ -183,17 +183,17 @@ export default function SettingsPage() {
       <div className="space-y-6">
         {settingsSections.map((section) => (
           <div key={section.title}>
-            <h2 className="text-sm font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wider mb-3 px-1">
+            <h2 className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-3 px-1">
               {section.title}
             </h2>
             <Card>
-              <CardContent className="p-0 divide-y divide-gray-100 dark:divide-zinc-700">
+              <CardContent className="p-0 divide-y divide-zinc-100 dark:divide-zinc-700">
                 {section.items.map((item, index) => (
                   <div
                     key={item.label}
                     className={cn(
                       'flex items-center justify-between p-4',
-                      item.onClick && 'cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors',
+                      item.onClick && 'cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors',
                       index === 0 && 'rounded-t-lg',
                       index === section.items.length - 1 && 'rounded-b-lg'
                     )}
@@ -207,7 +207,7 @@ export default function SettingsPage() {
                           'w-10 h-10 rounded-full flex items-center justify-center',
                           item.danger
                             ? 'bg-red-100 dark:bg-red-900/30'
-                            : 'bg-gray-100 dark:bg-zinc-700'
+                            : 'bg-zinc-100 dark:bg-zinc-700'
                         )}
                       >
                         <item.icon
@@ -215,7 +215,7 @@ export default function SettingsPage() {
                           className={cn(
                             item.danger
                               ? 'text-red-600 dark:text-red-400'
-                              : 'text-gray-600 dark:text-zinc-300'
+                              : 'text-zinc-600 dark:text-zinc-300'
                           )}
                         />
                       </div>
@@ -225,12 +225,12 @@ export default function SettingsPage() {
                             'font-medium',
                             item.danger
                               ? 'text-red-600 dark:text-red-400'
-                              : 'text-gray-900 dark:text-white'
+                              : 'text-zinc-900 dark:text-white'
                           )}
                         >
                           {item.label}
                         </p>
-                        <p className="text-sm text-gray-500 dark:text-zinc-400">
+                        <p className="text-sm text-zinc-500 dark:text-zinc-400">
                           {item.description}
                         </p>
                       </div>
@@ -245,7 +245,7 @@ export default function SettingsPage() {
 
         {/* App Version */}
         <div className="text-center py-4">
-          <p className="text-sm text-gray-400 dark:text-zinc-500">
+          <p className="text-sm text-zinc-400 dark:text-zinc-500">
             Flavatix v1.0.0
           </p>
         </div>

@@ -1,7 +1,7 @@
 // Webpack moduleId: 7093 (for crash tracing)
 // SSR-safe flavor wheels page - D3 loaded dynamically via visualization component
 
-import { useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../contexts/SimpleAuthContext';
 import { supabase } from '../lib/supabase';
@@ -14,24 +14,27 @@ import Container from '../components/layout/Container';
 import FlavorWheelListView from '../components/flavor-wheels/FlavorWheelListView';
 import { FlavorWheelPDFExporter } from '../lib/flavorWheelPDFExporter';
 import FlavorWheelErrorBoundary from '../components/flavor-wheels/FlavorWheelErrorBoundary';
+import { BottomSheet, FlavorPill } from '@/components/ui';
+import { FLAVOR_COLORS, STATUS_COLORS } from '@/lib/colors';
 
 // Color palette for categories (matches D3 visualization)
-const CATEGORY_COLORS = [
-  '#ef4444', // Red - Fruity
-  '#f59e0b', // Orange - Sweet
-  '#eab308', // Yellow - Citrus
-  '#10b981', // Green - Herbal
-  '#059669', // Dark Green - Earthy
-  '#3b82f6', // Blue - Floral
-  '#8b5cf6', // Purple - Spicy
-  '#d97706', // Brown - Woody/Nutty
-  '#6b7280', // Gray - Mineral
-  '#ec4899'  // Pink - Other
+// Uses hex values from centralized color system
+const WHEEL_CATEGORY_COLORS = [
+  FLAVOR_COLORS.fruity.hex,    // Red - Fruity
+  FLAVOR_COLORS.sweet.hex,     // Yellow - Sweet
+  FLAVOR_COLORS.citrus.hex,    // Yellow - Citrus
+  FLAVOR_COLORS.vegetal.hex,   // Green - Herbal
+  FLAVOR_COLORS.earthy.hex,    // Dark Green - Earthy
+  FLAVOR_COLORS.floral.hex,    // Pink - Floral
+  FLAVOR_COLORS.spicy.hex,     // Red - Spicy
+  FLAVOR_COLORS.nutty.hex,     // Brown - Woody/Nutty
+  FLAVOR_COLORS.mineral.hex,   // Gray - Mineral
+  FLAVOR_COLORS.other.hex,     // Pink - Other
 ];
 
 // Helper to get category color by index
 const getCategoryColor = (index: number): string => {
-  return CATEGORY_COLORS[index % CATEGORY_COLORS.length];
+  return WHEEL_CATEGORY_COLORS[index % WHEEL_CATEGORY_COLORS.length];
 };
 
 // Dynamically import to avoid SSR issues
@@ -70,6 +73,25 @@ export default function FlavorWheelsPage() {
   const [cached, setCached] = useState(false);
   const [wheelSize, setWheelSize] = useState(700);
   const [exportingPDF, setExportingPDF] = useState(false);
+
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [selectedSegment, setSelectedSegment] = useState<{
+    category: string;
+    subcategory?: string;
+    descriptor?: string;
+  } | null>(null);
+
+  const [sourcesLoading, setSourcesLoading] = useState(false);
+  const [sourcesError, setSourcesError] = useState<string | null>(null);
+  const [sources, setSources] = useState<Array<{
+    source_type: 'quick_tasting' | 'quick_review' | 'prose_review';
+    source_id: string;
+    descriptor_text: string;
+    item_name: string | null;
+    item_category: string | null;
+    created_at: string;
+    confidence_score: number | null;
+  }>>([]);
 
   // Load predefined categories
   useEffect(() => {
@@ -240,8 +262,80 @@ export default function FlavorWheelsPage() {
   };
 
   const handleSegmentClick = (category: string, subcategory?: string, descriptor?: string) => {
-    console.log('Clicked:', { category, subcategory, descriptor });
+    setSelectedSegment({ category, subcategory, descriptor });
+    setIsDetailOpen(true);
   };
+
+  const selectedCategory = useMemo(() => {
+    if (!selectedSegment) return undefined;
+    return wheelData?.categories?.find(c => c.name === selectedSegment.category);
+  }, [selectedSegment, wheelData]);
+
+  const selectedSubcategory = useMemo(() => {
+    if (!selectedSegment?.subcategory) return undefined;
+    return selectedCategory?.subcategories?.find(s => s.name === selectedSegment.subcategory);
+  }, [selectedSegment, selectedCategory]);
+
+  const selectedDescriptor = useMemo(() => {
+    if (!selectedSegment?.descriptor) return undefined;
+    return selectedSubcategory?.descriptors?.find(d => d.text === selectedSegment.descriptor);
+  }, [selectedSegment, selectedSubcategory]);
+
+  const topDescriptorChips = wheelData?.categories
+    ?.flatMap(cat => cat.subcategories?.flatMap(sub => sub.descriptors?.map(d => ({
+      category: cat.name,
+      subcategory: sub.name,
+      descriptor: d.text,
+      count: d.count,
+    })) || []) || [])
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8);
+
+  useEffect(() => {
+    const run = async () => {
+      if (!user) return;
+      if (!isDetailOpen) return;
+      if (!selectedSegment?.descriptor) {
+        setSources([]);
+        setSourcesError(null);
+        setSourcesLoading(false);
+        return;
+      }
+
+      setSourcesLoading(true);
+      setSourcesError(null);
+
+      try {
+        let query = supabase
+          .from('flavor_descriptors')
+          .select('source_type, source_id, descriptor_text, item_name, item_category, created_at, confidence_score')
+          .eq('user_id', user.id)
+          .eq('category', selectedSegment.category)
+          .ilike('descriptor_text', selectedSegment.descriptor)
+          .order('created_at', { ascending: false })
+          .limit(12);
+
+        query = selectedSegment.subcategory
+          ? query.eq('subcategory', selectedSegment.subcategory)
+          : query.is('subcategory', null);
+
+        const { data, error } = await query;
+
+        if (error) {
+          throw error;
+        }
+
+        setSources((data || []) as any);
+      } catch (e: any) {
+        setSources([]);
+        setSourcesError(e?.message || 'Failed to load related items');
+      } finally {
+        setSourcesLoading(false);
+      }
+    };
+
+    run();
+  }, [isDetailOpen, selectedSegment, user]);
 
   if (authLoading) {
     return (
@@ -269,13 +363,13 @@ export default function FlavorWheelsPage() {
       {/* Wide content area for controls and visualization */}
       <Container size="4xl" className="mt-2">
         {/* Info Banner */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 dark:border-blue-500 p-4 mb-6">
+        <div className={`${STATUS_COLORS.info.bg} border-l-4 ${STATUS_COLORS.info.border} p-4 mb-6 rounded-r-[14px]`}>
           <div className="flex">
             <div className="flex-shrink-0">
-              <Info className="h-5 w-5 text-blue-400 dark:text-blue-400" />
+              <Info className={`h-5 w-5 ${STATUS_COLORS.info.text}`} />
             </div>
             <div className="ml-3">
-              <p className="text-sm text-blue-700 dark:text-blue-200">
+              <p className={`text-sm ${STATUS_COLORS.info.text}`}>
                 Flavor wheels are AI-generated visualizations of your tasting notes.
                 They analyze your reviews and tastings to reveal patterns in the flavors and aromas you experience.
               </p>
@@ -284,18 +378,18 @@ export default function FlavorWheelsPage() {
         </div>
 
         {/* Controls */}
-        <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6 mb-6">
+        <div className="bg-white dark:bg-zinc-800 rounded-[22px] shadow-sm border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6 mb-6">
           {/* Selectors row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             {/* Wheel Type Selector */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-2">
                 Wheel Type
               </label>
               <select
                 value={wheelType}
                 onChange={(e) => setWheelType(e.target.value as WheelType)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-zinc-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-[14px] bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="aroma">Aroma Wheel</option>
                 <option value="flavor">Flavor Wheel</option>
@@ -306,13 +400,13 @@ export default function FlavorWheelsPage() {
 
             {/* Scope Selector */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-2">
                 Scope
               </label>
               <select
                 value={scopeType}
                 onChange={(e) => setScopeType(e.target.value as ScopeType)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-zinc-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-[14px] bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="personal">My Flavor Wheel</option>
                 <option value="universal">Universal (All Users)</option>
@@ -325,7 +419,7 @@ export default function FlavorWheelsPage() {
             <button
               onClick={handleRegenerateWheel}
               disabled={loading}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors min-w-[120px]"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-[14px] hover:bg-primary-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors min-w-[120px]"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               Regenerate
@@ -338,7 +432,7 @@ export default function FlavorWheelsPage() {
             <button
               onClick={handleExportWheel}
               disabled={!wheelData || loading}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed transition-colors min-w-[100px]"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border border-gemini-border dark:border-zinc-600 text-gemini-text-gray dark:text-zinc-200 rounded-[14px] hover:bg-white dark:hover:bg-zinc-700 disabled:bg-gray-100 dark:disabled:bg-zinc-800 disabled:cursor-not-allowed transition-colors min-w-[100px]"
             >
               <Download className="w-4 h-4" />
               Export
@@ -347,8 +441,8 @@ export default function FlavorWheelsPage() {
 
           {/* Cache Info */}
           {cached && !loading && (
-            <div className="mt-3 text-sm text-gray-500 dark:text-gray-400 dark:text-gray-300">
-              <span className="inline-flex items-center px-2 py-1 rounded-md bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200">
+            <div className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
+              <span className={`inline-flex items-center px-2 py-1 rounded-[14px] ${STATUS_COLORS.success.bg} ${STATUS_COLORS.success.text}`}>
                 Cached - Click "Regenerate" to update with latest data
               </span>
             </div>
@@ -356,27 +450,27 @@ export default function FlavorWheelsPage() {
         </div>
 
         {/* Wheel Visualization */}
-        <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-8 mb-6">
+        <div className="bg-white dark:bg-zinc-800 rounded-[22px] shadow-sm border border-zinc-200 dark:border-zinc-700 p-4 sm:p-8 mb-6">
           {loading && (
             <div className="flex flex-col items-center justify-center py-20">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-600 mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-300 text-lg">Generating your flavor wheel...</p>
-              <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">This may take a moment</p>
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mb-4"></div>
+              <p className="text-zinc-600 dark:text-zinc-300 text-lg">Generating your flavor wheel...</p>
+              <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-2">This may take a moment</p>
             </div>
           )}
 
           {error && !loading && (
             <div className="text-center py-20">
               <div className="mb-4">
-                <svg className="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 dark:text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-16 h-16 mx-auto text-zinc-300 dark:text-zinc-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">No Data Available</h3>
-              <p className="text-gray-600 dark:text-gray-300 max-w-md mx-auto mb-6">{error}</p>
+              <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-2">No Data Available</h3>
+              <p className="text-zinc-600 dark:text-zinc-300 max-w-md mx-auto mb-6">{error}</p>
               <button
                 onClick={() => router.push('/taste')}
-                className="px-6 py-3 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+                className="px-6 py-3 bg-primary text-white rounded-[14px] hover:bg-primary-600 transition-colors"
               >
                 Start Tasting
               </button>
@@ -385,30 +479,56 @@ export default function FlavorWheelsPage() {
 
           {wheelData && !loading && !error && wheelData.categories.length > 0 && (
             <div className="flex flex-col items-center overflow-hidden">
+              {/* Top descriptors chips */}
+              <div className="w-full mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-semibold text-gemini-text-dark dark:text-zinc-100">
+                    Top notes
+                  </h3>
+                  <button
+                    type="button"
+                    className="text-xs font-medium text-primary hover:opacity-80 transition-opacity"
+                    onClick={() => setViewMode('list')}
+                  >
+                    View all
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {(topDescriptorChips || []).map((chip) => (
+                    <FlavorPill
+                      key={`${chip.category}-${chip.subcategory}-${chip.descriptor}`}
+                      flavor={chip.descriptor}
+                      size="sm"
+                      onClick={() => handleSegmentClick(chip.category, chip.subcategory, chip.descriptor)}
+                    />
+                  ))}
+                </div>
+              </div>
+
               {/* View Mode Toggle */}
               <div className="w-full flex justify-center mb-6">
-                <div className="inline-flex rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-1">
+                <div className="inline-flex rounded-[14px] border border-gemini-border dark:border-zinc-700 bg-gemini-card dark:bg-zinc-800 p-1">
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-2 px-4 py-2 rounded-[10px] text-sm font-medium transition-colors ${
                       viewMode === 'list'
-                        ? 'bg-orange-600 text-white'
-                        : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200'
+                        ? 'bg-primary text-white'
+                        : 'text-gemini-text-gray dark:text-zinc-400 hover:text-gemini-text-dark dark:hover:text-zinc-200'
                     }`}
                   >
                     <List className="w-4 h-4" />
-                    Mobile View
+                    List
                   </button>
                   <button
                     onClick={() => setViewMode('wheel')}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-2 px-4 py-2 rounded-[10px] text-sm font-medium transition-colors ${
                       viewMode === 'wheel'
-                        ? 'bg-orange-600 text-white'
-                        : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200'
+                        ? 'bg-primary text-white'
+                        : 'text-gemini-text-gray dark:text-zinc-400 hover:text-gemini-text-dark dark:hover:text-zinc-200'
                     }`}
                   >
                     <Download className="w-4 h-4" />
-                    Wheel View
+                    Wheel
                   </button>
                 </div>
               </div>
@@ -442,6 +562,173 @@ export default function FlavorWheelsPage() {
                 </FlavorWheelErrorBoundary>
               )}
 
+              {/* Segment detail bottom sheet */}
+              <BottomSheet
+                isOpen={isDetailOpen}
+                onClose={() => setIsDetailOpen(false)}
+                title={selectedSegment?.descriptor || selectedSegment?.subcategory || selectedSegment?.category || 'Details'}
+                ariaDescription="Details for the selected flavor wheel segment"
+              >
+                {!selectedSegment ? (
+                  <p className="text-sm text-gemini-text-gray dark:text-zinc-400">
+                    Select a segment to see details.
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <p className="text-xs font-medium text-gemini-text-muted dark:text-zinc-500">Category</p>
+                      <p className="text-sm font-semibold text-gemini-text-dark dark:text-zinc-100">
+                        {selectedSegment.category}
+                      </p>
+                      {selectedSegment.subcategory ? (
+                        <>
+                          <p className="text-xs font-medium text-gemini-text-muted dark:text-zinc-500 mt-2">Subcategory</p>
+                          <p className="text-sm font-semibold text-gemini-text-dark dark:text-zinc-100">
+                            {selectedSegment.subcategory}
+                          </p>
+                        </>
+                      ) : null}
+                    </div>
+
+                    {selectedDescriptor ? (
+                      <div className="rounded-[22px] bg-gemini-card dark:bg-zinc-800 p-4">
+                        <div className="flex items-baseline justify-between">
+                          <p className="text-sm font-semibold text-gemini-text-dark dark:text-zinc-100">
+                            Mentions
+                          </p>
+                          <p className="text-sm font-bold text-primary tabular-nums">
+                            {selectedDescriptor.count}
+                          </p>
+                        </div>
+                        <p className="text-xs text-gemini-text-gray dark:text-zinc-400 mt-1">
+                          Avg intensity: {selectedDescriptor.avgIntensity}
+                        </p>
+                      </div>
+                    ) : null}
+
+                    {selectedSubcategory ? (
+                      <div className="space-y-2">
+                        <p className="text-xs font-medium text-gemini-text-muted dark:text-zinc-500">Top descriptors</p>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedSubcategory.descriptors.slice(0, 12).map((d) => (
+                            <FlavorPill
+                              key={d.text}
+                              flavor={d.text}
+                              size="sm"
+                              onClick={() => handleSegmentClick(selectedSegment.category, selectedSubcategory.name, d.text)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    ) : selectedCategory ? (
+                      <div className="space-y-2">
+                        <p className="text-xs font-medium text-gemini-text-muted dark:text-zinc-500">Subcategories</p>
+                        <div className="space-y-2">
+                          {selectedCategory.subcategories.slice(0, 10).map((s) => (
+                            <button
+                              key={s.name}
+                              type="button"
+                              className="w-full text-left rounded-[14px] bg-gemini-card dark:bg-zinc-800 px-4 py-3 hover:shadow-sm active:scale-[0.98] transition"
+                              onClick={() => handleSegmentClick(selectedSegment.category, s.name)}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gemini-text-dark dark:text-zinc-100">
+                                  {s.name}
+                                </span>
+                                <span className="text-xs font-semibold text-gemini-text-gray dark:text-zinc-400 tabular-nums">
+                                  {s.count}
+                                </span>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
+
+                    {selectedSegment.descriptor ? (
+                      <div className="space-y-2">
+                        <p className="text-xs font-medium text-gemini-text-muted dark:text-zinc-500">Contributing items</p>
+
+                        {sourcesLoading ? (
+                          <div className="rounded-[22px] bg-gemini-card dark:bg-zinc-800 p-4">
+                            <p className="text-sm text-gemini-text-gray dark:text-zinc-400">Loading…</p>
+                          </div>
+                        ) : sourcesError ? (
+                          <div className="rounded-[22px] bg-gemini-card dark:bg-zinc-800 p-4">
+                            <p className="text-sm text-gemini-text-gray dark:text-zinc-400">{sourcesError}</p>
+                          </div>
+                        ) : sources.length === 0 ? (
+                          <div className="rounded-[22px] bg-gemini-card dark:bg-zinc-800 p-4">
+                            <p className="text-sm text-gemini-text-gray dark:text-zinc-400">No linked items found yet.</p>
+                          </div>
+                        ) : (
+                          <div className="space-y-2">
+                            {sources.map((s) => {
+                              const href =
+                                s.source_type === 'quick_tasting'
+                                  ? `/tasting-summary/${s.source_id}`
+                                  : s.source_type === 'prose_review'
+                                    ? `/review/summary/${s.source_id}?type=prose`
+                                    : `/review/summary/${s.source_id}`;
+
+                              const label =
+                                s.source_type === 'quick_tasting'
+                                  ? 'Quick tasting'
+                                  : s.source_type === 'prose_review'
+                                    ? 'Prose review'
+                                    : 'Structured review';
+
+                              return (
+                                <button
+                                  key={`${s.source_type}:${s.source_id}`}
+                                  type="button"
+                                  className="w-full text-left rounded-[14px] bg-gemini-card dark:bg-zinc-800 px-4 py-3 hover:shadow-sm active:scale-[0.98] transition"
+                                  onClick={() => {
+                                    setIsDetailOpen(false);
+                                    router.push(href);
+                                  }}
+                                >
+                                  <div className="flex items-center justify-between gap-3">
+                                    <div className="min-w-0">
+                                      <p className="text-sm font-medium text-gemini-text-dark dark:text-zinc-100 truncate">
+                                        {s.item_name || label}
+                                      </p>
+                                      <p className="text-xs text-gemini-text-gray dark:text-zinc-400 truncate">
+                                        {label}
+                                      </p>
+                                    </div>
+                                    <span className="text-xs text-gemini-text-muted dark:text-zinc-500 tabular-nums">
+                                      {new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                    </span>
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="rounded-[22px] bg-gemini-card dark:bg-zinc-800 p-4">
+                        <p className="text-sm text-gemini-text-gray dark:text-zinc-400">
+                          Select a specific descriptor to see which tastings or reviews contributed.
+                        </p>
+                      </div>
+                    )}
+
+                    <button
+                      type="button"
+                      className="w-full rounded-[14px] bg-primary text-white py-3 font-semibold active:scale-[0.98] transition"
+                      onClick={() => {
+                        setIsDetailOpen(false);
+                        router.push('/history');
+                      }}
+                    >
+                      View related tastings
+                    </button>
+                  </div>
+                )}
+              </BottomSheet>
+
               {/* AI Badge */}
               {wheelData.aiMetadata?.hasAIDescriptors && (
                 <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 border border-purple-200 dark:border-purple-700 rounded-full">
@@ -459,38 +746,38 @@ export default function FlavorWheelsPage() {
 
               {/* Stats */}
               <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-center w-full max-w-md sm:max-w-none">
-                <div className="bg-gray-50 dark:bg-zinc-700/50 rounded-lg p-3 sm:p-4">
-                  <div className="text-2xl sm:text-3xl font-bold text-orange-600 dark:text-orange-400">
+                <div className="bg-zinc-50 dark:bg-zinc-700/50 rounded-[22px] p-3 sm:p-4">
+                  <div className="text-2xl sm:text-3xl font-bold text-primary dark:text-primary-400">
                     {wheelData.categories.length}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Categories</div>
+                  <div className="text-sm text-zinc-600 dark:text-zinc-300 mt-1">Categories</div>
                 </div>
-                <div className="bg-gray-50 dark:bg-zinc-700/50 rounded-lg p-3 sm:p-4">
-                  <div className="text-2xl sm:text-3xl font-bold text-orange-600 dark:text-orange-400">
+                <div className="bg-zinc-50 dark:bg-zinc-700/50 rounded-[22px] p-3 sm:p-4">
+                  <div className="text-2xl sm:text-3xl font-bold text-primary dark:text-primary-400">
                     {wheelData.uniqueDescriptors}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Unique Descriptors</div>
+                  <div className="text-sm text-zinc-600 dark:text-zinc-300 mt-1">Unique Descriptors</div>
                 </div>
-                <div className="bg-gray-50 dark:bg-zinc-700/50 rounded-lg p-3 sm:p-4">
-                  <div className="text-2xl sm:text-3xl font-bold text-orange-600 dark:text-orange-400">
+                <div className="bg-zinc-50 dark:bg-zinc-700/50 rounded-[22px] p-3 sm:p-4">
+                  <div className="text-2xl sm:text-3xl font-bold text-primary dark:text-primary-400">
                     {wheelData.totalDescriptors}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Total Notes</div>
+                  <div className="text-sm text-zinc-600 dark:text-zinc-300 mt-1">Total Notes</div>
                 </div>
               </div>
 
               {/* Legend */}
               <div className="mt-8 w-full">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Categories</h3>
+                <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-4">Categories</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                   {wheelData.categories.map((category, idx) => (
                     <div key={idx} className="flex items-center gap-2">
-                      <div 
-                        className="w-4 h-4 rounded-full" 
+                      <div
+                        className="w-4 h-4 rounded-full"
                         style={{ backgroundColor: getCategoryColor(idx) }}
                       />
-                      <span className="text-sm text-gray-700 dark:text-gray-200">{category.name}</span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">({category.count})</span>
+                      <span className="text-sm text-zinc-700 dark:text-zinc-200">{category.name}</span>
+                      <span className="text-xs text-zinc-500 dark:text-zinc-400">({category.count})</span>
                     </div>
                   ))}
                 </div>

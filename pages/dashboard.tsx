@@ -12,8 +12,10 @@ import BottomNavigation from '../components/navigation/BottomNavigation';
 import NotificationSystem from '../components/notifications/NotificationSystem';
 import Container from '../components/layout/Container';
 import { cn } from '@/lib/utils';
+import { STATUS_COLORS } from '@/lib/colors';
 import { AvatarWithFallback } from '@/components/ui/AvatarWithFallback';
 import UserAvatarMenu from '@/components/navigation/UserAvatarMenu';
+import { CategoryStamp } from '@/components/ui';
 
 export default function Dashboard() {
    const { user, loading, signOut } = useAuth();
@@ -129,13 +131,43 @@ export default function Dashboard() {
              <Container size="md" className="pt-6 animate-fade-in flex flex-col gap-8">
                {/* Welcome Hero Section - Gemini Style */}
                <header className="flex justify-between items-start">
-                 <div>
-                   <p className="text-gemini-text-gray text-lg">Welcome back,</p>
-                   <h2 className="text-2xl font-bold text-gemini-text-dark dark:text-white">
-                     {profile?.full_name || user?.email?.split('@')[0]}
-                   </h2>
-                 </div>
-               </header>
+                <div>
+                  <p className="text-gemini-text-gray text-lg">Welcome back,</p>
+                  <h2 className="text-2xl font-bold text-gemini-text-dark dark:text-white">
+                    {profile?.full_name || user?.email?.split('@')[0]}
+                  </h2>
+                </div>
+              </header>
+
+              {/* One-tap quick tasting presets */}
+              <section className="-mt-4">
+                <p className="text-xs font-medium text-gemini-text-gray dark:text-zinc-400 mb-2">
+                  Quick tasting presets
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => router.push('/quick-tasting?category=whiskey')}
+                    className="active:scale-[0.98]"
+                  >
+                    <CategoryStamp category="whiskey" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => router.push('/quick-tasting?category=coffee')}
+                    className="active:scale-[0.98]"
+                  >
+                    <CategoryStamp category="coffee" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => router.push('/quick-tasting?category=mezcal')}
+                    className="active:scale-[0.98]"
+                  >
+                    <CategoryStamp category="mezcal" />
+                  </button>
+                </div>
+              </section>
 
             {/* Profile Overview - Gemini Style */}
             {profile && (
@@ -243,17 +275,17 @@ export default function Dashboard() {
                     <div className="flex items-center">
                       {profile.email_confirmed ? (
                         <>
-                          <svg className="w-4 h-4 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className={cn("w-4 h-4 mr-1", STATUS_COLORS.verified.text)} fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
-                          <span className="text-green-500 font-medium">Verified</span>
+                          <span className={cn("font-medium", STATUS_COLORS.verified.text)}>Verified</span>
                         </>
                       ) : (
                         <>
-                          <svg className="w-4 h-4 text-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className={cn("w-4 h-4 mr-1", STATUS_COLORS.pending.text)} fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                           </svg>
-                          <span className="text-yellow-500 font-medium">Pending</span>
+                          <span className={cn("font-medium", STATUS_COLORS.pending.text)}>Pending</span>
                         </>
                       )}
                     </div>
@@ -266,7 +298,7 @@ export default function Dashboard() {
             <div className="space-y-4">
               <button
                 onClick={() => router.push('/history')}
-                className="w-full flex items-center gap-3 p-4 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 rounded-lg hover:bg-zinc-50:bg-zinc-700 transition-colors"
+                className="w-full flex items-center gap-3 p-4 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 rounded-[22px] hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors"
               >
                 <span className="material-symbols-outlined">history</span>
                 <div className="text-left">
@@ -277,7 +309,7 @@ export default function Dashboard() {
 
               {/* Recent Tastings */}
               {recentTastings.length > 0 ? (
-                <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg">
+                <div className="bg-white dark:bg-zinc-800 p-4 rounded-[22px]">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">
                       Recent Tastings
@@ -323,7 +355,7 @@ export default function Dashboard() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-white dark:bg-zinc-800 p-6 rounded-lg text-center">
+                <div className="bg-white dark:bg-zinc-800 p-6 rounded-[22px] text-center">
                   <div className="text-zinc-400 mb-3">
                     <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -333,7 +365,7 @@ export default function Dashboard() {
                   <p className="text-sm text-zinc-600 dark:text-zinc-300 mb-4">Start your flavor journey today!</p>
                   <button
                     onClick={() => router.push('/taste')}
-                    className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+                    className="px-4 py-2 bg-primary text-white rounded-[14px] hover:bg-primary-hover transition-colors"
                   >
                     Create Your First Tasting
                   </button>
@@ -342,7 +374,7 @@ export default function Dashboard() {
 
               {/* Stats Card */}
               {tastingStats && (
-                <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg">
+                <div className="bg-white dark:bg-zinc-800 p-4 rounded-[22px]">
                   <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-3">Your Stats</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center">

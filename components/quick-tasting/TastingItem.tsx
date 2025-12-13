@@ -418,21 +418,21 @@ const TastingItem: React.FC<TastingItemProps> = ({
                   value={localAroma}
                   onChange={(e) => handleAromaChange(e.target.value)}
                   placeholder={`Describe the ${category}'s aroma...`}
-                  className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl text-sm focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all resize-none placeholder:text-zinc-400"
+                  className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-[14px] text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
                 />
               </div>
 
               {/* Default Flavor Section */}
               <div className="mb-5">
                 <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
-                  <Droplet size={20} className="text-orange-500" />
+                  <Droplet size={20} className="text-primary" />
                   Flavor
                 </label>
                 <textarea
                   value={localFlavor}
                   onChange={(e) => handleFlavorChange(e.target.value)}
                   placeholder={`Describe the ${category}'s flavor, taste, and mouthfeel...`}
-                  className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl text-sm focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all resize-none placeholder:text-zinc-400"
+                  className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-[14px] text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
                 />
               </div>
 
@@ -446,7 +446,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
                   value={localNotes}
                   onChange={(e) => handleNotesChange(e.target.value)}
                   placeholder={`Additional notes about the ${category}...`}
-                  className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl text-sm focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all resize-none placeholder:text-zinc-400"
+                  className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-[14px] text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
                 />
               </div>
             </>
@@ -454,28 +454,27 @@ const TastingItem: React.FC<TastingItemProps> = ({
 
           {/* Overall Score - Show when requested */}
           {showOverallScore && (
-            <div className="mb-6 py-6 px-4 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-zinc-800/50 dark:to-zinc-900/50 rounded-2xl border border-orange-100 dark:border-zinc-700">
+            <div className="mb-6 py-5 px-4 bg-gemini-card dark:bg-zinc-800/60 rounded-[22px] border border-gemini-border dark:border-zinc-700">
               <div className="text-center">
-                <div className="inline-flex items-center gap-2 text-xs font-semibold text-orange-600 dark:text-orange-400 mb-4 tracking-widest uppercase bg-white dark:bg-zinc-800 px-3 py-1 rounded-full shadow-sm">
+                <div className="inline-flex items-center gap-2 text-xs font-semibold text-gemini-text-gray dark:text-zinc-400 mb-3 tracking-widest uppercase">
                   <Star size={12} className="fill-current" />
                   Overall Score
                 </div>
-                <div className="flex flex-col items-center space-y-4">
+                <div className="flex flex-col items-center space-y-3">
                   {/* Score display */}
                   <div className="relative">
-                    <div className="text-6xl sm:text-7xl font-bold bg-gradient-to-br from-orange-500 to-amber-500 bg-clip-text text-transparent leading-none">
+                    <div className="text-5xl sm:text-6xl font-bold text-gemini-text-dark dark:text-white leading-none tabular-nums">
                       {localScore}
                     </div>
                     {localScore > 0 && (
-                      <div className="mt-2 text-sm font-medium text-zinc-500 dark:text-zinc-400 animate-fade-in">
+                      <div className="mt-1 text-xs font-medium text-gemini-text-muted dark:text-zinc-500">
                         {getScoreLabel(localScore)}
                       </div>
                     )}
                   </div>
                   
-                  {/* Enhanced slider */}
+                  {/* Slider */}
                   <div className="relative w-full max-w-xs px-2">
-                    <div className="score-indicator mb-2" />
                     <input
                       type="range"
                       min="0"
@@ -485,13 +484,13 @@ const TastingItem: React.FC<TastingItemProps> = ({
                       className="w-full h-2 rounded-full appearance-none cursor-pointer"
                       style={{
                         background: `linear-gradient(to right,
-                          #ec7813 0%,
-                          #ec7813 ${localScore}%,
-                          #e5e5e5 ${localScore}%,
-                          #e5e5e5 100%)`
+                          #C63C22 0%,
+                          #C63C22 ${localScore}%,
+                          #E6E6E6 ${localScore}%,
+                          #E6E6E6 100%)`
                       }}
                     />
-                    <div className="flex justify-between mt-1 text-xs text-zinc-400">
+                    <div className="flex justify-between mt-1 text-xs text-gemini-text-muted dark:text-zinc-500">
                       <span>0</span>
                       <span>50</span>
                       <span>100</span>

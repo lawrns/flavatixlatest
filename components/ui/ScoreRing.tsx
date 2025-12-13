@@ -6,6 +6,7 @@
  */
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { getScoreHex } from '@/lib/colors';
 
 interface ScoreRingProps {
   /** Score value (0-100) */
@@ -30,16 +31,12 @@ const sizeConfig = {
 };
 
 /**
- * Get color based on score value
+ * Get color based on score value (0-100 scale)
+ * Uses centralized color system from lib/colors.ts
  */
 const getScoreColor = (score: number): string => {
-  if (score >= 90) return '#22c55e'; // green-500
-  if (score >= 80) return '#84cc16'; // lime-500
-  if (score >= 70) return '#eab308'; // yellow-500
-  if (score >= 60) return '#f59e0b'; // amber-500
-  if (score >= 50) return '#f97316'; // orange-500
-  if (score >= 40) return '#ef4444'; // red-500
-  return '#dc2626'; // red-600
+  // Convert 0-100 scale to 0-10 scale for the centralized function
+  return getScoreHex(score / 10);
 };
 
 /**

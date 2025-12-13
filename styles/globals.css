@@ -92,27 +92,27 @@ a {
 
 /* Custom component styles with dark mode support and mobile optimization */
 .btn-primary {
-  @apply bg-primary text-white rounded-lg px-5 py-3 min-h-[44px] font-semibold transition-all duration-200 hover:bg-orange-600 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0.5 active:scale-95 touch-manipulation;
+  @apply bg-primary text-white rounded-[14px] px-5 py-3 min-h-[44px] font-semibold transition-all duration-200 hover:bg-primary-600 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0.5 active:scale-95 touch-manipulation;
 }
 
 .btn-secondary {
-  @apply bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-white rounded-lg px-5 py-3 min-h-[44px] font-medium transition-all duration-200 hover:border-primary hover:shadow-sm touch-manipulation;
+  @apply bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-white rounded-[14px] px-5 py-3 min-h-[44px] font-medium transition-all duration-200 hover:border-primary hover:shadow-sm touch-manipulation;
 }
 
 .btn-ghost {
-  @apply bg-transparent text-primary border border-primary rounded-lg px-5 py-3 min-h-[44px] transition-all duration-200 hover:bg-primary hover:text-white touch-manipulation;
+  @apply bg-transparent text-primary border border-primary rounded-[14px] px-5 py-3 min-h-[44px] transition-all duration-200 hover:bg-primary hover:text-white touch-manipulation;
 }
 
 .card {
-  @apply bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-md p-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
+  @apply bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-[22px] shadow-md p-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
 }
 
 .card-tasting {
-  @apply bg-zinc-50 dark:bg-zinc-800/50 border border-primary-100 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:scale-[1.01];
+  @apply bg-zinc-50 dark:bg-zinc-800/50 border border-primary-100 rounded-[22px] shadow-md transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:scale-[1.01];
 }
 
 .input {
-  @apply bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-white rounded-lg px-3.5 py-3 min-h-[44px] focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-200 touch-manipulation;
+  @apply bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-white rounded-[14px] px-3.5 py-3 min-h-[44px] focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-200 touch-manipulation;
 }
 
 .text-small {
@@ -138,7 +138,7 @@ a {
 
 /* Enhanced Focus styles for accessibility */
 *:focus-visible {
-  outline: 2px solid #ec7813;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -146,17 +146,17 @@ a {
 /* Specific focus styles for interactive elements */
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid #ec7813;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(236, 120, 19, 0.1);
+  box-shadow: 0 0 0 4px rgba(198, 60, 34, 0.1);
 }
 
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
   outline: none;
-  border-color: #ec7813;
-  box-shadow: 0 0 0 3px rgba(236, 120, 19, 0.1);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(198, 60, 34, 0.1);
 }
 
 /* High contrast mode support */
@@ -227,29 +227,23 @@ textarea {
    ENHANCED UI COMPONENTS - Modern & Charming Design
    ============================================================================ */
 
-/* Premium card with subtle gradient border */
+/* Premium card - Gemini neutral style (no orange) */
 .card-premium {
-  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
-  border: 1px solid rgba(236, 120, 19, 0.15);
-  border-radius: 16px;
-  box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.05),
-    0 2px 4px -2px rgba(0, 0, 0, 0.05),
-    0 0 0 1px rgba(236, 120, 19, 0.05);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #FFFFFF;
+  border: 1px solid #E6E6E6;
+  border-radius: 22px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .card-premium:hover {
   transform: translateY(-2px);
-  box-shadow: 
-    0 20px 25px -5px rgba(0, 0, 0, 0.08),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04),
-    0 0 0 1px rgba(236, 120, 19, 0.1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
 }
 
 .dark .card-premium {
-  background: linear-gradient(135deg, rgba(39, 39, 42, 0.95) 0%, rgba(39, 39, 42, 0.9) 100%);
-  border-color: rgba(236, 120, 19, 0.2);
+  background: #27272a;
+  border-color: #3f3f46;
 }
 
 /* Glass morphism effect */
@@ -307,20 +301,14 @@ textarea {
   top: 0.5rem;
   transform: translateY(0);
   font-size: 0.75rem;
-  color: #ec7813;
+  color: var(--color-primary);
 }
 
-/* Smooth score indicator */
+/* Smooth score indicator - neutral track */
 .score-indicator {
   position: relative;
-  height: 8px;
-  background: linear-gradient(90deg, 
-    #ef4444 0%, 
-    #f59e0b 25%, 
-    #eab308 50%, 
-    #84cc16 75%, 
-    #22c55e 100%
-  );
+  height: 6px;
+  background: #E6E6E6;
   border-radius: 9999px;
   overflow: hidden;
 }
@@ -332,7 +320,7 @@ textarea {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+  background: transparent;
 }
 
 /* Micro-interactions */
@@ -346,7 +334,7 @@ textarea {
 }
 
 .hover-glow:hover {
-  box-shadow: 0 0 20px rgba(236, 120, 19, 0.3);
+  box-shadow: 0 0 20px rgba(198, 60, 34, 0.3);
 }
 
 /* Pulse animation for attention */
@@ -614,10 +602,10 @@ textarea {
 
 /* Dark mode slider styles */
 .dark .slider-ultra-thin {
-  background: linear-gradient(to right, 
-    #ec7813 0%, 
-    #ec7813 var(--slider-value, 0)%, 
-    #52525b var(--slider-value, 0)%, 
+  background: linear-gradient(to right,
+    var(--color-primary) 0%,
+    var(--color-primary) var(--slider-value, 0)%,
+    #52525b var(--slider-value, 0)%,
     #52525b 100%) !important;
 }
 
@@ -636,13 +624,13 @@ textarea {
 
 /* Dark mode form improvements */
 .dark input[type="range"]::-webkit-slider-thumb {
-  background: #ec7813;
+  background: var(--color-primary);
   border: 2px solid #27272a;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .dark input[type="range"]::-moz-range-thumb {
-  background: #ec7813;
+  background: var(--color-primary);
   border: 2px solid #27272a;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
@@ -693,11 +681,11 @@ input[type="range"]::-moz-range-track {
 
 /* Dark mode accessibility improvements */
 .dark .focus\:ring-primary\/20:focus {
-  --tw-ring-color: rgba(236, 120, 19, 0.2);
+  --tw-ring-color: rgba(198, 60, 34, 0.2);
 }
 
 .dark .focus\:border-primary:focus {
-  border-color: #ec7813;
+  border-color: var(--color-primary);
 }
 
 /* Enhanced touch interactions for mobile */
@@ -865,10 +853,10 @@ input[type="range"]::-moz-range-track {
 /* Glow pulse animation */
 @keyframes glowPulse {
   0%, 100% {
-    box-shadow: 0 0 5px rgba(236, 120, 19, 0.2);
+    box-shadow: 0 0 5px rgba(198, 60, 34, 0.2);
   }
   50% {
-    box-shadow: 0 0 20px rgba(236, 120, 19, 0.4);
+    box-shadow: 0 0 20px rgba(198, 60, 34, 0.4);
   }
 }
 
@@ -925,10 +913,10 @@ input[type="range"]::-moz-range-track {
 /* Tasting card with flavor accent */
 .card-tasting-enhanced {
   background: linear-gradient(135deg, #FFF7ED 0%, #FFFFFF 100%);
-  border: 1px solid rgba(236, 120, 19, 0.15);
+  border: 1px solid rgba(198, 60, 34, 0.15);
   border-radius: 20px;
-  box-shadow: 
-    0 4px 20px rgba(236, 120, 19, 0.08),
+  box-shadow:
+    0 4px 20px rgba(198, 60, 34, 0.08),
     0 1px 3px rgba(0, 0, 0, 0.05);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -942,19 +930,19 @@ input[type="range"]::-moz-range-track {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #ec7813 0%, #f59e0b 50%, #fbbf24 100%);
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-400) 50%, var(--color-primary-300) 100%);
 }
 
 .card-tasting-enhanced:hover {
   transform: translateY(-6px) scale(1.01);
-  box-shadow: 
-    0 20px 40px rgba(236, 120, 19, 0.15),
+  box-shadow:
+    0 20px 40px rgba(198, 60, 34, 0.15),
     0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 .dark .card-tasting-enhanced {
   background: linear-gradient(135deg, rgba(39, 39, 42, 0.95) 0%, rgba(24, 24, 27, 0.95) 100%);
-  border-color: rgba(236, 120, 19, 0.2);
+  border-color: rgba(198, 60, 34, 0.2);
 }
 
 /* Social post card */
@@ -996,8 +984,8 @@ input[type="range"]::-moz-range-track {
 
 .input-modern:focus {
   outline: none;
-  border-color: #ec7813;
-  box-shadow: 0 0 0 4px rgba(236, 120, 19, 0.1);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(198, 60, 34, 0.1);
 }
 
 .dark .input-modern {
@@ -1007,8 +995,8 @@ input[type="range"]::-moz-range-track {
 }
 
 .dark .input-modern:focus {
-  border-color: #ec7813;
-  box-shadow: 0 0 0 4px rgba(236, 120, 19, 0.2);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(198, 60, 34, 0.2);
 }
 
 /* Textarea with auto-grow */
@@ -1070,13 +1058,13 @@ input[type="range"]::-moz-range-track {
 }
 
 .nav-item:hover {
-  background: rgba(236, 120, 19, 0.1);
-  color: #ec7813;
+  background: rgba(198, 60, 34, 0.1);
+  color: var(--color-primary);
 }
 
 .nav-item.active {
-  background: rgba(236, 120, 19, 0.15);
-  color: #ec7813;
+  background: rgba(198, 60, 34, 0.15);
+  color: var(--color-primary);
 }
 
 .nav-item.active::after {
@@ -1087,7 +1075,7 @@ input[type="range"]::-moz-range-track {
   transform: translateX(-50%);
   width: 20px;
   height: 3px;
-  background: #ec7813;
+  background: var(--color-primary);
   border-radius: 3px 3px 0 0;
 }
 
@@ -1169,7 +1157,7 @@ input[type="range"]::-moz-range-track {
 .loader-dots span {
   width: 8px;
   height: 8px;
-  background: #ec7813;
+  background: var(--color-primary);
   border-radius: 50%;
   animation: dotPulse 1.4s infinite ease-in-out both;
 }

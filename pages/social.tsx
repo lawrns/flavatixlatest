@@ -7,6 +7,7 @@ import CommentsModal from '../components/social/CommentsModal';
 import { SocialPostCard, TastingPost, TastingItem, getCategoryColor, formatTimeAgo } from '../components/social/SocialPostCard';
 import { SocialFeedFilters } from '../components/social/SocialFeedFilters';
 import notificationService from '@/lib/notificationService';
+import BottomNavigation from '@/components/navigation/BottomNavigation';
 
 export default function SocialPage() {
   const { user, loading } = useAuth();
@@ -583,7 +584,7 @@ export default function SocialPage() {
             {filteredPosts.length === 0 ? (
               <div className="p-8 text-center">
                 <div className="mb-4">
-                  <span className="material-symbols-outlined text-6xl text-orange-500">local_bar</span>
+                  <span className="material-symbols-outlined text-6xl text-primary">local_bar</span>
                 </div>
                 <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-2">No tastings yet</h3>
                 <p className="text-zinc-600 dark:text-zinc-300 mb-4">
@@ -638,26 +639,7 @@ export default function SocialPage() {
         </main>
 
         {/* Bottom Navigation */}
-        <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
-          <nav className="flex justify-around p-2">
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
-              <span className="material-symbols-outlined">home</span>
-              <span className="text-xs font-medium">Home</span>
-            </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/taste">
-              <span className="material-symbols-outlined">restaurant</span>
-              <span className="text-xs font-medium">Taste</span>
-            </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
-              <span className="material-symbols-outlined">reviews</span>
-              <span className="text-xs font-medium">Review</span>
-            </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
-              <span className="material-symbols-outlined">donut_small</span>
-              <span className="text-xs font-medium">Wheels</span>
-            </a>
-          </nav>
-        </footer>
+        <BottomNavigation />
       </div>
 
       {/* Comments Modal */}

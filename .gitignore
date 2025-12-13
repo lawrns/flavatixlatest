@@ -130,6 +130,9 @@ web_modules/
 .next
 out
 
+# Local reference app folder
+/flavatix_new/
+
 # Nuxt.js build / generate output
 .nuxt
 dist

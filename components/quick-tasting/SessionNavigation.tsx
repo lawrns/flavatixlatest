@@ -35,7 +35,7 @@ export const SessionNavigation: React.FC<SessionNavigationProps> = ({
   const isLastItem = currentIndex >= items.length - 1;
 
   return (
-    <div className="flex flex-col items-center mt-lg px-4 gap-4">
+    <div className="flex flex-col items-center mt-6 px-4 gap-3">
       {/* Item Dropdown Navigation */}
       {items.length > 1 && (
         <div className="flex justify-center w-full">
@@ -49,24 +49,24 @@ export const SessionNavigation: React.FC<SessionNavigationProps> = ({
       )}
 
       {/* Navigation Controls */}
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-2">
         <button
           onClick={onPrevious}
           disabled={isFirstItem}
-          className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-4 py-2 rounded-[14px] text-sm font-medium text-gemini-text-gray bg-gemini-card border border-gemini-border hover:bg-white dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           Previous
         </button>
 
-        <span className="text-sm text-gray-500 px-2 min-w-20 text-center">
-          {currentIndex + 1} of {items.length}
+        <span className="text-xs text-gemini-text-muted px-2 min-w-[4rem] text-center tabular-nums">
+          {currentIndex + 1} / {items.length}
         </span>
 
         <button
           onClick={onNext}
-          className="btn-secondary"
+          className="px-4 py-2 rounded-[14px] text-sm font-medium text-gemini-text-gray bg-gemini-card border border-gemini-border hover:bg-white dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700 transition-colors"
         >
-          {isLastItem ? 'Add Item' : 'Next Item'}
+          {isLastItem ? 'Add Item' : 'Next'}
         </button>
       </div>
 
@@ -74,17 +74,17 @@ export const SessionNavigation: React.FC<SessionNavigationProps> = ({
       {items.length > 1 && (
         <button
           onClick={onToggleShowAll}
-          className="text-sm text-primary-600 hover:text-primary-700 underline"
+          className="text-xs text-gemini-text-muted hover:text-gemini-text-gray transition-colors"
         >
           {showAllItems ? 'Hide' : 'Show'} All Items
         </button>
       )}
 
-      {/* Complete Tasting Button */}
+      {/* Complete Tasting Button - Primary CTA */}
       <button
         onClick={onComplete}
         disabled={isLoading}
-        className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full max-w-xs px-6 py-3 rounded-[14px] text-base font-semibold text-white bg-primary hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {isLoading ? 'Completing...' : 'Complete Tasting'}
       </button>

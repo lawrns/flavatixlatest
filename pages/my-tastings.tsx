@@ -97,7 +97,7 @@ export default function MyTastingsPage() {
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`px-4 py-2 rounded-[14px] font-medium transition-colors ${
               filter === 'all'
                 ? 'bg-primary text-white'
                 : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50'
@@ -107,7 +107,7 @@ export default function MyTastingsPage() {
           </button>
           <button
             onClick={() => setFilter('completed')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`px-4 py-2 rounded-[14px] font-medium transition-colors ${
               filter === 'completed'
                 ? 'bg-primary text-white'
                 : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50'
@@ -117,7 +117,7 @@ export default function MyTastingsPage() {
           </button>
           <button
             onClick={() => setFilter('in_progress')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`px-4 py-2 rounded-[14px] font-medium transition-colors ${
               filter === 'in_progress'
                 ? 'bg-primary text-white'
                 : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50'
@@ -133,7 +133,7 @@ export default function MyTastingsPage() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
         ) : tastings.length === 0 ? (
-          <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700 p-12 text-center">
+          <div className="bg-white dark:bg-zinc-800 rounded-[22px] shadow-sm border border-zinc-200 dark:border-zinc-700 p-12 text-center">
             <div className="w-16 h-16 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
@@ -143,7 +143,7 @@ export default function MyTastingsPage() {
             <p className="text-zinc-600 dark:text-zinc-300 mb-6">Start your first tasting session to track your flavor journey</p>
             <button
               onClick={() => router.push('/taste')}
-              className="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
+              className="px-6 py-3 bg-primary text-white rounded-[14px] font-medium hover:bg-primary/90 transition-colors"
             >
               Start Tasting
             </button>
@@ -153,7 +153,7 @@ export default function MyTastingsPage() {
             {tastings.map((tasting) => (
               <div
                 key={tasting.id}
-                className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700 p-6 hover:shadow-md transition-shadow"
+                className="bg-white dark:bg-zinc-800 rounded-[22px] shadow-sm border border-zinc-200 dark:border-zinc-700 p-6 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
@@ -201,14 +201,14 @@ export default function MyTastingsPage() {
                     <>
                       <button
                         onClick={() => router.push(`/competition/${tasting.id}`)}
-                        className="flex-1 px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                        className="flex-1 px-4 py-2 bg-primary text-white rounded-[14px] font-medium hover:bg-primary/90 transition-colors"
                       >
                         {tasting.completed_at ? 'View Results' : 'Start Competition'}
                       </button>
                       {tasting.rank_participants && (
                         <button
                           onClick={() => router.push(`/competition/${tasting.id}/leaderboard`)}
-                          className="px-4 py-2 bg-yellow-500 text-white rounded-lg font-medium hover:bg-yellow-600 transition-colors"
+                          className="px-4 py-2 bg-yellow-500 text-white rounded-[14px] font-medium hover:bg-yellow-600 transition-colors"
                         >
                           Leaderboard
                         </button>
@@ -217,21 +217,21 @@ export default function MyTastingsPage() {
                   ) : tasting.mode === 'study' ? (
                     <button
                       onClick={() => router.push(`/taste/study/${tasting.id}`)}
-                      className="flex-1 px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                      className="flex-1 px-4 py-2 bg-primary text-white rounded-[14px] font-medium hover:bg-primary/90 transition-colors"
                     >
                       {tasting.completed_at ? 'View Study' : 'Continue Study'}
                     </button>
                   ) : (
                     <button
                       onClick={() => router.push(tasting.completed_at ? `/tasting-summary/${tasting.id}` : `/quick-tasting?session=${tasting.id}`)}
-                      className="flex-1 px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                      className="flex-1 px-4 py-2 bg-primary text-white rounded-[14px] font-medium hover:bg-primary/90 transition-colors"
                     >
                       {tasting.completed_at ? 'View Details' : 'Continue'}
                     </button>
                   )}
                   <button
                     onClick={() => handleDeleteTasting(tasting.id)}
-                    className="px-4 py-2 bg-red-50 text-red-600 rounded-lg font-medium hover:bg-red-100 transition-colors"
+                    className="px-4 py-2 bg-red-50 text-red-600 rounded-[14px] font-medium hover:bg-red-100 transition-colors"
                   >
                     Delete
                   </button>

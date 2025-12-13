@@ -79,7 +79,7 @@ const Modal: React.FC<ModalProps> = ({
         aria-labelledby={title ? titleId : undefined}
         aria-describedby={ariaDescription ? descriptionId : undefined}
         className={cn(
-          'bg-white dark:bg-zinc-800 rounded-lg shadow-xl w-full max-h-[90vh] overflow-hidden',
+          'bg-white dark:bg-zinc-800 rounded-[22px] shadow-xl w-full max-h-[90vh] overflow-hidden',
           'focus:outline-none',
           sizeClasses[size],
           className

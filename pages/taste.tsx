@@ -9,6 +9,7 @@ import {
   History 
 } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
+import { CategoryStamp } from '@/components/ui';
 
 // Taste mode card component with motion
 interface TasteModeCardProps {
@@ -136,6 +137,36 @@ const TastePage: React.FC = () => {
       showBack
       backUrl="/dashboard"
     >
+      {/* One-tap presets */}
+      <div className="mt-2">
+        <p className="text-xs font-medium text-gemini-text-gray dark:text-zinc-400 mb-2">
+          Quick presets
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => router.push('/quick-tasting?category=whiskey')}
+            className="active:scale-[0.98]"
+          >
+            <CategoryStamp category="whiskey" />
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push('/quick-tasting?category=coffee')}
+            className="active:scale-[0.98]"
+          >
+            <CategoryStamp category="coffee" />
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push('/quick-tasting?category=mezcal')}
+            className="active:scale-[0.98]"
+          >
+            <CategoryStamp category="mezcal" />
+          </button>
+        </div>
+      </div>
+
       {/* Taste Options */}
       <div className="flex flex-col gap-3 mt-2">
           {tasteOptions.map((option, index) => (

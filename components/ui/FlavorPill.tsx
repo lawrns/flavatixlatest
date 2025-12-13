@@ -93,9 +93,10 @@ export const FlavorPill: React.FC<FlavorPillProps> = ({
     lg: 'px-4 py-1.5 text-base',
   };
   
-  const intensityOpacity = intensity 
-    ? `opacity-${Math.min(100, 60 + intensity * 10)}` 
-    : '';
+  // Use inline style for dynamic opacity since Tailwind doesn't support dynamic values
+  const intensityStyle = intensity
+    ? { opacity: Math.min(1, 0.6 + intensity * 0.1) }
+    : undefined;
   
   const isInteractive = !!onClick;
   
@@ -107,11 +108,11 @@ export const FlavorPill: React.FC<FlavorPillProps> = ({
         colors.text,
         colors.border,
         sizeClasses[size],
-        intensityOpacity,
         selected && 'ring-2 ring-primary ring-offset-1',
         isInteractive && 'cursor-pointer hover:shadow-sm active:scale-95',
         className
       )}
+      style={intensityStyle}
       onClick={onClick}
       role={isInteractive ? 'button' : undefined}
       tabIndex={isInteractive ? 0 : undefined}

@@ -76,59 +76,52 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
   };
 
   return (
-    <div className="card p-md mb-lg">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-        <div>
+    <div className="rounded-[22px] bg-gemini-card dark:bg-zinc-800/80 border border-gemini-border dark:border-zinc-700 p-4 mb-6">
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+        <div className="min-w-0 flex-1">
           {/* Session Name */}
           {isEditingName ? (
             <div className="mb-2">
-              <div className="p-2 rounded-lg bg-background-app border-2 border-primary-300">
-                <div className="text-xs font-medium text-text-secondary uppercase tracking-wider mb-1">
+              <div className="p-2 rounded-lg bg-white dark:bg-zinc-900 border border-gemini-border dark:border-zinc-600">
+                <div className="text-xs font-medium text-gemini-text-muted uppercase tracking-wider mb-1">
                   Editing Session Name
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2">
                   <input
                     type="text"
                     value={editingName}
                     onChange={(e) => setEditingName(e.target.value)}
                     onBlur={saveName}
                     onKeyDown={handleKeyPress}
-                    className="text-h2 font-heading font-bold text-text-primary bg-transparent border-none outline-none focus:ring-0 flex-1 placeholder-text-secondary/50"
+                    className="text-xl font-semibold text-gemini-text-dark dark:text-white bg-transparent border-none outline-none focus:ring-0 flex-1 min-w-0"
                     placeholder="Enter session name..."
                     autoFocus
                   />
-                  <div className="flex items-center space-x-1 text-text-secondary text-xs">
-                    <span>Press Enter to save</span>
-                  </div>
+                  <span className="text-xs text-gemini-text-muted flex-shrink-0">Enter to save</span>
                 </div>
               </div>
             </div>
           ) : (
             <div className="mb-2">
               <div
-                className={`flex items-center space-x-2 p-2 rounded-lg bg-background-app border border-border-subtle ${
+                className={`flex items-center gap-2 p-2 -m-2 rounded-lg ${
                   canEditName 
-                    ? 'hover:border-primary-300 hover:bg-primary-50/30 cursor-pointer' 
+                    ? 'hover:bg-white dark:hover:bg-zinc-700/50 cursor-pointer' 
                     : 'opacity-60 cursor-not-allowed'
-                } transition-all duration-200 group`}
+                } transition-colors group`}
                 onClick={canEditName ? startEditing : undefined}
-                title={canEditName ? 'Click to edit session name' : 'Cannot edit session name after adding items'}
+                title={canEditName ? 'Click to edit session name' : 'Cannot edit after adding items'}
               >
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-medium text-text-secondary uppercase tracking-wider mb-1">
+                <div className="min-w-0 flex-1">
+                  <div className="text-xs font-medium text-gemini-text-muted uppercase tracking-wider mb-0.5">
                     Session Name
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <h2 className="text-h2 font-heading font-bold text-text-primary truncate">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-xl font-bold text-gemini-text-dark dark:text-white truncate">
                       {session.session_name || 'Quick Tasting'}
                     </h2>
                     {canEditName && (
-                      <div className="flex items-center space-x-1 text-text-secondary">
-                        <Edit size={16} className="opacity-60 group-hover:opacity-100 transition-opacity" />
-                        <span className="text-xs font-medium opacity-60 group-hover:opacity-100 transition-opacity">
-                          Edit
-                        </span>
-                      </div>
+                      <Edit size={14} className="text-gemini-text-muted opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                     )}
                   </div>
                 </div>
@@ -171,15 +164,15 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
         </div>
 
         {/* Right Side: Actions & Stats */}
-        <div className="mt-4 md:mt-0 flex items-center space-x-4">
+        <div className="flex items-center gap-3 flex-shrink-0">
           {/* Edit Tasting Button - Setup phase only */}
           {phase === 'setup' && (
             <button
               onClick={onToggleEditDashboard}
-              className="btn-secondary flex items-center gap-2"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-[14px] text-sm font-medium text-gemini-text-gray hover:bg-white dark:hover:bg-zinc-700 transition-colors"
             >
-              <Settings size={16} />
-              Edit Tasting
+              <Settings size={14} />
+              Edit
             </button>
           )}
 
@@ -187,25 +180,27 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
           {session.mode === 'study' && session.study_approach === 'collaborative' && phase === 'setup' && (
             <button
               onClick={onToggleSuggestions}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-[14px] text-sm font-medium transition-colors ${
                 showSuggestions
-                  ? 'bg-blue-100 text-blue-800'
-                  : 'bg-white dark:bg-zinc-800 text-blue-600 border border-blue-200 hover:bg-blue-50'
+                  ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300'
+                  : 'text-gemini-text-gray hover:bg-white dark:hover:bg-zinc-700'
               }`}
             >
               <span className="material-symbols-outlined text-base">lightbulb</span>
-              Suggestions
+              Tips
             </button>
           )}
 
           {/* Stats */}
-          <div className="text-center">
-            <div className="text-h2 font-heading font-bold text-primary-600">{completedItems}</div>
-            <div className="text-small font-body text-text-secondary">Completed</div>
-          </div>
-          <div className="text-center">
-            <div className="text-h2 font-heading font-bold text-text-primary">{itemsCount}</div>
-            <div className="text-small font-body text-text-secondary">Total Items</div>
+          <div className="flex items-center gap-3 pl-2 border-l border-gemini-border dark:border-zinc-600">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-primary tabular-nums">{completedItems}</div>
+              <div className="text-xs text-gemini-text-muted">Done</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-gemini-text-dark dark:text-white tabular-nums">{itemsCount}</div>
+              <div className="text-xs text-gemini-text-muted">Total</div>
+            </div>
           </div>
         </div>
       </div>

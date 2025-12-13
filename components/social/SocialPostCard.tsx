@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { getCategoryColors } from '@/lib/colors';
 
 export type TastingItem = {
   id: string;
@@ -54,17 +55,10 @@ interface SocialPostCardProps {
 
 /**
  * Get color class for category badge
+ * Uses centralized color system from lib/colors.ts
  */
-export const getCategoryColor = (category: string): string => {
-  const colors: Record<string, string> = {
-    coffee: 'text-amber-600',
-    wine: 'text-red-600',
-    beer: 'text-yellow-600',
-    whiskey: 'text-orange-600',
-    tea: 'text-green-600',
-    chocolate: 'text-amber-800',
-  };
-  return colors[category.toLowerCase()] || 'text-primary';
+export const getCategoryColor = (category: string) => {
+  return getCategoryColors(category);
 };
 
 /**
@@ -149,9 +143,12 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
 
       {/* Category Badge */}
       <div className="mb-2">
-        <span 
-          className={`inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize ${getCategoryColor(post.category)} bg-opacity-10`}
-          style={{ backgroundColor: `${getCategoryColor(post.category).replace('text-', '')}15` }}
+        <span
+          className={cn(
+            'inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize',
+            getCategoryColor(post.category).bg,
+            getCategoryColor(post.category).text
+          )}
         >
           {post.category}
         </span>

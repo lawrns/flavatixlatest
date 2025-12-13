@@ -1,59 +1,77 @@
 import React from 'react';
-import { Coffee, Wine, Beer, Utensils } from 'lucide-react';
+import { Beer, Coffee, GlassWater, Sprout, Utensils, Wine } from 'lucide-react';
 
 interface CategorySelectorProps {
   onCategorySelect: (category: string) => void;
   isLoading: boolean;
 }
 
+// Icon color classes derived from CATEGORY_COLORS (using -600 variants for solid backgrounds)
+const CATEGORY_ICON_COLORS: Record<string, { bg: string; hover: string }> = {
+  coffee: { bg: 'bg-amber-600', hover: 'hover:bg-amber-700' },
+  whisky: { bg: 'bg-orange-600', hover: 'hover:bg-orange-700' },
+  mezcal: { bg: 'bg-lime-600', hover: 'hover:bg-lime-700' },
+  tea: { bg: 'bg-emerald-600', hover: 'hover:bg-emerald-700' },
+  wine: { bg: 'bg-red-600', hover: 'hover:bg-red-700' },
+  spirits: { bg: 'bg-purple-600', hover: 'hover:bg-purple-700' },
+  beer: { bg: 'bg-yellow-600', hover: 'hover:bg-yellow-700' },
+  chocolate: { bg: 'bg-stone-600', hover: 'hover:bg-stone-700' },
+};
+
+// Helper to get icon colors with fallback
+function getIconColors(categoryId: string) {
+  return CATEGORY_ICON_COLORS[categoryId] || { bg: 'bg-zinc-600', hover: 'hover:bg-zinc-700' };
+}
+
+// Category configurations using centralized color system
 const categories = [
   {
     id: 'coffee',
     name: 'Coffee',
     description: 'Explore coffee beans, roasts, and brewing methods',
     icon: <Coffee size={24} className="text-white" />,
-    color: 'bg-amber-500',
-    hoverColor: 'hover:bg-amber-600',
+  },
+  {
+    id: 'whisky',
+    name: 'Whisky',
+    description: 'Nose, palate, and finish — capture what you taste.',
+    icon: <GlassWater size={24} className="text-white" />,
+  },
+  {
+    id: 'mezcal',
+    name: 'Mezcal',
+    description: 'Agave, smoke, minerality — track your profile.',
+    icon: <Sprout size={24} className="text-white" />,
   },
   {
     id: 'tea',
     name: 'Tea',
     description: 'Discover tea varieties and flavor profiles',
     icon: <Coffee size={24} className="text-white" />,
-    color: 'bg-green-500',
-    hoverColor: 'hover:bg-green-600',
   },
   {
     id: 'wine',
     name: 'Wine',
     description: 'Taste wines and learn about terroir',
     icon: <Wine size={24} className="text-white" />,
-    color: 'bg-purple-500',
-    hoverColor: 'hover:bg-purple-600',
   },
   {
     id: 'spirits',
-    name: 'Spirits',
-    description: 'Explore whiskey, rum, gin, and more',
+    name: 'Spirits (Other)',
+    description: 'Rum, gin, tequila, and more',
     icon: <Wine size={24} className="text-white" />,
-    color: 'bg-orange-500',
-    hoverColor: 'hover:bg-orange-600',
   },
   {
     id: 'beer',
     name: 'Beer',
     description: 'Sample craft beers and brewing styles',
     icon: <Beer size={24} className="text-white" />,
-    color: 'bg-yellow-500',
-    hoverColor: 'hover:bg-yellow-600',
   },
   {
     id: 'chocolate',
     name: 'Chocolate',
     description: 'Taste chocolate and cacao varieties',
     icon: <Utensils size={24} className="text-white" />,
-    color: 'bg-amber-800',
-    hoverColor: 'hover:bg-amber-900',
   },
 ];
 
@@ -91,7 +109,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
             <div className="text-center mb-sm">
               <div className={`
                 inline-flex items-center justify-center w-16 h-16 rounded-full
-                ${category.color} ${category.hoverColor}
+                ${getIconColors(category.id).bg} ${getIconColors(category.id).hover}
                 text-white text-h2 font-heading font-bold
                 transition-colors duration-200
                 group-hover:scale-110 transform
