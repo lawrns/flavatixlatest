@@ -1,10 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Beer, Coffee, GlassWater, Sprout, Wine, Leaf, Martini, Candy } from 'lucide-react';
+import Combobox from '../ui/Combobox';
 
 interface CategorySelectorProps {
   onCategorySelect: (category: string) => void;
   isLoading: boolean;
 }
+
+// Standardized categories list - used across the app
+export const STANDARD_CATEGORIES = [
+  'Coffee',
+  'Tea',
+  'Red Wine',
+  'White Wine',
+  'Wine (Other)',
+  'Beer',
+  'Whiskey',
+  'Mezcal',
+  'Tequila',
+  'Rum',
+  'Gin',
+  'Vodka',
+  'Brandy',
+  'Spirits (Other)',
+  'Chocolate',
+  'Cheese',
+  'Olive Oil',
+  'Honey',
+  'Hot Sauce',
+  'Perfume',
+  'Cigars',
+  'Other',
+];
 
 // Icon color classes derived from CATEGORY_COLORS (using -600 variants for solid backgrounds)
 const CATEGORY_ICON_COLORS: Record<string, { bg: string; hover: string }> = {
@@ -79,6 +106,27 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
   onCategorySelect,
   isLoading,
 }) => {
+  const [customCategory, setCustomCategory] = useState('');
+
+  const handleComboboxChange = (value: string) => {
+    setCustomCategory(value);
+  };
+
+  const handleComboboxSelect = () => {
+    if (customCategory.trim()) {
+      // Normalize the category ID (lowercase, replace spaces with underscores)
+      const categoryId = customCategory.toLowerCase().replace(/\s+/g, '_').replace(/[()]/g, '');
+      onCategorySelect(categoryId);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && customCategory.trim()) {
+      e.preventDefault();
+      handleComboboxSelect();
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-lg">
@@ -86,8 +134,41 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
           Choose Your Tasting Category
         </h2>
         <p className="text-text-secondary">
-          Select a category to start your quick tasting session
+          Select from the list, type your own, or choose a quick option below
         </p>
+      </div>
+
+      {/* Category Search/Input with Combobox */}
+      <div className="mb-6">
+        <div className="flex gap-2">
+          <div className="flex-1" onKeyDown={handleKeyDown}>
+            <Combobox
+              options={STANDARD_CATEGORIES}
+              value={customCategory}
+              onChange={handleComboboxChange}
+              placeholder="Search categories or type your own..."
+              allowCustom={true}
+              label="Category selection"
+            />
+          </div>
+          <button
+            onClick={handleComboboxSelect}
+            disabled={!customCategory.trim() || isLoading}
+            className="px-6 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+          >
+            Start
+          </button>
+        </div>
+        <p className="text-xs text-text-secondary mt-2 text-center">
+          Type any category name or select from the dropdown
+        </p>
+      </div>
+
+      {/* Divider */}
+      <div className="flex items-center gap-4 mb-6">
+        <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-700"></div>
+        <span className="text-sm text-text-secondary">or choose a popular category</span>
+        <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-700"></div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

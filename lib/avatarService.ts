@@ -225,7 +225,8 @@ export class AvatarService {
       // Extract filename from URL
       const urlParts = avatarUrl.split('/');
       const fileName = urlParts[urlParts.length - 1];
-      const filePath = `avatars/${fileName}`;
+      // Path is relative to bucket, format: {userId}/{filename}
+      const filePath = `${userId}/${fileName}`;
 
       const { error } = await this.getSupabase().storage
         .from(this.BUCKET_NAME)

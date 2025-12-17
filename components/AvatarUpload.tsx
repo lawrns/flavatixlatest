@@ -141,7 +141,7 @@ export default function AvatarUpload({
     setError(null);
 
     try {
-      const result = await AvatarService.deleteAvatar(userId, currentAvatarUrl);
+      const result = await AvatarService.deleteAvatar(currentAvatarUrl, userId);
       if (result) {
         setPreviewUrl(null);
         setSuccess('Avatar removed successfully!');
