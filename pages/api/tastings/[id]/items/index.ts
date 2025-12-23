@@ -65,7 +65,7 @@ async function getItemsHandler(
       return sendServerError(res, itemsError, 'Failed to fetch items');
     }
 
-    logger.query('quick_tasting_items', 'select', tastingId, userId);
+    logger.debug('API', 'Fetching tasting items', { tastingId, userId });
     return sendSuccess(res, items || [], 'Items retrieved successfully');
   } catch (error) {
     return sendServerError(res, error, 'Failed to retrieve items');
@@ -148,7 +148,7 @@ async function createItemHandler(
       item_order: nextOrder,
     };
 
-    logger.mutation('quick_tasting_items', 'create', undefined, userId, { tastingId });
+    logger.debug('API', 'Creating tasting item', { tastingId, userId });
 
     const { data: createdItem, error: createError } = await supabase
       .from('quick_tasting_items')

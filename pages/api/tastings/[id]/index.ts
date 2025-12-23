@@ -68,11 +68,11 @@ async function getTastingHandler(
       .single();
 
     if (tastingError || !tasting) {
-      logger.query('quick_tastings', 'select', id, userId, { error: tastingError });
+      logger.debug('API', 'Error fetching tasting', { tastingId: id, userId, error: tastingError });
       return sendNotFound(res, 'Tasting');
     }
 
-    logger.query('quick_tastings', 'select', id, userId);
+    logger.debug('API', 'Tasting fetched', { tastingId: id, userId });
     return sendSuccess(res, tasting, 'Tasting retrieved successfully');
   } catch (error) {
     return sendServerError(res, error, 'Failed to retrieve tasting');
@@ -130,7 +130,7 @@ async function updateTastingHandler(
     }
 
     // Update the tasting
-    logger.mutation('quick_tastings', 'update', id, userId, updates);
+    logger.debug('API', 'Updating tasting', { tastingId: id, userId, updates });
 
     const { data: updatedTasting, error: updateError } = await supabase
       .from('quick_tastings')
@@ -180,7 +180,7 @@ async function deleteTastingHandler(
     }
 
     // Delete tasting (items will be cascade deleted due to foreign key)
-    logger.mutation('quick_tastings', 'delete', id, userId);
+    logger.debug('API', 'Deleting tasting', { tastingId: id, userId });
 
     const { error: deleteError } = await supabase
       .from('quick_tastings')

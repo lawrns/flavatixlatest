@@ -103,7 +103,7 @@ async function getParticipantsHandler(
       return sendServerError(res, participantsError, 'Failed to fetch participants');
     }
 
-    logger.query('tasting_participants', 'select', tastingId, userId);
+    logger.debug('API', 'Fetching participants', { tastingId, userId });
     return sendSuccess(res, participants || [], 'Participants retrieved successfully');
   } catch (error) {
     return sendServerError(res, error, 'Failed to retrieve participants');
@@ -167,7 +167,7 @@ async function addParticipantHandler(
       can_add_items: participantData.can_add_items || false,
     };
 
-    logger.mutation('tasting_participants', 'create', undefined, userId, { tastingId });
+    logger.debug('API', 'Adding participant', { tastingId, userId });
 
     const { data: createdParticipant, error: createError } = await supabase
       .from('tasting_participants')
@@ -243,7 +243,7 @@ async function removeParticipantHandler(
     }
 
     // Delete participant
-    logger.mutation('tasting_participants', 'delete', participant_id, userId);
+    logger.debug('API', 'Removing participant', { participantId: participant_id, tastingId, userId });
 
     const { error: deleteError } = await supabase
       .from('tasting_participants')

@@ -66,11 +66,11 @@ async function getItemHandler(
       .single();
 
     if (itemError || !item) {
-      logger.query('quick_tasting_items', 'select', itemId, userId, { error: itemError });
+      logger.debug('API', 'Error fetching item', { itemId, userId, error: itemError });
       return sendNotFound(res, 'Item');
     }
 
-    logger.query('quick_tasting_items', 'select', itemId, userId);
+    logger.debug('API', 'Item fetched', { itemId, userId });
     return sendSuccess(res, item, 'Item retrieved successfully');
   } catch (error) {
     return sendServerError(res, error, 'Failed to retrieve item');
@@ -149,7 +149,7 @@ async function updateItemHandler(
     });
 
     // Update the item
-    logger.mutation('quick_tasting_items', 'update', itemId, userId, updates);
+    logger.debug('API', 'Updating item', { itemId, userId, updates });
 
     const { data: updatedItem, error: updateError } = await supabase
       .from('quick_tasting_items')
@@ -215,7 +215,7 @@ async function deleteItemHandler(
     }
 
     // Delete the item
-    logger.mutation('quick_tasting_items', 'delete', itemId, userId);
+    logger.debug('API', 'Deleting item', { itemId, userId });
 
     const { error: deleteError } = await supabase
       .from('quick_tasting_items')
