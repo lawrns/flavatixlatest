@@ -367,7 +367,8 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
         role="dialog"
         aria-modal="true"
         aria-labelledby="comments-modal-title"
-        className="bg-white dark:bg-zinc-800 w-full sm:max-w-2xl sm:rounded-t-2xl rounded-t-2xl max-h-[90vh] flex flex-col"
+        className="bg-white dark:bg-zinc-800 w-full sm:max-w-2xl sm:rounded-t-2xl rounded-t-2xl max-h-[90vh] flex flex-col pb-safe"
+        style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-700">
@@ -398,7 +399,7 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
         </div>
 
         {/* Input */}
-        <div className="border-t border-zinc-200 dark:border-zinc-700 p-4">
+        <div className="border-t border-zinc-200 dark:border-zinc-700 p-4 pb-safe" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
           {replyingTo && (
             <div className="flex items-center gap-2 mb-2 text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">
               <span>Replying to comment</span>
