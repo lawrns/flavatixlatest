@@ -1,7 +1,15 @@
 const { Client } = require('pg');
 
+// Use environment variable for database connection
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  console.error('ERROR: DATABASE_URL environment variable is not set');
+  console.error('Please set DATABASE_URL in your .env.local file');
+  process.exit(1);
+}
+
 const client = new Client({
-  connectionString: 'postgresql://postgres:lBCpicVSvM4M5iRm@db.kobuclkvlacdwvxmakvq.supabase.co:5432/postgres'
+  connectionString
 });
 
 async function checkForeignKeyIndexes() {

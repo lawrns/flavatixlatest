@@ -44,6 +44,7 @@ next-env.d.ts
 *.swp
 *.swo
 *~
+.claude/
 
 # OS
 .DS_Store
