@@ -8,6 +8,7 @@ import { SocialPostCard, TastingPost, TastingItem, getCategoryColor, formatTimeA
 import { SocialFeedFilters } from '../components/social/SocialFeedFilters';
 import notificationService from '@/lib/notificationService';
 import BottomNavigation from '@/components/navigation/BottomNavigation';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
 
 export default function SocialPage() {
   const { user, loading } = useAuth();
@@ -678,7 +679,8 @@ export default function SocialPage() {
           initialCommentCount={posts.find(p => p.id === activePostId)?.stats.comments || 0}
         />
       )}
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }
 
