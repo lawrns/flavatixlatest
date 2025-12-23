@@ -79,11 +79,12 @@ const Modal: React.FC<ModalProps> = ({
         aria-labelledby={title ? titleId : undefined}
         aria-describedby={ariaDescription ? descriptionId : undefined}
         className={cn(
-          'bg-white dark:bg-zinc-800 rounded-[22px] shadow-xl w-full max-h-[90vh] overflow-hidden',
+          'bg-white dark:bg-zinc-800 rounded-[22px] shadow-xl w-full max-h-[90vh] overflow-hidden pb-safe',
           'focus:outline-none',
           sizeClasses[size],
           className
         )}
+        style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
         tabIndex={-1}
       >
         {/* Screen reader only description */}

@@ -62,9 +62,10 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
           'border-t border-gemini-border dark:border-zinc-700/50',
           'shadow-[0_-20px_60px_rgba(0,0,0,0.25)]',
           'max-h-[85vh] overflow-hidden',
-          'focus:outline-none',
+          'focus:outline-none pb-safe',
           className
         )}
+        style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
       >
         {ariaDescription ? <p id={descriptionId} className="sr-only">{ariaDescription}</p> : null}
 
