@@ -230,19 +230,25 @@ async function deleteItemHandler(
       return sendServerError(res, deleteError, 'Failed to delete item');
     }
 
-    // Update tasting item count
-    await supabase.rpc('increment', {
-      table_name: 'quick_tastings',
-      column_name: 'total_items',
-      id: tastingId,
-      amount: -1,
-    }).catch(() => {
-      // If RPC doesn't exist, manually update
-      supabase
-        .from('quick_tastings')
-        .update({ total_items: supabase.raw('GREATEST(total_items - 1, 0)') })
-        .eq('id', tastingId);
-    });
+    // Update tasting item count (try RPC, fallback to manual update)
+    try {
+      const { error: rpcError } = await supabase.rpc('increment', {
+        table_name: 'quick_tastings',
+        column_name: 'total_items',
+        id: tastingId,
+        amount: -1,
+      });
+      
+      if (rpcError) {
+        // If RPC doesn't exist or fails, manually update
+        await supabase
+          .from('quick_tastings')
+          .update({ total_items: supabase.raw('GREATEST(total_items - 1, 0)') })
+          .eq('id', tastingId);
+      }
+    } catch {
+      // Silently fail - item count update is not critical
+    }
 
     return sendSuccess(res, { id: itemId }, 'Item deleted successfully');
   } catch (error) {
