@@ -75,9 +75,9 @@ class ApiClient {
    * Get authentication headers
    */
   private async getHeaders(options?: RequestOptions): Promise<HeadersInit> {
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      ...options?.headers,
+      ...(options?.headers as Record<string, string> || {}),
     };
 
     // Add auth token unless skipAuth is true
@@ -88,7 +88,7 @@ class ApiClient {
       }
     }
 
-    return headers;
+    return headers as HeadersInit;
   }
 
   /**
