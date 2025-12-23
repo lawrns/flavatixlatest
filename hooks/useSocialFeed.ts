@@ -2,12 +2,14 @@
  * useSocialFeed Hook
  * 
  * Manages social feed data fetching, filtering, and interactions.
+ * Uses API client for social interactions (likes, follows) with optimistic updates.
  */
 
 import { useState, useEffect, useCallback } from 'react';
 import { getSupabaseClient } from '../lib/supabase';
 import { toast } from '../lib/toast';
 import { logger } from '../lib/logger';
+import { apiClient, ApiClientError } from '../lib/api/client';
 
 // ============================================================================
 // TYPES
@@ -300,77 +302,80 @@ export function useSocialFeed({
       return;
     }
 
+    const isCurrentlyLiked = likedPosts.has(postId);
+    const previousLikedPosts = new Set(likedPosts);
+    const previousPosts = [...posts];
+
+    // Optimistic update
+    if (isCurrentlyLiked) {
+      setLikedPosts(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(postId);
+        return newSet;
+      });
+      setPosts(prev => prev.map(post =>
+        post.id === postId
+          ? { ...post, stats: { ...post.stats, likes: Math.max(0, post.stats.likes - 1) }, isLiked: false }
+          : post
+      ));
+    } else {
+      setLikedPosts(prev => {
+        const newSet = new Set(prev);
+        newSet.add(postId);
+        return newSet;
+      });
+      setPosts(prev => prev.map(post =>
+        post.id === postId
+          ? { ...post, stats: { ...post.stats, likes: post.stats.likes + 1 }, isLiked: true }
+          : post
+      ));
+    }
+
     try {
-      const supabase = getSupabaseClient() as any;
-      const isCurrentlyLiked = likedPosts.has(postId);
+      // Use API client for like toggle
+      const result = await apiClient.post<{ liked: boolean; like_count: number }>(
+        '/api/social/likes',
+        { tasting_id: postId }
+      );
 
-      if (isCurrentlyLiked) {
-        try {
-          await supabase
-            .from('tasting_likes')
-            .delete()
-            .eq('user_id', userId)
-            .eq('tasting_id', postId);
-        } catch (dbError) {
-          logger.debug('SocialFeed', 'Likes table not available');
-        }
+      // Update with actual count from server
+      setPosts(prev => prev.map(post =>
+        post.id === postId
+          ? { ...post, stats: { ...post.stats, likes: result.like_count }, isLiked: result.liked }
+          : post
+      ));
 
-        setLikedPosts(prev => {
-          const newSet = new Set(prev);
-          newSet.delete(postId);
-          return newSet;
-        });
-
-        setPosts(prev => prev.map(post =>
-          post.id === postId
-            ? { ...post, stats: { ...post.stats, likes: Math.max(0, post.stats.likes - 1) }, isLiked: false }
-            : post
-        ));
-      } else {
-        // Optimistic update first
+      if (result.liked) {
         setLikedPosts(prev => {
           const newSet = new Set(prev);
           newSet.add(postId);
           return newSet;
         });
+      } else {
+        setLikedPosts(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(postId);
+          return newSet;
+        });
+      }
 
-        setPosts(prev => prev.map(post =>
-          post.id === postId
-            ? { ...post, stats: { ...post.stats, likes: post.stats.likes + 1 }, isLiked: true }
-            : post
-        ));
-
-        // Then perform async operation
-        try {
-          await supabase
-            .from('tasting_likes')
-            .insert({ user_id: userId, tasting_id: postId });
-          
-          // Success toast only after operation completes
-          toast.success('Post liked!');
-        } catch (dbError) {
-          // Rollback optimistic update on error
-          setLikedPosts(prev => {
-            const newSet = new Set(prev);
-            newSet.delete(postId);
-            return newSet;
-          });
-
-          setPosts(prev => prev.map(post =>
-            post.id === postId
-              ? { ...post, stats: { ...post.stats, likes: Math.max(0, post.stats.likes - 1) }, isLiked: false }
-              : post
-          ));
-
-          logger.debug('SocialFeed', 'Likes table not available');
-          toast.error('Failed to like post');
-        }
+      // Success toast only after operation completes
+      if (!isCurrentlyLiked) {
+        toast.success('Post liked!');
       }
     } catch (error) {
-      logger.error('SocialFeed', 'Error toggling like', error);
+      // Rollback optimistic update on error
+      setLikedPosts(previousLikedPosts);
+      setPosts(previousPosts);
+
+      if (error instanceof ApiClientError) {
+        logger.error('SocialFeed', 'API error toggling like', error, { code: error.code, status: error.status });
+      } else {
+        logger.error('SocialFeed', 'Error toggling like', error);
+      }
       toast.error('Failed to update like');
     }
-  }, [userId, likedPosts]);
+  }, [userId, likedPosts, posts]);
 
   const handleFollow = useCallback(async (targetUserId: string, targetUserName: string) => {
     if (!userId) {
@@ -383,59 +388,50 @@ export function useSocialFeed({
       return;
     }
 
+    const post = posts.find(p => p.user_id === targetUserId);
+    const isCurrentlyFollowing = post?.isFollowed || false;
+    const previousPosts = [...posts];
+
+    // Optimistic update
+    setPosts(prev => prev.map(p =>
+      p.user_id === targetUserId
+        ? { ...p, isFollowed: !isCurrentlyFollowing }
+        : p
+    ));
+
     try {
-      const supabase = getSupabaseClient() as any;
-      const post = posts.find(p => p.user_id === targetUserId);
-      const isCurrentlyFollowing = post?.isFollowed || false;
+      // Use API client for follow toggle
+      const result = await apiClient.post<{ following: boolean; follower_count: number }>(
+        '/api/social/follows',
+        { following_id: targetUserId }
+      );
 
-      if (isCurrentlyFollowing) {
-        try {
-          await supabase
-            .from('user_follows')
-            .delete()
-            .eq('follower_id', userId)
-            .eq('following_id', targetUserId);
-        } catch (dbError) {
-          logger.debug('SocialFeed', 'Follows table not available');
-        }
+      // Update with actual state from server
+      setPosts(prev => prev.map(p =>
+        p.user_id === targetUserId
+          ? { ...p, isFollowed: result.following }
+          : p
+      ));
 
-        setPosts(prev => prev.map(post =>
-          post.user_id === targetUserId
-            ? { ...post, isFollowed: false }
-            : post
-        ));
-
-        toast.success(`Unfollowed ${targetUserName}`);
+      // Success toast only after operation completes
+      if (result.following) {
+        toast.success(`Following ${targetUserName}`);
       } else {
-        // Optimistic update first
-        setPosts(prev => prev.map(post =>
-          post.user_id === targetUserId
-            ? { ...post, isFollowed: true }
-            : post
-        ));
-
-        // Then perform async operation
-        try {
-          await supabase
-            .from('user_follows')
-            .insert({ follower_id: userId, following_id: targetUserId });
-          
-          // Success toast only after operation completes
-          toast.success(`Following ${targetUserName}`);
-        } catch (dbError) {
-          // Rollback optimistic update on error
-          setPosts(prev => prev.map(post =>
-            post.user_id === targetUserId
-              ? { ...post, isFollowed: false }
-              : post
-          ));
-
-          logger.debug('SocialFeed', 'Follows table not available');
-          toast.error('Failed to follow user');
-        }
+        toast.success(`Unfollowed ${targetUserName}`);
       }
     } catch (error) {
-      logger.error('SocialFeed', 'Error toggling follow', error);
+      // Rollback optimistic update on error
+      setPosts(previousPosts);
+
+      if (error instanceof ApiClientError) {
+        logger.error('SocialFeed', 'API error toggling follow', error, { code: error.code, status: error.status });
+        if (error.code === 'FORBIDDEN') {
+          toast.error('You cannot follow yourself');
+          return;
+        }
+      } else {
+        logger.error('SocialFeed', 'Error toggling follow', error);
+      }
       toast.error('Failed to update follow');
     }
   }, [userId, posts]);

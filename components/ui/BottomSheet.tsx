@@ -83,7 +83,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="h-10 w-10 rounded-full hover:bg-gemini-card dark:hover:bg-zinc-800 transition-colors flex items-center justify-center"
+              className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full hover:bg-gemini-card dark:hover:bg-zinc-800 transition-colors flex items-center justify-center"
               aria-label="Close"
             >
               <span className="text-lg leading-none text-gemini-text-gray dark:text-zinc-300">×</span>

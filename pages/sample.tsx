@@ -3,7 +3,7 @@ import React from 'react';
 export default function SamplePage() {
   return (
     <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
-      <div className="flex h-screen flex-col">
+      <div className="flex min-h-screen flex-col">
         {/* Header */}
         <header className="flex items-center border-b border-zinc-200 dark:border-zinc-700 p-4">
           <button className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100:bg-zinc-800">

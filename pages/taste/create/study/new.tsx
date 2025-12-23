@@ -621,11 +621,20 @@ const NewStudyTastingPage: React.FC = () => {
 
       {/* Preview Modal */}
       {showPreview && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-md">
-          <div className="bg-white dark:bg-zinc-800 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+        <div 
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-md"
+          onClick={(e) => e.target === e.currentTarget && setShowPreview(false)}
+          onKeyDown={(e) => e.key === 'Escape' && setShowPreview(false)}
+        >
+          <div 
+            className="bg-white dark:bg-zinc-800 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="preview-modal-title"
+          >
             <div className="sticky top-0 bg-white dark:bg-zinc-800 border-b border-border-default p-md flex justify-between items-center">
-              <h3 className="text-h3 font-heading font-semibold">Preview</h3>
-              <div className="flex gap-sm">
+              <h3 id="preview-modal-title" className="text-h3 font-heading font-semibold">Preview</h3>
+              <div className="flex gap-sm items-center">
                 <button
                   onClick={handleSaveTemplate}
                   className="btn-secondary text-small"
@@ -634,9 +643,10 @@ const NewStudyTastingPage: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setShowPreview(false)}
-                  className="text-text-secondary hover:text-text-primary"
+                  className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-text-secondary hover:text-text-primary hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+                  aria-label="Close preview"
                 >
-                  Close
+                  <X size={20} />
                 </button>
               </div>
             </div>

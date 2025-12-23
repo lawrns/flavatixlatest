@@ -99,7 +99,7 @@ export default function Dashboard() {
       'bg-white dark:bg-zinc-900',
       'text-gemini-text-dark dark:text-zinc-50'
     )}>
-      <div className="flex h-screen flex-col">
+      <div className="flex min-h-screen flex-col">
         {/* Gemini-style Header */}
         <header
           className={cn(

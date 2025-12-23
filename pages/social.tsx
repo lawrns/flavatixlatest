@@ -553,7 +553,7 @@ export default function SocialPage() {
   if (loading || loadingPosts) {
     return (
       <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
-        <div className="flex h-screen flex-col">
+        <div className="flex min-h-screen flex-col">
           <header className="border-b border-zinc-200 dark:border-zinc-700 bg-background-light p-4">
             <div className="flex items-center justify-between mb-4">
               <div className="w-10 h-10 bg-zinc-200 rounded-full animate-pulse" />
@@ -576,7 +576,7 @@ export default function SocialPage() {
   return (
     <ErrorBoundary>
       <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
-        <div className="flex h-screen flex-col">
+        <div className="flex min-h-screen flex-col">
         {/* Header */}
         <header className="border-b border-zinc-200 dark:border-zinc-700 bg-background-light sticky top-0 z-40">
           <div className="flex items-center justify-between p-4">
