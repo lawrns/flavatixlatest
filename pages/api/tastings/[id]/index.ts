@@ -68,7 +68,9 @@ async function getTastingHandler(
       .single();
 
     if (tastingError || !tasting) {
-      logger.debug('API', 'Error fetching tasting', { tastingId: id, userId, error: tastingError });
+      if (tastingError) {
+        logger.debug('API', 'Error fetching tasting', { tastingId: id, userId, error: tastingError });
+      }
       return sendNotFound(res, 'Tasting');
     }
 

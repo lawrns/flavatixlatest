@@ -66,7 +66,9 @@ async function getItemHandler(
       .single();
 
     if (itemError || !item) {
-      logger.debug('API', 'Error fetching item', { itemId, userId, error: itemError });
+      if (itemError) {
+        logger.debug('API', 'Error fetching item', { itemId, userId, error: itemError });
+      }
       return sendNotFound(res, 'Item');
     }
 
