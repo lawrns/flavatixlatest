@@ -57,6 +57,18 @@ export const API_ENDPOINTS = {
   // Admin
   ADMIN_AI_USAGE: '/api/admin/ai-usage-stats',
   ADMIN_EXTRACTION_STATS: '/api/admin/extraction-stats',
+  
+  // Social
+  SOCIAL_LIKES: '/api/social/likes',
+  SOCIAL_COMMENTS: '/api/social/comments',
+  SOCIAL_FOLLOWS: '/api/social/follows',
+  
+  // Tasting Items
+  TASTING_ITEMS: (tastingId: string) => `/api/tastings/${tastingId}/items`,
+  TASTING_ITEM: (tastingId: string, itemId: string) => `/api/tastings/${tastingId}/items/${itemId}`,
+  
+  // Participants
+  TASTING_PARTICIPANTS: (tastingId: string) => `/api/tastings/${tastingId}/participants`,
 } as const;
 
 // ============================================================================

@@ -14,6 +14,8 @@ import {
   createApiHandler,
   withAuth,
   withValidation,
+  withRateLimit,
+  RATE_LIMITS,
   sendSuccess,
   sendServerError,
   sendUnauthorized,
@@ -137,6 +139,6 @@ async function createTastingHandler(
 // 3. Authentication (withAuth)
 // 4. Input validation (withValidation)
 export default createApiHandler({
-  POST: withAuth(withValidation(createTastingSchema, createTastingHandler)),
+  POST: withRateLimit(RATE_LIMITS.API)(withAuth(withValidation(createTastingSchema, createTastingHandler))),
 });
 

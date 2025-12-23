@@ -164,6 +164,9 @@ export const tastingItemSchema = z.object({
 
 export const updateTastingItemSchema = tastingItemSchema.partial().omit({ tasting_id: true });
 
+// Schema for creating an item (tasting_id comes from URL)
+export const createTastingItemSchema = tastingItemSchema.omit({ tasting_id: true });
+
 // ============================================================================
 // PROFILE SCHEMAS
 // ============================================================================

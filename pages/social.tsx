@@ -295,7 +295,21 @@ export default function SocialPage() {
             : post
         ));
       } else {
-        // Like
+        // Like - optimistic update first
+        setLikedPosts(prev => {
+          const newSet = new Set(prev);
+          newSet.add(postId);
+          return newSet;
+        });
+
+        // Update post stats optimistically
+        setPosts(prev => prev.map(post =>
+          post.id === postId
+            ? { ...post, stats: { ...post.stats, likes: post.stats.likes + 1 }, isLiked: true }
+            : post
+        ));
+
+        // Then perform async operation
         try {
           const { error } = await (supabase as any)
             .from('tasting_likes')
@@ -305,24 +319,26 @@ export default function SocialPage() {
             });
 
           if (error) throw error;
+          
+          // Success toast only after operation completes
+          toast.success('Post liked!');
         } catch (dbError) {
+          // Rollback optimistic update on error
+          setLikedPosts(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(postId);
+            return newSet;
+          });
+
+          setPosts(prev => prev.map(post =>
+            post.id === postId
+              ? { ...post, stats: { ...post.stats, likes: Math.max(0, post.stats.likes - 1) }, isLiked: false }
+              : post
+          ));
+
           console.log('Likes table not available, using local state only');
+          toast.error('Failed to like post');
         }
-
-        setLikedPosts(prev => {
-          const newSet = new Set(prev);
-          newSet.add(postId);
-          return newSet;
-        });
-
-        // Update post stats
-        setPosts(prev => prev.map(post =>
-          post.id === postId
-            ? { ...post, stats: { ...post.stats, likes: post.stats.likes + 1 }, isLiked: true }
-            : post
-        ));
-
-        toast.success('Post liked!');
       }
     } catch (error) {
       console.error('Error toggling like:', error);
@@ -369,7 +385,14 @@ export default function SocialPage() {
 
         toast.success(`Unfollowed ${targetUserName}`);
       } else {
-        // Follow
+        // Follow - optimistic update first
+        setPosts(prev => prev.map(post =>
+          post.user_id === targetUserId
+            ? { ...post, isFollowed: true }
+            : post
+        ));
+
+        // Then perform async operation
         try {
           const { error } = await (supabase as any)
             .from('user_follows')
@@ -389,18 +412,20 @@ export default function SocialPage() {
 
           const followerName = currentUser?.full_name || 'Someone';
           await notificationService.notifyFollow(user.id, targetUserId, followerName);
+          
+          // Success toast only after operation completes
+          toast.success(`Following ${targetUserName}!`);
         } catch (dbError) {
+          // Rollback optimistic update on error
+          setPosts(prev => prev.map(post =>
+            post.user_id === targetUserId
+              ? { ...post, isFollowed: false }
+              : post
+          ));
+
           console.log('Follows table not available, using local state only');
+          toast.error('Failed to follow user');
         }
-
-        // Update post
-        setPosts(prev => prev.map(post =>
-          post.user_id === targetUserId
-            ? { ...post, isFollowed: true }
-            : post
-        ));
-
-        toast.success(`Following ${targetUserName}!`);
       }
     } catch (error) {
       console.error('Error toggling follow:', error);
@@ -548,8 +573,9 @@ export default function SocialPage() {
   const categories = ['all', 'coffee', 'wine', 'beer', 'spirits', 'tea', 'chocolate'];
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
-      <div className="flex h-screen flex-col">
+    <ErrorBoundary>
+      <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
+        <div className="flex h-screen flex-col">
         {/* Header */}
         <header className="border-b border-zinc-200 dark:border-zinc-700 bg-background-light sticky top-0 z-40">
           <div className="flex items-center justify-between p-4">

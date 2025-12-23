@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { getSupabaseClient } from '@/lib/supabase';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import QuickTastingSession from '@/components/quick-tasting/QuickTastingSession';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import { toast } from '@/lib/toast';
 import { ChevronLeft } from 'lucide-react';
 
@@ -212,11 +213,13 @@ const TastingSessionPage: React.FC = () => {
           </div>
 
           {/* Tasting Session */}
-          <QuickTastingSession
-            session={session}
-            userId={user!.id}
-            onSessionComplete={handleSessionComplete}
-          />
+          <ErrorBoundary>
+            <QuickTastingSession
+              session={session}
+              userId={user!.id}
+              onSessionComplete={handleSessionComplete}
+            />
+          </ErrorBoundary>
         </div>
       </main>
 

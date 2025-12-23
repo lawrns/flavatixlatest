@@ -781,17 +781,36 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         {/* Item Action Buttons */}
         {currentItem && (
           <div className="mt-8 flex justify-center gap-4">
-            <button
-              onClick={handleAddNextItem}
-              className="btn-secondary flex items-center gap-2"
-            >
-              Next Item
-            </button>
+            {/* Only show "Next Item" button if user has permission and not in competition mode */}
+            {userPermissions.canAddItems && session.mode !== 'competition' && (
+              <button
+                onClick={handleAddNextItem}
+                disabled={isLoading}
+                className="btn-secondary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                    Adding...
+                  </>
+                ) : (
+                  'Next Item'
+                )}
+              </button>
+            )}
             <button
               onClick={handleEndTasting}
-              className="btn-primary flex items-center gap-2"
+              disabled={isLoading}
+              className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              End Tasting
+              {isLoading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Completing...
+                </>
+              ) : (
+                'End Tasting'
+              )}
             </button>
           </div>
         )}

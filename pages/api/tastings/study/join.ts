@@ -4,6 +4,8 @@ import {
   createApiHandler,
   withOptionalAuth,
   withValidation,
+  withRateLimit,
+  RATE_LIMITS,
   sendError,
   sendSuccess,
   type ApiContext,

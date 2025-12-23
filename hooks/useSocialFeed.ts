@@ -327,14 +327,7 @@ export function useSocialFeed({
             : post
         ));
       } else {
-        try {
-          await supabase
-            .from('tasting_likes')
-            .insert({ user_id: userId, tasting_id: postId });
-        } catch (dbError) {
-          logger.debug('SocialFeed', 'Likes table not available');
-        }
-
+        // Optimistic update first
         setLikedPosts(prev => {
           const newSet = new Set(prev);
           newSet.add(postId);
@@ -347,7 +340,31 @@ export function useSocialFeed({
             : post
         ));
 
-        toast.success('Post liked!');
+        // Then perform async operation
+        try {
+          await supabase
+            .from('tasting_likes')
+            .insert({ user_id: userId, tasting_id: postId });
+          
+          // Success toast only after operation completes
+          toast.success('Post liked!');
+        } catch (dbError) {
+          // Rollback optimistic update on error
+          setLikedPosts(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(postId);
+            return newSet;
+          });
+
+          setPosts(prev => prev.map(post =>
+            post.id === postId
+              ? { ...post, stats: { ...post.stats, likes: Math.max(0, post.stats.likes - 1) }, isLiked: false }
+              : post
+          ));
+
+          logger.debug('SocialFeed', 'Likes table not available');
+          toast.error('Failed to like post');
+        }
       }
     } catch (error) {
       logger.error('SocialFeed', 'Error toggling like', error);
@@ -390,21 +407,32 @@ export function useSocialFeed({
 
         toast.success(`Unfollowed ${targetUserName}`);
       } else {
-        try {
-          await supabase
-            .from('user_follows')
-            .insert({ follower_id: userId, following_id: targetUserId });
-        } catch (dbError) {
-          logger.debug('SocialFeed', 'Follows table not available');
-        }
-
+        // Optimistic update first
         setPosts(prev => prev.map(post =>
           post.user_id === targetUserId
             ? { ...post, isFollowed: true }
             : post
         ));
 
-        toast.success(`Following ${targetUserName}`);
+        // Then perform async operation
+        try {
+          await supabase
+            .from('user_follows')
+            .insert({ follower_id: userId, following_id: targetUserId });
+          
+          // Success toast only after operation completes
+          toast.success(`Following ${targetUserName}`);
+        } catch (dbError) {
+          // Rollback optimistic update on error
+          setPosts(prev => prev.map(post =>
+            post.user_id === targetUserId
+              ? { ...post, isFollowed: false }
+              : post
+          ));
+
+          logger.debug('SocialFeed', 'Follows table not available');
+          toast.error('Failed to follow user');
+        }
       }
     } catch (error) {
       logger.error('SocialFeed', 'Error toggling follow', error);

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { CompetitionSession } from '@/components/competition/CompetitionSession';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
 
 const CompetitionPage: React.FC = () => {
   const router = useRouter();
@@ -29,7 +30,11 @@ const CompetitionPage: React.FC = () => {
     return null;
   }
 
-  return <CompetitionSession sessionId={id} />;
+  return (
+    <ErrorBoundary>
+      <CompetitionSession sessionId={id} />
+    </ErrorBoundary>
+  );
 };
 
 export default CompetitionPage;
