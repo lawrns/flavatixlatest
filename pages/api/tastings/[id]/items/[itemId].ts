@@ -240,11 +240,20 @@ async function deleteItemHandler(
       });
       
       if (rpcError) {
-        // If RPC doesn't exist or fails, manually update
-        await supabase
+        // If RPC doesn't exist or fails, fetch current count and decrement
+        const { data: currentTasting } = await supabase
           .from('quick_tastings')
-          .update({ total_items: supabase.raw('GREATEST(total_items - 1, 0)') })
-          .eq('id', tastingId);
+          .select('total_items')
+          .eq('id', tastingId)
+          .single();
+        
+        if (currentTasting) {
+          const newCount = Math.max((currentTasting.total_items || 0) - 1, 0);
+          await supabase
+            .from('quick_tastings')
+            .update({ total_items: newCount })
+            .eq('id', tastingId);
+        }
       }
     } catch {
       // Silently fail - item count update is not critical
