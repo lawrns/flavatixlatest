@@ -65,7 +65,7 @@ class ApiClient {
         const { data: { session } } = await supabase.auth.getSession();
         return session?.access_token || null;
       } catch (error) {
-        logger.debug('API', 'Failed to get auth token', error);
+        // Silently fail - auth token not available
         return null;
       }
     };
