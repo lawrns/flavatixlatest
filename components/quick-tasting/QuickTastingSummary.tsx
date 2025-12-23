@@ -142,17 +142,17 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-4 tablet:space-y-8 px-sm tablet:px-0">
       {/* Session Header */}
       <div className="card p-md">
-        <div className="flex items-center justify-between mb-sm">
-          <div className="flex items-center space-x-sm">
-            <div className="flex items-center justify-center w-16 h-16">{getCategoryIcon(session.category)}</div>
-            <div>
-              <h2 className="text-h2 font-heading font-bold text-text-primary">
+        <div className="flex flex-col tablet:flex-row tablet:items-center tablet:justify-between gap-md mb-sm">
+          <div className="flex items-center space-x-sm min-w-0 flex-1">
+            <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 tablet:w-16 tablet:h-16">{getCategoryIcon(session.category)}</div>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-h3 tablet:text-h2 font-heading font-bold text-text-primary truncate">
                 {session.session_name}
               </h2>
-              <p className="text-text-secondary">
+              <p className="text-text-secondary text-small tablet:text-base">
                 {session.category.charAt(0).toUpperCase() + session.category.slice(1)} Tasting Session
               </p>
               <p className="text-small font-body text-text-secondary">
@@ -162,7 +162,7 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
           </div>
           <button
             onClick={onStartNewSession}
-            className="btn-primary"
+            className="btn-primary w-full tablet:w-auto flex-shrink-0"
           >
             Start New Session
           </button>
@@ -178,38 +178,49 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
       </div>
 
       {/* Statistics */}
-      <div className="grid grid-cols-1 tablet:grid-cols-3 gap-md">
-        <div className="card p-md text-center">
-          <div className="text-h1 font-heading font-bold text-primary mb-xs">{items.length}</div>
-          <div className="text-text-secondary">Total Items</div>
-        </div>
-        <div className="card p-md text-center">
-          <div className="text-h1 font-heading font-bold text-success text-primary mb-xs">{completedItems.length}</div>
-          <div className="text-text-secondary">Items Scored</div>
-        </div>
-        <div className="card p-md text-center">
-          <div className="text-h1 font-heading font-bold text-warning text-primary mb-xs">
-            {averageScore > 0 ? `${averageScore}/100` : 'N/A'}
+      <div className="grid grid-cols-1 tablet:grid-cols-3 gap-sm tablet:gap-md">
+        <div className="card p-sm tablet:p-md text-center overflow-hidden">
+          <div className="text-3xl tablet:text-4xl desktop:text-h1 font-heading font-bold text-primary mb-xs break-words">
+            {items.length}
           </div>
-          <div className="text-text-secondary">Average Score</div>
+          <div className="text-text-secondary text-small tablet:text-base">Total Items</div>
+        </div>
+        <div className="card p-sm tablet:p-md text-center overflow-hidden">
+          <div className="text-3xl tablet:text-4xl desktop:text-h1 font-heading font-bold text-success mb-xs break-words">
+            {completedItems.length}
+          </div>
+          <div className="text-text-secondary text-small tablet:text-base">Items Scored</div>
+        </div>
+        <div className="card p-sm tablet:p-md text-center overflow-hidden">
+          <div className="text-3xl tablet:text-4xl desktop:text-h1 font-heading font-bold text-warning mb-xs break-words whitespace-nowrap">
+            {averageScore > 0 ? (
+              <span className="inline-block">
+                <span className="tabular-nums">{averageScore}</span>
+                <span className="text-xl tablet:text-2xl">/100</span>
+              </span>
+            ) : (
+              'N/A'
+            )}
+          </div>
+          <div className="text-text-secondary text-small tablet:text-base">Average Score</div>
         </div>
       </div>
 
       {/* Top Flavors */}
       {topFlavors.length > 0 && (
-        <div className="card p-md">
+        <div className="card p-sm tablet:p-md">
           <h3 className="text-h4 font-heading font-semibold text-text-primary mb-sm">Top Flavors</h3>
           <div className="space-y-sm">
             {topFlavors.map((flavor, index) => (
-              <div key={flavor.flavor} className="flex items-center justify-between">
-                <div className="flex items-center space-x-sm">
-                  <div className="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-small font-body font-bold">
+              <div key={flavor.flavor} className="flex items-center justify-between gap-sm min-w-0">
+                <div className="flex items-center space-x-sm min-w-0 flex-1">
+                  <div className="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-small font-body font-bold flex-shrink-0">
                     {index + 1}
                   </div>
-                  <span className="font-medium text-text-primary">{flavor.flavor}</span>
+                  <span className="font-medium text-text-primary truncate">{flavor.flavor}</span>
                 </div>
-                <div className="text-right">
-                  <div className="text-small font-body font-medium text-text-primary">
+                <div className="text-right flex-shrink-0">
+                  <div className="text-small font-body font-medium text-text-primary whitespace-nowrap">
                     {flavor.avgScore}/100 avg
                   </div>
                   <div className="text-caption font-body text-text-secondary">
@@ -223,7 +234,7 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
       )}
 
       {/* Items List */}
-      <div className="card p-md">
+      <div className="card p-sm tablet:p-md">
         <h3 className="text-h4 font-heading font-semibold text-text-primary mb-sm">Tasted Items</h3>
         <div className="space-y-sm">
           {items.map((item) => (
@@ -231,19 +242,19 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
               <div className="p-sm bg-background-app cursor-pointer hover:bg-background-surface transition-colors"
                 onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-sm">
-                    <h4 className="font-medium text-text-primary">{item.item_name}</h4>
+                <div className="flex items-center justify-between gap-sm min-w-0">
+                  <div className="flex items-center space-x-sm min-w-0 flex-1">
+                    <h4 className="font-medium text-text-primary truncate">{item.item_name}</h4>
                     {item.overall_score && (
-                      <div className="flex items-center space-x-xs">
+                      <div className="flex items-center space-x-xs flex-shrink-0">
                         <Star className="w-4 h-4 text-warning fill-current" />
-                        <span className="text-small font-body font-medium text-text-primary">
+                        <span className="text-small font-body font-medium text-text-primary whitespace-nowrap">
                           {item.overall_score}/100
                         </span>
                       </div>
                     )}
                   </div>
-                  <div className="flex items-center space-x-xs">
+                  <div className="flex items-center space-x-xs flex-shrink-0">
                     {item.photo_url && (
                       <span className="text-small font-body text-text-secondary">📸</span>
                     )}
