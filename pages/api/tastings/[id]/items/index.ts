@@ -161,19 +161,34 @@ async function createItemHandler(
       return sendServerError(res, createError, 'Failed to create item');
     }
 
-    // Update tasting item count
-    await supabase.rpc('increment', {
-      table_name: 'quick_tastings',
-      column_name: 'total_items',
-      id: tastingId,
-      amount: 1,
-    }).catch(() => {
-      // If RPC doesn't exist, manually update
-      supabase
-        .from('quick_tastings')
-        .update({ total_items: supabase.raw('total_items + 1') })
-        .eq('id', tastingId);
-    });
+    // Update tasting item count (try RPC, fallback to manual update)
+    try {
+      const { error: rpcError } = await supabase.rpc('increment', {
+        table_name: 'quick_tastings',
+        column_name: 'total_items',
+        id: tastingId,
+        amount: 1,
+      });
+      
+      if (rpcError) {
+        // If RPC doesn't exist or fails, fetch current count and increment
+        const { data: currentTasting } = await supabase
+          .from('quick_tastings')
+          .select('total_items')
+          .eq('id', tastingId)
+          .single();
+        
+        if (currentTasting) {
+          const newCount = (currentTasting.total_items || 0) + 1;
+          await supabase
+            .from('quick_tastings')
+            .update({ total_items: newCount })
+            .eq('id', tastingId);
+        }
+      }
+    } catch {
+      // Silently fail - item count update is not critical
+    }
 
     return sendSuccess(res, createdItem, 'Item created successfully', 201);
   } catch (error) {
