@@ -47,7 +47,7 @@ export const SocialFeedFilters: React.FC<SocialFeedFiltersProps> = ({
       </div>
 
       {/* Category Filters */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto bg-white dark:bg-zinc-900">
         <div className="flex gap-2 p-3 min-w-max">
           {categories.map((cat) => (
             <button
@@ -56,7 +56,7 @@ export const SocialFeedFilters: React.FC<SocialFeedFiltersProps> = ({
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors capitalize ${
                 categoryFilter === cat
                   ? 'bg-primary text-white'
-                  : 'bg-zinc-100 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200'
+                  : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700'
               }`}
             >
               {cat}

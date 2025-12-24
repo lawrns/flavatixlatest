@@ -131,7 +131,7 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
                 className={`px-4 py-1.5 text-sm font-medium rounded-full transition-colors ${
                   post.isFollowed
                     ? 'bg-primary text-white hover:bg-primary/90'
-                    : 'bg-zinc-100 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200'
+                    : 'bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-600'
                 }`}
               >
                 {post.isFollowed ? 'Following' : 'Follow'}
@@ -177,7 +177,7 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
           'grid grid-cols-2 gap-1'
         }`}>
           {post.photos.slice(0, 4).map((photo, idx) => (
-            <div key={idx} className="relative aspect-square bg-zinc-100">
+            <div key={idx} className="relative aspect-square bg-zinc-100 dark:bg-zinc-800">
               <img
                 src={photo}
                 alt={`Tasting photo ${idx + 1}`}
@@ -243,17 +243,17 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
       )}
 
       {/* Stats Bar */}
-      <div className="flex items-center gap-4 text-sm text-zinc-500 py-2 border-t border-zinc-100">
+      <div className="flex items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400 py-2 border-t border-zinc-100 dark:border-zinc-700">
         <span>{post.stats.likes} likes</span>
         <span>•</span>
         <span>{post.stats.comments} comments</span>
       </div>
 
       {/* Engagement Buttons */}
-      <div className="flex justify-around border-t border-zinc-100 pt-2">
+      <div className="flex justify-around border-t border-zinc-100 dark:border-zinc-700 pt-2">
         <button
           onClick={onLike}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-zinc-50 transition-colors ${
+          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors ${
             post.isLiked ? 'text-red-500' : 'text-zinc-600 dark:text-zinc-300'
           }`}
         >
@@ -264,14 +264,14 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
         </button>
         <button
           onClick={onComment}
-          className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-zinc-50 transition-colors text-zinc-600 dark:text-zinc-300"
+          className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors text-zinc-600 dark:text-zinc-300"
         >
           <span className="material-symbols-outlined text-xl">mode_comment</span>
           <span className="text-sm font-medium">Comment</span>
         </button>
         <button
           onClick={onShare}
-          className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-zinc-50 transition-colors text-zinc-600 dark:text-zinc-300"
+          className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors text-zinc-600 dark:text-zinc-300"
         >
           <span className="material-symbols-outlined text-xl">share</span>
           <span className="text-sm font-medium">Share</span>

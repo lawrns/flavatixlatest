@@ -529,39 +529,39 @@ export default function SocialPage() {
 
   // Skeleton Loading Component
   const SkeletonPost = () => (
-    <div className="bg-white dark:bg-zinc-800 p-4 animate-pulse">
+    <div className="bg-white dark:bg-zinc-900 p-4 animate-pulse">
       <div className="flex items-start space-x-3 mb-3">
-        <div className="w-12 h-12 bg-zinc-200 rounded-full flex-shrink-0" />
+        <div className="w-12 h-12 bg-zinc-200 dark:bg-zinc-700 rounded-full flex-shrink-0" />
         <div className="flex-1">
-          <div className="h-4 bg-zinc-200 rounded w-1/3 mb-2" />
-          <div className="h-3 bg-zinc-200 rounded w-1/4" />
+          <div className="h-4 bg-zinc-200 dark:bg-zinc-700 rounded w-1/3 mb-2" />
+          <div className="h-3 bg-zinc-200 dark:bg-zinc-700 rounded w-1/4" />
         </div>
       </div>
-      <div className="h-3 bg-zinc-200 rounded w-1/6 mb-3" />
-      <div className="h-4 bg-zinc-200 rounded w-2/3 mb-2" />
-      <div className="h-3 bg-zinc-200 rounded w-full mb-2" />
-      <div className="h-3 bg-zinc-200 rounded w-4/5 mb-3" />
-      <div className="h-48 bg-zinc-200 rounded-xl mb-3" />
-      <div className="flex gap-4 pt-2 border-t border-zinc-100">
-        <div className="h-8 bg-zinc-200 rounded flex-1" />
-        <div className="h-8 bg-zinc-200 rounded flex-1" />
-        <div className="h-8 bg-zinc-200 rounded flex-1" />
+      <div className="h-3 bg-zinc-200 dark:bg-zinc-700 rounded w-1/6 mb-3" />
+      <div className="h-4 bg-zinc-200 dark:bg-zinc-700 rounded w-2/3 mb-2" />
+      <div className="h-3 bg-zinc-200 dark:bg-zinc-700 rounded w-full mb-2" />
+      <div className="h-3 bg-zinc-200 dark:bg-zinc-700 rounded w-4/5 mb-3" />
+      <div className="h-48 bg-zinc-200 dark:bg-zinc-700 rounded-xl mb-3" />
+      <div className="flex gap-4 pt-2 border-t border-zinc-100 dark:border-zinc-700">
+        <div className="h-8 bg-zinc-200 dark:bg-zinc-700 rounded flex-1" />
+        <div className="h-8 bg-zinc-200 dark:bg-zinc-700 rounded flex-1" />
+        <div className="h-8 bg-zinc-200 dark:bg-zinc-700 rounded flex-1" />
       </div>
     </div>
   );
 
   if (loading || loadingPosts) {
     return (
-      <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
+      <div className="bg-white dark:bg-zinc-900 font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
         <div className="flex min-h-screen flex-col">
-          <header className="border-b border-zinc-200 dark:border-zinc-700 bg-background-light p-4">
+          <header className="border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-10 h-10 bg-zinc-200 rounded-full animate-pulse" />
-              <div className="h-6 bg-zinc-200 rounded w-32 animate-pulse" />
-              <div className="w-10 h-10 bg-zinc-200 rounded-full animate-pulse" />
+              <div className="w-10 h-10 bg-zinc-200 dark:bg-zinc-700 rounded-full animate-pulse" />
+              <div className="h-6 bg-zinc-200 dark:bg-zinc-700 rounded w-32 animate-pulse" />
+              <div className="w-10 h-10 bg-zinc-200 dark:bg-zinc-700 rounded-full animate-pulse" />
             </div>
           </header>
-          <main className="flex-1 overflow-y-auto divide-y divide-zinc-200">
+          <main className="flex-1 overflow-y-auto divide-y divide-zinc-200 dark:divide-zinc-700">
             <SkeletonPost />
             <SkeletonPost />
             <SkeletonPost />
@@ -575,21 +575,21 @@ export default function SocialPage() {
 
   return (
     <ErrorBoundary>
-      <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
+      <div className="bg-white dark:bg-zinc-900 font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
         <div className="flex min-h-screen flex-col">
         {/* Header */}
-        <header className="border-b border-zinc-200 dark:border-zinc-700 bg-background-light sticky top-0 z-40">
+        <header className="border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 sticky top-0 z-40">
           <div className="flex items-center justify-between p-4">
             <button
               onClick={() => router.back()}
-              className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100"
+              className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
             >
               <span className="material-symbols-outlined">arrow_back</span>
             </button>
             <h1 className="text-xl font-bold">Social Feed</h1>
             <button
               onClick={() => router.push('/quick-tasting')}
-              className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100"
+              className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
             >
               <span className="material-symbols-outlined">add_circle</span>
             </button>
@@ -606,8 +606,8 @@ export default function SocialPage() {
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto">
-          <div className="divide-y divide-zinc-200">
+        <main className="flex-1 overflow-y-auto bg-white dark:bg-zinc-900">
+          <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
             {filteredPosts.length === 0 ? (
               <div className="p-8 text-center">
                 <div className="mb-4">
