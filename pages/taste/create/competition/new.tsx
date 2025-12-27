@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { toast } from '@/lib/toast';
-import { ChevronLeft, Plus, Trash2, Eye, Save, ArrowRight, CheckCircle, X, Package, EyeOff } from 'lucide-react';
+import { ChevronLeft, Plus, Trash2, Eye, X, Package, EyeOff, ArrowRight, ArrowLeft, Check } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
@@ -26,14 +26,18 @@ const BASE_CATEGORIES = [
 
 type ParameterType = 'multiple_choice' | 'true_false' | 'contains' | 'exact_match' | 'range' | 'numeric';
 
-interface Parameter {
+// Shared parameter template (defined once, applied to all items)
+interface ParameterTemplate {
   id: string;
   name: string;
   type: ParameterType;
   points: number;
-  // Answer key fields
-  correctAnswer?: any;
-  options?: string[]; // For multiple_choice
+  options?: string[]; // For multiple_choice - the available options
+}
+
+// Per-item parameter answer (the correct answer for each item)
+interface ParameterAnswer {
+  parameterId: string;
   correctOptions?: string[]; // For multiple_choice
   correctValueText?: string; // For exact_match, contains
   correctValueBoolean?: boolean; // For true_false
@@ -42,36 +46,50 @@ interface Parameter {
   correctValueNumeric?: number; // For numeric
 }
 
+// Subjective inputs for each item
+interface SubjectiveInputs {
+  correctAroma: string;
+  correctFlavor: string;
+  correctOverallScore: number;
+}
+
 interface CompetitionItem {
   id: string;
   number: number;
   name: string;
   isBlind: boolean;
-  parameters: Parameter[];
+  parameterAnswers: ParameterAnswer[];
+  subjective: SubjectiveInputs;
 }
 
 interface CreateCompetitionForm {
   name: string;
   baseCategory: string;
+  parameterTemplates: ParameterTemplate[]; // Shared parameters
   items: CompetitionItem[];
   rankParticipants: boolean;
   rankingType: 'accuracy' | 'points' | 'weighted';
-  /** Session-level blind setting - applies to all items */
   isBlindTasting: boolean;
+  includeSubjectiveInputs: boolean; // Whether to include aroma/flavor/overall scoring
 }
+
+type Step = 'setup' | 'items';
 
 const NewCompetitionPage: React.FC = () => {
   const router = useRouter();
   const { user, loading } = useAuth();
   const supabase = getSupabaseClient();
 
+  const [currentStep, setCurrentStep] = useState<Step>('setup');
   const [form, setForm] = useState<CreateCompetitionForm>({
     name: '',
     baseCategory: '',
+    parameterTemplates: [],
     items: [],
     rankParticipants: true,
     rankingType: 'points',
-    isBlindTasting: false
+    isBlindTasting: false,
+    includeSubjectiveInputs: true
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -85,7 +103,7 @@ const NewCompetitionPage: React.FC = () => {
     }
   }, [user, loading, router]);
 
-  const validateForm = (): boolean => {
+  const validateSetup = (): boolean => {
     const newErrors: Record<string, string> = {};
 
     if (!form.name || form.name.length < 1 || form.name.length > 120) {
@@ -96,32 +114,44 @@ const NewCompetitionPage: React.FC = () => {
       newErrors.baseCategory = 'Please select a base category';
     }
 
+    // Validate parameter templates
+    form.parameterTemplates.forEach((param, index) => {
+      if (!param.name.trim()) {
+        newErrors[`param-${index}-name`] = 'Parameter name is required';
+      }
+      if (param.type === 'multiple_choice' && (!param.options || param.options.filter(o => o.trim()).length < 2)) {
+        newErrors[`param-${index}-options`] = 'Multiple choice needs at least 2 options';
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateItems = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
     if (form.items.length === 0) {
       newErrors.items = 'Please add at least one item';
     }
 
-    // Validate each item has at least one parameter
-    form.items.forEach((item, index) => {
-      if (item.parameters.length === 0) {
-        newErrors[`item-${index}`] = `Item ${item.number} must have at least one parameter`;
-      }
-
-      // Validate parameters have correct answer keys
-      item.parameters.forEach((param, pIndex) => {
-        if (param.type === 'multiple_choice' && (!param.options || param.options.length < 2)) {
-          newErrors[`item-${index}-param-${pIndex}`] = 'Multiple choice must have at least 2 options';
-        }
-        if (param.type === 'multiple_choice' && (!param.correctOptions || param.correctOptions.length === 0)) {
-          newErrors[`item-${index}-param-${pIndex}`] = 'Select at least one correct answer';
-        }
-        if (param.type === 'exact_match' && !param.correctValueText) {
-          newErrors[`item-${index}-param-${pIndex}`] = 'Provide correct exact match value';
-        }
-        if (param.type === 'contains' && !param.correctValueText) {
-          newErrors[`item-${index}-param-${pIndex}`] = 'Provide text that must be contained';
-        }
-        if (param.type === 'range' && (param.correctValueMin === undefined || param.correctValueMax === undefined)) {
-          newErrors[`item-${index}-param-${pIndex}`] = 'Provide min and max for range';
+    // Validate each item has answers for all parameters
+    form.items.forEach((item, itemIndex) => {
+      form.parameterTemplates.forEach((template) => {
+        const answer = item.parameterAnswers.find(a => a.parameterId === template.id);
+        if (!answer) {
+          newErrors[`item-${itemIndex}-param-${template.id}`] = 'Answer required';
+        } else {
+          // Validate answer based on type
+          if (template.type === 'multiple_choice' && (!answer.correctOptions || answer.correctOptions.length === 0)) {
+            newErrors[`item-${itemIndex}-param-${template.id}`] = 'Select at least one correct answer';
+          }
+          if ((template.type === 'exact_match' || template.type === 'contains') && !answer.correctValueText?.trim()) {
+            newErrors[`item-${itemIndex}-param-${template.id}`] = 'Provide correct text value';
+          }
+          if (template.type === 'range' && (answer.correctValueMin === undefined || answer.correctValueMax === undefined)) {
+            newErrors[`item-${itemIndex}-param-${template.id}`] = 'Provide min and max values';
+          }
         }
       });
     });
@@ -130,18 +160,86 @@ const NewCompetitionPage: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleNextStep = () => {
+    if (validateSetup()) {
+      setCurrentStep('items');
+    } else {
+      toast.error('Please fix the errors before continuing');
+    }
+  };
+
+  const handlePrevStep = () => {
+    setCurrentStep('setup');
+  };
+
+  // Parameter template management
+  const addParameterTemplate = () => {
+    if (form.parameterTemplates.length >= 20) {
+      toast.error('Maximum 20 parameters allowed');
+      return;
+    }
+
+    const newTemplate: ParameterTemplate = {
+      id: `param-${Date.now()}`,
+      name: '',
+      type: 'multiple_choice',
+      points: 1,
+      options: ['', '']
+    };
+
+    setForm({ ...form, parameterTemplates: [...form.parameterTemplates, newTemplate] });
+  };
+
+  const removeParameterTemplate = (paramId: string) => {
+    setForm({
+      ...form,
+      parameterTemplates: form.parameterTemplates.filter(p => p.id !== paramId),
+      // Also remove answers for this parameter from all items
+      items: form.items.map(item => ({
+        ...item,
+        parameterAnswers: item.parameterAnswers.filter(a => a.parameterId !== paramId)
+      }))
+    });
+  };
+
+  const updateParameterTemplate = (paramId: string, updates: Partial<ParameterTemplate>) => {
+    setForm({
+      ...form,
+      parameterTemplates: form.parameterTemplates.map(p =>
+        p.id === paramId ? { ...p, ...updates } : p
+      )
+    });
+  };
+
+  // Item management
   const addItem = () => {
     if (form.items.length >= 50) {
       toast.error('Maximum 50 items allowed');
       return;
     }
 
+    // Create empty answers for all parameter templates
+    const emptyAnswers: ParameterAnswer[] = form.parameterTemplates.map(template => ({
+      parameterId: template.id,
+      correctOptions: template.type === 'multiple_choice' ? [] : undefined,
+      correctValueText: undefined,
+      correctValueBoolean: undefined,
+      correctValueMin: undefined,
+      correctValueMax: undefined,
+      correctValueNumeric: undefined
+    }));
+
     const newItem: CompetitionItem = {
       id: `item-${Date.now()}`,
       number: form.items.length + 1,
       name: `Item ${form.items.length + 1}`,
       isBlind: false,
-      parameters: []
+      parameterAnswers: emptyAnswers,
+      subjective: {
+        correctAroma: '',
+        correctFlavor: '',
+        correctOverallScore: 80
+      }
     };
 
     setForm({ ...form, items: [...form.items, newItem] });
@@ -151,10 +249,10 @@ const NewCompetitionPage: React.FC = () => {
   const removeItem = (itemId: string) => {
     const updatedItems = form.items
       .filter(item => item.id !== itemId)
-      .map((item, index) => ({ ...item, number: index + 1, name: `Item ${index + 1}` }));
-    
+      .map((item, index) => ({ ...item, number: index + 1 }));
+
     setForm({ ...form, items: updatedItems });
-    
+
     if (expandedItem === itemId) {
       setExpandedItem(null);
     }
@@ -163,57 +261,42 @@ const NewCompetitionPage: React.FC = () => {
   const updateItem = (itemId: string, updates: Partial<CompetitionItem>) => {
     setForm({
       ...form,
-      items: form.items.map(item => 
+      items: form.items.map(item =>
         item.id === itemId ? { ...item, ...updates } : item
       )
     });
   };
 
-  const addParameter = (itemId: string) => {
-    const item = form.items.find(i => i.id === itemId);
-    if (!item) return;
-
-    if (item.parameters.length >= 20) {
-      toast.error('Maximum 20 parameters per item');
-      return;
-    }
-
-    const newParameter: Parameter = {
-      id: `param-${Date.now()}`,
-      name: '',
-      type: 'multiple_choice',
-      points: 1,
-      options: ['', ''],
-      correctOptions: []
-    };
-
-    updateItem(itemId, {
-      parameters: [...item.parameters, newParameter]
+  const updateItemAnswer = (itemId: string, parameterId: string, answerUpdates: Partial<ParameterAnswer>) => {
+    setForm({
+      ...form,
+      items: form.items.map(item => {
+        if (item.id !== itemId) return item;
+        return {
+          ...item,
+          parameterAnswers: item.parameterAnswers.map(a =>
+            a.parameterId === parameterId ? { ...a, ...answerUpdates } : a
+          )
+        };
+      })
     });
   };
 
-  const removeParameter = (itemId: string, paramId: string) => {
-    const item = form.items.find(i => i.id === itemId);
-    if (!item) return;
-
-    updateItem(itemId, {
-      parameters: item.parameters.filter(p => p.id !== paramId)
-    });
-  };
-
-  const updateParameter = (itemId: string, paramId: string, updates: Partial<Parameter>) => {
-    const item = form.items.find(i => i.id === itemId);
-    if (!item) return;
-
-    updateItem(itemId, {
-      parameters: item.parameters.map(p => 
-        p.id === paramId ? { ...p, ...updates } : p
-      )
+  const updateItemSubjective = (itemId: string, updates: Partial<SubjectiveInputs>) => {
+    setForm({
+      ...form,
+      items: form.items.map(item => {
+        if (item.id !== itemId) return item;
+        return {
+          ...item,
+          subjective: { ...item.subjective, ...updates }
+        };
+      })
     });
   };
 
   const handleCreate = async () => {
-    if (!validateForm() || !user) {
+    if (!validateItems() || !user) {
       toast.error('Please fix validation errors');
       return;
     }
@@ -221,7 +304,7 @@ const NewCompetitionPage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Create competition session with session-level settings
+      // Create competition session
       const { data: session, error: sessionError } = await supabase
         .from('quick_tastings')
         .insert({
@@ -233,7 +316,6 @@ const NewCompetitionPage: React.FC = () => {
           ranking_type: form.rankingType,
           total_items: form.items.length,
           completed_items: 0,
-          // Session-level blind setting (applies to all items by default)
           is_blind_items: form.isBlindTasting
         } as any)
         .select()
@@ -244,13 +326,20 @@ const NewCompetitionPage: React.FC = () => {
 
       // Create items with parameters and answer keys
       for (const item of form.items) {
-        // Create tasting item
+        // Create tasting item with subjective correct answers
         const { data: tastingItem, error: itemError } = await supabase
           .from('quick_tasting_items')
           .insert({
             tasting_id: session.id,
             item_name: item.name,
-            item_order: item.number
+            item_order: item.number,
+            // Store subjective correct answers in the item
+            correct_answers: form.includeSubjectiveInputs ? {
+              aroma: item.subjective.correctAroma,
+              flavor: item.subjective.correctFlavor,
+              overall_score: item.subjective.correctOverallScore
+            } : null,
+            include_in_ranking: true
           } as any)
           .select()
           .single() as { data: { id: string } | null, error: any };
@@ -259,52 +348,54 @@ const NewCompetitionPage: React.FC = () => {
         if (!tastingItem) throw new Error('Failed to create tasting item');
 
         // Create competition item metadata
-        // Per-item is_blind uses session setting by default, with optional per-item override
         const { error: metadataError } = await supabase
           .from('competition_item_metadata')
           .insert({
             item_id: tastingItem.id,
             tasting_id: session.id,
             item_order: item.number,
-            is_blind: form.isBlindTasting || item.isBlind  // Session-level OR per-item override
+            is_blind: form.isBlindTasting || item.isBlind
           } as any);
 
         if (metadataError) throw metadataError;
 
         // Create answer keys for each parameter
-        for (const param of item.parameters) {
+        for (const answer of item.parameterAnswers) {
+          const template = form.parameterTemplates.find(t => t.id === answer.parameterId);
+          if (!template) continue;
+
           // Build correct_answer as JSONB based on parameter type
           let correctAnswer: any = {};
           let answerOptions: any = null;
-          
-          switch (param.type) {
+
+          switch (template.type) {
             case 'multiple_choice':
-              correctAnswer = { options: param.correctOptions };
-              answerOptions = param.options || [];
+              correctAnswer = { options: answer.correctOptions };
+              answerOptions = template.options || [];
               break;
             case 'true_false':
-              correctAnswer = { value: param.correctValueBoolean };
+              correctAnswer = { value: answer.correctValueBoolean };
               break;
             case 'exact_match':
             case 'contains':
-              correctAnswer = { text: param.correctValueText };
+              correctAnswer = { text: answer.correctValueText };
               break;
             case 'range':
-              correctAnswer = { min: param.correctValueMin, max: param.correctValueMax };
+              correctAnswer = { min: answer.correctValueMin, max: answer.correctValueMax };
               break;
             case 'numeric':
-              correctAnswer = { value: param.correctValueNumeric };
+              correctAnswer = { value: answer.correctValueNumeric };
               break;
           }
 
           const answerKey: any = {
             tasting_id: session.id,
             item_id: tastingItem.id,
-            parameter_name: param.name,
-            parameter_type: param.type,
+            parameter_name: template.name,
+            parameter_type: template.type,
             correct_answer: correctAnswer,
             answer_options: answerOptions,
-            points: param.points || 1
+            points: template.points || 1
           };
 
           const { error: answerError } = await supabase
@@ -337,193 +428,299 @@ const NewCompetitionPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background-light pb-40">
       <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Header */}
         <div className="mb-6">
-          <div className="flex items-center justify-between mb-2">
-            <button
-              onClick={() => router.back()}
-              className="flex items-center text-text-secondary hover:text-text-primary transition-colors"
-            >
-              <ChevronLeft size={20} className="mr-1" />
-              Back
-            </button>
-            <h1 className="text-3xl font-display font-bold text-text-primary">
-              Create Competition
-            </h1>
-            <p className="text-text-secondary font-body">
-              Design a competition with answer keys and scoring
-            </p>
-          </div>
-        </div>
-
-        {/* Basic Information */}
-        <Card className="mb-6">
-          <CardHeader>
-            <h3 className="text-xl font-semibold">Basic Information</h3>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Competition Name *
-                </label>
-                <Input
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="e.g., Coffee Cupping Competition 2025"
-                  maxLength={120}
-                />
-                <p className="text-xs text-text-secondary mt-1">
-                  {form.name.length}/120 characters
-                </p>
-                {errors.name && (
-                  <p className="text-xs text-red-600 mt-1">{errors.name}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Base Category *
-                </label>
-                <Combobox
-                  value={form.baseCategory}
-                  onChange={(value) => setForm({ ...form, baseCategory: value })}
-                  options={BASE_CATEGORIES}
-                  placeholder="Select or type a category"
-                />
-                <p className="text-xs text-text-secondary mt-1">
-                  Select from the list or type your own custom category
-                </p>
-                {errors.baseCategory && (
-                  <p className="text-xs text-red-600 mt-1">{errors.baseCategory}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={form.rankParticipants}
-                    onChange={(e) => setForm({ ...form, rankParticipants: e.target.checked })}
-                    className="rounded"
-                  />
-                  <span className="text-sm font-medium">Rank Participants</span>
-                </label>
-              </div>
-
-              {form.rankParticipants && (
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Ranking Method
-                  </label>
-                  <select
-                    value={form.rankingType}
-                    onChange={(e) => setForm({ ...form, rankingType: e.target.value as any })}
-                    className="w-full px-3 py-2 border rounded-md"
-                  >
-                    <option value="points">Total Points</option>
-                    <option value="accuracy">Accuracy Percentage</option>
-                    <option value="weighted">Weighted Score</option>
-                  </select>
-                </div>
-              )}
-
-              {/* Session-level Blind Tasting Toggle */}
-              <div className="pt-4 border-t border-zinc-200 dark:border-zinc-700">
-                <label className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    checked={form.isBlindTasting}
-                    onChange={(e) => setForm({ ...form, isBlindTasting: e.target.checked })}
-                    className="w-5 h-5 rounded text-primary focus:ring-primary"
-                  />
-                  <div>
-                    <span className="text-sm font-medium block">Blind Tasting</span>
-                    <span className="text-xs text-text-secondary">Hide all item names from participants during the competition</span>
-                  </div>
-                </label>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Items Section */}
-        <Card className="mb-6">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">Competition Items</h2>
-              <p className="text-text-secondary">
-                Add items and define parameters with correct answers
-              </p>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {form.items.length === 0 ? (
-              <p className="text-center text-text-secondary py-8">
-                No items yet. Click "Add Item" to get started.
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {form.items.map((item) => (
-                  <CompetitionItemCard
-                    key={item.id}
-                    item={item}
-                    expanded={expandedItem === item.id}
-                    onToggle={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
-                    onUpdate={(updates) => updateItem(item.id, updates)}
-                    onRemove={() => removeItem(item.id)}
-                    onAddParameter={() => addParameter(item.id)}
-                    onRemoveParameter={(paramId) => removeParameter(item.id, paramId)}
-                    onUpdateParameter={(paramId, updates) => updateParameter(item.id, paramId, updates)}
-                    errors={errors}
-                    sessionIsBlind={form.isBlindTasting}
-                  />
-                ))}
-              </div>
-            )}
-
-            <Button
-              onClick={addItem}
-              variant="secondary"
-              className="w-full mt-4"
-              disabled={form.items.length >= 50}
-            >
-              <Plus size={20} className="mr-2" />
-              Add Item
-            </Button>
-
-            {errors.items && (
-              <p className="text-xs text-red-600 mt-2">{errors.items}</p>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Actions */}
-        <div className="flex gap-4 justify-between">
-          <Button
+          <button
             onClick={() => router.back()}
-            variant="secondary"
+            className="flex items-center text-text-secondary hover:text-text-primary transition-colors mb-4"
           >
-            Cancel
-          </Button>
+            <ChevronLeft size={20} className="mr-1" />
+            Back
+          </button>
+          <h1 className="text-3xl font-display font-bold text-text-primary">
+            Create Competition
+          </h1>
+          <p className="text-text-secondary font-body mt-1">
+            Design a competition with parameters, items, and scoring
+          </p>
+        </div>
 
-          <div className="flex gap-4">
-            <Button
-              onClick={() => setShowPreview(true)}
-              variant="secondary"
-              disabled={form.items.length === 0}
-            >
-              <Eye size={20} className="mr-2" />
-              Preview
-            </Button>
-
-            <Button
-              onClick={handleCreate}
-              disabled={isSubmitting || form.items.length === 0}
-            >
-              {isSubmitting ? 'Creating...' : 'Create & Start'}
-            </Button>
+        {/* Step Indicator */}
+        <div className="flex items-center gap-4 mb-8">
+          <div className={`flex items-center gap-2 ${currentStep === 'setup' ? 'text-primary' : 'text-text-secondary'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+              currentStep === 'setup' ? 'bg-primary text-white' : 'bg-green-500 text-white'
+            }`}>
+              {currentStep === 'items' ? <Check size={16} /> : '1'}
+            </div>
+            <span className="font-medium">Setup & Parameters</span>
+          </div>
+          <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-700"></div>
+          <div className={`flex items-center gap-2 ${currentStep === 'items' ? 'text-primary' : 'text-text-secondary'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+              currentStep === 'items' ? 'bg-primary text-white' : 'bg-zinc-200 dark:bg-zinc-700'
+            }`}>
+              2
+            </div>
+            <span className="font-medium">Items & Answers</span>
           </div>
         </div>
+
+        {/* Step 1: Setup & Parameters */}
+        {currentStep === 'setup' && (
+          <>
+            {/* Basic Information */}
+            <Card className="mb-6">
+              <CardHeader>
+                <h3 className="text-xl font-semibold">Basic Information</h3>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      Competition Name *
+                    </label>
+                    <Input
+                      value={form.name}
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      placeholder="e.g., Coffee Cupping Competition 2025"
+                      maxLength={120}
+                    />
+                    <p className="text-xs text-text-secondary mt-1">
+                      {form.name.length}/120 characters
+                    </p>
+                    {errors.name && (
+                      <p className="text-xs text-red-600 mt-1">{errors.name}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      Base Category *
+                    </label>
+                    <Combobox
+                      value={form.baseCategory}
+                      onChange={(value) => setForm({ ...form, baseCategory: value })}
+                      options={BASE_CATEGORIES}
+                      placeholder="Select or type a category"
+                    />
+                    {errors.baseCategory && (
+                      <p className="text-xs text-red-600 mt-1">{errors.baseCategory}</p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={form.rankParticipants}
+                          onChange={(e) => setForm({ ...form, rankParticipants: e.target.checked })}
+                          className="rounded"
+                        />
+                        <span className="text-sm font-medium">Rank Participants</span>
+                      </label>
+                    </div>
+
+                    <div>
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={form.isBlindTasting}
+                          onChange={(e) => setForm({ ...form, isBlindTasting: e.target.checked })}
+                          className="rounded"
+                        />
+                        <span className="text-sm font-medium">Blind Tasting</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {form.rankParticipants && (
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        Ranking Method
+                      </label>
+                      <select
+                        value={form.rankingType}
+                        onChange={(e) => setForm({ ...form, rankingType: e.target.value as any })}
+                        className="w-full px-3 py-2 border rounded-md dark:bg-zinc-800 dark:border-zinc-700"
+                      >
+                        <option value="points">Total Points</option>
+                        <option value="accuracy">Accuracy Percentage</option>
+                        <option value="weighted">Weighted Score</option>
+                      </select>
+                    </div>
+                  )}
+
+                  <div className="pt-4 border-t border-zinc-200 dark:border-zinc-700">
+                    <label className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        checked={form.includeSubjectiveInputs}
+                        onChange={(e) => setForm({ ...form, includeSubjectiveInputs: e.target.checked })}
+                        className="w-5 h-5 rounded text-primary focus:ring-primary"
+                      />
+                      <div>
+                        <span className="text-sm font-medium block">Include Subjective Scoring</span>
+                        <span className="text-xs text-text-secondary">Allow participants to enter aroma, flavor notes, and overall score</span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Parameter Templates */}
+            <Card className="mb-6">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-xl font-semibold">Parameters</h3>
+                    <p className="text-sm text-text-secondary mt-1">
+                      Define parameters that will be the same across all items
+                    </p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {form.parameterTemplates.length === 0 ? (
+                  <div className="text-center py-8 border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-lg">
+                    <p className="text-text-secondary mb-4">
+                      No parameters yet. Add parameters that participants will evaluate.
+                    </p>
+                    <Button onClick={addParameterTemplate} variant="secondary">
+                      <Plus size={16} className="mr-2" />
+                      Add Parameter
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {form.parameterTemplates.map((template, index) => (
+                      <ParameterTemplateCard
+                        key={template.id}
+                        template={template}
+                        index={index}
+                        onUpdate={(updates) => updateParameterTemplate(template.id, updates)}
+                        onRemove={() => removeParameterTemplate(template.id)}
+                        errors={errors}
+                      />
+                    ))}
+                    <Button
+                      onClick={addParameterTemplate}
+                      variant="secondary"
+                      className="w-full"
+                      disabled={form.parameterTemplates.length >= 20}
+                    >
+                      <Plus size={16} className="mr-2" />
+                      Add Parameter
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Next Step Button */}
+            <div className="flex justify-end">
+              <Button onClick={handleNextStep}>
+                Next: Add Items
+                <ArrowRight size={16} className="ml-2" />
+              </Button>
+            </div>
+          </>
+        )}
+
+        {/* Step 2: Items & Answers */}
+        {currentStep === 'items' && (
+          <>
+            <Card className="mb-6">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-xl font-semibold">Competition Items</h3>
+                    <p className="text-sm text-text-secondary mt-1">
+                      Add items and set the correct answers for each
+                    </p>
+                  </div>
+                  <div className="text-sm text-text-secondary">
+                    {form.parameterTemplates.length} parameters per item
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {form.items.length === 0 ? (
+                  <div className="text-center py-8 border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-lg">
+                    <p className="text-text-secondary mb-4">
+                      No items yet. Add items for participants to evaluate.
+                    </p>
+                    <Button onClick={addItem} variant="secondary">
+                      <Plus size={16} className="mr-2" />
+                      Add Item
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {form.items.map((item) => (
+                      <CompetitionItemCard
+                        key={item.id}
+                        item={item}
+                        parameterTemplates={form.parameterTemplates}
+                        expanded={expandedItem === item.id}
+                        onToggle={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
+                        onUpdate={(updates) => updateItem(item.id, updates)}
+                        onRemove={() => removeItem(item.id)}
+                        onUpdateAnswer={(paramId, updates) => updateItemAnswer(item.id, paramId, updates)}
+                        onUpdateSubjective={(updates) => updateItemSubjective(item.id, updates)}
+                        errors={errors}
+                        sessionIsBlind={form.isBlindTasting}
+                        includeSubjective={form.includeSubjectiveInputs}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                <Button
+                  onClick={addItem}
+                  variant="secondary"
+                  className="w-full mt-4"
+                  disabled={form.items.length >= 50}
+                >
+                  <Plus size={20} className="mr-2" />
+                  Add Item
+                </Button>
+
+                {errors.items && (
+                  <p className="text-xs text-red-600 mt-2">{errors.items}</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Actions */}
+            <div className="flex gap-4 justify-between">
+              <Button onClick={handlePrevStep} variant="secondary">
+                <ArrowLeft size={16} className="mr-2" />
+                Back to Setup
+              </Button>
+
+              <div className="flex gap-4">
+                <Button
+                  onClick={() => setShowPreview(true)}
+                  variant="secondary"
+                  disabled={form.items.length === 0}
+                >
+                  <Eye size={20} className="mr-2" />
+                  Preview
+                </Button>
+
+                <Button
+                  onClick={handleCreate}
+                  disabled={isSubmitting || form.items.length === 0}
+                >
+                  {isSubmitting ? 'Creating...' : 'Create & Start'}
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       <BottomNavigation />
@@ -539,50 +736,186 @@ const NewCompetitionPage: React.FC = () => {
   );
 };
 
+// Parameter Template Card Component
+interface ParameterTemplateCardProps {
+  template: ParameterTemplate;
+  index: number;
+  onUpdate: (updates: Partial<ParameterTemplate>) => void;
+  onRemove: () => void;
+  errors: Record<string, string>;
+}
+
+const ParameterTemplateCard: React.FC<ParameterTemplateCardProps> = ({
+  template,
+  index,
+  onUpdate,
+  onRemove,
+  errors
+}) => {
+  const addOption = () => {
+    onUpdate({ options: [...(template.options || []), ''] });
+  };
+
+  const removeOption = (optIndex: number) => {
+    const newOptions = (template.options || []).filter((_, i) => i !== optIndex);
+    onUpdate({ options: newOptions });
+  };
+
+  const updateOption = (optIndex: number, value: string) => {
+    const newOptions = [...(template.options || [])];
+    newOptions[optIndex] = value;
+    onUpdate({ options: newOptions });
+  };
+
+  return (
+    <div className="bg-gray-50 dark:bg-zinc-800 p-4 rounded-lg">
+      <div className="flex items-start justify-between mb-3">
+        <span className="text-sm font-medium text-text-secondary">
+          Parameter {index + 1}
+        </span>
+        <button
+          onClick={onRemove}
+          className="p-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+          aria-label="Remove parameter"
+        >
+          <X size={16} />
+        </button>
+      </div>
+
+      <div className="space-y-3">
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Parameter Name *
+          </label>
+          <Input
+            value={template.name}
+            onChange={(e) => onUpdate({ name: e.target.value })}
+            placeholder="e.g., Origin Country, Roast Level"
+          />
+          {errors[`param-${index}-name`] && (
+            <p className="text-xs text-red-600 mt-1">{errors[`param-${index}-name`]}</p>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-sm font-medium mb-1">Type *</label>
+            <select
+              value={template.type}
+              onChange={(e) => onUpdate({ type: e.target.value as ParameterType })}
+              className="w-full px-2 py-1.5 border rounded-md text-sm dark:bg-zinc-700 dark:border-zinc-600"
+            >
+              <option value="multiple_choice">Multiple Choice</option>
+              <option value="true_false">True/False</option>
+              <option value="exact_match">Exact Match</option>
+              <option value="contains">Contains Text</option>
+              <option value="range">Numeric Range</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Points</label>
+            <Input
+              type="number"
+              value={template.points}
+              onChange={(e) => onUpdate({ points: parseInt(e.target.value) || 1 })}
+              min={1}
+              max={100}
+            />
+          </div>
+        </div>
+
+        {/* Multiple choice options */}
+        {template.type === 'multiple_choice' && (
+          <div>
+            <label className="block text-sm font-medium mb-2">Options *</label>
+            <div className="space-y-2">
+              {(template.options || []).map((option, optIndex) => (
+                <div key={optIndex} className="flex items-center gap-2">
+                  <Input
+                    value={option}
+                    onChange={(e) => updateOption(optIndex, e.target.value)}
+                    placeholder={`Option ${optIndex + 1}`}
+                  />
+                  {(template.options || []).length > 2 && (
+                    <button
+                      onClick={() => removeOption(optIndex)}
+                      className="p-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
+                      aria-label="Remove option"
+                    >
+                      <X size={16} />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            <Button
+              onClick={addOption}
+              variant="secondary"
+              size="sm"
+              className="mt-2"
+              disabled={(template.options || []).length >= 10}
+            >
+              <Plus size={14} className="mr-1" />
+              Add Option
+            </Button>
+            {errors[`param-${index}-options`] && (
+              <p className="text-xs text-red-600 mt-1">{errors[`param-${index}-options`]}</p>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // Competition Item Card Component
 interface CompetitionItemCardProps {
   item: CompetitionItem;
+  parameterTemplates: ParameterTemplate[];
   expanded: boolean;
   onToggle: () => void;
   onUpdate: (updates: Partial<CompetitionItem>) => void;
   onRemove: () => void;
-  onAddParameter: () => void;
-  onRemoveParameter: (paramId: string) => void;
-  onUpdateParameter: (paramId: string, updates: Partial<Parameter>) => void;
+  onUpdateAnswer: (parameterId: string, updates: Partial<ParameterAnswer>) => void;
+  onUpdateSubjective: (updates: Partial<SubjectiveInputs>) => void;
   errors: Record<string, string>;
-  /** Session-level blind setting - when true, all items are blind */
-  sessionIsBlind?: boolean;
+  sessionIsBlind: boolean;
+  includeSubjective: boolean;
 }
 
 const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
   item,
+  parameterTemplates,
   expanded,
   onToggle,
   onUpdate,
   onRemove,
-  onAddParameter,
-  onRemoveParameter,
-  onUpdateParameter,
+  onUpdateAnswer,
+  onUpdateSubjective,
   errors,
-  sessionIsBlind = false
+  sessionIsBlind,
+  includeSubjective
 }) => {
   return (
-    <div className="border rounded-lg p-4">
+    <div className="border rounded-lg p-4 dark:border-zinc-700">
       <div className="flex items-center justify-between mb-2">
         <button
           onClick={onToggle}
           className="flex items-center gap-2 text-lg font-display font-semibold hover:text-primary transition-colors"
         >
-          {(sessionIsBlind || item.isBlind) ? <EyeOff size={20} className="text-amber-600" /> : <Package size={20} className="text-primary" />}
+          {(sessionIsBlind || item.isBlind) ? (
+            <EyeOff size={20} className="text-amber-600" />
+          ) : (
+            <Package size={20} className="text-primary" />
+          )}
           <span>{item.name}</span>
-          <span className="text-sm font-body text-text-secondary">
-            ({item.parameters.length} parameters)
-          </span>
         </button>
 
         <button
           onClick={onRemove}
-          className="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+          className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
+          aria-label="Remove item"
         >
           <Trash2 size={18} />
         </button>
@@ -601,307 +934,204 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
             />
           </div>
 
-          {/* Per-item blind override - hidden when session-level blind is enabled */}
           {!sessionIsBlind && (
-            <div>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={item.isBlind}
-                  onChange={(e) => onUpdate({ isBlind: e.target.checked })}
-                  className="rounded"
-                />
-                <span className="text-sm font-medium">Blind for this item</span>
-                <span className="text-xs text-text-secondary">(Override session setting)</span>
-              </label>
-            </div>
-          )}
-          {sessionIsBlind && (
-            <div className="bg-amber-50 dark:bg-amber-900/20 p-2 rounded-md">
-              <span className="text-sm text-amber-800 dark:text-amber-200 flex items-center gap-2">
-                <EyeOff size={16} />
-                This item is blind (session-level setting)
-              </span>
-            </div>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={item.isBlind}
+                onChange={(e) => onUpdate({ isBlind: e.target.checked })}
+                className="rounded"
+              />
+              <span className="text-sm font-medium">Blind for this item</span>
+            </label>
           )}
 
-          {/* Parameters */}
-          <div className="border-t pt-4">
-            <h4 className="font-display font-semibold mb-3">Parameters & Answer Keys</h4>
-            
-            {item.parameters.length === 0 ? (
-              <p className="text-sm text-text-secondary text-center py-4">
-                No parameters yet. Add one to define what participants will evaluate.
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {item.parameters.map((param, index) => (
-                  <ParameterCard
-                    key={param.id}
-                    parameter={param}
-                    index={index}
-                    onUpdate={(updates) => onUpdateParameter(param.id, updates)}
-                    onRemove={() => onRemoveParameter(param.id)}
+          {/* Subjective Inputs */}
+          {includeSubjective && (
+            <div className="border-t pt-4 dark:border-zinc-700">
+              <h4 className="font-semibold mb-3 flex items-center gap-2">
+                <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded">Subjective</span>
+                Correct Aroma, Flavor & Score
+              </h4>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Correct Aroma Notes
+                  </label>
+                  <textarea
+                    value={item.subjective.correctAroma}
+                    onChange={(e) => onUpdateSubjective({ correctAroma: e.target.value })}
+                    placeholder="e.g., Bright citrus, floral jasmine, honey sweetness"
+                    className="form-input w-full h-20 resize-none"
                   />
-                ))}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Correct Flavor Notes
+                  </label>
+                  <textarea
+                    value={item.subjective.correctFlavor}
+                    onChange={(e) => onUpdateSubjective({ correctFlavor: e.target.value })}
+                    placeholder="e.g., Lemon zest, bergamot, brown sugar finish"
+                    className="form-input w-full h-20 resize-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Correct Overall Score: {item.subjective.correctOverallScore}
+                  </label>
+                  <input
+                    type="range"
+                    min="1"
+                    max="100"
+                    value={item.subjective.correctOverallScore}
+                    onChange={(e) => onUpdateSubjective({ correctOverallScore: parseInt(e.target.value) })}
+                    className="w-full"
+                  />
+                  <div className="flex justify-between text-xs text-text-secondary">
+                    <span>Poor (1)</span>
+                    <span>Excellent (100)</span>
+                  </div>
+                </div>
               </div>
-            )}
+            </div>
+          )}
 
-            <Button
-              onClick={onAddParameter}
-              variant="secondary"
-              size="sm"
-              className="w-full mt-3"
-              disabled={item.parameters.length >= 20}
-            >
-              <Plus size={16} className="mr-1" />
-              Add Parameter
-            </Button>
-          </div>
+          {/* Parameter Answers */}
+          {parameterTemplates.length > 0 && (
+            <div className="border-t pt-4 dark:border-zinc-700">
+              <h4 className="font-semibold mb-3">Parameter Answers</h4>
+              <div className="space-y-4">
+                {parameterTemplates.map((template) => {
+                  const answer = item.parameterAnswers.find(a => a.parameterId === template.id);
+                  return (
+                    <ParameterAnswerInput
+                      key={template.id}
+                      template={template}
+                      answer={answer}
+                      onUpdate={(updates) => onUpdateAnswer(template.id, updates)}
+                      itemIndex={item.number - 1}
+                      errors={errors}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 };
 
-// Parameter Card Component
-interface ParameterCardProps {
-  parameter: Parameter;
-  index: number;
-  onUpdate: (updates: Partial<Parameter>) => void;
-  onRemove: () => void;
+// Parameter Answer Input Component
+interface ParameterAnswerInputProps {
+  template: ParameterTemplate;
+  answer?: ParameterAnswer;
+  onUpdate: (updates: Partial<ParameterAnswer>) => void;
+  itemIndex: number;
+  errors: Record<string, string>;
 }
 
-const ParameterCard: React.FC<ParameterCardProps> = ({
-  parameter,
-  index,
+const ParameterAnswerInput: React.FC<ParameterAnswerInputProps> = ({
+  template,
+  answer,
   onUpdate,
-  onRemove
+  itemIndex,
+  errors
 }) => {
-  return (
-    <div className="bg-gray-50 dark:bg-zinc-800 p-4 rounded-lg">
-      <div className="flex items-start justify-between mb-3">
-        <span className="text-sm font-medium text-text-secondary">
-          Parameter {index + 1}
-        </span>
-        <button
-          onClick={onRemove}
-          className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
-        >
-          <X size={16} />
-        </button>
-      </div>
-
-      <div className="space-y-3">
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Parameter Name *
-          </label>
-          <Input
-            value={parameter.name}
-            onChange={(e) => onUpdate({ name: e.target.value })}
-            placeholder="e.g., Origin Country, Roast Level"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Type *
-            </label>
-            <select
-              value={parameter.type}
-              onChange={(e) => onUpdate({ type: e.target.value as ParameterType })}
-              className="w-full px-2 py-1.5 border rounded-md text-sm"
-            >
-              <option value="multiple_choice">Multiple Choice</option>
-              <option value="true_false">True/False</option>
-              <option value="exact_match">Exact Match</option>
-              <option value="contains">Contains Text</option>
-              <option value="range">Numeric Range</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Points
-            </label>
-            <Input
-              type="number"
-              value={parameter.points}
-              onChange={(e) => onUpdate({ points: parseInt(e.target.value) || 1 })}
-              min={1}
-              max={100}
-            />
-          </div>
-        </div>
-
-        {/* Answer Key Fields */}
-        {parameter.type === 'multiple_choice' && (
-          <MultipleChoiceAnswerKey
-            options={parameter.options || []}
-            correctOptions={parameter.correctOptions || []}
-            onUpdateOptions={(options) => onUpdate({ options })}
-            onUpdateCorrectOptions={(correctOptions) => onUpdate({ correctOptions })}
-          />
-        )}
-
-        {parameter.type === 'true_false' && (
-          <div>
-            <label className="block text-sm font-medium mb-2">Correct Answer *</label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  checked={parameter.correctValueBoolean === true}
-                  onChange={() => onUpdate({ correctValueBoolean: true })}
-                />
-                <span className="text-sm">True</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  checked={parameter.correctValueBoolean === false}
-                  onChange={() => onUpdate({ correctValueBoolean: false })}
-                />
-                <span className="text-sm">False</span>
-              </label>
-            </div>
-          </div>
-        )}
-
-        {(parameter.type === 'exact_match' || parameter.type === 'contains') && (
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Correct Answer * ({parameter.type === 'contains' ? 'Text to contain' : 'Exact text'})
-            </label>
-            <Input
-              value={parameter.correctValueText || ''}
-              onChange={(e) => onUpdate({ correctValueText: e.target.value })}
-              placeholder={parameter.type === 'contains' ? 'e.g., Ethiopia' : 'e.g., Ethiopian Yirgacheffe'}
-            />
-          </div>
-        )}
-
-        {parameter.type === 'range' && (
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-sm font-medium mb-1">Min Value *</label>
-              <Input
-                type="number"
-                value={parameter.correctValueMin || ''}
-                onChange={(e) => onUpdate({ correctValueMin: parseFloat(e.target.value) })}
-                placeholder="e.g., 80"
-                              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Max Value *</label>
-              <Input
-                type="number"
-                value={parameter.correctValueMax || ''}
-                onChange={(e) => onUpdate({ correctValueMax: parseFloat(e.target.value) })}
-                placeholder="e.g., 85"
-                              />
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// Multiple Choice Answer Key Component
-interface MultipleChoiceAnswerKeyProps {
-  options: string[];
-  correctOptions: string[];
-  onUpdateOptions: (options: string[]) => void;
-  onUpdateCorrectOptions: (correctOptions: string[]) => void;
-}
-
-const MultipleChoiceAnswerKey: React.FC<MultipleChoiceAnswerKeyProps> = ({
-  options,
-  correctOptions,
-  onUpdateOptions,
-  onUpdateCorrectOptions
-}) => {
-  const addOption = () => {
-    onUpdateOptions([...options, '']);
-  };
-
-  const removeOption = (index: number) => {
-    const newOptions = options.filter((_, i) => i !== index);
-    onUpdateOptions(newOptions);
-    
-    // Remove from correct options if it was selected
-    const removedOption = options[index];
-    if (correctOptions.includes(removedOption)) {
-      onUpdateCorrectOptions(correctOptions.filter(o => o !== removedOption));
-    }
-  };
-
-  const updateOption = (index: number, value: string) => {
-    const newOptions = [...options];
-    const oldValue = newOptions[index];
-    newOptions[index] = value;
-    onUpdateOptions(newOptions);
-
-    // Update correct options if this option was selected
-    if (correctOptions.includes(oldValue)) {
-      onUpdateCorrectOptions(correctOptions.map(o => o === oldValue ? value : o));
-    }
-  };
-
-  const toggleCorrectOption = (option: string) => {
-    if (correctOptions.includes(option)) {
-      onUpdateCorrectOptions(correctOptions.filter(o => o !== option));
-    } else {
-      onUpdateCorrectOptions([...correctOptions, option]);
-    }
-  };
+  const errorKey = `item-${itemIndex}-param-${template.id}`;
 
   return (
-    <div>
-      <label className="block text-sm font-medium mb-2">Options & Correct Answers *</label>
-      <div className="space-y-2">
-        {options.map((option, index) => (
-          <div key={index} className="flex items-center gap-2">
+    <div className="bg-gray-50 dark:bg-zinc-800 p-3 rounded-lg">
+      <div className="flex items-center justify-between mb-2">
+        <span className="font-medium text-sm">{template.name}</span>
+        <span className="text-xs text-text-secondary">{template.points} pts</span>
+      </div>
+
+      {template.type === 'multiple_choice' && (
+        <div className="space-y-1">
+          {(template.options || []).map((option, index) => (
+            <label key={index} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={(answer?.correctOptions || []).includes(option)}
+                onChange={(e) => {
+                  const current = answer?.correctOptions || [];
+                  if (e.target.checked) {
+                    onUpdate({ correctOptions: [...current, option] });
+                  } else {
+                    onUpdate({ correctOptions: current.filter(o => o !== option) });
+                  }
+                }}
+                disabled={!option.trim()}
+                className="rounded"
+              />
+              <span className="text-sm">{option || `Option ${index + 1}`}</span>
+            </label>
+          ))}
+          <p className="text-xs text-text-secondary mt-1">Check correct answer(s)</p>
+        </div>
+      )}
+
+      {template.type === 'true_false' && (
+        <div className="flex gap-4">
+          <label className="flex items-center gap-2">
             <input
-              type="checkbox"
-              checked={correctOptions.includes(option)}
-              onChange={() => toggleCorrectOption(option)}
-              disabled={!option}
-              className="rounded"
+              type="radio"
+              checked={answer?.correctValueBoolean === true}
+              onChange={() => onUpdate({ correctValueBoolean: true })}
             />
-            <Input
-              value={option}
-              onChange={(e) => updateOption(index, e.target.value)}
-              placeholder={`Option ${index + 1}`}
-                          />
-            {options.length > 2 && (
-              <button
-                onClick={() => removeOption(index)}
-                className="p-1 text-red-600 hover:bg-red-50 rounded"
-              >
-                <X size={16} />
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
-      
-      <Button
-        onClick={addOption}
-        variant="secondary"
-                className="mt-2"
-        disabled={options.length >= 10}
-      >
-        <Plus size={14} className="mr-1" />
-        Add Option
-      </Button>
+            <span className="text-sm">True</span>
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              checked={answer?.correctValueBoolean === false}
+              onChange={() => onUpdate({ correctValueBoolean: false })}
+            />
+            <span className="text-sm">False</span>
+          </label>
+        </div>
+      )}
 
-      <p className="text-xs text-text-secondary mt-2">
-        Check the box next to correct answers. Multiple selections allowed.
-      </p>
+      {(template.type === 'exact_match' || template.type === 'contains') && (
+        <Input
+          value={answer?.correctValueText || ''}
+          onChange={(e) => onUpdate({ correctValueText: e.target.value })}
+          placeholder={template.type === 'contains' ? 'Text that must be present' : 'Exact correct answer'}
+        />
+      )}
+
+      {template.type === 'range' && (
+        <div className="grid grid-cols-2 gap-2">
+          <Input
+            type="number"
+            value={answer?.correctValueMin ?? ''}
+            onChange={(e) => onUpdate({ correctValueMin: parseFloat(e.target.value) })}
+            placeholder="Min"
+          />
+          <Input
+            type="number"
+            value={answer?.correctValueMax ?? ''}
+            onChange={(e) => onUpdate({ correctValueMax: parseFloat(e.target.value) })}
+            placeholder="Max"
+          />
+        </div>
+      )}
+
+      {template.type === 'numeric' && (
+        <Input
+          type="number"
+          value={answer?.correctValueNumeric ?? ''}
+          onChange={(e) => onUpdate({ correctValueNumeric: parseFloat(e.target.value) })}
+          placeholder="Correct numeric value"
+        />
+      )}
+
+      {errors[errorKey] && (
+        <p className="text-xs text-red-600 mt-1">{errors[errorKey]}</p>
+      )}
     </div>
   );
 };
@@ -913,7 +1143,6 @@ interface PreviewModalProps {
 }
 
 const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
-  // Handle escape key
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -927,11 +1156,11 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
   }, [onClose]);
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div 
+      <div
         className="bg-white dark:bg-zinc-900 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto"
         role="dialog"
         aria-modal="true"
@@ -951,51 +1180,48 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
 
           <div className="space-y-6">
             <div>
-              <h4 className="font-display font-semibold text-lg mb-1">Competition Name</h4>
-              <p className="font-body text-text-secondary">{form.name || 'Untitled Competition'}</p>
+              <h4 className="font-semibold text-lg mb-1">Competition Name</h4>
+              <p className="text-text-secondary">{form.name || 'Untitled Competition'}</p>
             </div>
 
             <div>
-              <h4 className="font-display font-semibold text-lg mb-1">Base Category</h4>
-              <p className="font-body text-text-secondary">{form.baseCategory || 'Not selected'}</p>
+              <h4 className="font-semibold text-lg mb-1">Category</h4>
+              <p className="text-text-secondary">{form.baseCategory || 'Not selected'}</p>
             </div>
 
             <div>
-              <h4 className="font-display font-semibold text-lg mb-1">Ranking</h4>
-              <p className="font-body text-text-secondary">
-                {form.rankParticipants ? `Yes - ${form.rankingType}` : 'No ranking'}
-              </p>
+              <h4 className="font-semibold text-lg mb-2">Parameters ({form.parameterTemplates.length})</h4>
+              <div className="space-y-2">
+                {form.parameterTemplates.map((param) => (
+                  <div key={param.id} className="bg-gray-50 dark:bg-zinc-800 p-2 rounded text-sm">
+                    <span className="font-medium">{param.name}</span>
+                    <span className="text-text-secondary ml-2">({param.type} - {param.points} pts)</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div>
-              <h4 className="font-display font-semibold text-lg mb-2">Items ({form.items.length})</h4>
+              <h4 className="font-semibold text-lg mb-2">Items ({form.items.length})</h4>
               <div className="space-y-4">
                 {form.items.map((item) => (
-                  <div key={item.id} className="border rounded-lg p-4">
+                  <div key={item.id} className="border dark:border-zinc-700 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-display font-semibold">{item.number}. {item.name}</span>
-                      {item.isBlind && (
-                        <span className="text-xs font-body bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+                      <span className="font-semibold">{item.number}. {item.name}</span>
+                      {(form.isBlindTasting || item.isBlind) && (
+                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
                           Blind
                         </span>
                       )}
                     </div>
-                    
-                    <div className="ml-4 space-y-2">
-                      {item.parameters.map((param, idx) => (
-                        <div key={param.id} className="text-sm font-body">
-                          <span className="font-display font-medium">{param.name}</span>
-                          <span className="text-text-secondary ml-2">
-                            ({param.type} - {param.points} pts)
-                          </span>
-                          
-                          {/* Show answer key */}
-                          <div className="ml-4 text-xs text-green-700 dark:text-green-400">
-                            Answer: {renderAnswerKey(param)}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+
+                    {form.includeSubjectiveInputs && (
+                      <div className="text-sm text-text-secondary mb-2">
+                        <p>Aroma: {item.subjective.correctAroma || 'Not set'}</p>
+                        <p>Flavor: {item.subjective.correctFlavor || 'Not set'}</p>
+                        <p>Score: {item.subjective.correctOverallScore}</p>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -1007,26 +1233,8 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
   );
 };
 
-// Helper to render answer key in preview
-const renderAnswerKey = (param: Parameter): string => {
-  switch (param.type) {
-    case 'multiple_choice':
-      return param.correctOptions?.join(', ') || 'Not set';
-    case 'true_false':
-      return param.correctValueBoolean !== undefined ? String(param.correctValueBoolean) : 'Not set';
-    case 'exact_match':
-    case 'contains':
-      return param.correctValueText || 'Not set';
-    case 'range':
-      return `${param.correctValueMin} - ${param.correctValueMax}`;
-    default:
-      return 'Unknown';
-  }
-};
-
 export default NewCompetitionPage;
 
 export async function getServerSideProps() {
   return { props: {} };
 }
-
