@@ -116,6 +116,7 @@ export const FlavorPill: React.FC<FlavorPillProps> = ({
       onClick={onClick}
       role={isInteractive ? 'button' : undefined}
       tabIndex={isInteractive ? 0 : undefined}
+      title={flavor}
     >
       {flavor}
       {intensity && (

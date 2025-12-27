@@ -92,6 +92,7 @@ export default function FlavorWheelsPage() {
     created_at: string;
     confidence_score: number | null;
   }>>([]);
+  const [autoRegenerating, setAutoRegenerating] = useState(false);
 
   // Load predefined categories
   useEffect(() => {
@@ -196,6 +197,51 @@ export default function FlavorWheelsPage() {
     }
   }, [user, wheelType, scopeType, loadWheel]);
 
+  // Auto-regenerate if wheel data is stale (new descriptors added since generation)
+  useEffect(() => {
+    const checkAndAutoRegenerate = async () => {
+      // Only check if we have cached wheel data and user is logged in
+      if (!wheelData || !cached || !user || loading || autoRegenerating) return;
+
+      // Skip if wheel has no generatedAt timestamp
+      if (!wheelData.generatedAt) return;
+
+      try {
+        // Query for any descriptors created after the wheel was generated
+        let query = supabase
+          .from('flavor_descriptors')
+          .select('created_at', { count: 'exact', head: true })
+          .gt('created_at', new Date(wheelData.generatedAt).toISOString());
+
+        // Apply scope filter for personal wheels
+        if (scopeType === 'personal') {
+          query = query.eq('user_id', user.id);
+        }
+
+        // Filter by descriptor type
+        if (wheelType === 'combined') {
+          query = query.in('descriptor_type', ['aroma', 'flavor']);
+        } else {
+          query = query.eq('descriptor_type', wheelType);
+        }
+
+        const { count } = await query;
+
+        // If there are new descriptors, auto-regenerate
+        if (count && count > 0) {
+          setAutoRegenerating(true);
+          await loadWheel(true); // Force regenerate
+          setAutoRegenerating(false);
+        }
+      } catch (error) {
+        console.error('Error checking wheel staleness:', error);
+        setAutoRegenerating(false);
+      }
+    };
+
+    checkAndAutoRegenerate();
+  }, [wheelData, cached, user, scopeType, wheelType, loading, autoRegenerating, loadWheel]);
+
   // Handle window resize for responsive wheel
   useEffect(() => {
     const updateWheelSize = () => {
@@ -281,15 +327,32 @@ export default function FlavorWheelsPage() {
     return selectedSubcategory?.descriptors?.find(d => d.text === selectedSegment.descriptor);
   }, [selectedSegment, selectedSubcategory]);
 
-  const topDescriptorChips = wheelData?.categories
-    ?.flatMap(cat => cat.subcategories?.flatMap(sub => sub.descriptors?.map(d => ({
-      category: cat.name,
-      subcategory: sub.name,
-      descriptor: d.text,
-      count: d.count,
-    })) || []) || [])
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 8);
+  // Get top descriptors, deduplicating by descriptor text to avoid showing same note multiple times
+  const topDescriptorChips = useMemo(() => {
+    if (!wheelData?.categories) return [];
+
+    const allDescriptors = wheelData.categories
+      .flatMap(cat => cat.subcategories?.flatMap(sub => sub.descriptors?.map(d => ({
+        category: cat.name,
+        subcategory: sub.name,
+        descriptor: d.text,
+        count: d.count,
+      })) || []) || [])
+      .sort((a, b) => b.count - a.count);
+
+    // Deduplicate by descriptor text, keeping highest count version
+    const seen = new Set<string>();
+    const unique: typeof allDescriptors = [];
+    for (const chip of allDescriptors) {
+      const key = chip.descriptor.toLowerCase();
+      if (!seen.has(key)) {
+        seen.add(key);
+        unique.push(chip);
+      }
+    }
+
+    return unique.slice(0, 8);
+  }, [wheelData?.categories]);
 
   useEffect(() => {
     const run = async () => {
@@ -439,11 +502,11 @@ export default function FlavorWheelsPage() {
             </button>
           </div>
 
-          {/* Cache Info */}
-          {cached && !loading && (
+          {/* Cache Info - only show if not auto-regenerating */}
+          {cached && !loading && !autoRegenerating && (
             <div className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
               <span className={`inline-flex items-center px-2 py-1 rounded-[14px] ${STATUS_COLORS.success.bg} ${STATUS_COLORS.success.text}`}>
-                Cached - Click "Regenerate" to update with latest data
+                Up to date
               </span>
             </div>
           )}
@@ -454,8 +517,12 @@ export default function FlavorWheelsPage() {
           {loading && (
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mb-4"></div>
-              <p className="text-zinc-600 dark:text-zinc-300 text-lg">Generating your flavor wheel...</p>
-              <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-2">This may take a moment</p>
+              <p className="text-zinc-600 dark:text-zinc-300 text-lg">
+                {autoRegenerating ? 'Updating with new data...' : 'Generating your flavor wheel...'}
+              </p>
+              <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-2">
+                {autoRegenerating ? 'New tasting data detected' : 'This may take a moment'}
+              </p>
             </div>
           )}
 
