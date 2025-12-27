@@ -4,6 +4,8 @@ interface CharacteristicSliderProps {
   label: string;
   value: number;
   onChange: (value: number) => void;
+  onTouch?: () => void;
+  touched?: boolean;
   description?: string;
   min?: number;
   max?: number;
@@ -13,6 +15,8 @@ const CharacteristicSlider: React.FC<CharacteristicSliderProps> = ({
   label,
   value,
   onChange,
+  onTouch,
+  touched,
   description,
   min = 0,
   max = 100
@@ -43,20 +47,22 @@ const CharacteristicSlider: React.FC<CharacteristicSliderProps> = ({
           max={max}
           value={value}
           onChange={(e) => onChange(parseInt(e.target.value))}
+          onMouseDown={() => onTouch?.()}
+          onTouchStart={() => onTouch?.()}
           className="w-full h-5 rounded-full appearance-none cursor-pointer slider-ultra-thin shadow-none border-0 touch-manipulation"
           style={{
             '--slider-value': `${value}%`,
-            background: `linear-gradient(to right, 
-              #ec7813 0%, 
-              #ec7813 ${value}%, 
-              #e5e5e5 ${value}%, 
+            background: `linear-gradient(to right,
+              ${touched ? '#ec7813' : '#9ca3af'} 0%,
+              ${touched ? '#ec7813' : '#9ca3af'} ${value}%,
+              #e5e5e5 ${value}%,
               #e5e5e5 100%)`
           } as React.CSSProperties}
         />
         <div className="absolute -top-1.5 left-0 w-full h-4 pointer-events-none flex items-center">
-          <div 
-            className="absolute w-3 h-3 bg-white dark:bg-zinc-800 rounded-full shadow-md border-2 border-primary transition-all duration-200 ease-out"
-            style={{ 
+          <div
+            className={`absolute w-3 h-3 bg-white dark:bg-zinc-800 rounded-full shadow-md border-2 transition-all duration-200 ease-out ${touched ? 'border-primary' : 'border-gray-400'}`}
+            style={{
               left: `calc(${((value - min) / (max - min)) * 100}% - 6px)`
             }}
           />
