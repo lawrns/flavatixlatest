@@ -16,6 +16,8 @@ import { STATUS_COLORS } from '@/lib/colors';
 import { AvatarWithFallback } from '@/components/ui/AvatarWithFallback';
 import UserAvatarMenu from '@/components/navigation/UserAvatarMenu';
 import { CategoryStamp } from '@/components/ui';
+import { getUserPresets, DEFAULT_PRESETS } from '@/lib/presetService';
+import { CategoryPackId } from '@/lib/categoryPacks';
 
 export default function Dashboard() {
    const { user, loading, signOut } = useAuth();
@@ -23,6 +25,7 @@ export default function Dashboard() {
    const [tastingStats, setTastingStats] = useState<any>(null);
    const [latestTasting, setLatestTasting] = useState<any>(null);
    const [recentTastings, setRecentTastings] = useState<any[]>([]);
+   const [quickPresets, setQuickPresets] = useState<CategoryPackId[]>(DEFAULT_PRESETS);
    const router = useRouter();
 
   const initializeDashboard = useCallback(async () => {

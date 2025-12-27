@@ -144,16 +144,24 @@ export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayPro
         </div>
         
         <div className="bg-[#F7F3EA] rounded-xl p-sm text-center">
-          <div className="text-h2 font-heading font-bold text-[#C65A2E]">
-            {profile.followers_count}
-          </div>
+          {(profile.followers_count || 0) === 0 ? (
+            <div className="text-small font-body text-text-muted">No followers yet</div>
+          ) : (
+            <div className="text-h2 font-heading font-bold text-[#C65A2E]">
+              {profile.followers_count}
+            </div>
+          )}
           <div className="text-small font-body text-text-secondary">Followers</div>
         </div>
-        
+
         <div className="bg-[#F7F3EA] rounded-xl p-4 text-center">
-          <div className="text-h2 font-heading font-bold text-[#C65A2E]">
-            {profile.following_count}
-          </div>
+          {(profile.following_count || 0) === 0 ? (
+            <div className="text-small font-body text-text-muted">Not following anyone</div>
+          ) : (
+            <div className="text-h2 font-heading font-bold text-[#C65A2E]">
+              {profile.following_count}
+            </div>
+          )}
           <div className="text-small font-body text-text-secondary">Following</div>
         </div>
       </div>
