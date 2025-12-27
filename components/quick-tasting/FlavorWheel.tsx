@@ -88,7 +88,7 @@ const MobileFlavorCategory: React.FC<{
                 <div className="flex items-center justify-between">
                   <span className="text-body font-medium text-text-primary">{flavor}</span>
                   <span className="text-sm text-text-secondary font-semibold">
-                    {currentScore}/5
+                    {currentScore}/100
                   </span>
                 </div>
                 
@@ -520,7 +520,7 @@ const Flavatix: React.FC<FlavatixProps> = ({
                     <div className="flex items-center justify-between mb-xs">
                       <span className="text-body-sm font-medium text-text-primary">{flavor}</span>
                       <span className="text-xs text-text-secondary font-semibold">
-                        {currentScore}/5
+                        {currentScore}/100
                       </span>
                     </div>
                     <div className="flex gap-xs justify-center">

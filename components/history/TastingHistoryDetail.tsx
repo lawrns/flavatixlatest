@@ -76,7 +76,7 @@ const TastingHistoryDetail: React.FC<TastingHistoryDetailProps> = ({
                 {flavor.replace('_', ' ')}
               </span>
               <span className={`text-sm font-bold ${getScoreColor(Number(score))}`}>
-                {Number(score)}/5
+                {Number(score)}/100
               </span>
             </div>
             <div className="mt-1 bg-gray-200 rounded-full h-2">
