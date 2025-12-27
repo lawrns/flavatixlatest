@@ -266,7 +266,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                           {category.name}
                         </h3>
                         <p className="text-sm text-gray-500 dark:text-zinc-400">
-                          {category.count} descriptors ({category.percentage.toFixed(1)}%)
+                          {category.count} {category.count === 1 ? 'descriptor' : 'descriptors'} ({category.percentage.toFixed(1)}%)
                         </p>
                       </div>
                     </div>
@@ -323,7 +323,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                                       {subcategory.name}
                                     </p>
                                     <p className="text-xs text-gray-500 dark:text-zinc-400">
-                                      {subcategory.count} descriptors
+                                      {subcategory.count} {subcategory.count === 1 ? 'descriptor' : 'descriptors'}
                                     </p>
                                   </div>
                                 </button>
