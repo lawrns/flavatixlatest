@@ -10,7 +10,7 @@ export default function Home() {
     <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50">
       <Head>
         <title>Flavatix - The one place for all your tasting needs</title>
-        <meta name="description" content="The world's most pivotal tasting app for anything with flavor or aroma. Discover, analyze, and share your tasting experiences with our user-friendly platform." />
+        <meta name="description" content="The world's most comprehensive tasting app for anything with flavor or aroma. Discover, analyze, and share your tasting experiences with our user-friendly platform." />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
         <link rel="icon" href="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png" />
         <link rel="apple-touch-icon" href="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png" />
@@ -44,7 +44,7 @@ export default function Home() {
 
               {/* Subtitle */}
               <p className="text-body text-white/90 max-w-2xl mx-auto leading-body">
-                The world's most pivotal tasting app for anything with flavor or aroma.
+                The world's most comprehensive tasting app for anything with flavor or aroma.
                 Discover, analyze, and share your tasting experiences with our intuitive platform
                 designed for everyone from casual enthusiasts to industry professionals.
               </p>

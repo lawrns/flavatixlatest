@@ -17,7 +17,7 @@ import { TASTING_CATEGORIES, TASTING_MODES, PARTICIPANT_ROLES } from './types';
 export const APP = {
   NAME: 'Flavatix',
   VERSION: process.env.NEXT_PUBLIC_APP_VERSION || '0.1.0',
-  DESCRIPTION: 'The world\'s most pivotal tasting app for anything with flavor or aroma',
+  DESCRIPTION: 'The world\'s most comprehensive tasting app for anything with flavor or aroma',
   URL: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
 } as const;
 

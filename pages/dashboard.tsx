@@ -231,7 +231,11 @@ export default function Dashboard() {
                     onClick={() => router.push(`/profile/${profile.username}/followers`)}
                     className="bg-white dark:bg-zinc-700 p-3 text-center rounded-2xl hover:bg-gray-50 dark:hover:bg-zinc-600 transition-colors cursor-pointer"
                   >
-                    <div className="text-xl font-bold text-primary">{profile.followers_count || 0}</div>
+                    {(profile.followers_count || 0) === 0 ? (
+                      <div className="text-xs text-zinc-500 dark:text-zinc-400">No followers yet</div>
+                    ) : (
+                      <div className="text-xl font-bold text-primary">{profile.followers_count}</div>
+                    )}
                     <div className="text-xs text-gemini-text-gray dark:text-zinc-300">Followers</div>
                   </button>
 
@@ -239,7 +243,11 @@ export default function Dashboard() {
                     onClick={() => router.push(`/profile/${profile.username}/following`)}
                     className="bg-white dark:bg-zinc-700 p-3 text-center rounded-2xl hover:bg-gray-50 dark:hover:bg-zinc-600 transition-colors cursor-pointer"
                   >
-                    <div className="text-xl font-bold text-primary">{profile.following_count || 0}</div>
+                    {(profile.following_count || 0) === 0 ? (
+                      <div className="text-xs text-zinc-500 dark:text-zinc-400">Not following anyone</div>
+                    ) : (
+                      <div className="text-xl font-bold text-primary">{profile.following_count}</div>
+                    )}
                     <div className="text-xs text-gemini-text-gray dark:text-zinc-300">Following</div>
                   </button>
                 </div>
@@ -325,7 +333,7 @@ export default function Dashboard() {
                     {recentTastings.map((tasting) => (
                       <button
                         key={tasting.id}
-                        onClick={() => router.push(`/history`)}
+                        onClick={() => router.push(`/tasting/${tasting.id}`)}
                         className="w-full bg-zinc-50 dark:bg-zinc-700 p-3 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors text-left"
                       >
                         <div className="flex items-center justify-between mb-1">
