@@ -238,6 +238,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
           <AvatarUpload
             userId={profile?.user_id || ''}
             currentAvatarUrl={formData.avatar_url}
+            displayName={formData.full_name || profile?.full_name}
             onUploadSuccess={handleAvatarUpload}
             onUploadError={handleAvatarError}
           />

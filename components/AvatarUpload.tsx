@@ -4,13 +4,16 @@ import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import { AvatarService, AvatarUploadResult } from '../lib/avatarService';
+import { AvatarWithFallback } from '@/components/ui/AvatarWithFallback';
 // Using project's custom styling instead of external UI components
 import * as LucideIcons from 'lucide-react';
-const { Upload, X, User, AlertCircle, CheckCircle, Camera } = LucideIcons;
+const { Upload, X, AlertCircle, CheckCircle, Camera } = LucideIcons;
 
 interface AvatarUploadProps {
   userId: string;
   currentAvatarUrl?: string;
+  /** Display name or email for fallback initials */
+  displayName?: string;
   onUploadSuccess?: (avatarUrl: string) => void;
   onUploadError?: (error: string) => void;
   className?: string;
@@ -19,6 +22,7 @@ interface AvatarUploadProps {
 export default function AvatarUpload({
   userId,
   currentAvatarUrl,
+  displayName,
   onUploadSuccess,
   onUploadError,
   className = ''
@@ -164,7 +168,7 @@ export default function AvatarUpload({
       {/* Avatar Preview */}
       <div className="flex justify-center">
         <div className="relative">
-          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 dark:border-zinc-600 bg-gray-100 dark:bg-zinc-800 flex items-center justify-center">
+          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 dark:border-zinc-600">
             {previewUrl ? (
               <Image
                 src={previewUrl}
@@ -174,10 +178,15 @@ export default function AvatarUpload({
                 className="w-full h-full object-cover"
               />
             ) : (
-              <User className="w-16 h-16 text-gray-400 dark:text-zinc-500" />
+              <AvatarWithFallback
+                src={null}
+                alt={displayName || 'User'}
+                fallback={(displayName || '?')[0].toUpperCase()}
+                size={128}
+              />
             )}
           </div>
-          
+
           {previewUrl && !uploading && (
             <button
               className="absolute -top-xs -right-xs rounded-full w-8 h-8 p-0 bg-error hover:bg-error/90 text-white transition-colors flex items-center justify-center"
