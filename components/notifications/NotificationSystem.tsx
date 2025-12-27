@@ -11,6 +11,9 @@ interface NotificationSystemProps {
 }
 
 export const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }) => {
+  // Notifications not yet implemented - hide until feature is ready
+  return null;
+
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
