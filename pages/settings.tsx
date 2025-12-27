@@ -148,7 +148,7 @@ export default function SettingsPage() {
       ],
     },
     {
-      title: 'Danger Zone',
+      title: 'Delete Account',
       items: [
         {
           icon: Trash2,
