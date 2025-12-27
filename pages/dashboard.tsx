@@ -343,7 +343,7 @@ export default function Dashboard() {
                           {tasting.average_score && (
                             <>
                               <span className="text-primary font-semibold">
-                                {tasting.average_score.toFixed(1)}/5
+                                {tasting.average_score.toFixed(1)}/100
                               </span>
                               <span className="text-zinc-400">•</span>
                             </>
