@@ -1,0 +1,47 @@
+{
+  "app": {
+    "name": "Flavatix",
+    "tagline": "La aplicacion de catas mas completa del mundo"
+  },
+  "dashboard": {
+    "title": "Panel",
+    "recentTastings": "Catas Recientes",
+    "yourStats": "Tus Estadisticas"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "tastings": "Catas",
+    "flavorWheels": "Ruedas de Sabores",
+    "profile": "Perfil",
+    "settings": "Configuracion"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "submit": "Enviar",
+    "back": "Atras",
+    "next": "Siguiente",
+    "done": "Hecho"
+  },
+  "tasting": {
+    "startTasting": "Iniciar Cata",
+    "continueTasting": "Continuar Cata",
+    "viewDetails": "Ver Detalles",
+    "completed": "Completado",
+    "inProgress": "En Progreso",
+    "items": "Articulos",
+    "scored": "Puntuados",
+    "avgScore": "Puntuacion Promedio"
+  },
+  "auth": {
+    "signIn": "Iniciar Sesion",
+    "signOut": "Cerrar Sesion",
+    "signUp": "Registrarse",
+    "email": "Correo Electronico",
+    "password": "Contrasena"
+  }
+}

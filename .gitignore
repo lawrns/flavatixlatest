@@ -140,7 +140,7 @@ dist
 
 # Gatsby files
 .cache/
-public
+# Note: 'public' removed - Next.js uses /public for static assets including i18n locales
 
 # Storybook build outputs
 .out

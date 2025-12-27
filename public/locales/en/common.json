@@ -1,0 +1,47 @@
+{
+  "app": {
+    "name": "Flavatix",
+    "tagline": "The world's most comprehensive tasting app"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "recentTastings": "Recent Tastings",
+    "yourStats": "Your Stats"
+  },
+  "navigation": {
+    "home": "Home",
+    "tastings": "Tastings",
+    "flavorWheels": "Flavor Wheels",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done"
+  },
+  "tasting": {
+    "startTasting": "Start Tasting",
+    "continueTasting": "Continue Tasting",
+    "viewDetails": "View Details",
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "items": "Items",
+    "scored": "Scored",
+    "avgScore": "Avg Score"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password"
+  }
+}

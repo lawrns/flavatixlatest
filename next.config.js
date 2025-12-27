@@ -1,7 +1,9 @@
 const { withSentryConfig } = require('@sentry/nextjs');
+const { i18n } = require('./next-i18next.config');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  i18n,
   reactStrictMode: true,
   swcMinify: true,
   // output: 'export', // Commented out for development to allow API routes
