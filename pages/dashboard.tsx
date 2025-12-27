@@ -31,11 +31,15 @@ export default function Dashboard() {
   const initializeDashboard = useCallback(async () => {
     try {
       if (!user) return;
-      
+
+      // Load quick presets from localStorage
+      const presets = getUserPresets();
+      setQuickPresets(presets);
+
       // Fetch user profile
       const userProfile = await ProfileService.getProfile(user.id);
       setProfile(userProfile);
-      
+
       // Fetch tasting stats, latest tasting, and recent tastings
       const [stats, latest, recent] = await Promise.all([
         getUserTastingStats(user.id),
@@ -45,7 +49,7 @@ export default function Dashboard() {
       setTastingStats(stats.data);
       setLatestTasting(latest.data);
       setRecentTastings(recent.data || []);
-      
+
     } catch (error) {
       console.error('Error initializing dashboard:', error);
       toast.error('Error loading dashboard');
@@ -148,27 +152,16 @@ export default function Dashboard() {
                   Quick tasting presets
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={() => router.push('/quick-tasting?category=whiskey')}
-                    className="active:scale-[0.98]"
-                  >
-                    <CategoryStamp category="whiskey" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => router.push('/quick-tasting?category=coffee')}
-                    className="active:scale-[0.98]"
-                  >
-                    <CategoryStamp category="coffee" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => router.push('/quick-tasting?category=mezcal')}
-                    className="active:scale-[0.98]"
-                  >
-                    <CategoryStamp category="mezcal" />
-                  </button>
+                  {quickPresets.map((category) => (
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() => router.push(`/quick-tasting?category=${category}`)}
+                      className="active:scale-[0.98]"
+                    >
+                      <CategoryStamp category={category} />
+                    </button>
+                  ))}
                 </div>
               </section>
 
