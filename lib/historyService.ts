@@ -38,7 +38,7 @@ export type HistoryFilters = {
 
 export type TastingStats = {
   totalTastings: number;
-  averageRating: number;
+  averageScore: number;
   mostTastedCategory: string | null;
   currentStreak: number;
   categoriesCount: Record<string, number>;
@@ -231,7 +231,7 @@ export async function getUserTastingStats(
       return {
         data: {
           totalTastings: 0,
-          averageRating: 0,
+          averageScore: 0,
           mostTastedCategory: null,
           currentStreak: 0,
           categoriesCount: {}
@@ -291,7 +291,7 @@ export async function getUserTastingStats(
 
     const stats: TastingStats = {
       totalTastings,
-      averageRating: Math.round(averageRating * 100) / 100, // Round to 2 decimal places
+      averageScore: Math.round(averageRating * 100) / 100, // Round to 2 decimal places
       mostTastedCategory,
       currentStreak,
       categoriesCount

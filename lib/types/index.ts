@@ -315,7 +315,7 @@ export interface TastingItemFormData {
 
 export interface TastingStats {
   totalTastings: number;
-  averageRating: number;
+  averageScore: number;
   mostTastedCategory: TastingCategory | null;
   currentStreak: number;
   categoriesCount: Record<TastingCategory, number>;

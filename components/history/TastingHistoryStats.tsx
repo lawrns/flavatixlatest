@@ -104,8 +104,8 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
       <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className={`text-2xl font-bold ${getRatingColor(stats.averageRating)}`}>
-              {stats.averageRating.toFixed(1)}
+            <p className={`text-2xl font-bold ${getRatingColor(stats.averageScore)}`}>
+              {stats.averageScore.toFixed(1)}
             </p>
             <p className="text-sm text-gray-600">Puntuación media</p>
           </div>
