@@ -120,14 +120,14 @@ export default function SettingsPage() {
             <button
               onClick={toggleDarkMode}
               className={cn(
-                'relative w-12 h-7 rounded-full transition-colors',
+                'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
                 isDarkMode ? 'bg-primary' : 'bg-zinc-300 dark:bg-zinc-600'
               )}
             >
               <span
                 className={cn(
-                  'absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform',
-                  isDarkMode ? 'translate-x-6' : 'translate-x-1'
+                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out',
+                  isDarkMode ? 'translate-x-5' : 'translate-x-0'
                 )}
               />
             </button>
@@ -146,14 +146,14 @@ export default function SettingsPage() {
             <button
               onClick={toggleNotifications}
               className={cn(
-                'relative w-12 h-7 rounded-full transition-colors',
+                'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
                 notificationsEnabled ? 'bg-primary' : 'bg-zinc-300 dark:bg-zinc-600'
               )}
             >
               <span
                 className={cn(
-                  'absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform',
-                  notificationsEnabled ? 'translate-x-6' : 'translate-x-1'
+                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out',
+                  notificationsEnabled ? 'translate-x-5' : 'translate-x-0'
                 )}
               />
             </button>
