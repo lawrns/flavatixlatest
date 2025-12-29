@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import { AvatarService, AvatarUploadResult } from '../lib/avatarService';
 import { AvatarWithFallback } from '@/components/ui/AvatarWithFallback';
 // Using project's custom styling instead of external UI components
 import * as LucideIcons from 'lucide-react';
-const { Upload, X, AlertCircle, CheckCircle, Camera } = LucideIcons;
+const { Upload, X, AlertCircle, CheckCircle, Pencil } = LucideIcons;
 
 interface AvatarUploadProps {
   userId: string;
@@ -32,8 +32,13 @@ export default function AvatarUpload({
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentAvatarUrl || null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
   const cameraInputRef = React.useRef<HTMLInputElement>(null);
+  const editInputRef = React.useRef<HTMLInputElement>(null);
+
+  // Sync previewUrl with currentAvatarUrl when it changes externally
+  useEffect(() => {
+    setPreviewUrl(currentAvatarUrl || null);
+  }, [currentAvatarUrl]);
 
   // Using static methods from AvatarService
 
@@ -128,6 +133,15 @@ export default function AvatarUpload({
     }
   };
 
+  const handleEditCapture = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    await handleFileUpload(file || null);
+    // Reset input so same file can be selected again
+    if (editInputRef.current) {
+      editInputRef.current.value = '';
+    }
+  };
+
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
     onDrop,
     accept: {
@@ -168,7 +182,14 @@ export default function AvatarUpload({
       {/* Avatar Preview */}
       <div className="flex justify-center">
         <div className="relative">
-          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 dark:border-zinc-600">
+          {/* Clickable avatar for editing */}
+          <button
+            type="button"
+            onClick={() => editInputRef.current?.click()}
+            disabled={uploading}
+            className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 dark:border-zinc-600 cursor-pointer hover:opacity-80 transition-opacity disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            aria-label={previewUrl ? "Change profile picture" : "Add profile picture"}
+          >
             {previewUrl ? (
               <Image
                 src={previewUrl}
@@ -185,12 +206,37 @@ export default function AvatarUpload({
                 size={128}
               />
             )}
-          </div>
+          </button>
 
+          {/* Hidden input for edit/change avatar */}
+          <input
+            ref={editInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleEditCapture}
+            className="hidden"
+            disabled={uploading}
+          />
+
+          {/* Edit button overlay */}
+          {!uploading && (
+            <button
+              type="button"
+              className="absolute bottom-0 right-0 rounded-full w-9 h-9 p-0 bg-primary hover:bg-primary/90 text-white transition-colors flex items-center justify-center shadow-lg"
+              onClick={() => editInputRef.current?.click()}
+              aria-label="Edit profile picture"
+            >
+              <Pencil className="w-4 h-4" />
+            </button>
+          )}
+
+          {/* Remove button */}
           {previewUrl && !uploading && (
             <button
+              type="button"
               className="absolute -top-xs -right-xs rounded-full w-8 h-8 p-0 bg-error hover:bg-error/90 text-white transition-colors flex items-center justify-center"
               onClick={removeAvatar}
+              aria-label="Remove profile picture"
             >
               <X className="w-4 h-4" />
             </button>

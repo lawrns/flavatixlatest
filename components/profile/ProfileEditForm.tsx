@@ -72,8 +72,21 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
     }
   };
 
-  const handleAvatarUpload = (avatarUrl: string) => {
+  const handleAvatarUpload = async (avatarUrl: string) => {
+    // Update local form state
     setFormData(prev => ({ ...prev, avatar_url: avatarUrl }));
+
+    // Auto-save avatar to profile immediately (don't require clicking Update Profile)
+    if (profile) {
+      const success = await ProfileService.updateProfile(profile.user_id, { avatar_url: avatarUrl });
+      if (success) {
+        // Fetch updated profile to sync state
+        const updatedProfile = await ProfileService.getProfile(profile.user_id);
+        if (updatedProfile) {
+          onProfileUpdate(updatedProfile);
+        }
+      }
+    }
   };
 
   const handleAvatarError = (error: string) => {
