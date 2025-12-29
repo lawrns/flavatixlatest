@@ -108,15 +108,13 @@ export class AvatarService {
         };
       }
 
-      // Validate image dimensions
-      const dimensionValidation = await this.validateImageDimensions(file);
-      if (!dimensionValidation.isValid) {
-        console.warn('[AvatarService] Dimension validation failed:', dimensionValidation.error);
-        return {
-          success: false,
-          error: dimensionValidation.error
-        };
-      }
+      // Auto-resize image to 400x400 for optimal performance
+      console.log('[AvatarService] Compressing image to 400x400...');
+      const processedFile = await this.compressImage(file, 400, 0.85);
+      console.log('[AvatarService] Image compressed:', {
+        originalSize: file.size,
+        compressedSize: processedFile.size
+      });
 
       // Generate unique filename
       const fileName = this.generateFileName(userId, file.name);
@@ -129,7 +127,7 @@ export class AvatarService {
       console.log('[AvatarService] Uploading to storage...');
       const { data, error } = await this.getSupabase().storage
         .from(this.BUCKET_NAME)
-        .upload(fileName, file, {
+        .upload(fileName, processedFile, {
           cacheControl: '3600',
           upsert: false
         });

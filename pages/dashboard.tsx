@@ -1,18 +1,14 @@
 import { useEffect, useState, useCallback } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/SimpleAuthContext';
 import ProfileService, { UserProfile } from '../lib/profileService';
-import ProfileDisplay from '../components/profile/ProfileDisplay';
-import ProfileEditForm from '../components/profile/ProfileEditForm';
 import { getUserTastingStats, getLatestTasting, getRecentTastings } from '../lib/historyService';
 import SocialFeedWidget from '../components/social/SocialFeedWidget';
 import BottomNavigation from '../components/navigation/BottomNavigation';
 import NotificationSystem from '../components/notifications/NotificationSystem';
 import Container from '../components/layout/Container';
 import { cn } from '@/lib/utils';
-import { STATUS_COLORS } from '@/lib/colors';
 import { AvatarWithFallback } from '@/components/ui/AvatarWithFallback';
 import UserAvatarMenu from '@/components/navigation/UserAvatarMenu';
 import { CategoryStamp } from '@/components/ui';
@@ -136,167 +132,52 @@ export default function Dashboard() {
 
         <main className="flex-1 overflow-y-auto pb-24">
              <Container size="md" className="pt-6 animate-fade-in flex flex-col gap-8">
-               {/* Welcome Hero Section - Gemini Style */}
-               <header className="flex justify-between items-start">
-                <div>
-                  <p className="text-gemini-text-gray text-lg">Welcome back,</p>
-                  <h2 className="text-2xl font-bold text-gemini-text-dark dark:text-white">
-                    {profile?.full_name || user?.email?.split('@')[0]}
-                  </h2>
-                </div>
-              </header>
+               {/* Unified Compact Header */}
+               <div className={cn(
+                 'rounded-[22px] p-4',
+                 'bg-gemini-card dark:bg-zinc-800/80',
+                 'shadow-[0_1px_2px_rgba(0,0,0,0.06)]'
+               )}>
+                 {/* Avatar and Welcome */}
+                 <div className="flex items-center gap-3 mb-3">
+                   <AvatarWithFallback
+                     src={profile?.avatar_url}
+                     alt={profile?.full_name || 'Profile'}
+                     fallback={(profile?.full_name || user?.email || '?')[0].toUpperCase()}
+                     size={40}
+                   />
+                   <div className="flex-1 min-w-0">
+                     <h2 className="text-lg font-bold text-gemini-text-dark dark:text-white truncate">
+                       Welcome back, {profile?.full_name || user?.email?.split('@')[0]}
+                     </h2>
+                     <p className="text-sm text-gemini-text-gray dark:text-zinc-400">
+                       {profile?.username && `@${profile.username}`}
+                       {profile?.username && ' | '}
+                       {tastingStats?.totalTastings || profile?.tastings_count || 0} tastings
+                       {profile?.created_at && ` | Member since ${new Date(profile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`}
+                     </p>
+                   </div>
+                 </div>
 
-              {/* One-tap quick tasting presets */}
-              <section className="-mt-4">
-                <p className="text-xs font-medium text-gemini-text-gray dark:text-zinc-400 mb-2">
-                  Quick tasting presets
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {quickPresets.map((category) => (
-                    <button
-                      key={category}
-                      type="button"
-                      onClick={() => router.push(`/quick-tasting?category=${category}`)}
-                      className="active:scale-[0.98]"
-                    >
-                      <CategoryStamp category={category} />
-                    </button>
-                  ))}
-                </div>
-              </section>
-
-            {/* Profile Overview - Gemini Style */}
-            {profile && (
-              <div className={cn(
-                'rounded-[22px] p-5',
-                'bg-gemini-card dark:bg-zinc-800/80',
-                'shadow-[0_1px_2px_rgba(0,0,0,0.06)]'
-              )}>
-                {/* Header with Avatar and Basic Info */}
-                <div className="flex items-start gap-4 mb-5">
-                  <div className="flex-shrink-0">
-                    <AvatarWithFallback
-                      src={profile.avatar_url}
-                      alt={profile.full_name || 'Profile'}
-                      fallback={(profile.full_name || user?.email || '?')[0].toUpperCase()}
-                      size={64}
-                    />
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-bold text-gemini-text-dark dark:text-zinc-50 truncate">
-                      {profile.full_name || 'No name set'}
-                    </h3>
-                    {profile.username && (
-                      <p className="text-gemini-text-gray dark:text-zinc-300 text-sm">@{profile.username}</p>
-                    )}
-                    {profile.preferred_category && (
-                      <span className="inline-block px-3 py-1 rounded-full text-xs font-medium mt-2 bg-primary/10 text-primary">
-                        {profile.preferred_category}
-                      </span>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => router.push('/profile/edit')}
-                    className="text-primary text-sm font-medium hover:opacity-80 transition-opacity"
-                  >
-                    Edit
-                  </button>
-                </div>
-
-                {/* Bio */}
-                {profile.bio && (
-                  <div className="mb-5 p-3 bg-white dark:bg-zinc-700 rounded-xl">
-                    <p className="text-gemini-text-dark dark:text-zinc-50 text-sm leading-relaxed">{profile.bio}</p>
-                  </div>
-                )}
-
-                {/* Stats Grid - Gemini Style */}
-                <div className="grid grid-cols-4 gap-3">
-                  <div className="bg-white dark:bg-zinc-700 p-3 text-center rounded-2xl">
-                    <div className="text-xl font-bold text-primary">{tastingStats?.totalTastings || profile.tastings_count || 0}</div>
-                    <div className="text-xs text-gemini-text-gray dark:text-zinc-300">Tastings</div>
-                  </div>
-
-                  <div className="bg-white dark:bg-zinc-700 p-3 text-center rounded-2xl">
-                    <div className="text-xl font-bold text-primary">{profile.reviews_count || 0}</div>
-                    <div className="text-xs text-gemini-text-gray dark:text-zinc-300">Reviews</div>
-                  </div>
-
-                  <button
-                    onClick={() => router.push(`/profile/${profile.username}/followers`)}
-                    className="bg-white dark:bg-zinc-700 p-3 text-center rounded-2xl hover:bg-gray-50 dark:hover:bg-zinc-600 transition-colors cursor-pointer"
-                  >
-                    {(profile.followers_count || 0) === 0 ? (
-                      <div className="text-xs text-zinc-500 dark:text-zinc-400">No followers yet</div>
-                    ) : (
-                      <div className="text-xl font-bold text-primary">{profile.followers_count}</div>
-                    )}
-                    <div className="text-xs text-gemini-text-gray dark:text-zinc-300">Followers</div>
-                  </button>
-
-                  <button
-                    onClick={() => router.push(`/profile/${profile.username}/following`)}
-                    className="bg-white dark:bg-zinc-700 p-3 text-center rounded-2xl hover:bg-gray-50 dark:hover:bg-zinc-600 transition-colors cursor-pointer"
-                  >
-                    {(profile.following_count || 0) === 0 ? (
-                      <div className="text-xs text-zinc-500 dark:text-zinc-400">Not following anyone</div>
-                    ) : (
-                      <div className="text-xl font-bold text-primary">{profile.following_count}</div>
-                    )}
-                    <div className="text-xs text-gemini-text-gray dark:text-zinc-300">Following</div>
-                  </button>
-                </div>
-
-                {/* Additional Info */}
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between items-center">
-                    <span className="text-zinc-600 dark:text-zinc-300">Member since</span>
-                    <span className="text-zinc-900 dark:text-zinc-50 font-medium">
-                      {new Date(profile.created_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </span>
-                  </div>
-
-                  {profile.last_tasted_at && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-zinc-600 dark:text-zinc-300">Last tasting</span>
-                      <span className="text-zinc-900 dark:text-zinc-50 font-medium">
-                        {new Date(profile.last_tasted_at).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="flex justify-between items-center">
-                    <span className="text-zinc-600 dark:text-zinc-300">Email verified</span>
-                    <div className="flex items-center">
-                      {profile.email_confirmed ? (
-                        <>
-                          <svg className={cn("w-4 h-4 mr-1", STATUS_COLORS.verified.text)} fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                          <span className={cn("font-medium", STATUS_COLORS.verified.text)}>Verified</span>
-                        </>
-                      ) : (
-                        <>
-                          <svg className={cn("w-4 h-4 mr-1", STATUS_COLORS.pending.text)} fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                          </svg>
-                          <span className={cn("font-medium", STATUS_COLORS.pending.text)}>Pending</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+                 {/* Quick tasting presets */}
+                 <div>
+                   <p className="text-xs font-medium text-gemini-text-gray dark:text-zinc-400 mb-2">
+                     Quick tasting presets
+                   </p>
+                   <div className="flex flex-wrap gap-2">
+                     {quickPresets.map((category) => (
+                       <button
+                         key={category}
+                         type="button"
+                         onClick={() => router.push(`/quick-tasting?category=${category}`)}
+                         className="active:scale-[0.98]"
+                       >
+                         <CategoryStamp category={category} />
+                       </button>
+                     ))}
+                   </div>
+                 </div>
+               </div>
 
             {/* Quick Actions */}
             <div className="space-y-4">
@@ -373,25 +254,6 @@ export default function Dashboard() {
                   >
                     Create Your First Tasting
                   </button>
-                </div>
-              )}
-
-              {/* Stats Card */}
-              {tastingStats && (
-                <div className="bg-white dark:bg-zinc-800 p-4 rounded-[22px]">
-                  <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-3">Your Stats</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-primary">{tastingStats.totalTastings}</div>
-                      <div className="text-sm text-zinc-600 dark:text-zinc-300">Total Tastings</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-primary">
-                        {tastingStats.averageScore ? tastingStats.averageScore.toFixed(1) : '0.0'}
-                      </div>
-                      <div className="text-sm text-zinc-600 dark:text-zinc-300">Avg Score</div>
-                    </div>
-                  </div>
                 </div>
               )}
 

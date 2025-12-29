@@ -142,14 +142,19 @@ export function useSocialFeed({
       } else {
         setLoadingMore(true);
       }
-      
+
       const supabase = getSupabaseClient() as any;
       const offset = pageNum * postsPerPage;
 
-      // Fetch completed tastings
-      const { data: tastingsData, error: tastingsError } = await supabase
+      // OPTIMIZED: Single query to fetch tastings with related profiles and items
+      // This replaces 3 separate queries (tastings, profiles, items) with 1
+      const { data: tastingsWithRelations, error: tastingsError } = await supabase
         .from('quick_tastings')
-        .select('*')
+        .select(`
+          *,
+          profiles:user_id(user_id, full_name, username, avatar_url),
+          quick_tasting_items(id, tasting_id, item_name, photo_url, overall_score, notes)
+        `)
         .not('completed_at', 'is', null)
         .order('completed_at', { ascending: false })
         .range(offset, offset + postsPerPage - 1);
@@ -159,90 +164,85 @@ export function useSocialFeed({
         throw tastingsError;
       }
 
-      // Fetch profiles for users
-      const userIds = (tastingsData as any[])?.map((t: any) => t.user_id) || [];
-      const { data: profilesData } = await supabase
-        .from('profiles')
-        .select('user_id, full_name, username, avatar_url')
-        .in('user_id', userIds);
+      const tastingIds = (tastingsWithRelations as any[])?.map((t: any) => t.id) || [];
+      const userIds = (tastingsWithRelations as any[])?.map((t: any) => t.user_id) || [];
 
-      // Fetch tasting items
-      const tastingIds = (tastingsData as any[])?.map((t: any) => t.id) || [];
-      const { data: itemsData } = await supabase
-        .from('quick_tasting_items')
-        .select('id, tasting_id, item_name, photo_url, overall_score, notes')
-        .in('tasting_id', tastingIds)
-        .order('overall_score', { ascending: false });
+      // Skip social queries if no tastings found
+      if (tastingIds.length === 0) {
+        setHasMore(false);
+        if (!append) {
+          setPosts([]);
+        }
+        setPage(pageNum);
+        return;
+      }
 
-      // Fetch social stats
-      let likesData: any[] = [];
-      let commentsData: any[] = [];
-      let sharesData: any[] = [];
-      let userLikes = new Set<string>();
-      let userFollows = new Set<string>();
-
-      try {
-        const likesResult = await supabase
+      // OPTIMIZED: Batch fetch all social data in parallel (3 queries instead of 5+)
+      // Previously: separate queries for likes count, comments count, shares count, user likes, user follows
+      // Now: 3 parallel queries that fetch all needed data
+      const [likesResult, commentsResult, sharesResult, userFollowsResult] = await Promise.all([
+        // Single query gets all likes for all tastings (includes user_id to check user's likes)
+        supabase
           .from('tasting_likes')
           .select('tasting_id, user_id')
-          .in('tasting_id', tastingIds);
-        likesData = likesResult.data || [];
-      } catch (error) {
-        logger.debug('SocialFeed', 'Likes table not available');
-      }
-
-      try {
-        const commentsResult = await supabase
+          .in('tasting_id', tastingIds),
+        // Single query gets all comments for all tastings
+        supabase
           .from('tasting_comments')
           .select('tasting_id')
-          .in('tasting_id', tastingIds);
-        commentsData = commentsResult.data || [];
-      } catch (error) {
-        logger.debug('SocialFeed', 'Comments table not available');
-      }
-
-      try {
-        const sharesResult = await supabase
+          .in('tasting_id', tastingIds),
+        // Single query gets all shares for all tastings
+        supabase
           .from('tasting_shares')
           .select('tasting_id')
-          .in('tasting_id', tastingIds);
-        sharesData = sharesResult.data || [];
-      } catch (error) {
-        logger.debug('SocialFeed', 'Shares table not available');
+          .in('tasting_id', tastingIds),
+        // Single query gets user's follows (only for users in current feed)
+        supabase
+          .from('user_follows')
+          .select('following_id')
+          .eq('follower_id', userId)
+          .in('following_id', userIds)
+      ]);
+
+      const likesData = likesResult.data || [];
+      const commentsData = commentsResult.data || [];
+      const sharesData = sharesResult.data || [];
+
+      // Extract user's likes from the likes data (no separate query needed)
+      const userLikes = new Set<string>(
+        likesData
+          .filter((l: any) => l.user_id === userId)
+          .map((l: any) => l.tasting_id)
+      );
+
+      const userFollows = new Set<string>(
+        (userFollowsResult.data as any[])?.map((f: any) => f.following_id) || []
+      );
+
+      // Pre-compute counts for each tasting (O(n) instead of O(n*m))
+      const likesCountMap = new Map<string, number>();
+      const commentsCountMap = new Map<string, number>();
+      const sharesCountMap = new Map<string, number>();
+
+      for (const like of likesData) {
+        likesCountMap.set(like.tasting_id, (likesCountMap.get(like.tasting_id) || 0) + 1);
+      }
+      for (const comment of commentsData) {
+        commentsCountMap.set(comment.tasting_id, (commentsCountMap.get(comment.tasting_id) || 0) + 1);
+      }
+      for (const share of sharesData) {
+        sharesCountMap.set(share.tasting_id, (sharesCountMap.get(share.tasting_id) || 0) + 1);
       }
 
-      // Fetch user's likes and follows
-      if (userId) {
-        try {
-          const { data: userLikesData } = await supabase
-            .from('tasting_likes')
-            .select('tasting_id')
-            .eq('user_id', userId)
-            .in('tasting_id', tastingIds);
-          userLikes = new Set((userLikesData as any[])?.map((l: any) => l.tasting_id) || []);
-        } catch (error) {
-          logger.debug('SocialFeed', 'User likes query failed');
-        }
-
-        try {
-          const { data: userFollowsData } = await supabase
-            .from('user_follows')
-            .select('following_id')
-            .eq('follower_id', userId);
-          userFollows = new Set((userFollowsData as any[])?.map((f: any) => f.following_id) || []);
-        } catch (error) {
-          logger.debug('SocialFeed', 'User follows query failed');
-        }
-      }
-
-      // Transform data
-      const transformedPosts: TastingPost[] = (tastingsData as any[])?.map((tasting: any) => {
-        const profile = (profilesData as any[])?.find((p: any) => p.user_id === tasting.user_id);
-        const likes = likesData?.filter(l => l.tasting_id === tasting.id) || [];
-        const comments = commentsData?.filter(c => c.tasting_id === tasting.id) || [];
-        const shares = sharesData?.filter(s => s.tasting_id === tasting.id) || [];
-        const postItems = (itemsData as any[])?.filter(item => item.tasting_id === tasting.id) || [];
-        const photos = postItems.map(item => item.photo_url).filter(Boolean) as string[];
+      // Transform data using the pre-fetched relations
+      const transformedPosts: TastingPost[] = (tastingsWithRelations as any[])?.map((tasting: any) => {
+        // Profile is already embedded in the tasting from the join
+        const profile = tasting.profiles;
+        // Items are already embedded in the tasting from the join
+        const postItems = tasting.quick_tasting_items || [];
+        // Sort items by overall_score descending
+        postItems.sort((a: any, b: any) => (b.overall_score || 0) - (a.overall_score || 0));
+        const photos = postItems.map((item: any) => item.photo_url).filter(Boolean) as string[];
 
         return {
           id: tasting.id,
@@ -257,9 +257,9 @@ export function useSocialFeed({
           completed_items: tasting.completed_items,
           user: profile || {},
           stats: {
-            likes: likes.length,
-            comments: comments.length,
-            shares: shares.length
+            likes: likesCountMap.get(tasting.id) || 0,
+            comments: commentsCountMap.get(tasting.id) || 0,
+            shares: sharesCountMap.get(tasting.id) || 0
           },
           isLiked: userLikes.has(tasting.id),
           isFollowed: userFollows.has(tasting.user_id),
@@ -281,7 +281,7 @@ export function useSocialFeed({
       } else {
         setPosts(transformedPosts);
       }
-      
+
       setPage(pageNum);
     } catch (error) {
       logger.error('SocialFeed', 'Error loading social feed', error);

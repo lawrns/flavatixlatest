@@ -19,9 +19,8 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
-  // Disable static optimization to avoid Html import errors
+  // Experimental settings
   experimental: {
-    disableOptimizedLoading: true,
     esmExternals: false,
   },
 

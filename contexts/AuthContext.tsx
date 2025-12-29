@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { getSupabaseClient } from '../lib/supabase';
 
@@ -102,13 +102,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const refreshSession = async () => {
+  const refreshSession = useCallback(async () => {
     setLoading(true);
     await refreshSessionInternal();
     setLoading(false);
-  };
+  }, []);
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     try {
       setLoading(true);
       const { error } = await supabase.auth.signOut();
@@ -120,15 +120,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase.auth]);
 
-  const value: AuthContextType = {
+  const value = useMemo<AuthContextType>(() => ({
     user,
     session,
     loading,
     signOut,
     refreshSession,
-  };
+  }), [user, session, loading, signOut, refreshSession]);
 
   return (
     <AuthContext.Provider value={value}>

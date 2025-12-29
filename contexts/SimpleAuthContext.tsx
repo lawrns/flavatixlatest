@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { getSupabaseClient } from '../lib/supabase';
 import { logger } from '../lib/logger';
@@ -73,7 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => subscription.unsubscribe();
   }, []);
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     try {
       const userId = user?.id || 'unknown';
       const { error } = await supabase.auth.signOut();
@@ -86,9 +86,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       logger.error('Auth', 'Error in signOut', error);
     }
-  };
+  }, [user?.id, supabase.auth]);
 
-  const refreshSession = async () => {
+  const refreshSession = useCallback(async () => {
     try {
       const { data: { session }, error } = await supabase.auth.refreshSession();
       if (error) {
@@ -105,15 +105,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       logger.error('Auth', 'Error in refreshSession', error);
       authLogger.tokenRefresh(user?.id || 'unknown', false);
     }
-  };
+  }, [user?.id, supabase.auth]);
 
-  const value: AuthContextType = {
+  const value = useMemo<AuthContextType>(() => ({
     user,
     session,
     loading,
     signOut,
     refreshSession,
-  };
+  }), [user, session, loading, signOut, refreshSession]);
 
   return (
     <AuthContext.Provider value={value}>
