@@ -372,13 +372,13 @@ const NewStudyTastingPage: React.FC = () => {
 
                 <div>
                   <label className="block text-small font-body font-medium text-text-primary mb-xs">
-                    Base Category *
+                    What's being tasted? *
                   </label>
                   <Combobox
                     options={BASE_CATEGORIES}
                     value={form.baseCategory}
                     onChange={(value) => setForm(prev => ({ ...prev, baseCategory: value }))}
-                    placeholder="Select or type a category"
+                    placeholder="Select or type what you're tasting..."
                     className={errors.baseCategory ? 'border-error' : ''}
                     allowCustom={true}
                   />
@@ -658,7 +658,7 @@ const NewStudyTastingPage: React.FC = () => {
               </div>
 
               <div>
-                <h4 className="font-semibold text-text-primary mb-xs">Base Category</h4>
+                <h4 className="font-semibold text-text-primary mb-xs">What's being tasted?</h4>
                 <p className="text-text-secondary">{form.baseCategory || 'Not selected'}</p>
               </div>
 
