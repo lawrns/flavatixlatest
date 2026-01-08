@@ -96,10 +96,11 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   const loadUserRole = async () => {
     if (!session) return;
 
-    // Quick tasting doesn't use roles - set default permissions
-    if (session.mode === 'quick') {
+    // Quick tasting and predefined study mode don't use participant roles
+    // Creator has full permissions
+    if (session.mode === 'quick' || (session.mode === 'study' && session.study_approach === 'predefined')) {
       setUserPermissions({
-        role: 'host', // Creator has full access to quick tasting
+        role: 'host',
         canModerate: true,
         canAddItems: true,
         canManageSession: true,
@@ -110,7 +111,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
       return;
     }
 
-    // Study mode: load participant roles
+    // Collaborative study mode: load participant roles
     try {
       const permissions = await roleService.getUserPermissions(session.id, userId);
       setUserPermissions(permissions);
