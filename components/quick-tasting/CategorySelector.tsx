@@ -131,7 +131,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-lg">
         <h2 className="text-h2 font-heading font-bold text-text-primary mb-sm">
-          Choose Your Tasting Category
+          What are you tasting?
         </h2>
         <p className="text-text-secondary">
           Select from the list, type your own, or choose a quick option below
