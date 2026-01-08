@@ -132,13 +132,19 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
           {/* Category & Mode Info */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-1 sm:space-y-0 text-text-secondary">
             <span className="text-sm font-medium">Category:</span>
-            <CategoryDropdown
-              category={session.category}
-              onCategoryChange={onCategoryChange}
-              className="text-sm w-full sm:w-auto"
-              isLoading={isChangingCategory}
-              disabled={itemsCount > 1}
-            />
+            {phase === 'setup' ? (
+              <CategoryDropdown
+                category={session.category}
+                onCategoryChange={onCategoryChange}
+                className="text-sm w-full sm:w-auto"
+                isLoading={isChangingCategory}
+                disabled={itemsCount > 1}
+              />
+            ) : (
+              <span className="text-sm font-semibold text-text-primary capitalize">
+                {session.custom_category_name || session.category.replace(/_/g, ' ')}
+              </span>
+            )}
             <div className="flex flex-wrap items-center space-x-2 text-xs">
               {session.mode === 'study' && session.study_approach && (
                 <span>• {session.study_approach.charAt(0).toUpperCase() + session.study_approach.slice(1)}</span>
