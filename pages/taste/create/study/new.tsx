@@ -262,12 +262,16 @@ const NewStudyTastingPage: React.FC = () => {
   };
 
   const handleSubmit = async (saveForLater: boolean = false) => {
+    console.log('[Study Mode] Starting submission', { form, saveForLater });
+
     if (!user) {
+      console.error('[Study Mode] No user found');
       toast.error('Please log in to continue');
       return;
     }
 
     if (!validateForm()) {
+      console.error('[Study Mode] Validation failed', errors);
       toast.error('Please fix the errors before submitting');
       return;
     }
@@ -275,13 +279,16 @@ const NewStudyTastingPage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
+      console.log('[Study Mode] Getting auth session...');
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
+        console.error('[Study Mode] No auth session found');
         toast.error('Session expired. Please log in again.');
         router.push('/auth');
         return;
       }
 
+      console.log('[Study Mode] Sending create request to API...');
       const response = await fetch('/api/tastings/study/create', {
         method: 'POST',
         headers: {
@@ -302,21 +309,27 @@ const NewStudyTastingPage: React.FC = () => {
         })
       });
 
+      console.log('[Study Mode] API response status:', response.status);
+
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('[Study Mode] API error:', errorData);
         throw new Error(errorData.error || 'Failed to create study session');
       }
 
       const data = await response.json();
+      console.log('[Study Mode] Study session created:', data);
       toast.success('Study session created successfully!');
 
       if (saveForLater) {
+        console.log('[Study Mode] Redirecting to my-tastings');
         router.push('/my-tastings');
       } else {
+        console.log('[Study Mode] Navigating to study session:', `/taste/study/${data.sessionId}`);
         router.push(`/taste/study/${data.sessionId}`);
       }
     } catch (error) {
-      console.error('Error creating study session:', error);
+      console.error('[Study Mode] Submission error:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to create study session');
     } finally {
       setIsSubmitting(false);
