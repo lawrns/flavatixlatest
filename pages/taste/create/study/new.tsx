@@ -317,16 +317,24 @@ const NewStudyTastingPage: React.FC = () => {
         throw new Error(errorData.error || 'Failed to create study session');
       }
 
-      const data = await response.json();
-      console.log('[Study Mode] Study session created:', data);
+      const result = await response.json();
+      console.log('[Study Mode] API response:', result);
+
+      const sessionId = result.data?.sessionId;
+      console.log('[Study Mode] Session ID:', sessionId);
+
+      if (!sessionId) {
+        throw new Error('No session ID returned from API');
+      }
+
       toast.success('Study session created successfully!');
 
       if (saveForLater) {
         console.log('[Study Mode] Redirecting to my-tastings');
         router.push('/my-tastings');
       } else {
-        console.log('[Study Mode] Navigating to study session:', `/taste/study/${data.sessionId}`);
-        router.push(`/taste/study/${data.sessionId}`);
+        console.log('[Study Mode] Navigating to study session:', `/taste/study/${sessionId}`);
+        router.push(`/taste/study/${sessionId}`);
       }
     } catch (error) {
       console.error('[Study Mode] Submission error:', error);
