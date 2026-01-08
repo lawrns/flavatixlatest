@@ -83,7 +83,7 @@ const nextConfig = {
     return [
       {
         source: '/history',
-        destination: '/flavor-wheels',
+        destination: '/my-tastings',
         permanent: true,
       },
     ]
