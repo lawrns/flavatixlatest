@@ -46,9 +46,16 @@ const CharacteristicSlider: React.FC<CharacteristicSliderProps> = ({
           min={min}
           max={max}
           value={value}
-          onChange={(e) => onChange(parseInt(e.target.value))}
+          onChange={(e) => {
+            // Auto-mark as touched on any interaction
+            if (!touched && onTouch) {
+              onTouch();
+            }
+            onChange(parseInt(e.target.value));
+          }}
           onMouseDown={() => onTouch?.()}
           onTouchStart={() => onTouch?.()}
+          onFocus={() => onTouch?.()}
           className="w-full h-5 rounded-full appearance-none cursor-pointer slider-ultra-thin shadow-none border-0 touch-manipulation"
           style={{
             '--slider-value': `${value}%`,
