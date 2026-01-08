@@ -185,8 +185,9 @@ const Combobox: React.FC<ComboboxProps> = ({
           role="listbox"
           aria-label={label || 'Options'}
           className="
-            absolute z-50 w-full mt-1 max-h-60 overflow-auto bg-white dark:bg-zinc-800 
+            absolute z-50 w-full mt-1 max-h-60 overflow-y-auto overflow-x-hidden bg-white dark:bg-zinc-800
             border border-gray-300 dark:border-zinc-600 rounded-lg shadow-lg
+            touch-pan-y overscroll-contain
           "
         >
           {filteredOptions.map((option, index) => (
