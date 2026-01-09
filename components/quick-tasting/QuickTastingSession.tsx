@@ -163,10 +163,22 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
       logger.debug('Tasting', `Loaded ${(data || []).length} items`);
       setItems(data || []);
 
-      // After loading items, check if we need to create the first item for quick tasting
-      if ((data || []).length === 0 && session.mode === 'quick' && phase === 'tasting' && !isLoading) {
+      // After loading items, check if we need to create the first item
+      // Auto-add for quick tasting (in tasting phase) or predefined study mode
+      const shouldAutoAddItem = (data || []).length === 0 && !isLoading && (
+        (session.mode === 'quick' && phase === 'tasting') ||
+        (session.mode === 'study' && session.study_approach === 'predefined')
+      );
+
+      if (shouldAutoAddItem) {
         logger.debug('🔄 QuickTastingSession: No items found, auto-adding first item...');
-        setTimeout(() => addNewItem(), 100); // Small delay to ensure state is updated
+        setTimeout(() => {
+          addNewItem();
+          // For study mode, also switch to tasting phase
+          if (session.mode === 'study') {
+            setPhase('tasting');
+          }
+        }, 100);
       }
     } catch (error) {
       console.error('Error loading tasting items:', error);
