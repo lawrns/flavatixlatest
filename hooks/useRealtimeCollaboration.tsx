@@ -63,7 +63,7 @@ export function useRealtimeCollaboration({
         const { data: profile } = await supabase
           .from('profiles')
           .select('username, full_name')
-          .eq('id', user.id)
+          .eq('user_id', user.id)
           .single() as { data: { username?: string; full_name?: string } | null };
 
         const displayName = profile?.full_name || profile?.username || user.email?.split('@')[0] || 'Anonymous';
