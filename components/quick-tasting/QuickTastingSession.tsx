@@ -293,9 +293,14 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     }
 
     try {
+      // Convert undefined values to null for Supabase (Supabase ignores undefined)
+      const dbUpdates = Object.fromEntries(
+        Object.entries(updates).map(([key, value]) => [key, value === undefined ? null : value])
+      );
+
       const { data, error } = await supabase
         .from('quick_tasting_items')
-        .update(updates)
+        .update(dbUpdates)
         .eq('id', itemId)
         .select()
         .single();

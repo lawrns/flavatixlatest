@@ -239,7 +239,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
       if (error) throw error;
 
       // Update item
-      onUpdate({ photo_url: null });
+      onUpdate({ photo_url: undefined });
       toast.success('Photo removed');
     } catch (error) {
       console.error('Error removing photo:', error);
