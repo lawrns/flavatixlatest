@@ -104,7 +104,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                   </button>
                 ) : (
                   <Link href="/dashboard" className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-xl text-primary">nutrition</span>
+                    <img src="/logos/flavatix-logo.svg" alt="Flavatix" className="w-6 h-6" />
                     <span className="font-heading font-semibold text-text-primary hidden sm:inline">
                       Flavatix
                     </span>

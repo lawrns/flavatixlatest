@@ -12,8 +12,8 @@ export default function Home() {
         <title>Flavatix - The one place for all your tasting needs</title>
         <meta name="description" content="The world's most comprehensive tasting app for anything with flavor or aroma. Discover, analyze, and share your tasting experiences with our user-friendly platform." />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-        <link rel="icon" href="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png" />
-        <link rel="apple-touch-icon" href="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png" />
+        <link rel="icon" href="/logos/flavatix-icon.svg" />
+        <link rel="apple-touch-icon" href="/logos/flavatix-icon.svg" />
       </Head>
 
       <main className="min-h-screen">
@@ -24,29 +24,15 @@ export default function Home() {
           <Container size="md" className="relative z-10 py-2xl text-center">
             {/* Logo/Brand Area */}
             <div className="mb-lg">
-              <Image
-                src="https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/flavicon.png"
-                alt="Flavatix Logo"
-                width={64}
-                height={64}
-                className="w-16 h-16 mx-auto mb-md"
+              <img
+                src="/logos/flavatix-logo.svg"
+                alt="Flavatix"
+                className="w-full max-w-md h-auto mx-auto mb-md"
               />
-              
-              {/* App Name */}
-              <h1 className="font-heading font-bold text-h1 text-white mb-sm">
-                Flavatix
-              </h1>
 
               {/* Tagline */}
-              <p className="text-h3 text-white font-medium mb-xs">
+              <p className="text-h3 text-white font-medium">
                 The one place for all your tasting needs
-              </p>
-
-              {/* Subtitle */}
-              <p className="text-body text-white/90 max-w-2xl mx-auto leading-body">
-                The world's most comprehensive tasting app for anything with flavor or aroma.
-                Discover, analyze, and share your tasting experiences with our intuitive platform
-                designed for everyone from casual enthusiasts to industry professionals.
               </p>
             </div>
             
