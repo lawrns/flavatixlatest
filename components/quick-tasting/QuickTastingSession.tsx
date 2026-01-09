@@ -48,6 +48,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
 
   // Ref for debouncing AI extraction
   const aiExtractionTimeoutRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
+  const autoAddTriggeredRef = useRef(false);
 
   // Realtime collaboration hook (only for study mode)
   const handleRemoteUpdate = useCallback((update: any) => {
@@ -162,24 +163,6 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
 
       logger.debug('Tasting', `Loaded ${(data || []).length} items`);
       setItems(data || []);
-
-      // After loading items, check if we need to create the first item
-      // Auto-add for quick tasting (in tasting phase) or predefined study mode
-      const shouldAutoAddItem = (data || []).length === 0 && !isLoading && (
-        (session.mode === 'quick' && phase === 'tasting') ||
-        (session.mode === 'study' && session.study_approach === 'predefined')
-      );
-
-      if (shouldAutoAddItem) {
-        logger.debug('🔄 QuickTastingSession: No items found, auto-adding first item...');
-        setTimeout(() => {
-          addNewItem();
-          // For study mode, also switch to tasting phase
-          if (session.mode === 'study') {
-            setPhase('tasting');
-          }
-        }, 100);
-      }
     } catch (error) {
       console.error('Error loading tasting items:', error);
       toast.error('Failed to load tasting items');
@@ -257,6 +240,39 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     } catch (error) {
       console.error('[ERROR] QuickTastingSession: Error adding new item:', error);
       toast.error('Failed to add new item');
+    }
+  };
+
+  const deleteLastItem = async () => {
+    if (!session || items.length === 0) return;
+
+    const lastItem = items[items.length - 1];
+
+    // Don't allow deleting if it's the only item
+    if (items.length === 1) {
+      toast.error('Cannot delete the only item');
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('quick_tasting_items')
+        .delete()
+        .eq('id', lastItem.id);
+
+      if (error) throw error;
+
+      // Update local state
+      const newItems = items.slice(0, -1);
+      setItems(newItems);
+
+      // Move to the new last item
+      setCurrentItemIndex(Math.max(0, newItems.length - 1));
+
+      toast.success('Item deleted');
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      toast.error('Failed to delete item');
     }
   };
 
@@ -630,6 +646,38 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     }
   }, [session?.id, session?.mode, session?.notes]);
 
+  // Auto-add first item for Quick Tasting and predefined Study Mode
+  useEffect(() => {
+    if (!session) return;
+
+    // Prevent multiple triggers
+    if (autoAddTriggeredRef.current) return;
+
+    // Quick Tasting: auto-add when in tasting phase with no items
+    const isQuickTasting = session.mode === 'quick' && phase === 'tasting';
+
+    // Study Mode: predefined approach with permissions ready
+    const isPredefinedStudy = session.mode === 'study' && session.study_approach === 'predefined';
+
+    // For predefined study, wait for permissions
+    if (isPredefinedStudy && (!userPermissions || !userRole)) {
+      logger.debug('🔄 Auto-add: Waiting for permissions...');
+      return;
+    }
+
+    // Check if we need to add the first item
+    if ((isQuickTasting || isPredefinedStudy) && items.length === 0 && !isLoading) {
+      logger.debug('🔄 Auto-add: No items found, auto-adding first item');
+      autoAddTriggeredRef.current = true;
+      setTimeout(() => {
+        addNewItem();
+        if (session.mode === 'study') {
+          setPhase('tasting');
+        }
+      }, 100);
+    }
+  }, [session?.id, session?.mode, session?.study_approach, phase, items.length, isLoading, userPermissions, userRole]);
+
   const currentItem = items[currentItemIndex];
   const hasItems = items.length > 0;
   const completedItems = items.filter(item => item.overall_score !== null).length;
@@ -868,6 +916,19 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
           </div>
         )}
 
+        {/* Delete Last Item Button - only show when on last item and more than 1 item exists */}
+        {items.length > 1 && currentItemIndex === items.length - 1 && (
+          <div className="flex justify-end mb-3">
+            <button
+              onClick={deleteLastItem}
+              className="flex items-center gap-2 px-3 py-2 text-sm text-error hover:bg-error/10 rounded-lg transition-colors"
+            >
+              <span className="material-symbols-outlined text-base">delete</span>
+              Delete this item
+            </button>
+          </div>
+        )}
+
         {/* Unified Tasting Item */}
         <TastingItem
           item={currentItem}
@@ -879,7 +940,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
           showOverallScore={true}
           showFlavorWheel={false}
           showEditControls={true}
-          showPhotoControls={false}
+          showPhotoControls={true}
           itemIndex={currentItemIndex + 1}
           studyCategories={studyCategories}
         />

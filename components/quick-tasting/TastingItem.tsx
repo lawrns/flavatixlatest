@@ -55,9 +55,14 @@ const TastingItem: React.FC<TastingItemProps> = ({
   const [localAroma, setLocalAroma] = useState(item.aroma || '');
   const [localFlavor, setLocalFlavor] = useState(item.flavor || '');
   const [localScore, setLocalScore] = useState(item.overall_score || 0);
+  const [scoreTouched, setScoreTouched] = useState(item.overall_score !== null);
   const [studyCategoryData, setStudyCategoryData] = useState<Record<string, any>>(
     item.study_category_data || {}
   );
+
+  // Refs for debouncing slider updates
+  const scoreDebounceRef = useRef<NodeJS.Timeout | null>(null);
+  const studyCategoryDebounceRef = useRef<NodeJS.Timeout | null>(null);
 
   // Generate dynamic display name based on current category and item index
   const getDisplayName = () => {
@@ -76,10 +81,19 @@ const TastingItem: React.FC<TastingItemProps> = ({
     setLocalAroma(item.aroma || '');
     setLocalFlavor(item.flavor || '');
     setLocalScore(item.overall_score || 0);
+    setScoreTouched(item.overall_score !== null);
     setStudyCategoryData(item.study_category_data || {});
     setEditingName(item.item_name);
     setIsEditingName(false);
   }, [item.id, item.study_category_data]);
+
+  // Cleanup debounce timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (scoreDebounceRef.current) clearTimeout(scoreDebounceRef.current);
+      if (studyCategoryDebounceRef.current) clearTimeout(studyCategoryDebounceRef.current);
+    };
+  }, []);
 
   const getScoreLabel = (score: number): string => {
     if (score >= 90) return '(Exceptional)';
@@ -164,13 +178,28 @@ const TastingItem: React.FC<TastingItemProps> = ({
 
   const handleScoreChange = (score: number) => {
     setLocalScore(score);
-    onUpdate({ overall_score: score });
+    setScoreTouched(true);
+
+    // Debounce database update - only save after user stops dragging
+    if (scoreDebounceRef.current) {
+      clearTimeout(scoreDebounceRef.current);
+    }
+    scoreDebounceRef.current = setTimeout(() => {
+      onUpdate({ overall_score: score });
+    }, 300);
   };
 
   const handleStudyCategoryChange = (categoryName: string, value: any) => {
     const updatedData = { ...studyCategoryData, [categoryName]: value };
     setStudyCategoryData(updatedData);
-    onUpdate({ study_category_data: updatedData });
+
+    // Debounce database update - only save after user stops dragging
+    if (studyCategoryDebounceRef.current) {
+      clearTimeout(studyCategoryDebounceRef.current);
+    }
+    studyCategoryDebounceRef.current = setTimeout(() => {
+      onUpdate({ study_category_data: updatedData });
+    }, 300);
   };
 
   const startEditingName = () => {
@@ -210,7 +239,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
       if (error) throw error;
 
       // Update item
-      onUpdate({ photo_url: undefined });
+      onUpdate({ photo_url: null });
       toast.success('Photo removed');
     } catch (error) {
       console.error('Error removing photo:', error);
@@ -372,12 +401,24 @@ const TastingItem: React.FC<TastingItemProps> = ({
                         min="0"
                         max={category.scaleMax || 100}
                         value={studyCategoryData[category.name]?.scale || 0}
-                        onChange={(e) => handleStudyCategoryChange(category.name, { 
-                          ...studyCategoryData[category.name], 
-                          scale: parseInt(e.target.value) 
+                        onChange={(e) => handleStudyCategoryChange(category.name, {
+                          ...studyCategoryData[category.name],
+                          scale: parseInt(e.target.value)
                         })}
-                        className="w-full h-2 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-primary"
+                        className="w-full h-2 rounded-lg appearance-none cursor-pointer"
+                        style={{
+                          background: `linear-gradient(to right,
+                            #ec7813 0%,
+                            #ec7813 ${((studyCategoryData[category.name]?.scale || 0) / (category.scaleMax || 100)) * 100}%,
+                            #E6E6E6 ${((studyCategoryData[category.name]?.scale || 0) / (category.scaleMax || 100)) * 100}%,
+                            #E6E6E6 100%)`
+                        }}
                       />
+                      <div className="flex justify-between mt-1 text-xs text-text-secondary">
+                        <span>0</span>
+                        <span>{Math.round((category.scaleMax || 100) / 2)}</span>
+                        <span>{category.scaleMax || 100}</span>
+                      </div>
                     </div>
                   )}
                   
@@ -475,7 +516,7 @@ const TastingItem: React.FC<TastingItemProps> = ({
                     <div className="text-5xl sm:text-6xl font-bold text-gemini-text-dark dark:text-white leading-none tabular-nums">
                       {localScore}
                     </div>
-                    {localScore > 0 && (
+                    {scoreTouched && (
                       <div className="mt-1 text-xs font-medium text-gemini-text-muted dark:text-zinc-500">
                         {getScoreLabel(localScore)}
                       </div>

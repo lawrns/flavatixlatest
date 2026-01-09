@@ -200,12 +200,12 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
           {/* Stats */}
           <div className="flex items-center gap-3 pl-2 border-l border-gemini-border dark:border-zinc-600">
             <div className="text-center">
-              <div className="text-2xl font-bold text-primary tabular-nums">{completedItems}</div>
-              <div className="text-xs text-gemini-text-muted">Done</div>
+              <div className="text-2xl font-bold text-gemini-text-dark dark:text-white tabular-nums">{itemsCount}</div>
+              <div className="text-xs text-gemini-text-muted">Total items</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-gemini-text-dark dark:text-white tabular-nums">{itemsCount}</div>
-              <div className="text-xs text-gemini-text-muted">Total</div>
+              <div className="text-2xl font-bold text-primary tabular-nums">{completedItems}</div>
+              <div className="text-xs text-gemini-text-muted">Completed</div>
             </div>
           </div>
         </div>
