@@ -280,6 +280,12 @@ const TastingItem: React.FC<TastingItemProps> = ({
         <div className="flex items-center space-x-sm min-w-0 flex-1">
           <div className="flex items-center justify-center w-10 h-10 tablet:w-12 tablet:h-12 flex-shrink-0">{getCategoryIcon(category)}</div>
           <div className="min-w-0 flex-1">
+            {/* Item # Label */}
+            {!isBlindItems && itemIndex && (
+              <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                Item #{itemIndex}
+              </div>
+            )}
             {isEditingName ? (
               <div className="flex items-center space-x-2">
                 <input
@@ -291,14 +297,15 @@ const TastingItem: React.FC<TastingItemProps> = ({
                     if (e.key === 'Enter') saveName();
                     if (e.key === 'Escape') cancelEditingName();
                   }}
-                  className="text-lg tablet:text-h4 font-heading font-semibold text-text-primary bg-transparent border-b border-primary-500 focus:outline-none flex-1"
+                  placeholder="<enter name>"
+                  className="text-lg tablet:text-h4 font-heading font-semibold text-text-primary bg-transparent border-b border-primary-500 focus:outline-none flex-1 placeholder:text-zinc-400 placeholder:italic"
                   autoFocus
                 />
               </div>
             ) : (
               <div className={`flex items-center space-x-2 ${showEditControls ? 'group cursor-pointer' : ''}`} onClick={showEditControls ? startEditingName : undefined}>
                 <h3 className="text-lg tablet:text-h4 font-heading font-semibold text-text-primary truncate">
-                  {getDisplayName()}
+                  {getDisplayName() || '<enter name>'}
                 </h3>
                 {!isBlindItems && showEditControls && (
                   <Edit size={16} className="text-text-secondary opacity-80 transition-opacity flex-shrink-0" />
