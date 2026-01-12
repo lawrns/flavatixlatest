@@ -49,6 +49,8 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   // Ref for debouncing AI extraction
   const aiExtractionTimeoutRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
   const autoAddTriggeredRef = useRef(false);
+  const hasAutoAddedRef = useRef(false);
+  const sessionIdRef = useRef<string | null>(null);
 
   // Realtime collaboration hook (only for study mode)
   const handleRemoteUpdate = useCallback((update: any) => {
@@ -655,8 +657,15 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   useEffect(() => {
     if (!session) return;
 
+    // Reset auto-add flag when session changes
+    if (sessionIdRef.current !== session.id) {
+      sessionIdRef.current = session.id;
+      hasAutoAddedRef.current = false;
+      autoAddTriggeredRef.current = false;
+    }
+
     // Prevent multiple triggers
-    if (autoAddTriggeredRef.current) return;
+    if (autoAddTriggeredRef.current || hasAutoAddedRef.current) return;
 
     // Quick Tasting: auto-add when in tasting phase with no items
     const isQuickTasting = session.mode === 'quick' && phase === 'tasting';
@@ -674,6 +683,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     if ((isQuickTasting || isPredefinedStudy) && items.length === 0 && !isLoading) {
       logger.debug('🔄 Auto-add: No items found, auto-adding first item');
       autoAddTriggeredRef.current = true;
+      hasAutoAddedRef.current = true;
       setTimeout(() => {
         addNewItem();
         if (session.mode === 'study') {
