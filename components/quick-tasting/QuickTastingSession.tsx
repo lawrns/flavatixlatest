@@ -257,12 +257,12 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     }
 
     // Check if item has any data
-    const hasData = lastItem.item_name ||
+    const hasData = (lastItem.item_name && lastItem.item_name.trim() !== '') ||
                     lastItem.overall_score !== null ||
                     lastItem.appearance_score !== null ||
                     lastItem.aroma_score !== null ||
                     lastItem.flavor_score !== null ||
-                    lastItem.notes ||
+                    (lastItem.notes && lastItem.notes.trim() !== '') ||
                     lastItem.photo_url;
 
     if (hasData) {
