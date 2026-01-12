@@ -605,6 +605,20 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   const completeSession = async () => {
     if (!session) return;
 
+    // Validate: Check if all items have at least an overall score
+    const emptyItems = items.filter(item => item.overall_score === null);
+
+    if (emptyItems.length > 0) {
+      toast.error(`Please score all items before completing. ${emptyItems.length} item(s) missing scores.`);
+      return;
+    }
+
+    // Validate: Must have at least 1 item
+    if (items.length === 0) {
+      toast.error('Please add at least one item before completing the tasting.');
+      return;
+    }
+
     logger.debug('🏁 QuickTastingSession: Completing session:', session.id);
     logger.debug('Tasting', `Current items state: ${items.length} items`);
 
@@ -987,6 +1001,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
           currentIndex={currentItemIndex}
           isLoading={isLoading}
           showAllItems={showItemNavigation}
+          incompleteCount={items.filter(item => item.overall_score === null).length}
           onPrevious={handlePreviousItem}
           onNext={handleNextOrAdd}
           onItemSelect={handleItemNavigation}

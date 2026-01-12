@@ -13,6 +13,7 @@ interface SessionNavigationProps {
   currentIndex: number;
   isLoading: boolean;
   showAllItems: boolean;
+  incompleteCount?: number;
   onPrevious: () => void;
   onNext: () => void;
   onItemSelect: (index: number) => void;
@@ -25,6 +26,7 @@ export const SessionNavigation: React.FC<SessionNavigationProps> = ({
   currentIndex,
   isLoading,
   showAllItems,
+  incompleteCount = 0,
   onPrevious,
   onNext,
   onItemSelect,
@@ -83,10 +85,18 @@ export const SessionNavigation: React.FC<SessionNavigationProps> = ({
       {/* Complete Tasting Button - Primary CTA */}
       <button
         onClick={onComplete}
-        disabled={isLoading}
-        className="w-full max-w-xs px-6 py-3 rounded-[14px] text-base font-semibold text-white bg-primary hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        disabled={isLoading || incompleteCount > 0}
+        className={`w-full max-w-xs px-6 py-3 rounded-[14px] text-base font-semibold transition-colors ${
+          incompleteCount > 0
+            ? 'bg-zinc-300 text-zinc-500 cursor-not-allowed dark:bg-zinc-700 dark:text-zinc-400'
+            : 'text-white bg-primary hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed'
+        }`}
       >
-        {isLoading ? 'Completing...' : 'Complete Tasting'}
+        {isLoading
+          ? 'Completing...'
+          : incompleteCount > 0
+            ? `Complete Tasting (${incompleteCount} items incomplete)`
+            : 'Complete Tasting'}
       </button>
     </div>
   );
