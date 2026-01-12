@@ -257,13 +257,18 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
     }
 
     // Check if item has any data
-    const hasData = (lastItem.item_name && lastItem.item_name.trim() !== '') ||
+    // Ignore auto-generated names like "Item 1", "Item 2"
+    const hasDefaultName = /^Item \d+$/.test(lastItem.item_name);
+    const hasCustomName = !hasDefaultName && lastItem.item_name && lastItem.item_name.trim() !== '';
+
+    const hasData = hasCustomName ||
                     lastItem.overall_score !== null ||
-                    lastItem.appearance_score !== null ||
-                    lastItem.aroma_score !== null ||
-                    lastItem.flavor_score !== null ||
                     (lastItem.notes && lastItem.notes.trim() !== '') ||
-                    lastItem.photo_url;
+                    (lastItem.aroma && lastItem.aroma.trim() !== '') ||
+                    (lastItem.flavor && lastItem.flavor.trim() !== '') ||
+                    (lastItem.flavor_scores && Object.keys(lastItem.flavor_scores).length > 0) ||
+                    lastItem.photo_url ||
+                    (lastItem.study_category_data && Object.keys(lastItem.study_category_data).length > 0);
 
     if (hasData) {
       const confirmed = window.confirm(
