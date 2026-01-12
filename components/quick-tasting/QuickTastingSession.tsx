@@ -256,6 +256,22 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
       return;
     }
 
+    // Check if item has any data
+    const hasData = lastItem.item_name ||
+                    lastItem.overall_score !== null ||
+                    lastItem.appearance_score !== null ||
+                    lastItem.aroma_score !== null ||
+                    lastItem.flavor_score !== null ||
+                    lastItem.notes ||
+                    lastItem.photo_url;
+
+    if (hasData) {
+      const confirmed = window.confirm(
+        'Are you sure you want to delete this item? This action cannot be undone.'
+      );
+      if (!confirmed) return;
+    }
+
     try {
       const { error } = await supabase
         .from('quick_tasting_items')
