@@ -41,6 +41,9 @@ class ProfileService {
         .single();
 
       if (error) {
+        // TODO(profiles): Silent failure returns null - caller cannot distinguish
+        // "profile not found" from "database error". Consider throwing or returning
+        // { data: null, error } tuple for better error handling.
         console.error('Error fetching profile:', error);
         return null;
       }

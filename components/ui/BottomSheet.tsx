@@ -42,7 +42,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/40"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/40"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}

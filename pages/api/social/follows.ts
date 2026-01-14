@@ -125,6 +125,11 @@ async function toggleFollowHandler(
         .select('*', { count: 'exact', head: true })
         .eq('following_id', following_id);
 
+      // TODO(social): Send follow notification to target user.
+      // Import notificationService and call:
+      // await notificationService.notifyFollow(userId, following_id, currentUserName);
+      // Need to fetch current user's name from profiles table first.
+
       return sendSuccess(res, {
         following: true,
         follower_count: followerCount || 0,

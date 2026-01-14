@@ -59,7 +59,9 @@ async function getPredefinedCategories(): Promise<{
     };
   } catch (error) {
     logger.error('DescriptorExtraction', 'Error fetching predefined categories', error);
-    // Return empty arrays as fallback
+    // TODO(ai): Empty fallback causes AI to generate uncategorized descriptors that won't
+    // match predefined_category_id. Consider: 1) Hardcoded fallback categories, 2) Retry logic,
+    // 3) Throw error to skip AI extraction entirely when categories unavailable.
     return {
       flavorCategories: [],
       metaphorCategories: []

@@ -36,7 +36,9 @@ class FlavorWheelErrorBoundary extends Component<Props, State> {
 
     // In production, send to error tracking
     if (process.env.NODE_ENV === 'production') {
-      // TODO: Send to error tracking service
+      // TODO(observability): Integrate Sentry for FlavorWheel errors.
+      // Import * as Sentry from '@sentry/nextjs' and call:
+      // Sentry.captureException(error, { tags: { component: 'FlavorWheel' }, extra: { componentStack } })
       console.error('[FlavorWheel Production Error]', {
         error: error.toString(),
         componentStack: errorInfo.componentStack,

@@ -8,6 +8,8 @@ export const useAuth = () => {
 
   useEffect(() => {
     // Get initial session
+    // TODO(auth): Add error handling for getSession failure. Currently fails silently.
+    // Should catch errors, log to Sentry, and potentially show user-facing error state.
     const getInitialSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
@@ -28,6 +30,8 @@ export const useAuth = () => {
   }, []);
 
   const signOut = async () => {
+    // TODO(auth): Handle signOut errors. Currently unhandled promise rejection if fails.
+    // Should catch error, show toast, and potentially retry or guide user to clear cookies.
     await supabase.auth.signOut();
   };
 

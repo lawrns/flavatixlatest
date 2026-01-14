@@ -101,7 +101,8 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
       // Fallback to clipboard
       try {
         await navigator.clipboard.writeText(window.location.href);
-        // TODO: Show toast notification
+        // TODO(ux): Show toast notification on successful clipboard copy.
+        // Import toast from '@/lib/toast' and call toast.success('Link copied!')
       } catch (error) {
         console.log('Error copying to clipboard:', error);
       }
@@ -358,7 +359,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
 
     // Create zoom behavior
     const zoom = d3.zoom<SVGSVGElement, unknown>()
-      .scaleExtent([0.5, 4]) // Min 0.5x, max 4x zoom
+      .scaleExtent([0.3, 4]) // Min 0.3x (more zoom out to see all labels), max 4x zoom
       .on('zoom', (event) => {
         g.attr('transform', event.transform.toString());
         setCurrentZoom(event.transform.k);

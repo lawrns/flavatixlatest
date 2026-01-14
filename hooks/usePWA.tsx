@@ -225,7 +225,7 @@ export function PWAInstallBanner() {
   if (!canInstall) return null;
 
   return (
-    <div className="fixed bottom-24 left-4 right-4 md:left-auto md:right-8 md:w-96 z-40">
+    <div className="fixed bottom-24 left-4 right-4 md:left-auto md:right-8 md:w-96 z-30">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-primary-500">
         <div className="flex items-start space-x-3">
           <div className="flex-shrink-0">

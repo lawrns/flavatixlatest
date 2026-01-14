@@ -72,8 +72,10 @@ export const PerformanceMonitor: React.FC = () => {
 
       // Send to analytics (if implemented)
       if (process.env.NODE_ENV === 'production') {
-        // TODO: Send metrics to analytics service
-        // analytics.track('performance_metrics', metrics);
+        // TODO(observability): Send Core Web Vitals to analytics service.
+        // Options: 1) Vercel Analytics (already may be configured), 2) Custom endpoint,
+        // 3) Sentry performance monitoring. Ensure LCP/FID/CLS thresholds are tracked.
+        // Example: fetch('/api/analytics/vitals', { method: 'POST', body: JSON.stringify(metrics) })
       }
     };
 

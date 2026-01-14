@@ -1157,7 +1157,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div

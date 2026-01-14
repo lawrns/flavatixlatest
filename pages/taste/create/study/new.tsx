@@ -643,7 +643,7 @@ const NewStudyTastingPage: React.FC = () => {
       {/* Preview Modal */}
       {showPreview && (
         <div 
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-md"
+          className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-md"
           onClick={(e) => e.target === e.currentTarget && setShowPreview(false)}
           onKeyDown={(e) => e.key === 'Escape' && setShowPreview(false)}
         >

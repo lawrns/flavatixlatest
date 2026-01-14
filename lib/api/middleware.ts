@@ -785,15 +785,12 @@ export function withCsrfProtection(handler: ApiHandler): ApiHandler {
       );
     }
 
-    // For Supabase auth, the session token itself provides CSRF protection
-    // The token is validated in withAuth middleware
-    // Additional validation can be added here if using custom session management
-
-    // If using custom CSRF tokens, validate them here:
-    // const isValid = await validateCsrfToken(csrfToken, context.user?.id);
-    // if (!isValid) {
-    //   return sendError(res, 'CSRF_TOKEN_INVALID', 'Invalid CSRF token', 403);
-    // }
+    // TODO(security): CSRF validation is incomplete. Currently only checks token presence,
+    // not validity. For endpoints not using Supabase auth (e.g., webhooks, public forms):
+    // 1. Implement validateCsrfToken() that checks token signature/expiry
+    // 2. Store CSRF tokens in session or signed cookie
+    // 3. Add generateCsrfToken() call to session creation flow
+    // For now, Supabase JWT in Authorization header provides implicit CSRF protection.
 
     return handler(req, res, context);
   };

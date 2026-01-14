@@ -70,6 +70,10 @@ class NotificationService {
       .limit(limit);
 
     if (error) {
+      // TODO(notifications): Silent failure returns empty array - caller has no way to know
+      // notifications failed to load vs user has no notifications. Consider:
+      // 1. Throwing error and letting caller handle, or
+      // 2. Returning { data: [], error } tuple pattern like other services.
       console.error('Error fetching notifications:', error);
       return [];
     }

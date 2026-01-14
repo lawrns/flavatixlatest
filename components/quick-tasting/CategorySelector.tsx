@@ -207,7 +207,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
       </div>
 
       {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
           <div className="card p-md flex items-center space-x-sm">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
             <span className="text-text-primary font-medium">Starting your tasting session...</span>

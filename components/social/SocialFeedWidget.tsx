@@ -280,7 +280,11 @@ export default function SocialFeedWidget({ userId, limit = 5 }: SocialFeedWidget
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  // TODO: Implement comments
+                  // TODO(social): Implement comments modal. Requires:
+                  // 1. CommentModal component with input, list, and submit
+                  // 2. API route POST /api/social/comments for CRUD
+                  // 3. Real-time subscription for new comments
+                  // 4. Notification to post owner via notificationService.notifyComment()
                 }}
                 className="flex items-center gap-1 hover:text-primary transition-colors touch-manipulation min-h-[44px] min-w-[44px] justify-center"
                 aria-label="View comments"
@@ -291,7 +295,8 @@ export default function SocialFeedWidget({ userId, limit = 5 }: SocialFeedWidget
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  // TODO: Implement sharing
+                  // TODO(social): Implement sharing. Use useSocialFeed.handleShare() which already
+                  // supports Web Share API with clipboard fallback. Wire up postId parameter.
                 }}
                 className="flex items-center gap-1 hover:text-primary transition-colors touch-manipulation min-h-[44px] min-w-[44px] justify-center"
                 aria-label="Share this tasting"
