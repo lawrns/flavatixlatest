@@ -99,7 +99,7 @@ export function usePWA() {
             setState(prev => ({ ...prev, isUpdateAvailable: true }));
 
             // Duration 0 means no auto-dismiss, use a long duration instead
-            toast.info('A new version is available!', 30000);
+            toast.info('A new version is available!', { duration: 30000 });
           }
         });
       });
@@ -126,7 +126,7 @@ export function usePWA() {
       // Show install banner after 30 seconds
       setTimeout(() => {
         if (!state.isInstalled && deferredPrompt) {
-          toast.info('Add Flavatix to your home screen for offline access!', 10000);
+          toast.info('Add Flavatix to your home screen for offline access!', { duration: 10000 });
         }
       }, 30000);
     };
@@ -152,7 +152,7 @@ export function usePWA() {
       if (outcome === 'accepted') {
         console.log('User accepted the install prompt');
         setState(prev => ({ ...prev, isInstalled: true, canInstall: false }));
-        toast.success('Flavatix installed successfully!', 5000);
+        toast.success('Flavatix installed successfully!', { duration: 5000 });
       } else {
         console.log('User dismissed the install prompt');
       }
