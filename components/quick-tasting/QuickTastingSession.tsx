@@ -10,16 +10,17 @@ import { CATEGORIES } from './CategoryDropdown';
 import { SessionHeader } from './SessionHeader';
 import { SessionNavigation } from './SessionNavigation';
 import { useRealtimeCollaboration, CollaboratorPresence } from '../../hooks/useRealtimeCollaboration';
+import { useDeleteConfirmation } from '../../hooks/useDeleteConfirmation';
 import { toast } from '../../lib/toast';
 import { Utensils } from 'lucide-react';
 import { logger } from '../../lib/logger';
-import { 
-  QuickTasting, 
-  TastingItemData, 
+import {
+  QuickTasting,
+  TastingItemData,
   QuickTastingSessionProps,
   UserPermissions,
   NavigationItem,
-  getDisplayCategoryName 
+  getDisplayCategoryName
 } from './types';
 
 // Types imported from ./types.ts
@@ -38,6 +39,14 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
   const [sessionNotes, setSessionNotes] = useState(session?.notes || '');
   const [userRole, setUserRole] = useState<'host' | 'participant' | 'both' | null>(null);
   const [userPermissions, setUserPermissions] = useState<any>({});
+
+  // Delete confirmation dialog
+  const { confirm: confirmDelete, Dialog: DeleteDialog } = useDeleteConfirmation({
+    title: 'Delete Item?',
+    description: 'Are you sure you want to delete this item? This action cannot be undone.',
+    confirmText: 'Delete',
+    cancelText: 'Cancel',
+  });
   const [showEditTastingDashboard, setShowEditTastingDashboard] = useState(false);
   const [showItemSuggestions, setShowItemSuggestions] = useState(false);
   const [showItemNavigation, setShowItemNavigation] = useState(false);
@@ -271,9 +280,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
                     (lastItem.study_category_data && Object.keys(lastItem.study_category_data).length > 0);
 
     if (hasData) {
-      const confirmed = window.confirm(
-        'Are you sure you want to delete this item? This action cannot be undone.'
-      );
+      const confirmed = await confirmDelete();
       if (!confirmed) return;
     }
 
@@ -1010,6 +1017,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = ({
         />
       </div>
     )}
+      <DeleteDialog />
     </div>
   );
 };

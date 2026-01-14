@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { getSupabaseClient, supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/SimpleAuthContext';
+import { useDeleteConfirmation } from '@/hooks/useDeleteConfirmation';
 import { toast } from '@/lib/toast';
 import { Trophy, Clock, Target, ChevronLeft, ChevronRight, Eye, EyeOff } from 'lucide-react';
 
@@ -58,6 +59,14 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [score, setScore] = useState<number | null>(null);
+
+  // Submit confirmation dialog
+  const { confirm: confirmSubmit, Dialog: SubmitDialog } = useDeleteConfirmation({
+    title: 'Submit Answers?',
+    description: 'You have unanswered items. Are you sure you want to submit?',
+    confirmText: 'Submit Anyway',
+    cancelText: 'Go Back',
+  });
 
   // Form state for current item
   const [currentAnswer, setCurrentAnswer] = useState({
@@ -214,8 +223,8 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
     saveCurrentAnswer();
 
     if (answers.size < items.length) {
-      const unanswered = items.length - answers.size;
-      if (!confirm(`You have ${unanswered} unanswered item(s). Submit anyway?`)) {
+      const confirmed = await confirmSubmit();
+      if (!confirmed) {
         return;
       }
     }
@@ -505,6 +514,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
           </div>
         </div>
       </div>
+      <SubmitDialog />
     </div>
   );
 };

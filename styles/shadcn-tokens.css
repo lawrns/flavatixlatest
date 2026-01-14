@@ -1,0 +1,130 @@
+/* Shadcn/UI Theme - Gemini Design System Integration */
+/* Maps Gemini design tokens to shadcn CSS variables */
+
+@layer base {
+  :root {
+    /* Background colors */
+    --background: 0 0% 100%; /* #FFFFFF */
+    --foreground: 0 0% 6.7%; /* #111111 - Gemini text-dark */
+
+    /* Card colors - Gemini card background #F6F6F6 */
+    --card: 0 0% 96.5%; /* #F6F6F6 */
+    --card-foreground: 0 0% 6.7%; /* #111111 */
+
+    /* Popover colors */
+    --popover: 0 0% 100%; /* #FFFFFF */
+    --popover-foreground: 0 0% 6.7%; /* #111111 */
+
+    /* Primary color - Gemini Rust Red #C63C22 */
+    --primary: 9 68% 45%; /* #C63C22 */
+    --primary-foreground: 0 0% 100%; /* #FFFFFF */
+
+    /* Secondary color - Neutral gray */
+    --secondary: 0 0% 96.5%; /* #F6F6F6 */
+    --secondary-foreground: 0 0% 6.7%; /* #111111 */
+
+    /* Muted colors */
+    --muted: 0 0% 96.5%; /* #F6F6F6 */
+    --muted-foreground: 0 0% 41.6%; /* #6A6A6A - Gemini text-gray */
+
+    /* Accent colors */
+    --accent: 0 0% 96.5%; /* #F6F6F6 */
+    --accent-foreground: 0 0% 6.7%; /* #111111 */
+
+    /* Destructive/error colors */
+    --destructive: 0 84.2% 60.2%; /* #ef4444 */
+    --destructive-foreground: 0 0% 100%;
+
+    /* Border colors - Gemini border #E6E6E6 */
+    --border: 0 0% 90.2%; /* #E6E6E6 */
+    --input: 0 0% 90.2%; /* #E6E6E6 */
+
+    /* Ring/focus colors - Primary color */
+    --ring: 9 68% 45%; /* #C63C22 */
+
+    /* Border radius - Gemini style */
+    --radius: 0.875rem; /* 14px for inputs/buttons */
+
+    /* Success color - Gemini success */
+    --success: 152 47% 37%; /* #2E8B57 */
+    --success-foreground: 0 0% 100%;
+
+    /* Warning color - Gemini warning */
+    --warning: 34 78% 54%; /* #E7A32B */
+    --warning-foreground: 0 0% 100%;
+  }
+
+  .dark {
+    /* Dark mode background colors */
+    --background: 240 10% 9.8%; /* #18181b */
+    --foreground: 0 0% 98%; /* #fafafa */
+
+    /* Card colors */
+    --card: 240 5.9% 16.5%; /* #27272a */
+    --card-foreground: 0 0% 98%; /* #fafafa */
+
+    /* Popover colors */
+    --popover: 240 5.9% 16.5%; /* #27272a */
+    --popover-foreground: 0 0% 98%; /* #fafafa */
+
+    /* Primary color - Lighter in dark mode */
+    --primary: 9 68% 55%; /* Lighter #C63C22 */
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary color */
+    --secondary: 240 3.7% 24.7%; /* #3f3f46 */
+    --secondary-foreground: 0 0% 98%;
+
+    /* Muted colors */
+    --muted: 240 3.7% 24.7%; /* #3f3f46 */
+    --muted-foreground: 240 5% 64.9%; /* #a1a1aa */
+
+    /* Accent colors */
+    --accent: 240 3.7% 24.7%; /* #3f3f46 */
+    --accent-foreground: 0 0% 98%;
+
+    /* Destructive colors */
+    --destructive: 0 62.8% 69.4%; /* #f87171 */
+    --destructive-foreground: 0 0% 98%;
+
+    /* Border colors */
+    --border: 240 3.7% 24.7%; /* #3f3f46 */
+    --input: 240 3.7% 24.7%; /* #3f3f46 */
+
+    /* Ring/focus colors */
+    --ring: 9 68% 55%;
+
+    /* Success color */
+    --success: 152 69% 60%; /* Lighter for dark mode */
+    --success-foreground: 0 0% 100%;
+
+    /* Warning color */
+    --warning: 34 92% 68%; /* Lighter for dark mode */
+    --warning-foreground: 0 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Component-specific radius overrides to match Gemini style */
+.shadcn-card {
+  border-radius: 22px !important; /* Gemini card radius */
+}
+
+.shadcn-button,
+.shadcn-input,
+.shadcn-select {
+  border-radius: 14px !important; /* Gemini input/button radius */
+}
+
+/* Ensure inputs have 2px border like Gemini style */
+.shadcn-input {
+  border-width: 2px;
+}

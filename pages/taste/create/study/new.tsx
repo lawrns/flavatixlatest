@@ -7,7 +7,7 @@ import { ChevronLeft, Plus, Trash2, Eye, Save, ArrowRight, CheckCircle, X } from
 import { STUDY_MODE_TEMPLATES, getStudyModeTemplateById } from '@/lib/templates/tastingTemplates';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
+import { Input } from '@/components/ui/input';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Combobox from '@/components/ui/Combobox';
 import BottomNavigation from '@/components/navigation/BottomNavigation';

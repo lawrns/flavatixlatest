@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 // UI Components
 import Button from '@/components/ui/Button';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
-import Input from '@/components/ui/Input';
+import { Input } from '@/components/ui/input';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from '@/components/ui/Modal';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { LoadingState, InlineLoading } from '@/components/ui/LoadingState';
@@ -627,9 +627,9 @@ export default function DesignSystemPage() {
                 {/* Input Sizes */}
                 <SubSection title="Input Sizes">
                   <div className="max-w-md space-y-4">
-                    <Input label="Small Input" size="sm" placeholder="Small size" />
-                    <Input label="Medium Input (default)" size="md" placeholder="Medium size" />
-                    <Input label="Large Input" size="lg" placeholder="Large size" />
+                    <Input label="Small Input" inputSize="sm" placeholder="Small size" />
+                    <Input label="Medium Input (default)" inputSize="md" placeholder="Medium size" />
+                    <Input label="Large Input" inputSize="lg" placeholder="Large size" />
                   </div>
                 </SubSection>
 

@@ -6,7 +6,7 @@ import { toast } from '@/lib/toast';
 import { ChevronLeft, Plus, Trash2, Eye, X, Package, EyeOff, ArrowRight, ArrowLeft, Check } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
+import { Input } from '@/components/ui/input';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Combobox from '@/components/ui/Combobox';
 import BottomNavigation from '@/components/navigation/BottomNavigation';

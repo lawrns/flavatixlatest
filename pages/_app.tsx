@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { ToastContainer } from 'react-toastify'
+import { Toaster } from '@/components/ui/sonner'
 import { AuthProvider } from '../contexts/SimpleAuthContext'
 import { QueryProvider } from '../lib/query/queryClient'
 import GlobalInspirationBox from '../components/GlobalInspirationBox'
@@ -91,6 +92,7 @@ export default function App({ Component, pageProps }: AppProps) {
           className="!mb-20"
           toastClassName="!rounded-xl !shadow-lg"
         />
+        <Toaster />
       </AuthProvider>
     </QueryProvider>
   )
