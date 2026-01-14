@@ -50,12 +50,12 @@ export function usePWA() {
   useEffect(() => {
     const handleOnline = () => {
       setState(prev => ({ ...prev, isOffline: false }));
-      toast.success('Back online! Syncing data...', 3000);
+      toast.success('Back online! Syncing data...', { duration: 3000 });
     };
 
     const handleOffline = () => {
       setState(prev => ({ ...prev, isOffline: true }));
-      toast.info('You are offline. Changes will sync when reconnected.', 5000);
+      toast.info('You are offline. Changes will sync when reconnected.', { duration: 5000 });
     };
 
     window.addEventListener('online', handleOnline);
