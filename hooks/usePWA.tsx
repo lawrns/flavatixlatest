@@ -178,11 +178,11 @@ export function usePWA() {
     const failed = results.filter(r => r.status !== 'success').length;
 
     if (successful > 0 && failed === 0) {
-      toast.success(`${successful} offline changes synced successfully!`, 5000);
+      toast.success(`${successful} offline changes synced successfully!`, { duration: 5000 });
     } else if (successful > 0 && failed > 0) {
-      toast.warn(`${successful} changes synced, ${failed} failed. Will retry later.`, 7000);
+      toast.warning(`${successful} changes synced, ${failed} failed. Will retry later.`, { duration: 7000 });
     } else if (failed > 0) {
-      toast.error(`Failed to sync ${failed} changes. Will retry when connection improves.`, 7000);
+      toast.error(`Failed to sync ${failed} changes. Will retry when connection improves.`, { duration: 7000 });
     }
   };
 
