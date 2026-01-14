@@ -123,7 +123,7 @@ export function deleteTastingWithUndo(tastingId: string) {
  */
 export function notificationWithAction() {
   // View action
-  toast('New comment on your tasting', {
+  toast.info('New comment on your tasting', {
     action: {
       label: 'View',
       onClick: () => {
@@ -337,7 +337,7 @@ export async function complexWorkflowExample(tastingData: any) {
     })
 
     // Step 3: Show next action
-    toast('Tasting saved', {
+    toast.success('Tasting saved', {
       description: 'What would you like to do next?',
       action: {
         label: 'Share',
@@ -357,7 +357,7 @@ export async function complexWorkflowExample(tastingData: any) {
  */
 export function socialInteractionExamples() {
   // Like notification
-  toast('Someone liked your tasting', {
+  toast.info('Someone liked your tasting', {
     description: 'Your "Espresso Blend #42" tasting has 12 likes',
     duration: 4000,
   })
@@ -374,7 +374,7 @@ export function socialInteractionExamples() {
   })
 
   // Comment notification
-  toast('New comment', {
+  toast.info('New comment', {
     description: 'John commented on your tasting',
     action: {
       label: 'Reply',
@@ -419,7 +419,7 @@ export function connectionStatusExamples() {
  * Example 20: Feature Announcements
  */
 export function featureAnnouncementExample() {
-  toast('New feature available', {
+  toast.info('New feature available', {
     description: 'Try our new AI-powered flavor descriptor extraction!',
     action: {
       label: 'Learn More',
