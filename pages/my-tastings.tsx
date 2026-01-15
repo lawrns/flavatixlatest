@@ -5,6 +5,7 @@ import { getSupabaseClient } from '../lib/supabase';
 import { getUserTastingHistory, TastingHistory } from '../lib/historyService';
 import { toast } from '../lib/toast';
 import PageLayout from '../components/layout/PageLayout';
+import EmptyStateCard from '../components/ui/EmptyStateCard';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -221,20 +222,17 @@ export default function MyTastingsPage() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
         ) : tastings.length === 0 ? (
-          <div className="bg-white dark:bg-zinc-800 rounded-[22px] shadow-sm border border-zinc-200 dark:border-zinc-700 p-12 text-center">
-            <div className="w-16 h-16 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-2">No tastings yet</h3>
-            <p className="text-zinc-600 dark:text-zinc-300 mb-6">Start your first tasting session to track your flavor journey</p>
-            <button
-              onClick={() => router.push('/taste')}
-              className="px-6 py-3 bg-primary text-white rounded-[14px] font-medium hover:bg-primary/90 transition-colors"
-            >
-              Start Tasting
-            </button>
+          <div className="bg-white dark:bg-zinc-800 rounded-[22px] shadow-sm border border-zinc-200 dark:border-zinc-700">
+            <EmptyStateCard
+              image="/generated-images/empty-tastings.png"
+              headline="No tastings yet, but your palate awaits"
+              description="Start your first tasting to begin discovering new flavors and building your taste profile"
+              cta={{
+                label: "Create Your First Tasting",
+                onClick: () => router.push('/taste'),
+                variant: 'primary'
+              }}
+            />
           </div>
         ) : (
           <div className="space-y-4">

@@ -43,6 +43,9 @@ const InspirationBox = dynamic(() => import('../components/ui/inspiration-box'),
   loading: () => null
 });
 
+// Import empty state component
+import EmptyStateCard from '../components/ui/EmptyStateCard';
+
 const FlavorWheelVisualization = dynamic(
   () => import('../components/flavor-wheels/FlavorWheelVisualization'),
   { ssr: false }
@@ -527,21 +530,16 @@ export default function FlavorWheelsPage() {
           )}
 
           {error && !loading && (
-            <div className="text-center py-20">
-              <div className="mb-4">
-                <svg className="w-16 h-16 mx-auto text-zinc-300 dark:text-zinc-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-2">No Data Available</h3>
-              <p className="text-zinc-600 dark:text-zinc-300 max-w-md mx-auto mb-6">{error}</p>
-              <button
-                onClick={() => router.push('/taste')}
-                className="px-6 py-3 bg-primary text-white rounded-[14px] hover:bg-primary-600 transition-colors"
-              >
-                Start Tasting
-              </button>
-            </div>
+            <EmptyStateCard
+              image="/generated-images/empty-flavor-wheel.png"
+              headline="Your flavor wheel is waiting to be born"
+              description={error}
+              cta={{
+                label: "Start Tasting to Generate",
+                onClick: () => router.push('/taste'),
+                variant: 'primary'
+              }}
+            />
           )}
 
           {wheelData && !loading && !error && wheelData.categories.length > 0 && (
