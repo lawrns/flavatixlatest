@@ -201,9 +201,9 @@ const AuthSection = () => {
         />
       </div>
 
-      <div className="flex min-h-screen flex-col items-center justify-center px-4 py-8 sm:py-12">
+      <div className="flex min-h-screen flex-col items-center justify-center py-8 sm:py-12">
         {/* Centered Premium Card */}
-        <div className="w-full max-w-sm rounded-2xl bg-white/95 dark:bg-zinc-900/95 shadow-lg dark:shadow-2xl backdrop-blur-sm border border-white/20 dark:border-zinc-700/30 p-8 sm:p-12">
+        <Container size="md" className="rounded-2xl bg-white/95 dark:bg-zinc-900/95 shadow-lg dark:shadow-2xl backdrop-blur-sm border border-white/20 dark:border-zinc-700/30 p-8 sm:p-12">
           {/* Logo */}
           <div className="mb-8 text-center">
             <img
@@ -364,7 +364,7 @@ const AuthSection = () => {
               </button>
             </div>
           </div>
-        </div>
+        </Container>
       </div>
     </div>
   );

@@ -106,7 +106,7 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
   return (
     <div className="w-full h-full flex flex-col bg-gradient-to-b from-white to-zinc-50 dark:from-zinc-900 dark:to-zinc-800 relative overflow-hidden">
       {/* Header: Progress & Skip Button */}
-      <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-0">
+      <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-0 mx-auto w-full max-w-md">
         {/* Progress Indicator */}
         <span className="text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-400">
           {currentIndex + 1} of {cards.length}
@@ -132,7 +132,7 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
       {/* Carousel Container */}
       <div
         ref={containerRef}
-        className="relative flex-1 flex items-center justify-center overflow-hidden px-4 sm:px-6 py-8 sm:py-12"
+        className="relative flex-1 flex items-center justify-center overflow-hidden px-4 sm:px-6 py-8 sm:py-12 mx-auto w-full max-w-md"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -195,7 +195,7 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
       </div>
 
       {/* Dot Navigation (secondary, optional) */}
-      <div className="flex items-center justify-center gap-1.5 pb-6 px-4">
+      <div className="flex items-center justify-center gap-1.5 pb-6 px-4 sm:px-6 mx-auto w-full max-w-md">
         {cards.map((_, index) => (
           <button
             key={index}
