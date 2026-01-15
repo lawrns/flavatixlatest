@@ -1,49 +1,24 @@
 import { test, expect } from '@playwright/test';
+import { login, TEST_USER } from './helpers/auth';
 
 test.describe('Flavatix Study Mode Enhancement - Full E2E Testing', () => {
-  const baseURL = 'http://localhost:3003';
-  let testUser = {
-    email: `test-user-${Date.now()}@example.com`,
-    password: 'TestPassword123!',
-    fullName: 'Test User'
-  };
   let sessionId: string;
 
-  test.beforeAll(async ({ browser }) => {
-    // Pre-create a test user in Supabase if needed
-    // This would normally be done via Supabase admin API
-    console.log('Test user:', testUser);
+  test.beforeAll(async () => {
+    // Using the existing test user from helpers/auth
+    console.log('Test user:', TEST_USER.email);
   });
 
-  test('Setup: Register new test account', async ({ page }) => {
-    await page.goto(`${baseURL}/auth`);
+  test('Setup: Login with test account', async ({ page }) => {
+    // Login with the test user
+    await login(page);
 
-    // Wait for auth page to load
-    await page.waitForSelector('input[type="email"]', { timeout: 10000 });
-
-    // Check if we're on sign up page, if not navigate to it
-    const signUpButton = page.locator('text=Sign Up').or(page.locator('text=Create Account'));
-    if (await signUpButton.isVisible()) {
-      await signUpButton.click();
-    }
-
-    // Fill registration form
-    await page.fill('input[type="email"]', testUser.email);
-    await page.fill('input[type="password"]', testUser.password);
-    await page.fill('input[name="full_name"]', testUser.fullName);
-
-    // Submit registration
-    await page.click('button[type="submit"]');
-
-    // Wait for successful registration or redirect
-    await page.waitForURL('**/dashboard', { timeout: 15000 });
-
-    // Verify we're on dashboard
-    await expect(page).toHaveURL(/.*dashboard/);
+    // Verify we're on dashboard or similar authenticated page
+    await expect(page).not.toHaveURL(/.*auth.*/);
   });
 
   test('Scenario 1: Pre-defined Study Mode - Session Creation', async ({ page }) => {
-    await page.goto(`${baseURL}/dashboard`);
+    await page.goto(`/dashboard`);
 
     // Navigate to create tasting
     await page.click('a[href="/create-tasting"]');
@@ -82,7 +57,7 @@ test.describe('Flavatix Study Mode Enhancement - Full E2E Testing', () => {
   });
 
   test('Scenario 1: Pre-defined Study Mode - Host Experience', async ({ page }) => {
-    await page.goto(`${baseURL}/tasting/${sessionId}`);
+    await page.goto(`/tasting/${sessionId}`);
 
     // Verify items are pre-loaded
     await expect(page.locator('text=Ethiopian Yirgacheffe')).toBeVisible();
@@ -100,7 +75,7 @@ test.describe('Flavatix Study Mode Enhancement - Full E2E Testing', () => {
     const participantPage = await context.newPage();
 
     // Share the session URL
-    await participantPage.goto(`${baseURL}/tasting/${sessionId}`);
+    await participantPage.goto(`/tasting/${sessionId}`);
 
     // Should be redirected to auth if not logged in
     await participantPage.waitForURL(/.*auth/, { timeout: 5000 });
@@ -125,7 +100,7 @@ test.describe('Flavatix Study Mode Enhancement - Full E2E Testing', () => {
 
   test('Scenario 1: Pre-defined Study Mode - Tasting Evaluation', async ({ page, context }) => {
     const participantPage = await context.newPage();
-    await participantPage.goto(`${baseURL}/tasting/${sessionId}`);
+    await participantPage.goto(`/tasting/${sessionId}`);
 
     // Login
     await participantPage.fill('input[type="email"]', testUser.email);
@@ -150,7 +125,7 @@ test.describe('Flavatix Study Mode Enhancement - Full E2E Testing', () => {
   });
 
   test('Scenario 1: Pre-defined Study Mode - Session Completion', async ({ page }) => {
-    await page.goto(`${baseURL}/tasting/${sessionId}`);
+    await page.goto(`/tasting/${sessionId}`);
 
     // Complete remaining evaluations as host
     await page.click('text=Ethiopian Yirgacheffe');
@@ -172,7 +147,7 @@ test.describe('Flavatix Study Mode Enhancement - Full E2E Testing', () => {
   });
 
   test('Scenario 2: Collaborative Study Mode - Session Creation', async ({ page }) => {
-    await page.goto(`${baseURL}/create-tasting`);
+    await page.goto(`/create-tasting`);
 
     // Select Study Mode
     await page.click('text=Study Mode');
@@ -199,7 +174,7 @@ test.describe('Flavatix Study Mode Enhancement - Full E2E Testing', () => {
   });
 
   test('Scenario 2: Collaborative Study Mode - Initial State', async ({ page }) => {
-    await page.goto(`${baseURL}/tasting/${sessionId}`);
+    await page.goto(`/tasting/${sessionId}`);
 
     // Verify no pre-loaded items
     await expect(page.locator('text=No Items Yet')).toBeVisible();
@@ -210,7 +185,7 @@ test.describe('Flavatix Study Mode Enhancement - Full E2E Testing', () => {
 
   test('Scenario 2: Collaborative Study Mode - Item Suggestions', async ({ page, context }) => {
     const participantPage = await context.newPage();
-    await participantPage.goto(`${baseURL}/tasting/${sessionId}`);
+    await participantPage.goto(`/tasting/${sessionId}`);
 
     // Login as participant
     await participantPage.fill('input[type="email"]', testUser.email);
@@ -246,7 +221,7 @@ test.describe('Flavatix Study Mode Enhancement - Full E2E Testing', () => {
 
     // Test real-time updates with another participant
     const participantPage = await context.newPage();
-    await participantPage.goto(`${baseURL}/tasting/${sessionId}`);
+    await participantPage.goto(`/tasting/${sessionId}`);
 
     // Login
     await participantPage.fill('input[type="email"]', testUser.email);
@@ -261,7 +236,7 @@ test.describe('Flavatix Study Mode Enhancement - Full E2E Testing', () => {
   });
 
   test('Scenario 3: Role Management - Role Assignment', async ({ page }) => {
-    await page.goto(`${baseURL}/tasting/${sessionId}`);
+    await page.goto(`/tasting/${sessionId}`);
 
     // Verify host has both roles (Host + Participant)
     await expect(page.locator('text=Host')).toBeVisible();
@@ -272,7 +247,7 @@ test.describe('Flavatix Study Mode Enhancement - Full E2E Testing', () => {
     // This would require simulating host disconnection
     // For now, verify the system handles role changes gracefully
 
-    await page.goto(`${baseURL}/tasting/${sessionId}`);
+    await page.goto(`/tasting/${sessionId}`);
 
     // Verify system continues to function
     await expect(page.locator('text=Jasmine Green Tea')).toBeVisible();
@@ -280,7 +255,7 @@ test.describe('Flavatix Study Mode Enhancement - Full E2E Testing', () => {
   });
 
   test('Scenario 5: Error Handling - Form Validation', async ({ page }) => {
-    await page.goto(`${baseURL}/create-tasting`);
+    await page.goto(`/create-tasting`);
 
     // Try to submit without required fields
     await page.click('text=Create Tasting Session');
@@ -290,7 +265,7 @@ test.describe('Flavatix Study Mode Enhancement - Full E2E Testing', () => {
   });
 
   test('Scenario 5: Error Handling - Invalid Session', async ({ page }) => {
-    await page.goto(`${baseURL}/tasting/invalid-session-id`);
+    await page.goto(`/tasting/invalid-session-id`);
 
     // Should show error message
     await expect(page.locator('text=Session Not Found')).toBeVisible();
@@ -298,7 +273,7 @@ test.describe('Flavatix Study Mode Enhancement - Full E2E Testing', () => {
 
   test('Navigation and URL Structure', async ({ page }) => {
     // Test direct URL access
-    await page.goto(`${baseURL}/tasting/${sessionId}`);
+    await page.goto(`/tasting/${sessionId}`);
     await expect(page.locator('text=Jasmine Green Tea')).toBeVisible();
 
     // Test back navigation

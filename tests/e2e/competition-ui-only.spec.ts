@@ -1,11 +1,16 @@
 import { test, expect } from '@playwright/test';
+import { login } from './helpers/auth';
 
 /**
- * Focused UI tests for competition mode without authentication
- * Testing only the UI elements that are visible without being logged in
+ * Focused UI tests for competition mode
+ * Testing the UI elements after authentication
  */
 
 test.describe('Competition UI - Blind Toggle', () => {
+  test.beforeEach(async ({ page }) => {
+    await login(page);
+  });
+
   test('should display session-level blind toggle on competition creation page', async ({ page }) => {
     // Navigate to competition creation page
     await page.goto('/taste/create/competition/new');

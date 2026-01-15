@@ -1,12 +1,10 @@
 import { test, expect } from '@playwright/test';
+import { login } from './helpers/auth';
 
 test.describe('Enhanced Tasting Summary Display', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the application
-    await page.goto('/');
-    
-    // Wait for the page to load
-    await page.waitForLoadState('networkidle');
+    // Login first
+    await login(page);
   });
 
   test('should display aroma and flavor fields in tasting summary', async ({ page }) => {
@@ -61,7 +59,7 @@ test.describe('Enhanced Tasting Summary Display', () => {
 
   test('should display fields in correct order: Aroma → Flavor → Notes', async ({ page }) => {
     // Navigate to a completed tasting session
-    await page.goto('//tasting/test-session-id');
+    await page.goto('/tasting/test-session-id');
     await page.waitForLoadState('networkidle');
     
     // Click on an item to expand it
@@ -91,7 +89,7 @@ test.describe('Enhanced Tasting Summary Display', () => {
 
   test('should only display fields that have content', async ({ page }) => {
     // Navigate to a completed tasting session with partial data
-    await page.goto('//tasting/test-session-partial');
+    await page.goto('/tasting/test-session-partial');
     await page.waitForLoadState('networkidle');
     
     // Click on an item that only has notes
@@ -116,7 +114,7 @@ test.describe('Enhanced Tasting Summary Display', () => {
     await page.setViewportSize({ width: 375, height: 667 });
     
     // Navigate to a completed tasting session
-    await page.goto('//tasting/test-session-id');
+    await page.goto('/tasting/test-session-id');
     await page.waitForLoadState('networkidle');
     
     // Click on an item to expand it
@@ -138,7 +136,7 @@ test.describe('Enhanced Tasting Summary Display', () => {
 
   test('should maintain expand/collapse functionality', async ({ page }) => {
     // Navigate to a completed tasting session
-    await page.goto('//tasting/test-session-id');
+    await page.goto('/tasting/test-session-id');
     await page.waitForLoadState('networkidle');
     
     // Initially, item details should not be visible
@@ -163,7 +161,7 @@ test.describe('Enhanced Tasting Summary Display', () => {
 
   test('should handle backward compatibility with existing sessions', async ({ page }) => {
     // Navigate to an existing session created before the enhancement
-    await page.goto('//tasting/old-session-id');
+    await page.goto('/tasting/old-session-id');
     await page.waitForLoadState('networkidle');
     
     // Click on an item

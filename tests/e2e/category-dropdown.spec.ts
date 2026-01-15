@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test'
+import { login } from './helpers/auth'
 
 test.describe('Category Dropdown E2E', () => {
+  test.beforeEach(async ({ page }) => {
+    await login(page)
+  })
+
   test('complete user workflow for category selection and mode display removal', async ({ page }) => {
     // Navigate to the quick tasting page
     await page.goto('/quick-tasting')

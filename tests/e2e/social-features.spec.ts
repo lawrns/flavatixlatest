@@ -4,9 +4,11 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { login } from './helpers/auth';
 
 test.describe('Social Features', () => {
   test.beforeEach(async ({ page }) => {
+    await login(page);
     // Navigate to social feed
     await page.goto('/social');
     await page.waitForLoadState('networkidle');

@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { login } from './helpers/auth';
 
 /**
  * E2E Tests for Competition Mode and Study Fixes
- * 
+ *
  * These tests verify:
  * 1. Competition creation form has session-level blind toggle
  * 2. Competition items respect session-level blind setting
@@ -12,6 +13,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Competition Mode - Session-Level Blind Settings', () => {
   test.beforeEach(async ({ page }) => {
+    await login(page);
     // Navigate to competition creation page
     await page.goto('/taste/create/competition/new');
     await page.waitForLoadState('networkidle');
@@ -87,6 +89,7 @@ test.describe('Competition Mode - Session-Level Blind Settings', () => {
 
 test.describe('Competition Mode - Category Dropdown', () => {
   test.beforeEach(async ({ page }) => {
+    await login(page);
     await page.goto('/taste/create/competition/new');
     await page.waitForLoadState('networkidle');
   });
@@ -118,6 +121,7 @@ test.describe('Competition Mode - Category Dropdown', () => {
 
 test.describe('Competition Creation - Form Validation', () => {
   test.beforeEach(async ({ page }) => {
+    await login(page);
     await page.goto('/taste/create/competition/new');
     await page.waitForLoadState('networkidle');
   });
@@ -152,6 +156,7 @@ test.describe('Competition Creation - Form Validation', () => {
 
 test.describe('Study Mode - Category Dropdown Standardization', () => {
   test.beforeEach(async ({ page }) => {
+    await login(page);
     await page.goto('/taste/create/study/new');
     await page.waitForLoadState('networkidle');
   });

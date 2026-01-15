@@ -10,6 +10,7 @@
  */
 
 import { test, expect, Page } from '@playwright/test';
+import { login } from './helpers/auth';
 
 // Helper to check if element exists without failing
 async function elementExists(page: Page, selector: string): Promise<boolean> {
@@ -40,6 +41,7 @@ async function waitForPageReady(page: Page) {
 
 test.describe('Quick Tasting Category Selector', () => {
   test.beforeEach(async ({ page }) => {
+    await login(page);
     await page.goto('/quick-tasting');
     await waitForPageReady(page);
   });
@@ -143,6 +145,7 @@ test.describe('Quick Tasting Category Selector', () => {
 
 test.describe('Competition Mode - New Flow', () => {
   test.beforeEach(async ({ page }) => {
+    await login(page);
     await page.goto('/taste/create/competition/new');
     await waitForPageReady(page);
   });
@@ -325,6 +328,7 @@ test.describe('Competition Mode - New Flow', () => {
 
 test.describe('Study Tasting - Save for Later Flow', () => {
   test.beforeEach(async ({ page }) => {
+    await login(page);
     await page.goto('/taste/create/study/new');
     await waitForPageReady(page);
   });
@@ -420,6 +424,7 @@ test.describe('My Tastings - Continue Study Flow', () => {
 
 test.describe('Profile Page - Avatar Upload', () => {
   test.beforeEach(async ({ page }) => {
+    await login(page);
     await page.goto('/profile/edit');
     await waitForPageReady(page);
   });

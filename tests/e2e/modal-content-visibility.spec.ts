@@ -10,6 +10,7 @@
  */
 
 import { test, expect, Page } from '@playwright/test';
+import { login } from './helpers/auth';
 
 const MOBILE_VIEWPORT = { width: 375, height: 667 };
 const SMALL_MOBILE_VIEWPORT = { width: 320, height: 568 };
@@ -57,6 +58,10 @@ async function getViewportHeight(page: Page): Promise<number> {
 }
 
 test.describe('Modal Content Visibility', () => {
+  test.beforeEach(async ({ page }) => {
+    await login(page);
+  });
+
   test('modal content should not be cut off at bottom on mobile', async ({ page }) => {
     await page.setViewportSize(MOBILE_VIEWPORT);
     await page.goto('/social');

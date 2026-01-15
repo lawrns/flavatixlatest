@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { login } from './helpers/auth';
 
 /**
  * E2E Tests for Tasting Session Flow
- * 
+ *
  * These tests verify:
  * 1. Mobile navigation is present on tasting pages
  * 2. Complete tasting redirects to dashboard
@@ -11,9 +12,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Tasting Session - Mobile Navigation', () => {
   test.beforeEach(async ({ page }) => {
-    // Note: In a real scenario, you'd need to authenticate first
-    // For now, we'll assume the user is logged in
-    // You may need to add authentication setup here
+    await login(page);
   });
 
   test('should display mobile navigation on tasting page', async ({ page }) => {

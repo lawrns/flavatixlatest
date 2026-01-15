@@ -17,6 +17,7 @@
  */
 
 import { test, expect, Page } from '@playwright/test';
+import { login } from './helpers/auth';
 
 // Test viewports
 const MOBILE_VIEWPORT = { width: 375, height: 667 };
@@ -55,6 +56,10 @@ async function getElementDimensions(page: Page, selector: string): Promise<{ wid
 // Requirement 1: Modal Positioning and Layering
 // ============================================================================
 test.describe('Requirement 1: Modal Positioning and Layering', () => {
+  test.beforeEach(async ({ page }) => {
+    await login(page);
+  });
+
   test('modal should be centered in viewport', async ({ page }) => {
     await page.setViewportSize(MOBILE_VIEWPORT);
     await page.goto('/social');

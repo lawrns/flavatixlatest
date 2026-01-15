@@ -4,8 +4,13 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { login } from './helpers/auth';
 
 test.describe('Competition Mode', () => {
+  test.beforeEach(async ({ page }) => {
+    await login(page);
+  });
+
   test('should create a competition session with items', async ({ page }) => {
     // Navigate to create tasting page
     await page.goto('/taste/create/competition/new');

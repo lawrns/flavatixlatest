@@ -4,12 +4,14 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { login } from './helpers/auth';
 
 test.describe('Tasting Creation Flow', () => {
   test.beforeEach(async ({ page }) => {
+    await login(page);
     // Navigate to home page
     await page.goto('/');
-    
+
     // Wait for page to load
     await page.waitForLoadState('networkidle');
   });
