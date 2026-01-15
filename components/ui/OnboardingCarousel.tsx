@@ -100,11 +100,35 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-white to-zinc-50 dark:from-zinc-900 dark:to-zinc-800 relative overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-gradient-to-b from-white to-zinc-50 dark:from-zinc-900 dark:to-zinc-800 relative overflow-hidden">
+      {/* Header: Progress & Skip Button */}
+      <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-0">
+        {/* Progress Indicator */}
+        <span className="text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-400">
+          {currentIndex + 1} of {cards.length}
+        </span>
+
+        {/* Skip Button */}
+        <button
+          onClick={onComplete}
+          className="text-xs sm:text-sm font-medium text-zinc-500 dark:text-zinc-500 hover:text-primary dark:hover:text-primary transition-colors"
+        >
+          Skip
+        </button>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="w-full h-1 bg-zinc-200 dark:bg-zinc-700 mt-4">
+        <div
+          className="h-full bg-gradient-to-r from-primary to-orange-500 transition-all duration-300 ease-spring"
+          style={{ width: `${((currentIndex + 1) / cards.length) * 100}%` }}
+        />
+      </div>
+
       {/* Carousel Container */}
       <div
         ref={containerRef}
-        className="relative w-full flex-1 flex items-center justify-center overflow-hidden px-4"
+        className="relative flex-1 flex items-center justify-center overflow-hidden px-4 sm:px-6 py-8 sm:py-12"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -113,18 +137,18 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Card Image */}
+        {/* Card Content */}
         <div
-          className="transition-transform duration-300 ease-spring select-none"
+          className="transition-transform duration-300 ease-spring select-none w-full"
           style={{
             transform: isDragging
               ? `translateX(${translateX}px)`
               : 'translateX(0)',
           }}
         >
-          <div className="flex flex-col items-center gap-8 max-w-md mx-auto">
-            {/* Image */}
-            <div className="w-full h-64 sm:h-80 rounded-3xl overflow-hidden shadow-2xl">
+          <div className="flex flex-col items-center max-w-lg mx-auto">
+            {/* Image: 4:5 aspect ratio, responsive sizing */}
+            <div className="w-full max-w-xs aspect-[4/5] rounded-2xl overflow-hidden shadow-xl mb-8 sm:mb-10">
               <img
                 src={card.image}
                 alt={card.headline}
@@ -133,34 +157,34 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
               />
             </div>
 
-            {/* Text Content */}
-            <div className="text-center space-y-4 px-4">
-              <h2 className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-white">
-                {card.headline}
-              </h2>
-              <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                {card.description}
-              </p>
-            </div>
+            {/* Heading: 28-32px mobile, 32-36px desktop */}
+            <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-white text-center mb-4">
+              {card.headline}
+            </h2>
+
+            {/* Body Text: 16-18px with proper line height */}
+            <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 text-center leading-relaxed mb-8 sm:mb-12 max-w-md">
+              {card.description}
+            </p>
 
             {/* CTA Buttons */}
             {card.ctaVariant === 'split' ? (
-              <div className="w-full max-w-xs space-y-3">
+              <div className="w-full space-y-3">
                 <button
                   onClick={onComplete}
-                  className="w-full bg-gradient-to-r from-primary to-orange-500 text-white py-3 px-4 rounded-lg font-semibold transition-spring hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+                  className="w-full h-12 bg-gradient-to-r from-primary to-orange-500 text-white rounded-lg font-semibold transition-spring hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
                 >
                   Sign Up
                 </button>
                 <button
                   onClick={onComplete}
-                  className="w-full bg-white dark:bg-zinc-800 text-primary border-2 border-primary dark:text-white py-3 px-4 rounded-lg font-semibold transition-spring hover:shadow-md active:scale-95"
+                  className="w-full h-12 bg-white dark:bg-zinc-800 text-primary border-2 border-primary dark:text-white rounded-lg font-semibold transition-spring hover:shadow-md active:scale-95"
                 >
                   Log In
                 </button>
               </div>
             ) : card.cta ? (
-              <p className="text-sm text-zinc-500 dark:text-zinc-400 animate-pulse">
+              <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 animate-pulse">
                 {card.cta}
               </p>
             ) : null}
@@ -168,37 +192,21 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
         </div>
       </div>
 
-      {/* Progress Indicators */}
-      <div className="flex items-center gap-4 pb-6">
-        {/* Dots */}
-        <div className="flex gap-2">
-          {cards.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToCard(index)}
-              className={`h-2 transition-all duration-300 ${
-                index === currentIndex
-                  ? 'bg-primary w-8'
-                  : 'bg-zinc-300 dark:bg-zinc-600 w-2 hover:bg-zinc-400 dark:hover:bg-zinc-500'
-              }`}
-              aria-label={`Go to card ${index + 1}`}
-            />
-          ))}
-        </div>
-
-        {/* Text Indicator */}
-        <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400 whitespace-nowrap">
-          {currentIndex + 1}/{cards.length}
-        </span>
+      {/* Dot Navigation (secondary, optional) */}
+      <div className="flex items-center justify-center gap-1.5 pb-6 px-4">
+        {cards.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToCard(index)}
+            className={`h-1.5 rounded-full transition-all duration-300 ${
+              index === currentIndex
+                ? 'bg-primary w-8'
+                : 'bg-zinc-300 dark:bg-zinc-600 w-1.5 hover:bg-zinc-400 dark:hover:bg-zinc-500'
+            }`}
+            aria-label={`Go to card ${index + 1}`}
+          />
+        ))}
       </div>
-
-      {/* Skip Button */}
-      <button
-        onClick={onComplete}
-        className="absolute top-4 right-4 text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors"
-      >
-        Skip
-      </button>
     </div>
   );
 };
