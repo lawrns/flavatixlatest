@@ -185,3 +185,6 @@ temp/
 
 # Local Netlify folder
 .netlify
+
+# Git worktrees
+.worktrees/
