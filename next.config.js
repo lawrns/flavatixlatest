@@ -148,16 +148,7 @@ const nextConfig = {
   },
 
   // Webpack configuration for aggressive performance optimization
-  webpack: (config, { isServer, dev, webpack }) => {
-    // Define self as global for server-side rendering to prevent "self is not defined" errors
-    if (isServer) {
-      config.plugins.push(
-        new webpack.DefinePlugin({
-          self: 'global',
-        })
-      );
-    }
-
+  webpack: (config, { isServer, dev }) => {
     // Prevent Next.js Document components from being imported outside _document.tsx
     if (!isServer) {
       config.resolve.alias = {
