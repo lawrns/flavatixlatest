@@ -96,7 +96,8 @@ function generateCsrfToken(): string {
 }
 
 export function middleware(request: NextRequest) {
-  const { pathname, method } = request.nextUrl;
+  const { pathname } = request.nextUrl;
+  const method = request.method;
 
   // Skip middleware for static files and Next.js internals
   if (pathname.startsWith('/_next') || pathname.startsWith('/static') || pathname.includes('.')) {

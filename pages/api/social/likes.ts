@@ -93,7 +93,7 @@ async function toggleLikeHandler(
       // Like - create new like
       logger.mutation('tasting_likes', 'create', undefined, userId, { tasting_id });
 
-      const { data: newLike, error: insertError } = await supabase
+      const { error: insertError } = await supabase
         .from('tasting_likes')
         .insert({
           user_id: userId,

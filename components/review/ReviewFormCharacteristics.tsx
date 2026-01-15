@@ -8,35 +8,14 @@
  */
 
 import React from 'react';
+import { ReviewFormData } from '@/lib/types/review';
 import CharacteristicSlider from './CharacteristicSlider';
 
-export interface CharacteristicsData {
-  aroma_notes?: string;
-  aroma_intensity: number;
-  salt_notes?: string;
-  salt_score: number;
-  sweetness_notes?: string;
-  sweetness_score: number;
-  acidity_notes?: string;
-  acidity_score: number;
-  umami_notes?: string;
-  umami_score: number;
-  spiciness_notes?: string;
-  spiciness_score: number;
-  flavor_notes?: string;
-  flavor_intensity: number;
-  texture_notes?: string;
-  typicity_score: number;
-  complexity_score: number;
-  other_notes?: string;
-  overall_score: number;
-}
-
 export interface ReviewFormCharacteristicsProps {
-  formData: CharacteristicsData;
-  onFieldUpdate: <K extends keyof CharacteristicsData>(
+  formData: ReviewFormData;
+  onFieldUpdate: <K extends keyof ReviewFormData>(
     field: K,
-    value: CharacteristicsData[K]
+    value: ReviewFormData[K]
   ) => void;
 }
 

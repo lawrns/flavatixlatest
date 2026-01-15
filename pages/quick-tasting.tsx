@@ -27,25 +27,6 @@ type QuickTastingWithNull = {
   completed_at: string | null;
 };
 
-// Helper functions to convert between types
-const toQuickTasting = (data: QuickTastingWithNull): QuickTasting => ({
-  ...data,
-  session_name: data.session_name === null ? undefined : data.session_name,
-  notes: data.notes === null ? undefined : data.notes,
-  average_score: data.average_score === null ? undefined : data.average_score,
-  completed_at: data.completed_at === null ? undefined : data.completed_at,
-  custom_category_name: data.custom_category_name,
-} as any);
-
-const toQuickTastingWithNull = (data: QuickTasting): QuickTastingWithNull => ({
-  ...data,
-  session_name: data.session_name === undefined ? null : data.session_name,
-  notes: data.notes === undefined ? null : data.notes,
-  average_score: data.average_score === undefined ? null : data.average_score,
-  completed_at: data.completed_at === undefined ? null : data.completed_at,
-  custom_category_name: (data as any).custom_category_name || null,
-} as QuickTastingWithNull);
-
 type TastingStep = 'category' | 'session' | 'summary';
 
 const QuickTastingPage: React.FC = () => {
@@ -71,16 +52,12 @@ const QuickTastingPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      console.log('Refreshing session for auth synchronization...');
-      const { data: sessionData, error: sessionError } = await supabase.auth.refreshSession();
+      const { error: sessionError } = await supabase.auth.refreshSession();
 
       if (sessionError) {
-        console.error('Session refresh failed:', sessionError);
         toast.error('Authentication error. Please try again.');
         return;
       }
-
-      console.log('Session refreshed successfully');
 
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
@@ -89,17 +66,9 @@ const QuickTastingPage: React.FC = () => {
         .single();
 
       if (profileError || !profile) {
-        console.error('User profile not found:', profileError);
         toast.error('User profile not found. Please contact support.');
         return;
       }
-
-      console.log('Auth state debug:', {
-        'auth.uid()': (await supabase.auth.getUser()).data.user?.id,
-        'user.id': user.id,
-        'profile.user_id': profile.user_id,
-        'session': (await supabase.auth.getSession()).data.session
-      });
 
       const { data, error } = await supabase
         .from('quick_tastings')
@@ -113,13 +82,6 @@ const QuickTastingPage: React.FC = () => {
         .single();
 
       if (error) {
-        console.error('Error creating tasting session:', error);
-        console.error('RLS Policy Debug:', {
-          'Attempting to insert user_id': user.id,
-          'Current auth.uid()': (await supabase.auth.getUser()).data.user?.id,
-          'Error details': error
-        });
-
         if (error.code === '42501') {
           toast.error('Permission denied. Please try logging out and back in.');
           return;
@@ -136,7 +98,6 @@ const QuickTastingPage: React.FC = () => {
       setCurrentStep('session');
       toast.success('Tasting session started!');
     } catch (error) {
-      console.error('Error creating tasting session:', error);
       toast.error('Failed to start tasting session');
     } finally {
       setIsLoading(false);

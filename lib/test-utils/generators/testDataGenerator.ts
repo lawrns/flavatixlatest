@@ -94,7 +94,7 @@ export function generateTestTastingItem(overrides?: Record<string, any>) {
     flavor_scores: overrides?.flavor_scores || flavorScores,
     overall_score: overrides?.overall_score !== undefined
       ? overrides.overall_score
-      : faker.number.float({ min: 0, max: 10, precision: 0.1 }),
+      : faker.number.float({ min: 0, max: 10, multipleOf: 0.1 }),
     photo_url: overrides?.photo_url || null,
     created_at: overrides?.created_at || faker.date.past().toISOString(),
     updated_at: overrides?.updated_at || faker.date.recent().toISOString(),

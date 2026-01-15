@@ -9,25 +9,13 @@
 
 import React, { useRef } from 'react';
 import { Camera, X } from 'lucide-react';
+import { ReviewFormData } from '@/lib/types/review';
 import {
   REVIEW_CATEGORIES,
   COUNTRIES,
   getStatesForCountry,
   hasStates,
 } from '@/lib/reviewCategories';
-
-export interface ReviewFormData {
-  item_name: string;
-  picture_url?: string;
-  brand?: string;
-  country?: string;
-  state?: string;
-  region?: string;
-  vintage?: string;
-  batch_id?: string;
-  upc_barcode?: string;
-  category: string;
-}
 
 export interface ReviewFormItemInfoProps {
   formData: ReviewFormData;

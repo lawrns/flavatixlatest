@@ -174,22 +174,23 @@ async function handleExport(
     });
 
     // Create audit log entry
-    await supabase
-      .from('audit_logs')
-      .insert({
-        user_id: user.id,
-        action: 'data_export',
-        resource_type: 'user_data',
-        resource_id: user.id,
-        metadata: {
-          export_date: exportData.exportDate,
-          data_size: JSON.stringify(exportData).length,
-        },
-      })
-      .catch((err) => {
-        // Don't fail export if audit log fails
-        logger.warn('DataExport', 'Failed to create audit log', { error: err });
-      });
+    try {
+      await supabase
+        .from('audit_logs')
+        .insert({
+          user_id: user.id,
+          action: 'data_export',
+          resource_type: 'user_data',
+          resource_id: user.id,
+          metadata: {
+            export_date: exportData.exportDate,
+            data_size: JSON.stringify(exportData).length,
+          },
+        });
+    } catch (err) {
+      // Don't fail export if audit log fails
+      logger.warn('DataExport', 'Failed to create audit log');
+    }
 
     return sendSuccess(
       res,

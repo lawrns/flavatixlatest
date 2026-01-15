@@ -99,9 +99,9 @@ export async function isAdmin(
 
     // FAIL-CLOSED: If table doesn't exist or query fails, DENY access
     if (roleError) {
-      logger.error('RBAC', 'Failed to query user_roles table', roleError, {
+      const errorObj = typeof roleError === 'string' ? new Error(roleError) : (roleError as Error);
+      logger.error('RBAC', 'Failed to query user_roles table', errorObj, {
         userId,
-        error: roleError.message,
       });
 
       // Send to Sentry for monitoring
@@ -196,7 +196,6 @@ export async function requireAdmin(
       userId,
       url: req.url,
       method: req.method,
-      error: errorMessage,
     });
 
     throw new Error(errorMessage);

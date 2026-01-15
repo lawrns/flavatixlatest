@@ -21,8 +21,7 @@ const addItemsSchema = z.object({
 
 async function getItemsHandler(
   req: NextApiRequest,
-  res: NextApiResponse,
-  context: ApiContext
+  res: NextApiResponse
 ) {
   const { id } = req.query;
 

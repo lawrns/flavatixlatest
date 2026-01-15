@@ -22,7 +22,6 @@ const ReviewModeCard: React.FC<ReviewModeCardProps> = ({
   iconBgColor,
   iconColor,
   onClick,
-  delay = 0,
 }) => {
   return (
     <button

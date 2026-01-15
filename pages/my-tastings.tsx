@@ -28,7 +28,6 @@ export default function MyTastingsPage() {
   const {
     data: tastingData,
     isLoading: loading,
-    refetch,
   } = useTastings(user?.id, queryFilters, page, ITEMS_PER_PAGE);
 
   const deleteMutation = useDeleteTasting();

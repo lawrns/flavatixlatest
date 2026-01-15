@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSupabaseClient } from '@/lib/supabase';
-import { withAdminAuth, AdminPermission, createAuditLog } from '@/lib/admin/rbac';
+import { withAdminAuth, AdminPermission } from '@/lib/admin/rbac';
 
 interface UsageStats {
   period: string;

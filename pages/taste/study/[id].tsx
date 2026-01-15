@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
@@ -72,17 +73,8 @@ const StudyTastingPage: React.FC = () => {
           return;
         }
 
-        console.log('[Study Session Page] Session loaded:', {
-          sessionId: data.id,
-          mode: data.mode,
-          hasNotes: !!data.notes,
-          notesLength: data.notes?.length || 0,
-          notesPreview: data.notes ? data.notes.substring(0, 100) : 'N/A',
-        });
-
         setSession(data);
       } catch (error) {
-        console.error('[Study Session Page] Error loading study session:', error);
         toast.error('Failed to load study session');
         router.push('/my-tastings');
       } finally {
@@ -93,7 +85,7 @@ const StudyTastingPage: React.FC = () => {
     loadSession();
   }, [id, user, supabase, router]);
 
-  const handleSessionComplete = (completedSession: QuickTasting) => {
+  const handleSessionComplete = () => {
     toast.success('Study session completed!');
     router.push('/my-tastings');
   };
@@ -137,31 +129,31 @@ const StudyTastingPage: React.FC = () => {
       {/* Bottom Navigation */}
       <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
         <nav className="flex justify-around p-2">
-          <a
+          <Link
             className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
             href="/dashboard"
           >
             <span className="material-symbols-outlined">home</span>
             <span className="text-xs font-medium">Home</span>
-          </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-primary" href="/taste">
+          </Link>
+          <Link className="flex flex-col items-center gap-1 p-2 text-primary" href="/taste">
             <span className="material-symbols-outlined">restaurant</span>
             <span className="text-xs font-bold">Taste</span>
-          </a>
-          <a
+          </Link>
+          <Link
             className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
             href="/review"
           >
             <span className="material-symbols-outlined">reviews</span>
             <span className="text-xs font-medium">Review</span>
-          </a>
-          <a
+          </Link>
+          <Link
             className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
             href="/flavor-wheels"
           >
             <span className="material-symbols-outlined">donut_small</span>
             <span className="text-xs font-medium">Wheels</span>
-          </a>
+          </Link>
         </nav>
       </footer>
     </div>

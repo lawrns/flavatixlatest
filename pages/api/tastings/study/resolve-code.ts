@@ -23,8 +23,7 @@ const resolveCodeSchema = z.object({
 
 async function resolveCodeHandler(
   req: NextApiRequest,
-  res: NextApiResponse,
-  context: ApiContext
+  res: NextApiResponse
 ) {
   // Request body is already validated by withValidation middleware
   const { code } = req.body as { code: string };

@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function SamplePage() {
   return (
@@ -31,7 +33,7 @@ export default function SamplePage() {
                 </div>
               </div>
               <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50 mb-2">Flavatix México</h1>
-              <p className="text-zinc-600 dark:text-zinc-300">Taste, analyze, and share your reviews of México's finest beverages.</p>
+              <p className="text-zinc-600 dark:text-zinc-300">Taste, analyze, and share your reviews of México&apos;s finest beverages.</p>
             </section>
 
             {/* Buttons Section */}
@@ -163,10 +165,12 @@ export default function SamplePage() {
               <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg">
                 <div className="flex flex-col items-center gap-4 mb-6">
                   <div className="relative">
-                    <img
+                    <Image
                       alt="Profile avatar"
                       className="h-28 w-28 rounded-full object-cover"
                       src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSm5L3p6blsbUuAYpXRwOUXiE9ky-AG-Sz02psWS4h2zpw708v3wxwh3vpP_kxSkiZLVPIVbc50Sum9TFvXaGx34RR_d75YveTw6iFE2CLka45Fnl0xDoMmyNF5jFTHB-eCJmuUtzL2cbc7gpDVJEx8twzlWe0CTe5K8PoK1rq2M4oTnueMIIUovn1mLFQ9lokszpggl6N3QhvWXt3E1GS2LLRfFY7VjXZtc9kb7EGzg9JNruX2yADzNn-jHP12ks41kRFQprNbeM"
+                      width={112}
+                      height={112}
                     />
                     <button className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white shadow-md transition-transform hover:scale-110">
                       <span className="material-symbols-outlined text-base">edit</span>
@@ -243,22 +247,22 @@ export default function SamplePage() {
         {/* Bottom Navigation */}
         <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
           <nav className="flex justify-around p-2">
-            <a className="flex flex-col items-center gap-1 p-2 text-primary" href="/dashboard">
+            <Link className="flex flex-col items-center gap-1 p-2 text-primary" href="/dashboard">
               <span className="material-symbols-outlined">home</span>
               <span className="text-xs font-bold">Home</span>
-            </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/taste">
+            </Link>
+            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/taste">
               <span className="material-symbols-outlined">restaurant</span>
               <span className="text-xs font-medium">Taste</span>
-            </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
+            </Link>
+            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
               <span className="material-symbols-outlined">reviews</span>
               <span className="text-xs font-medium">Review</span>
-            </a>
-            <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
+            </Link>
+            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
               <span className="material-symbols-outlined">donut_small</span>
               <span className="text-xs font-medium">Wheels</span>
-            </a>
+            </Link>
           </nav>
         </footer>
       </div>

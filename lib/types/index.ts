@@ -11,6 +11,9 @@
 // Re-export comment types
 export * from './comments';
 
+// Re-export review types
+export * from './review';
+
 // ============================================================================
 // ENUMS & CONSTANTS (as const for type safety)
 // ============================================================================

@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import Image from 'next/image'
 import { FileText, Users, PieChart } from 'lucide-react'
 import styles from './HeroSection.module.css'
 import Container from '@/components/layout/Container'
@@ -24,6 +23,7 @@ export default function Home() {
           <Container size="md" className="relative z-10 py-2xl text-center">
             {/* Logo/Brand Area */}
             <div className="mb-lg">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/logos/flavatix-logo.svg"
                 alt="Flavatix"

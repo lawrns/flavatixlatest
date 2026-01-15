@@ -41,16 +41,6 @@ export default function Dashboard() {
     }
   }, [user, authLoading, router]);
 
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      toast.success('Logged out successfully');
-      router.push('/auth');
-    } catch (error) {
-      toast.error('Error logging out');
-    }
-  };
-
   if (!user) {
     return null;
   }

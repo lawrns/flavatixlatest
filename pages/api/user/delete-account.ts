@@ -85,12 +85,13 @@ async function handleDeleteAccount(
       },
     };
 
-    await supabase
-      .from('audit_logs')
-      .insert(auditLogData)
-      .catch((err) => {
-        logger.error('AccountDeletion', 'Failed to create audit log', err);
-      });
+    try {
+      await supabase
+        .from('audit_logs')
+        .insert(auditLogData);
+    } catch (err) {
+      logger.error('AccountDeletion', 'Failed to create audit log', err instanceof Error ? err : new Error(String(err)));
+    }
 
     // Implement soft delete with 30-day grace period
     // Mark account for deletion instead of immediate deletion
@@ -117,18 +118,19 @@ async function handleDeleteAccount(
     // This protects user privacy while maintaining referential integrity
     const anonymizedEmail = `deleted_${user.id}@flavatix.local`;
 
-    await supabase
-      .from('profiles')
-      .update({
-        email: anonymizedEmail,
-        full_name: '[Deleted User]',
-        bio: null,
-        avatar_url: null,
-      })
-      .eq('id', user.id)
-      .catch((err) => {
-        logger.warn('AccountDeletion', 'Failed to anonymize profile', { error: err });
-      });
+    try {
+      await supabase
+        .from('profiles')
+        .update({
+          email: anonymizedEmail,
+          full_name: '[Deleted User]',
+          bio: null,
+          avatar_url: null,
+        })
+        .eq('id', user.id);
+    } catch (err) {
+      logger.warn('AccountDeletion', 'Failed to anonymize profile');
+    }
 
     // Delete user-generated content (optional - can be kept with anonymization)
     // This is configurable based on business requirements
@@ -146,23 +148,25 @@ async function handleDeleteAccount(
     ];
 
     for (const table of tables) {
-      await supabase
-        .from(table)
-        .delete()
-        .eq('user_id', user.id)
-        .catch((err) => {
-          logger.warn('AccountDeletion', `Failed to delete from ${table}`, { error: err });
-        });
+      try {
+        await supabase
+          .from(table)
+          .delete()
+          .eq('user_id', user.id);
+      } catch (err) {
+        logger.warn('AccountDeletion', `Failed to delete from ${table}`);
+      }
     }
 
     // Delete AI extraction logs (privacy-sensitive data)
-    await supabase
-      .from('ai_extraction_logs')
-      .delete()
-      .eq('user_id', user.id)
-      .catch((err) => {
-        logger.warn('AccountDeletion', 'Failed to delete AI logs', { error: err });
-      });
+    try {
+      await supabase
+        .from('ai_extraction_logs')
+        .delete()
+        .eq('user_id', user.id);
+    } catch (err) {
+      logger.warn('AccountDeletion', 'Failed to delete AI logs');
+    }
 
     // Sign out user immediately
     await supabase.auth.signOut();

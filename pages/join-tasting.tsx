@@ -142,7 +142,7 @@ export default function JoinTastingPage() {
               </li>
               <li className="flex">
                 <span className="font-semibold text-primary mr-2">2.</span>
-                <span>Enter the code above and click "Join Tasting"</span>
+                <span>Enter the code above and click &quot;Join Tasting&quot;</span>
               </li>
               <li className="flex">
                 <span className="font-semibold text-primary mr-2">3.</span>

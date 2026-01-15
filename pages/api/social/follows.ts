@@ -105,7 +105,7 @@ async function toggleFollowHandler(
       // Follow - create new follow
       logger.mutation('user_follows', 'create', undefined, userId, { following_id });
 
-      const { data: newFollow, error: insertError } = await supabase
+      const { error: insertError } = await supabase
         .from('user_follows')
         .insert({
           follower_id: userId,

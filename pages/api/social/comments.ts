@@ -38,8 +38,7 @@ const deleteCommentSchema = z.object({
 // GET /api/social/comments - Get comments for a tasting
 async function getCommentsHandler(
   req: NextApiRequest,
-  res: NextApiResponse,
-  context: ApiContext
+  res: NextApiResponse
 ) {
   const { tasting_id } = req.query;
 

@@ -75,7 +75,6 @@ export default function FlavorWheelsPage() {
   const [error, setError] = useState<string | null>(null);
   const [cached, setCached] = useState(false);
   const [wheelSize, setWheelSize] = useState(700);
-  const [exportingPDF, setExportingPDF] = useState(false);
 
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [selectedSegment, setSelectedSegment] = useState<{
@@ -98,6 +97,7 @@ export default function FlavorWheelsPage() {
     }>
   >([]);
   const [autoRegenerating, setAutoRegenerating] = useState(false);
+  const [exportingPDF, setExportingPDF] = useState(false);
 
   // Load predefined categories
   useEffect(() => {

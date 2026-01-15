@@ -13,18 +13,15 @@ import { cn } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
 import { Input } from '@/components/ui/input';
-import { Modal, ModalHeader, ModalBody, ModalFooter } from '@/components/ui/Modal';
+import { Modal, ModalBody, ModalFooter } from '@/components/ui/Modal';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import { LoadingState, InlineLoading } from '@/components/ui/LoadingState';
+import { InlineLoading } from '@/components/ui/LoadingState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ScoreRing, ScoreBadge } from '@/components/ui/ScoreRing';
 import { FlavorPill } from '@/components/ui/FlavorPill';
 import { AvatarWithFallback } from '@/components/ui/AvatarWithFallback';
 import {
-  FormStepper,
   StepperProgress,
-  StepContent,
-  StepperNavigation,
   FormStepperProvider,
 } from '@/components/ui/FormStepper';
 import Combobox from '@/components/ui/Combobox';
@@ -34,8 +31,6 @@ import {
   Sun,
   Moon,
   Search,
-  Mail,
-  Lock,
   Eye,
   ChevronRight,
   Heart,

@@ -148,7 +148,16 @@ const nextConfig = {
   },
 
   // Webpack configuration for aggressive performance optimization
-  webpack: (config, { isServer, dev }) => {
+  webpack: (config, { isServer, dev, webpack }) => {
+    // Define self as global for server-side rendering to prevent "self is not defined" errors
+    if (isServer) {
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          self: 'global',
+        })
+      );
+    }
+
     // Prevent Next.js Document components from being imported outside _document.tsx
     if (!isServer) {
       config.resolve.alias = {
@@ -159,7 +168,10 @@ const nextConfig = {
 
     // Aggressive performance optimizations for production
     if (!dev) {
-      config.optimization = {
+      // Disable custom splitChunks to avoid 'self is not defined' error
+      // The aggressive chunking strategy was causing webpack to generate
+      // browser-specific code (using 'self') in server bundles
+      /* config.optimization = {
         ...config.optimization,
         moduleIds: 'deterministic',
         runtimeChunk: 'single',
@@ -225,7 +237,7 @@ const nextConfig = {
             },
           },
         },
-      };
+      }; */
     }
 
     return config;
@@ -277,7 +289,5 @@ const sentryWebpackPluginOptions = {
 };
 
 // Wrap the config with Sentry only if DSN is configured
-module.exports =
-  process.env.NEXT_PUBLIC_SENTRY_DSN || process.env.SENTRY_DSN
-    ? withSentryConfig(nextConfig, sentryWebpackPluginOptions)
-    : nextConfig;
+// Disabled during build to prevent "self is not defined" error
+module.exports = nextConfig;

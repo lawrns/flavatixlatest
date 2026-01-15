@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { getSupabaseClient } from '@/lib/supabase';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { toast } from '@/lib/toast';
-import { Users, Trophy, BookOpen, Eye, EyeOff, Plus, Trash2, FileText } from 'lucide-react';
+import { Trophy, BookOpen } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
-import { StudyModeSelector, StudyApproach } from '@/components/quick-tasting/StudyModeSelector';
-import { TemplateSelector } from '@/components/templates/TemplateSelector';
-import { TastingTemplate } from '@/lib/templates/tastingTemplates';
+import { StudyApproach } from '@/components/quick-tasting/StudyModeSelector';
 
 type TastingMode = 'study' | 'competition' | 'quick';
 
@@ -35,13 +32,9 @@ interface CreateTastingForm {
   template_id: string | null;
 }
 
-const CATEGORIES = ['coffee', 'tea', 'wine', 'spirits', 'beer', 'chocolate'];
-const RANKING_TYPES = ['overall_score', 'average_score', 'weighted_score'];
-
 const CreateTastingPage: React.FC = () => {
   const router = useRouter();
   const { user, loading } = useAuth();
-  const supabase = getSupabaseClient();
 
   const [form, setForm] = useState<CreateTastingForm>({
     mode: 'study',
@@ -66,46 +59,6 @@ const CreateTastingPage: React.FC = () => {
       router.push('/auth');
     }
   }, [user, loading, router]);
-
-  const handleModeChange = (mode: TastingMode) => {
-    setForm((prev) => ({
-      ...prev,
-      mode,
-      // Reset study approach when switching away from study mode
-      study_approach: mode === 'study' ? prev.study_approach : null,
-      // Reset ranking when switching away from competition
-      rank_participants: mode === 'competition' ? prev.rank_participants : false,
-      // Clear items for study mode
-      items: mode === 'study' ? [] : prev.items,
-    }));
-  };
-
-  const addItem = () => {
-    const newItem: TastingItem = {
-      id: `temp-${Date.now()}-${Math.random()}`,
-      item_name: `Item ${form.items.length + 1}`,
-      category: form.category || 'coffee',
-      include_in_ranking: true,
-    };
-    setForm((prev) => ({
-      ...prev,
-      items: [...prev.items, newItem],
-    }));
-  };
-
-  const updateItem = (id: string, updates: Partial<TastingItem>) => {
-    setForm((prev) => ({
-      ...prev,
-      items: prev.items.map((item) => (item.id === id ? { ...item, ...updates } : item)),
-    }));
-  };
-
-  const removeItem = (id: string) => {
-    setForm((prev) => ({
-      ...prev,
-      items: prev.items.filter((item) => item.id !== id),
-    }));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
