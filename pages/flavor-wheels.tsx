@@ -189,7 +189,7 @@ export default function FlavorWheelsPage() {
         setWheelData(data.wheelData);
         setCached(data.cached || false);
 
-        if (data.wheelData.categories.length === 0) {
+        if (data.wheelData?.categories?.length === 0) {
           setError(
             'No flavor descriptors found. Add some tasting notes or reviews to generate your flavor wheel!'
           );

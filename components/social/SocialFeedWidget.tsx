@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { getSupabaseClient } from '../../lib/supabase';
@@ -40,11 +40,7 @@ const SocialFeedWidget = React.memo(
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
-    useEffect(() => {
-      loadRecentPosts();
-    }, [userId]);
-
-    const loadRecentPosts = async () => {
+    const loadRecentPosts = useCallback(async () => {
       try {
         const supabase = getSupabaseClient();
 
@@ -163,7 +159,11 @@ const SocialFeedWidget = React.memo(
       } finally {
         setLoading(false);
       }
-    };
+    }, [userId, limit]);
+
+    useEffect(() => {
+      loadRecentPosts();
+    }, [loadRecentPosts]);
 
     const handleLike = async (postId: string, e: React.MouseEvent) => {
       e.stopPropagation();

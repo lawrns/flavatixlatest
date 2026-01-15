@@ -89,11 +89,13 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
 
   // Share functionality
   const handleShare = async () => {
+    if (!wheelData) return;
+
     if (navigator.share) {
       try {
         await navigator.share({
           title: 'My Flavor Wheel',
-          text: `Check out my flavor wheel with ${wheelData.totalDescriptors} descriptors!`,
+          text: `Check out my flavor wheel with ${wheelData.totalDescriptors || 0} descriptors!`,
           url: window.location.href,
         });
       } catch (error) {
@@ -111,10 +113,10 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
     }
   };
 
-  // Color scale for categories
+  // Color scale for categories - safely handle null/undefined wheelData
   const colorScale = d3
     .scaleOrdinal<string>()
-    .domain(wheelData.categories.map((c) => c.name))
+    .domain(wheelData?.categories?.map((c) => c.name) || [])
     .range([
       '#ef4444', // Red - Fruity
       '#f59e0b', // Orange - Sweet

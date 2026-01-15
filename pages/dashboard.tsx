@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/SimpleAuthContext';
 import SocialFeedWidget from '../components/social/SocialFeedWidget';
 import BottomNavigation from '../components/navigation/BottomNavigation';
@@ -16,7 +15,7 @@ import { useCurrentProfile } from '../lib/query/hooks/useProfile';
 import { useRecentTastings, useTastingStats } from '../lib/query/hooks/useTastings';
 
 export default function Dashboard() {
-  const { user, loading: authLoading, signOut } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [quickPresets, setQuickPresets] = useState<CategoryPackId[]>(DEFAULT_PRESETS);
   const router = useRouter();
 
