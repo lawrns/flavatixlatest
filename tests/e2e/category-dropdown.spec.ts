@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test'
 test.describe('Category Dropdown E2E', () => {
   test('complete user workflow for category selection and mode display removal', async ({ page }) => {
     // Navigate to the quick tasting page
-http://localhost:3030/quick-tasting')
+    await page.goto('/quick-tasting')
 
     // Wait for the page to load
     await page.waitForSelector('[data-testid="quick-tasting-session"]', { timeout: 10000 })
@@ -40,7 +40,7 @@ http://localhost:3030/quick-tasting')
   })
 
   test('category persistence across page interactions', async ({ page }) => {
-    await page.goto('http://localhost:3030/quick-tasting')
+    await page.goto('/quick-tasting')
     await page.waitForSelector('[data-testid="quick-tasting-session"]', { timeout: 10000 })
 
     // Change category
@@ -48,8 +48,8 @@ http://localhost:3030/quick-tasting')
     await categorySelect.selectOption('wine')
 
     // Navigate away and back
-    await page.goto('http://localhost:3030/dashboard')
-    await page.goto('http://localhost:3030/quick-tasting')
+    await page.goto('/dashboard')
+    await page.goto('/quick-tasting')
 
     // Category should still be wine (if session persists)
     // Note: This depends on session persistence implementation
@@ -57,7 +57,7 @@ http://localhost:3030/quick-tasting')
   })
 
   test('accessibility compliance', async ({ page }) => {
-    await page.goto('http://localhost:3030/quick-tasting')
+    await page.goto('/quick-tasting')
     await page.waitForSelector('[data-testid="quick-tasting-session"]', { timeout: 10000 })
 
     // Check that category dropdown has proper accessibility attributes
@@ -77,7 +77,7 @@ http://localhost:3030/quick-tasting')
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 })
 
-    await page.goto('http://localhost:3030/quick-tasting')
+    await page.goto('/quick-tasting')
     await page.waitForSelector('[data-testid="quick-tasting-session"]', { timeout: 10000 })
 
     // Verify category dropdown is usable on mobile
@@ -90,7 +90,7 @@ http://localhost:3030/quick-tasting')
   })
 
   test('error handling for category changes', async ({ page }) => {
-    await page.goto('http://localhost:3030/quick-tasting')
+    await page.goto('/quick-tasting')
     await page.waitForSelector('[data-testid="quick-tasting-session"]', { timeout: 10000 })
 
     // Simulate network failure by blocking API calls

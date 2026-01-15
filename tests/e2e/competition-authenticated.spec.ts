@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { login } from './helpers/auth';
 
 /**
  * Authenticated tests for competition mode features
@@ -7,29 +8,12 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Competition Mode - Authenticated Tests', () => {
   test.beforeEach(async ({ page }) => {
-    // First navigate to auth page
-    await page.goto('https://flavatix.netlify.app/auth');
-    await page.waitForLoadState('networkidle');
-
-    // Click "Sign in with Email" to reveal email form
-    await page.getByRole('button', { name: 'Sign in with Email' }).click();
-    await page.waitForTimeout(1000); // Wait for form to appear
-    
-    // Login with provided credentials
-    await page.getByLabel('Email').fill('han@han.com');
-    await page.getByLabel('Password').fill('hennie12');
-    await page.getByRole('button', { name: 'Sign In' }).click();
-    
-    // Wait for login to complete - should redirect somewhere
-    await page.waitForLoadState('networkidle');
-    
-    // Give it a moment to fully load
-    await page.waitForTimeout(2000);
+    await login(page);
   });
 
   test('should access competition creation after login', async ({ page }) => {
     // Navigate to competition creation
-    await page.goto('https://flavatix.netlify.app/taste/create/competition/new');
+    await page.goto('/taste/create/competition/new');
     await page.waitForLoadState('networkidle');
 
     // Should NOT redirect to auth now
@@ -42,7 +26,7 @@ test.describe('Competition Mode - Authenticated Tests', () => {
   });
 
   test('should toggle blind setting and show item controls', async ({ page }) => {
-    await page.goto('https://flavatix.netlify.app/taste/create/competition/new');
+    await page.goto('/taste/create/competition/new');
     await page.waitForLoadState('networkidle');
 
     // Find and verify blind toggle is unchecked by default
@@ -79,7 +63,7 @@ test.describe('Competition Mode - Authenticated Tests', () => {
   });
 
   test('should have category dropdown in competition form', async ({ page }) => {
-    await page.goto('https://flavatix.netlify.app/taste/create/competition/new');
+    await page.goto('/taste/create/competition/new');
     await page.waitForLoadState('networkidle');
 
     // Look for category-related elements
@@ -91,7 +75,7 @@ test.describe('Competition Mode - Authenticated Tests', () => {
   });
 
   test('should validate competition creation form', async ({ page }) => {
-    await page.goto('https://flavatix.netlify.app/taste/create/competition/new');
+    await page.goto('/taste/create/competition/new');
     await page.waitForLoadState('networkidle');
 
     // Try to create without filling form
@@ -108,7 +92,7 @@ test.describe('Competition Mode - Authenticated Tests', () => {
 test.describe('Study Mode - Authenticated Tests', () => {
   test.beforeEach(async ({ page }) => {
     // Login
-    await page.goto('https://flavatix.netlify.app/auth');
+    await page.goto('/auth');
     await page.waitForLoadState('networkidle');
     
     await page.getByLabel('Email').fill('han@han.com');
@@ -120,7 +104,7 @@ test.describe('Study Mode - Authenticated Tests', () => {
   });
 
   test('should access study creation after login', async ({ page }) => {
-    await page.goto('https://flavatix.netlify.app/taste/create/study/new');
+    await page.goto('/taste/create/study/new');
     await page.waitForLoadState('networkidle');
 
     // Should NOT redirect to auth

@@ -8,7 +8,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Production - Competition Mode Features', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to competition creation page on production
-    await page.goto('https://flavatix.netlify.app/taste/create/competition/new');
+    await page.goto('/taste/create/competition/new');
     await page.waitForLoadState('networkidle');
   });
 
@@ -29,7 +29,7 @@ test.describe('Production - Competition Mode Features', () => {
 
 test.describe('Production - Study Mode Features', () => {
   test('should show authentication when accessing study creation', async ({ page }) => {
-    await page.goto('https://flavatix.netlify.app/taste/create/study/new');
+    await page.goto('/taste/create/study/new');
     await page.waitForLoadState('networkidle');
 
     // Should redirect to auth page
@@ -39,7 +39,7 @@ test.describe('Production - Study Mode Features', () => {
 
 test.describe('Production - Public Pages', () => {
   test('should load dashboard without authentication', async ({ page }) => {
-    await page.goto('https://flavatix.netlify.app/dashboard');
+    await page.goto('/dashboard');
     await page.waitForLoadState('networkidle');
 
     // Dashboard should be accessible (may show empty state)
@@ -49,7 +49,7 @@ test.describe('Production - Public Pages', () => {
   });
 
   test('should load create tasting page without authentication', async ({ page }) => {
-    await page.goto('https://flavatix.netlify.app/create-tasting');
+    await page.goto('/create-tasting');
     await page.waitForLoadState('networkidle');
 
     // Create tasting should be accessible

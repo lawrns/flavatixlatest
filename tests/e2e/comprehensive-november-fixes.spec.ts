@@ -1,9 +1,10 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+import { login } from './helpers/auth';
 
 /**
  * Comprehensive E2E Tests for November 25th Fixes
  * Tests run against han@han.com / hennie12 account
- * 
+ *
  * Verifies:
  * 1. Profile picture upload with camera support
  * 2. Quick Tasting item naming (Item 1, Item 2 pattern)
@@ -12,32 +13,6 @@ import { test, expect, Page } from '@playwright/test';
  * 5. Study Mode preview - "Ranked" label only for scale params
  * 6. Overall application stability
  */
-
-const TEST_USER = {
-  email: 'han@han.com',
-  password: 'hennie12'
-};
-
-async function login(page: Page) {
-  await page.goto('/auth');
-  await page.waitForLoadState('networkidle');
-
-  // First click "Sign in with Email" to show the email form
-  const signInWithEmailButton = page.getByRole('button', { name: /sign in with email/i });
-  await signInWithEmailButton.click();
-  await page.waitForTimeout(500);
-
-  // Fill login form
-  await page.fill('input[type="email"]', TEST_USER.email);
-  await page.fill('input[type="password"]', TEST_USER.password);
-  
-  // Click sign in
-  const signInButton = page.getByRole('button', { name: /^sign in$/i });
-  await signInButton.click();
-
-  // Wait for redirect to dashboard
-  await page.waitForURL(/\/(dashboard|quick-tasting|taste|my-tastings|create-tasting)/, { timeout: 15000 });
-}
 
 test.describe('Authentication Flow', () => {
   test('should successfully login with han@han.com account', async ({ page }) => {
