@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSupabaseClient } from '@/lib/supabase';
+import { withAdminAuth, AdminPermission, createAuditLog } from '@/lib/admin/rbac';
 
 interface UsageStats {
   period: string;
@@ -18,8 +19,11 @@ interface UsageStats {
 /**
  * API Endpoint: Get AI usage statistics
  * GET /api/admin/ai-usage-stats
+ *
+ * SECURITY: Requires admin role with AI_USAGE_READ permission
+ * Uses fail-closed RBAC with comprehensive audit logging
  */
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse<{ success: boolean; stats?: UsageStats; error?: string }>
 ) {
@@ -29,29 +33,12 @@ export default async function handler(
 
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith('Bearer ')) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
-    }
-
-    const token = authHeader.replace('Bearer ', '');
+    const token = authHeader!.replace('Bearer ', '');
     const supabase = getSupabaseClient(req, res);
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    if (authError || !user) {
+    const { data: { user } } = await supabase.auth.getUser(token);
+    if (!user) {
       return res.status(401).json({ success: false, error: 'Invalid token' });
-    }
-
-    // Check if user is admin (skip if user_roles table doesn't exist)
-    const { data: userRole, error: roleError } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', user.id)
-      .single();
-
-    // If user_roles table doesn't exist, allow all authenticated users for now
-    // In production, you should ensure user_roles table exists
-    if (!roleError && userRole && (userRole as any).role !== 'admin') {
-      return res.status(403).json({ success: false, error: 'Forbidden - admin access required' });
     }
 
     // Get usage stats from last 30 days
@@ -119,3 +106,6 @@ export default async function handler(
     });
   }
 }
+
+// Export with admin auth wrapper and AI_USAGE_READ permission
+export default withAdminAuth(handler, AdminPermission.AI_USAGE_READ);

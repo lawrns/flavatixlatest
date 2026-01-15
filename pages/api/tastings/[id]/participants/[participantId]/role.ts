@@ -69,7 +69,7 @@ async function updateRoleHandler(
 }
 
 export default createApiHandler({
-  PUT: withAuth(withValidation(updateRoleSchema, updateRoleHandler)),
+  PATCH: withAuth(withValidation(updateRoleSchema, updateRoleHandler)),
 });
 
 

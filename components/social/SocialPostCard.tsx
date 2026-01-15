@@ -6,41 +6,10 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { getCategoryColors } from '@/lib/colors';
+import type { TastingPost } from '@/lib/query/hooks/useFeed';
 
-export type TastingItem = {
-  id: string;
-  item_name: string;
-  photo_url?: string;
-  overall_score?: number;
-  notes?: string;
-};
-
-export type TastingPost = {
-  id: string;
-  user_id: string;
-  category: string;
-  session_name?: string;
-  notes?: string;
-  average_score?: number;
-  created_at: string;
-  completed_at?: string;
-  total_items: number;
-  completed_items: number;
-  user: {
-    full_name?: string;
-    username?: string;
-    avatar_url?: string;
-  };
-  stats: {
-    likes: number;
-    comments: number;
-    shares: number;
-  };
-  isLiked: boolean;
-  isFollowed: boolean;
-  items?: TastingItem[];
-  photos?: string[];
-};
+// Re-export types for backward compatibility
+export type { TastingPost };
 
 interface SocialPostCardProps {
   post: TastingPost;

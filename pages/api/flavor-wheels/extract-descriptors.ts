@@ -6,90 +6,79 @@ import {
   ExtractedDescriptor,
 } from '@/lib/flavorDescriptorExtractor';
 import { extractDescriptorsWithAI } from '@/lib/ai/descriptorExtractionService';
+import {
+  createApiHandler,
+  withAuth,
+  withValidation,
+  withRateLimit,
+  RATE_LIMITS,
+  sendSuccess,
+  sendServerError,
+  requireUser,
+  type ApiContext,
+} from '@/lib/api/middleware';
+import { z } from 'zod';
 
-interface ExtractRequest {
-  sourceType: 'quick_tasting' | 'quick_review' | 'prose_review';
-  sourceId: string;
-  text?: string;
-  structuredData?: {
-    aroma_notes?: string;
-    flavor_notes?: string;
-    texture_notes?: string;
-    other_notes?: string;
-    aroma_intensity?: number;
-    flavor_intensity?: number;
-  };
-  itemContext?: {
-    itemName?: string;
-    itemCategory?: string;
-  };
-  category?: string;
-  useAI?: boolean; // Flag to enable AI extraction
-}
+// Validation schema for extract descriptors request
+const extractDescriptorsSchema = z.object({
+  sourceType: z.enum(['quick_tasting', 'quick_review', 'prose_review'], {
+    errorMap: () => ({ message: 'Source type must be quick_tasting, quick_review, or prose_review' }),
+  }),
+  sourceId: z.string().uuid('Source ID must be a valid UUID'),
+  text: z.string().optional(),
+  structuredData: z.object({
+    aroma_notes: z.string().optional(),
+    flavor_notes: z.string().optional(),
+    texture_notes: z.string().optional(),
+    other_notes: z.string().optional(),
+    aroma_intensity: z.number().min(0).max(10).optional(),
+    flavor_intensity: z.number().min(0).max(10).optional(),
+  }).optional(),
+  itemContext: z.object({
+    itemName: z.string().optional(),
+    itemCategory: z.string().optional(),
+  }).optional(),
+  category: z.string().optional(),
+  useAI: z.boolean().optional().default(true),
+}).refine(
+  (data) => data.text || data.structuredData,
+  { message: 'Either text or structuredData must be provided' }
+);
+
+type ExtractDescriptorsInput = z.infer<typeof extractDescriptorsSchema>;
 
 interface ExtractResponse {
-  success: boolean;
-  descriptors?: ExtractedDescriptor[];
-  savedCount?: number;
+  descriptors: ExtractedDescriptor[];
+  savedCount: number;
   tokensUsed?: number;
   processingTimeMs?: number;
-  extractionMethod?: 'keyword' | 'ai';
-  error?: string;
+  extractionMethod: 'keyword' | 'ai';
 }
 
 /**
  * API Endpoint: Extract and save flavor descriptors
  * POST /api/flavor-wheels/extract-descriptors
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse<ExtractResponse>) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, error: 'Method not allowed' });
-  }
+async function extractDescriptorsHandler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  context: ApiContext
+) {
+  const userId = requireUser(context).id;
+  const supabase = getSupabaseClient(req, res);
+
+  // Request body is already validated by withValidation middleware
+  const {
+    sourceType,
+    sourceId,
+    text,
+    structuredData,
+    itemContext,
+    category,
+    useAI,
+  } = req.body as ExtractDescriptorsInput;
 
   try {
-    // Get auth token from Authorization header (like other APIs)
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ success: false, error: 'Unauthorized - missing Bearer token' });
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    const supabase = getSupabaseClient(req, res);
-
-    // Get authenticated user using the token
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser(token);
-
-    if (authError || !user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized - invalid token' });
-    }
-
-    const {
-      sourceType,
-      sourceId,
-      text,
-      structuredData,
-      itemContext,
-      category,
-      useAI = true, // Default to AI extraction
-    } = req.body as ExtractRequest;
-
-    // Validate request
-    if (!sourceType || !sourceId) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required fields: sourceType, sourceId',
-      });
-    }
-
-    if (!text && !structuredData) {
-      return res.status(400).json({
-        success: false,
-        error: 'Either text or structuredData must be provided',
-      });
-    }
 
     // Combine text from all fields
     let combinedText = text || '';
@@ -142,7 +131,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         // Log AI extraction (store full input text, no truncation)
         // @ts-ignore - Supabase type inference issue
         await supabase.from('ai_extraction_logs').insert({
-          user_id: user.id,
+          user_id: userId,
           tasting_id: sourceId,
           source_type: sourceType,
           input_text: combinedText, // Store full text, no arbitrary truncation
@@ -175,16 +164,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 
     if (descriptors.length === 0) {
-      return res.status(200).json({
-        success: true,
-        descriptors: [],
-        savedCount: 0,
-      });
+      return sendSuccess(
+        res,
+        {
+          descriptors: [],
+          savedCount: 0,
+          extractionMethod,
+        } as ExtractResponse,
+        'No descriptors extracted'
+      );
     }
 
     // Save descriptors to database with case-insensitive deduplication
     const descriptorRecords = descriptors.map((descriptor) => ({
-      user_id: user.id,
+      user_id: userId,
       source_type: sourceType,
       source_id: sourceId,
       descriptor_text: descriptor.text,
@@ -212,26 +205,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       .select('id');
 
     if (saveError) {
-      console.error('Error saving descriptors:', saveError);
-      return res.status(500).json({
-        success: false,
-        error: 'Failed to save descriptors',
-      });
+      return sendServerError(res, saveError, 'Failed to save descriptors');
     }
 
-    return res.status(200).json({
-      success: true,
+    const responseData: ExtractResponse = {
       descriptors,
       savedCount: savedDescriptors?.length || 0,
-      tokensUsed: extractionMethod === 'ai' ? tokensUsed : undefined,
-      processingTimeMs: extractionMethod === 'ai' ? processingTimeMs : undefined,
       extractionMethod,
-    });
+    };
+
+    if (extractionMethod === 'ai') {
+      responseData.tokensUsed = tokensUsed;
+      responseData.processingTimeMs = processingTimeMs;
+    }
+
+    return sendSuccess(res, responseData, 'Descriptors extracted successfully', 200);
   } catch (error) {
-    console.error('Error in extract-descriptors:', error);
-    return res.status(500).json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Internal server error',
-    });
+    return sendServerError(res, error, 'Failed to extract descriptors');
   }
 }
+
+// Export handler with middleware chain
+export default createApiHandler({
+  POST: withRateLimit(RATE_LIMITS.API)(
+    withAuth(
+      withValidation(extractDescriptorsSchema, extractDescriptorsHandler)
+    )
+  ),
+});

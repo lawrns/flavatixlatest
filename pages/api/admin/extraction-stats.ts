@@ -5,6 +5,16 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSupabaseClient } from '@/lib/supabase';
+import {
+  createApiHandler,
+  withAuth,
+  withRateLimit,
+  RATE_LIMITS,
+  sendSuccess,
+  sendServerError,
+  requireUser,
+  type ApiContext,
+} from '@/lib/api/middleware';
 
 interface ExtractionStats {
   period: string;
@@ -22,33 +32,21 @@ interface ExtractionStats {
     extracted: number;
     rate: number;
   }>;
-  failureReasons?: Array<{
-    reason: string;
-    count: number;
-  }>;
 }
 
-export default async function handler(
+/**
+ * GET /api/admin/extraction-stats
+ * Get extraction statistics for monitoring
+ */
+async function getExtractionStatsHandler(
   req: NextApiRequest,
-  res: NextApiResponse<ExtractionStats | { error: string }>
+  res: NextApiResponse,
+  context: ApiContext
 ) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  requireUser(context); // Verify authentication
+  const supabase = getSupabaseClient(req, res);
 
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    const supabase = getSupabaseClient(req, res);
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    if (authError || !user) {
-      return res.status(401).json({ error: 'Invalid token' });
-    }
-
     const period = (req.query.period as string) || '7d';
 
     // Calculate date range
@@ -63,8 +61,7 @@ export default async function handler(
       .gte('created_at', startDate.toISOString());
 
     if (itemsError) {
-      console.error('Error fetching items:', itemsError);
-      return res.status(500).json({ error: 'Failed to fetch items' });
+      return sendServerError(res, itemsError, 'Failed to fetch items');
     }
 
     // Filter items with content
@@ -81,7 +78,7 @@ export default async function handler(
       .in('source_id', itemIds);
 
     if (descriptorsError) {
-      console.error('Error fetching descriptors:', descriptorsError);
+      return sendServerError(res, descriptorsError, 'Failed to fetch descriptors');
     }
 
     // Calculate extraction statistics
@@ -116,7 +113,7 @@ export default async function handler(
       .in('id', tastingIds);
 
     if (tastingsError) {
-      console.error('Error fetching tastings:', tastingsError);
+      return sendServerError(res, tastingsError, 'Failed to fetch tastings');
     }
 
     const tastingCategoryMap = new Map(
@@ -140,7 +137,7 @@ export default async function handler(
       category,
       total: stats.total,
       extracted: stats.extracted,
-      rate: (stats.extracted / stats.total) * 100
+      rate: Math.round((stats.extracted / stats.total) * 100 * 100) / 100
     }));
 
     const response: ExtractionStats = {
@@ -153,9 +150,13 @@ export default async function handler(
       byCategory
     };
 
-    res.status(200).json(response);
+    return sendSuccess(res, response, 'Extraction statistics retrieved successfully');
   } catch (error) {
-    console.error('Error in extraction stats:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    return sendServerError(res, error, 'Failed to get extraction statistics');
   }
 }
+
+// Export handler with middleware chain
+export default createApiHandler({
+  GET: withRateLimit(RATE_LIMITS.API)(withAuth(getExtractionStatsHandler)),
+});

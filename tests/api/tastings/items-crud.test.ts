@@ -298,7 +298,7 @@ describe('Tasting Items CRUD Operations', () => {
     });
   });
 
-  describe('PUT /api/tastings/[id]/items/[itemId]', () => {
+  describe('PATCH /api/tastings/[id]/items/[itemId]', () => {
     it('should update item successfully', async () => {
       const existingItem = {
         id: itemId,
@@ -327,7 +327,7 @@ describe('Tasting Items CRUD Operations', () => {
         });
 
       req = createMockRequest({
-        method: 'PUT',
+        method: 'PATCH',
         query: { id: tastingId, itemId },
         headers: createMockAuthHeaders(),
         body: {

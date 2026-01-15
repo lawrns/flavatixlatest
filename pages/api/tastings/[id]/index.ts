@@ -19,7 +19,6 @@ import {
   RATE_LIMITS,
   sendSuccess,
   sendNotFound,
-  sendForbidden,
   sendServerError,
   requireUser,
   type ApiContext,
@@ -81,7 +80,7 @@ async function getTastingHandler(
   }
 }
 
-// PUT /api/tastings/[id] - Update a tasting
+// PATCH /api/tastings/[id] - Update a tasting (partial update)
 async function updateTastingHandler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -204,7 +203,7 @@ async function deleteTastingHandler(
 // Export handler with middleware chain
 export default createApiHandler({
   GET: withRateLimit(RATE_LIMITS.API)(withAuth(getTastingHandler)),
-  PUT: withRateLimit(RATE_LIMITS.API)(withAuth(withValidation(updateTastingSchema, updateTastingHandler))),
+  PATCH: withRateLimit(RATE_LIMITS.API)(withAuth(withValidation(updateTastingSchema, updateTastingHandler))),
   DELETE: withRateLimit(RATE_LIMITS.API)(withAuth(deleteTastingHandler)),
 });
 

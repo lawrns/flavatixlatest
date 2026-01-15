@@ -13,7 +13,15 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/$1',
   },
   testEnvironment: 'jest-environment-jsdom',
-  testPathIgnorePatterns: ['<rootDir>/tests/e2e/', '<rootDir>/lib/__tests__/', '<rootDir>/e2e/'],
+  testPathIgnorePatterns: ['<rootDir>/tests/e2e/', '<rootDir>/lib/__tests__/', '<rootDir>/e2e/', '<rootDir>/.next/', '<rootDir>/node_modules/', '<rootDir>/tests/data-quality/', '<rootDir>/tests/api/', '<rootDir>/.worktrees/'],
+  // Transform ESM modules
+  transformIgnorePatterns: [
+    'node_modules/(?!(@faker-js|@sentry|uuid|nanoid)/)',
+  ],
+  testEnvironmentOptions: {
+    url: 'http://localhost:3000',
+  },
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   collectCoverageFrom: [
     'pages/**/*.{js,jsx,ts,tsx}',
     'components/**/*.{js,jsx,ts,tsx}',

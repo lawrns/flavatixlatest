@@ -65,9 +65,21 @@ const AuthSection = () => {
     }
   }, [user, router]);
 
+  // Enhanced password policy (OWASP compliant)
+  const passwordSchema = z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one number')
+    .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character (!@#$%^&*)')
+    .refine((val) => !['password', '12345678', 'qwerty'].some((weak) => val.toLowerCase().includes(weak)), {
+      message: 'Password is too common. Please use a stronger password.',
+    });
+
   const emailSchema = z.object({
     email: z.string().email('Invalid email address'),
-    password: z.string().min(6, 'Password must be at least 6 characters'),
+    password: mode === 'register' ? passwordSchema : z.string().min(1, 'Password is required'),
     full_name:
       mode === 'register'
         ? z.string().min(2, 'Full name must be at least 2 characters')

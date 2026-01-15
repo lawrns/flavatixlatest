@@ -1,0 +1,79 @@
+# Dependabot configuration for automated dependency updates
+# Helps maintain security by automatically updating vulnerable dependencies
+# See: https://docs.github.com/en/code-security/dependabot
+
+version: 2
+updates:
+  # NPM dependencies (package.json)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    # Security updates are applied immediately, version updates weekly
+    open-pull-requests-limit: 10
+    reviewers:
+      - "lukatenbosch"
+    assignees:
+      - "lukatenbosch"
+    labels:
+      - "dependencies"
+      - "security"
+    # Automatically merge security updates
+    pull-request-branch-name:
+      separator: "-"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    # Group related updates together
+    groups:
+      # Security-critical dependencies
+      security:
+        patterns:
+          - "@sentry/*"
+          - "@supabase/*"
+          - "zod"
+          - "next"
+        update-types:
+          - "patch"
+          - "minor"
+      # Development dependencies
+      dev-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "patch"
+          - "minor"
+      # Production dependencies
+      production-dependencies:
+        dependency-type: "production"
+        update-types:
+          - "patch"
+    # Ignore specific dependencies (if needed)
+    ignore:
+      # Example: Ignore major version updates for specific packages
+      # - dependency-name: "react"
+      #   update-types: ["version-update:semver-major"]
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "lukatenbosch"
+    labels:
+      - "github-actions"
+      - "dependencies"
+
+# Security vulnerability alerts
+# Dependabot will automatically:
+# 1. Scan for vulnerabilities in dependencies
+# 2. Create security advisories
+# 3. Open pull requests to fix vulnerabilities
+# 4. Can be configured to auto-merge security patches

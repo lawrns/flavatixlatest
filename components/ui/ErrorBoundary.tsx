@@ -2,7 +2,6 @@ import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Card, CardContent, CardHeader } from './Card';
 import Button from './Button';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
-import * as Sentry from '@sentry/nextjs';
 
 interface Props {
   children: ReactNode;
@@ -32,22 +31,29 @@ class ErrorBoundary extends Component<Props, State> {
       errorInfo
     });
 
-    // Send error to Sentry with additional context
-    Sentry.captureException(error, {
-      contexts: {
-        react: {
-          componentStack: errorInfo.componentStack,
-        },
-      },
-      tags: {
-        errorBoundary: true,
-      },
-      level: 'error',
-      extra: {
-        errorInfo,
-        timestamp: new Date().toISOString(),
-      },
-    });
+    // Send error to Sentry with additional context (only in browser environment)
+    if (typeof window !== 'undefined') {
+      try {
+        const Sentry = require('@sentry/nextjs');
+        Sentry.captureException(error, {
+          contexts: {
+            react: {
+              componentStack: errorInfo.componentStack,
+            },
+          },
+          tags: {
+            errorBoundary: true,
+          },
+          level: 'error',
+          extra: {
+            errorInfo,
+            timestamp: new Date().toISOString(),
+          },
+        });
+      } catch (e) {
+        // Sentry not available, just log to console
+      }
+    }
   }
 
   handleRetry = () => {

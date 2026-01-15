@@ -1,3 +1,26 @@
-#!/bin/sh
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 
-npx lint-staged
+# Pre-commit hook for security checks
+echo "🔍 Running pre-commit security checks..."
+
+# 1. Check for secrets
+echo "📝 Checking for secrets..."
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --verbose || exit 1
+else
+  echo "⚠️  gitleaks not installed"
+fi
+
+# 2. Check for .env files
+echo "📦 Checking for .env files..."
+if git diff --cached --name-only | grep -E "\.env$|\.env\.local$" 2>/dev/null; then
+  echo "❌ .env file detected in commit!"
+  exit 1
+fi
+
+# 3. Run linter
+echo "🔧 Running linter..."
+npm run lint || exit 1
+
+echo "✅ Pre-commit checks passed!"

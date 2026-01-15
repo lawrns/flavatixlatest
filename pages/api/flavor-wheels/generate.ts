@@ -5,90 +5,69 @@ import {
   FlavorWheelData,
   WheelGenerationOptions
 } from '@/lib/flavorWheelGenerator';
+import {
+  createApiHandler,
+  withAuth,
+  withValidation,
+  withRateLimit,
+  RATE_LIMITS,
+  sendSuccess,
+  sendServerError,
+  requireUser,
+  type ApiContext,
+} from '@/lib/api/middleware';
+import { z } from 'zod';
 
-interface GenerateRequest {
-  wheelType: 'aroma' | 'flavor' | 'combined' | 'metaphor';
-  scopeType: 'personal' | 'universal' | 'item' | 'category' | 'tasting';
-  scopeFilter?: {
-    userId?: string;
-    itemName?: string;
-    itemCategory?: string;
-    tastingId?: string;
-  };
-  forceRegenerate?: boolean;
-}
+// Validation schema for generate flavor wheel request
+const generateWheelSchema = z.object({
+  wheelType: z.enum(['aroma', 'flavor', 'combined', 'metaphor'], {
+    errorMap: () => ({ message: 'Wheel type must be aroma, flavor, combined, or metaphor' }),
+  }),
+  scopeType: z.enum(['personal', 'universal', 'item', 'category', 'tasting'], {
+    errorMap: () => ({ message: 'Scope type must be personal, universal, item, category, or tasting' }),
+  }),
+  scopeFilter: z.object({
+    userId: z.string().uuid().optional(),
+    itemName: z.string().optional(),
+    itemCategory: z.string().optional(),
+    tastingId: z.string().uuid().optional(),
+  }).optional(),
+  forceRegenerate: z.boolean().optional().default(false),
+});
+
+type GenerateWheelInput = z.infer<typeof generateWheelSchema>;
 
 interface GenerateResponse {
-  success: boolean;
-  wheelData?: FlavorWheelData;
-  wheelId?: string;
-  cached?: boolean;
-  error?: string;
+  wheelData: FlavorWheelData;
+  wheelId: string;
+  cached: boolean;
+  warning?: string;
 }
 
 /**
  * API Endpoint: Generate flavor wheel visualization
  * POST /api/flavor-wheels/generate
  */
-export default async function handler(
+async function generateWheelHandler(
   req: NextApiRequest,
-  res: NextApiResponse<GenerateResponse>
+  res: NextApiResponse,
+  context: ApiContext
 ) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, error: 'Method not allowed' });
-  }
+  const userId = requireUser(context).id;
+  const supabase = getSupabaseClient(req, res);
+
+  // Request body is already validated by withValidation middleware
+  const {
+    wheelType,
+    scopeType,
+    scopeFilter = {},
+    forceRegenerate,
+  } = req.body as GenerateWheelInput;
 
   try {
-    // Get auth token from Authorization header (like other APIs)
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ success: false, error: 'Unauthorized - missing Bearer token' });
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    const supabase = getSupabaseClient(req, res);
-
-    // Get authenticated user using the token
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-
-    if (authError || !user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized - invalid token' });
-    }
-
-    const {
-      wheelType,
-      scopeType,
-      scopeFilter = {},
-      forceRegenerate = false
-    } = req.body as GenerateRequest;
-
-    // Validate request
-    if (!wheelType || !scopeType) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required fields: wheelType, scopeType'
-      });
-    }
-
-    // Validate wheel type
-    if (!['aroma', 'flavor', 'combined', 'metaphor'].includes(wheelType)) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid wheelType. Must be: aroma, flavor, combined, or metaphor'
-      });
-    }
-
-    // Validate scope type
-    if (!['personal', 'universal', 'item', 'category', 'tasting'].includes(scopeType)) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid scopeType. Must be: personal, universal, item, category, or tasting'
-      });
-    }
-
     // For personal scope, ensure userId matches authenticated user
     if (scopeType === 'personal') {
-      scopeFilter.userId = user.id;
+      scopeFilter.userId = userId;
     }
 
     // Build generation options
@@ -96,7 +75,7 @@ export default async function handler(
       wheelType,
       scopeType,
       scopeFilter,
-      userId: scopeType === 'personal' ? user.id : undefined
+      userId: scopeType === 'personal' ? userId : undefined
     };
 
     // If force regenerate, delete existing wheel first
@@ -108,7 +87,7 @@ export default async function handler(
         .eq('scope_type', scopeType);
 
       if (scopeType === 'personal') {
-        deleteQuery = deleteQuery.eq('user_id', user.id);
+        deleteQuery = deleteQuery.eq('user_id', userId);
       }
 
       await deleteQuery;
@@ -121,28 +100,32 @@ export default async function handler(
     );
 
     // Check if wheel has data
-    if (wheelData.categories.length === 0) {
-      return res.status(200).json({
-        success: true,
-        wheelData,
-        wheelId,
-        cached: false,
-        error: 'No flavor descriptors found for the specified scope. Try adding some tasting notes or reviews first.'
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
+    const responseData: GenerateResponse = {
       wheelData,
       wheelId,
-      cached
-    });
+      cached,
+    };
 
+    if (wheelData.categories.length === 0) {
+      responseData.warning = 'No flavor descriptors found for the specified scope. Try adding some tasting notes or reviews first.';
+    }
+
+    return sendSuccess(
+      res,
+      responseData,
+      cached ? 'Flavor wheel retrieved from cache' : 'Flavor wheel generated successfully',
+      200
+    );
   } catch (error) {
-    console.error('Error in generate wheel:', error);
-    return res.status(500).json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Internal server error'
-    });
+    return sendServerError(res, error, 'Failed to generate flavor wheel');
   }
 }
+
+// Export handler with middleware chain
+export default createApiHandler({
+  POST: withRateLimit(RATE_LIMITS.API)(
+    withAuth(
+      withValidation(generateWheelSchema, generateWheelHandler)
+    )
+  ),
+});

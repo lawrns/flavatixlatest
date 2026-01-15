@@ -776,29 +776,130 @@ export function withCsrfProtection(handler: ApiHandler): ApiHandler {
       logger.warn('CSRF', 'Missing CSRF token', {
         method: req.method,
         url: req.url,
+        userId: context.user?.id,
       });
+
+      Sentry.captureMessage('CSRF token missing', {
+        level: 'warning',
+        tags: { security: true, csrf: true },
+        extra: { method: req.method, url: req.url, userId: context.user?.id },
+      });
+
       return sendError(res, 'CSRF_TOKEN_MISSING', 'CSRF token required for this operation', 403);
     }
 
-    // TODO(security): CSRF validation is incomplete. Currently only checks token presence,
-    // not validity. For endpoints not using Supabase auth (e.g., webhooks, public forms):
-    // 1. Implement validateCsrfToken() that checks token signature/expiry
-    // 2. Store CSRF tokens in session or signed cookie
-    // 3. Add generateCsrfToken() call to session creation flow
-    // For now, Supabase JWT in Authorization header provides implicit CSRF protection.
+    // Validate CSRF token signature and expiry
+    const isValid = validateCsrfToken(csrfToken);
 
+    if (!isValid) {
+      logger.warn('CSRF', 'Invalid CSRF token', {
+        method: req.method,
+        url: req.url,
+        userId: context.user?.id,
+      });
+
+      Sentry.captureMessage('CSRF token validation failed', {
+        level: 'warning',
+        tags: { security: true, csrf: true },
+        extra: { method: req.method, url: req.url, userId: context.user?.id },
+      });
+
+      return sendError(res, 'CSRF_TOKEN_INVALID', 'CSRF token is invalid or expired. Please refresh the page and try again.', 403);
+    }
+
+    // CSRF validation successful, proceed to handler
     return handler(req, res, context);
   };
 }
 
 /**
- * Generate a CSRF token for a user session
- * This would be called when creating a session and returned to the client
+ * Generate a cryptographically secure CSRF token
+ * This token is stored in a secure, httpOnly cookie and validated on each request
  */
 export function generateCsrfToken(userId?: string): string {
+  // Use crypto.randomBytes for cryptographically secure tokens
+  const crypto = require('crypto');
+  const randomBytes = crypto.randomBytes(32).toString('hex');
   const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2);
-  return `${userId || 'anon'}-${timestamp}-${random}`;
+  const userPart = userId ? userId.substring(0, 8) : 'anon';
+
+  // Combine user ID, timestamp, and random bytes
+  const tokenData = `${userPart}-${timestamp}-${randomBytes}`;
+
+  // Create HMAC signature to prevent tampering
+  const secret = process.env.CSRF_SECRET || process.env.JWT_SECRET || 'default-secret-change-in-production';
+  const signature = crypto
+    .createHmac('sha256', secret)
+    .update(tokenData)
+    .digest('hex');
+
+  return `${tokenData}.${signature}`;
+}
+
+/**
+ * Validate CSRF token signature and expiry
+ * Returns true if token is valid, false otherwise
+ */
+export function validateCsrfToken(token: string): boolean {
+  if (!token || typeof token !== 'string') {
+    return false;
+  }
+
+  try {
+    // Token format: userPart-timestamp-randomBytes.signature
+    const [tokenData, providedSignature] = token.split('.');
+    if (!tokenData || !providedSignature) {
+      return false;
+    }
+
+    // Verify signature
+    const crypto = require('crypto');
+    const secret = process.env.CSRF_SECRET || process.env.JWT_SECRET || 'default-secret-change-in-production';
+    const expectedSignature = crypto
+      .createHmac('sha256', secret)
+      .update(tokenData)
+      .digest('hex');
+
+    // Constant-time comparison to prevent timing attacks
+    if (!timingSafeEqual(providedSignature, expectedSignature)) {
+      return false;
+    }
+
+    // Extract timestamp and validate expiry (24 hours)
+    const parts = tokenData.split('-');
+    if (parts.length < 3) {
+      return false;
+    }
+
+    const timestamp = parseInt(parts[1], 10);
+    const now = Date.now();
+    const maxAge = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+    if (now - timestamp > maxAge) {
+      return false; // Token expired
+    }
+
+    return true;
+  } catch (error) {
+    logger.warn('CSRF', 'Token validation error', { error });
+    return false;
+  }
+}
+
+/**
+ * Timing-safe string comparison to prevent timing attacks
+ */
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+
+  return result === 0;
 }
 
 // ============================================================================
@@ -838,4 +939,150 @@ export function requireUser(context: ApiContext): User {
     throw new Error('User required but not found in context. Did you use withAuth middleware?');
   }
   return context.user;
+}
+
+// ============================================================================
+// OWNERSHIP VERIFICATION MIDDLEWARE
+// ============================================================================
+
+/**
+ * Configuration for ownership verification
+ */
+export interface OwnershipConfig {
+  /** Supabase table to check */
+  table: string;
+  /** ID parameter name from req.query (default: 'id') */
+  idParam?: string;
+  /** Column name for the resource ID (default: 'id') */
+  idColumn?: string;
+  /** Column name for the user ID (default: 'user_id') */
+  userIdColumn?: string;
+  /** Resource name for error messages (default: 'Resource') */
+  resourceName?: string;
+  /** Optional custom ownership check function */
+  customCheck?: (
+    req: NextApiRequest,
+    userId: string,
+    supabase: any
+  ) => Promise<{ isOwner: boolean; resource?: any }>;
+}
+
+/**
+ * Middleware that verifies resource ownership
+ * Ensures the authenticated user owns the resource before allowing access
+ *
+ * @example
+ * // Verify tasting ownership
+ * export default createApiHandler({
+ *   GET: withAuth(withOwnership({ table: 'quick_tastings' })(handler)),
+ *   PUT: withAuth(withOwnership({ table: 'quick_tastings' })(handler)),
+ * });
+ *
+ * @example
+ * // Verify nested resource ownership (item within tasting)
+ * export default createApiHandler({
+ *   PUT: withAuth(withOwnership({
+ *     table: 'quick_tastings',
+ *     customCheck: async (req, userId, supabase) => {
+ *       const { id: tastingId, itemId } = req.query;
+ *       const { data: tasting } = await supabase
+ *         .from('quick_tastings')
+ *         .select('id, user_id')
+ *         .eq('id', tastingId)
+ *         .eq('user_id', userId)
+ *         .single();
+ *       return { isOwner: !!tasting, resource: tasting };
+ *     }
+ *   })(handler)),
+ * });
+ */
+export function withOwnership(config: OwnershipConfig): (handler: ApiHandler) => ApiHandler {
+  const {
+    table,
+    idParam = 'id',
+    idColumn = 'id',
+    userIdColumn = 'user_id',
+    resourceName = 'Resource',
+    customCheck,
+  } = config;
+
+  return (handler: ApiHandler) => {
+    return async (req, res, context) => {
+      const userId = requireUser(context).id;
+      const supabase = getSupabaseClient(req, res);
+
+      try {
+        // Use custom ownership check if provided
+        if (customCheck) {
+          const { isOwner, resource } = await customCheck(req, userId, supabase);
+
+          if (!isOwner) {
+            logger.warn('Authorization', 'Ownership verification failed (custom check)', {
+              userId,
+              table,
+              method: req.method,
+              url: req.url,
+            });
+
+            Sentry.captureMessage('Unauthorized resource access attempt', {
+              level: 'warning',
+              tags: { security: true, authorization: true },
+              extra: { userId, table, method: req.method, url: req.url },
+            });
+
+            return sendForbidden(res, `You do not have permission to access this ${resourceName.toLowerCase()}`);
+          }
+
+          // Optionally attach resource to context for use in handler
+          (context as any).resource = resource;
+
+          return handler(req, res, context);
+        }
+
+        // Standard ownership check
+        const resourceId = req.query[idParam];
+
+        if (!resourceId || typeof resourceId !== 'string') {
+          return sendNotFound(res, resourceName);
+        }
+
+        // Query resource with ownership check
+        const { data: resource, error } = await supabase
+          .from(table)
+          .select(`${idColumn}, ${userIdColumn}`)
+          .eq(idColumn, resourceId)
+          .eq(userIdColumn, userId)
+          .single();
+
+        if (error || !resource) {
+          logger.debug('Authorization', 'Resource not found or access denied', {
+            userId,
+            table,
+            resourceId,
+            error: error?.message,
+          });
+
+          // Don't reveal whether resource exists or user lacks permission
+          return sendNotFound(res, resourceName);
+        }
+
+        // Ownership verified, attach resource to context
+        (context as any).resource = resource;
+
+        logger.debug('Authorization', 'Ownership verified', {
+          userId,
+          table,
+          resourceId,
+        });
+
+        return handler(req, res, context);
+      } catch (error) {
+        logger.error('Authorization', 'Ownership verification error', error, {
+          userId,
+          table,
+        });
+        return sendServerError(res, error, 'Failed to verify resource ownership');
+      }
+    };
+  };
 }

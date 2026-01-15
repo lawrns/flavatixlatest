@@ -6,7 +6,7 @@
 import { User, Session } from '@supabase/supabase-js';
 import { testUser } from '../fixtures/testUser';
 
-export const createMockAuthToken = (userId: string = 'test-user-id-123'): string => {
+export const createMockAuthToken = (userId: string = '00000000-0000-4000-8000-000000000001'): string => {
   return `mock-jwt-token-${userId}`;
 };
 
@@ -22,7 +22,7 @@ export const createMockSession = (user?: Partial<User>): Session => {
   };
 };
 
-export const createMockAuthHeaders = (userId: string = 'test-user-id-123'): Record<string, string> => {
+export const createMockAuthHeaders = (userId: string = '00000000-0000-4000-8000-000000000001'): Record<string, string> => {
   return {
     authorization: `Bearer ${createMockAuthToken(userId)}`,
   };

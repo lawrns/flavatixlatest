@@ -1,5 +1,16 @@
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+// Lazy load heavy PDF generation libraries only when needed
+let jsPDF: any = null;
+let html2canvas: any = null;
+
+async function loadPDFLibraries() {
+  if (!jsPDF || !html2canvas) {
+    [jsPDF, html2canvas] = await Promise.all([
+      import('jspdf').then((m) => m.default),
+      import('html2canvas').then((m) => m.default),
+    ]);
+  }
+  return { jsPDF, html2canvas };
+}
 
 interface WheelData {
   categories: Array<{
@@ -222,6 +233,11 @@ export class FlavorWheelPDFExporter {
     } = options;
 
     try {
+      // Lazy load PDF libraries only when export is triggered
+      const libs = await loadPDFLibraries();
+      const PDFDoc = libs.jsPDF;
+      const canvasLib = libs.html2canvas;
+
       // Create hidden wheel element
       const container = this.createHiddenWheelElement(wheelData);
 
@@ -232,7 +248,7 @@ export class FlavorWheelPDFExporter {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Capture the container as canvas
-      const canvas = await html2canvas(container, {
+      const canvas = await canvasLib(container, {
         scale: 2, // Higher quality
         useCORS: true,
         allowTaint: true,
@@ -244,7 +260,7 @@ export class FlavorWheelPDFExporter {
 
       // Create PDF
       const pdfSize = this.PAPER_SIZES[paperSize];
-      const pdf = new jsPDF({
+      const pdf = new PDFDoc({
         orientation: 'portrait',
         unit: 'in',
         format: paperSize,

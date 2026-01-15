@@ -139,10 +139,10 @@ describe('Tasting CRUD Operations', () => {
     });
   });
 
-  describe('PUT /api/tastings/[id]', () => {
+  describe('PATCH /api/tastings/[id]', () => {
     it('should return 401 when not authenticated', async () => {
       req = createMockRequest({
-        method: 'PUT',
+        method: 'PATCH',
         query: { id: tastingId },
         headers: {},
         body: { session_name: 'Updated Name' },
@@ -163,7 +163,7 @@ describe('Tasting CRUD Operations', () => {
       });
 
       req = createMockRequest({
-        method: 'PUT',
+        method: 'PATCH',
         query: { id: tastingId },
         headers: createMockAuthHeaders(),
         body: { session_name: 'Updated Name' },
@@ -203,7 +203,7 @@ describe('Tasting CRUD Operations', () => {
         });
 
       req = createMockRequest({
-        method: 'PUT',
+        method: 'PATCH',
         query: { id: tastingId },
         headers: createMockAuthHeaders(),
         body: {
@@ -223,7 +223,7 @@ describe('Tasting CRUD Operations', () => {
 
     it('should validate input schema', async () => {
       req = createMockRequest({
-        method: 'PUT',
+        method: 'PATCH',
         query: { id: tastingId },
         headers: createMockAuthHeaders(),
         body: {

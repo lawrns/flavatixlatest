@@ -1,0 +1,18 @@
+# Gitleaks ignore file
+# Specify patterns to ignore false positives
+
+# Example ignored secrets (update as needed)
+# next-env.d.ts:1:NEXT_PUBLIC_SUPABASE_URL
+
+# Allow test fixtures with fake secrets
+**/__tests__/**/*
+**/__mocks__/**/*
+**/test-fixtures/**/*
+
+# Allow documentation examples
+**/docs/**/*
+**/*.md:*password*example*
+**/*.md:*api_key*example*
+
+# Allow specific files if they don't contain real secrets
+# .env.example

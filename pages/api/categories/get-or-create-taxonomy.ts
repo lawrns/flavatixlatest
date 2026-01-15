@@ -1,49 +1,49 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSupabaseClient } from '@/lib/supabase';
 import { generateCategoryTaxonomy } from '@/lib/ai/taxonomyGenerationService';
+import {
+  createApiHandler,
+  withAuth,
+  withValidation,
+  withRateLimit,
+  RATE_LIMITS,
+  sendSuccess,
+  sendError,
+  sendServerError,
+  requireUser,
+  type ApiContext,
+} from '@/lib/api/middleware';
+import { z } from 'zod';
 
-interface TaxonomyRequest {
-  categoryName: string;
-}
+// Validation schema for taxonomy request
+const taxonomySchema = z.object({
+  categoryName: z.string().min(1, 'Category name is required').max(100, 'Category name too long'),
+});
+
+type TaxonomyInput = z.infer<typeof taxonomySchema>;
 
 interface TaxonomyResponse {
-  success: boolean;
-  taxonomy?: any;
-  cached?: boolean;
-  error?: string;
+  taxonomy: any;
+  cached: boolean;
+  warning?: string;
 }
 
 /**
  * API Endpoint: Get or create category taxonomy
  * POST /api/categories/get-or-create-taxonomy
  */
-export default async function handler(
+async function getTaxonomyHandler(
   req: NextApiRequest,
-  res: NextApiResponse<TaxonomyResponse>
+  res: NextApiResponse,
+  context: ApiContext
 ) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, error: 'Method not allowed' });
-  }
+  const userId = requireUser(context).id;
+  const supabase = getSupabaseClient(req, res);
+
+  // Request body is already validated by withValidation middleware
+  const { categoryName } = req.body as TaxonomyInput;
 
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith('Bearer ')) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    const supabase = getSupabaseClient(req, res);
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    if (authError || !user) {
-      return res.status(401).json({ success: false, error: 'Invalid token' });
-    }
-
-    const { categoryName } = req.body as TaxonomyRequest;
-    if (!categoryName) {
-      return res.status(400).json({ success: false, error: 'categoryName required' });
-    }
-
     const normalizedName = categoryName.toLowerCase().trim();
 
     // Check if taxonomy already exists
@@ -64,21 +64,28 @@ export default async function handler(
         })
         .eq('id', (existingTaxonomy as any).id);
 
-      return res.status(200).json({
-        success: true,
+      const responseData: TaxonomyResponse = {
         taxonomy: existingTaxonomy,
         cached: true,
-      });
+      };
+
+      return sendSuccess(
+        res,
+        responseData,
+        'Taxonomy retrieved from cache',
+        200
+      );
     }
 
     // Check if AI key is available
     if (!process.env.ANTHROPIC_API_KEY) {
-      return res.status(200).json({
-        success: true,
-        taxonomy: null,
-        cached: false,
-        error: 'AI taxonomy generation not available (no API key)',
-      });
+      return sendError(
+        res,
+        'AI_NOT_AVAILABLE',
+        'AI taxonomy generation not available (API key not configured)',
+        503,
+        { categoryName, normalizedName }
+      );
     }
 
     // Generate new taxonomy with AI
@@ -92,31 +99,37 @@ export default async function handler(
         category_name: taxonomy.categoryName,
         normalized_name: taxonomy.normalizedName,
         taxonomy_data: taxonomy.taxonomyData,
-        first_used_by: user.id,
+        first_used_by: userId,
         usage_count: 1,
       })
       .select()
       .single();
 
     if (saveError) {
-      console.error('Error saving taxonomy:', saveError);
-      return res.status(500).json({
-        success: false,
-        error: 'Failed to save taxonomy',
-      });
+      return sendServerError(res, saveError, 'Failed to save taxonomy');
     }
 
-    return res.status(200).json({
-      success: true,
+    const responseData: TaxonomyResponse = {
       taxonomy: savedTaxonomy,
       cached: false,
-    });
+    };
 
+    return sendSuccess(
+      res,
+      responseData,
+      'Taxonomy generated successfully',
+      201
+    );
   } catch (error) {
-    console.error('Taxonomy generation error:', error);
-    return res.status(500).json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Internal server error',
-    });
+    return sendServerError(res, error, 'Failed to get or create taxonomy');
   }
 }
+
+// Export handler with middleware chain
+export default createApiHandler({
+  POST: withRateLimit(RATE_LIMITS.API)(
+    withAuth(
+      withValidation(taxonomySchema, getTaxonomyHandler)
+    )
+  ),
+});
