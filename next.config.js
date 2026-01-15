@@ -52,9 +52,9 @@ const nextConfig = {
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://kobuclkvlacdwvxmakvq.supabase.co https://*.sentry.io",
-              "style-src 'self' 'unsafe-inline'",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: blob: https://kobuclkvlacdwvxmakvq.supabase.co",
-              "font-src 'self' data:",
+              "font-src 'self' data: https://fonts.gstatic.com",
               "connect-src 'self' https://kobuclkvlacdwvxmakvq.supabase.co https://*.sentry.io https://api.anthropic.com wss://kobuclkvlacdwvxmakvq.supabase.co",
               "frame-ancestors 'none'",
               "base-uri 'self'",
@@ -101,20 +101,20 @@ const nextConfig = {
             key: 'X-DNS-Prefetch-Control',
             value: 'on',
           },
-          // Cross-Origin-Embedder-Policy - Isolate cross-origin resources
+          // Cross-Origin-Embedder-Policy - Allow credentialless cross-origin resources
           {
             key: 'Cross-Origin-Embedder-Policy',
-            value: 'require-corp',
+            value: 'credentialless',
           },
           // Cross-Origin-Opener-Policy - Prevent cross-origin attacks
           {
             key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin',
+            value: 'same-origin-allow-popups',
           },
           // Cross-Origin-Resource-Policy - Control resource loading
           {
             key: 'Cross-Origin-Resource-Policy',
-            value: 'same-site',
+            value: 'cross-origin',
           },
         ],
       },
