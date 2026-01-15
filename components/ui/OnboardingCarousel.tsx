@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 
 interface OnboardingCard {
   id: number;
-  image: string;
+  image?: string | React.ReactNode;
   headline: string;
   description: string;
   cta?: string;
@@ -123,15 +123,25 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
           }}
         >
           <div className="flex flex-col items-center gap-8 max-w-md mx-auto">
-            {/* Image */}
-            <div className="w-full h-64 sm:h-80 rounded-3xl overflow-hidden shadow-2xl">
-              <img
-                src={card.image}
-                alt={card.headline}
-                className="w-full h-full object-cover"
-                draggable={false}
-              />
-            </div>
+            {/* Image/Icon */}
+            {card.image && (
+              <div className="w-full h-64 sm:h-80 flex items-center justify-center">
+                {React.isValidElement(card.image) ? (
+                  <div className="w-48 h-48 sm:w-56 sm:h-56 text-primary">
+                    {card.image}
+                  </div>
+                ) : typeof card.image === 'string' ? (
+                  <div className="w-full h-full rounded-3xl overflow-hidden shadow-2xl">
+                    <img
+                      src={card.image}
+                      alt={card.headline}
+                      className="w-full h-full object-cover"
+                      draggable={false}
+                    />
+                  </div>
+                ) : null}
+              </div>
+            )}
 
             {/* Text Content */}
             <div className="text-center space-y-4 px-4">

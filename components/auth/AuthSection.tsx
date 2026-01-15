@@ -7,6 +7,7 @@ import { toast } from '../../lib/toast';
 import { z } from 'zod';
 import Container from '../layout/Container';
 import OnboardingCarousel from '../ui/OnboardingCarousel';
+import SVGIllustrations from '../ui/SVGIllustrations';
 
 const AuthSection = () => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
@@ -19,29 +20,29 @@ const AuthSection = () => {
   const supabase = getSupabaseClient();
   const { user } = useAuth();
 
-  // Onboarding cards with generated images
+  // Onboarding cards with minimalist SVG illustrations
   const onboardingCards = [
     {
       id: 1,
-      image: '/generated-images/onboarding-discover.png',
+      image: <SVGIllustrations.Discover />,
       headline: 'Discover Your Next Favorite',
       description: 'Explore flavors across coffee, wine, spirits, and more',
     },
     {
       id: 2,
-      image: '/generated-images/onboarding-taste.png',
+      image: <SVGIllustrations.Taste />,
       headline: 'Master Your Palate',
       description: 'Capture nuanced flavor profiles and develop your taste',
     },
     {
       id: 3,
-      image: '/generated-images/onboarding-connect.png',
+      image: <SVGIllustrations.Connect />,
       headline: 'Share & Compete',
       description: 'Connect with fellow tasters, join tastings, and compete',
     },
     {
       id: 4,
-      image: '/generated-images/onboarding-ready.png',
+      image: <SVGIllustrations.Ready />,
       headline: 'Ready to Transform Your Palate?',
       description: 'The one place for all your tasting needs',
       ctaVariant: 'split' as const,

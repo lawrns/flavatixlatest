@@ -6,6 +6,7 @@ import { getUserTastingHistory, TastingHistory } from '../lib/historyService';
 import { toast } from '../lib/toast';
 import PageLayout from '../components/layout/PageLayout';
 import EmptyStateCard from '../components/ui/EmptyStateCard';
+import SVGIllustrations from '../components/ui/SVGIllustrations';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -224,7 +225,7 @@ export default function MyTastingsPage() {
         ) : tastings.length === 0 ? (
           <div className="bg-white dark:bg-zinc-800 rounded-[22px] shadow-sm border border-zinc-200 dark:border-zinc-700">
             <EmptyStateCard
-              image="/generated-images/empty-tastings.png"
+              image={<SVGIllustrations.EmptyTastings />}
               headline="No tastings yet, but your palate awaits"
               description="Start your first tasting to begin discovering new flavors and building your taste profile"
               cta={{

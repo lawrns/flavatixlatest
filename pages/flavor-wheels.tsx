@@ -16,6 +16,8 @@ import { FlavorWheelPDFExporter } from '../lib/flavorWheelPDFExporter';
 import FlavorWheelErrorBoundary from '../components/flavor-wheels/FlavorWheelErrorBoundary';
 import { BottomSheet, FlavorPill } from '@/components/ui';
 import { FLAVOR_COLORS, STATUS_COLORS } from '@/lib/colors';
+import SVGIllustrations from '../components/ui/SVGIllustrations';
+import EmptyStateCard from '../components/ui/EmptyStateCard';
 
 // Color palette for categories (matches D3 visualization)
 // Uses hex values from centralized color system
@@ -42,9 +44,6 @@ const InspirationBox = dynamic(() => import('../components/ui/inspiration-box'),
   ssr: false,
   loading: () => null
 });
-
-// Import empty state component
-import EmptyStateCard from '../components/ui/EmptyStateCard';
 
 const FlavorWheelVisualization = dynamic(
   () => import('../components/flavor-wheels/FlavorWheelVisualization'),
@@ -531,7 +530,7 @@ export default function FlavorWheelsPage() {
 
           {error && !loading && (
             <EmptyStateCard
-              image="/generated-images/empty-flavor-wheel.png"
+              image={<SVGIllustrations.EmptyFlavorWheel />}
               headline="Your flavor wheel is waiting to be born"
               description={error}
               cta={{

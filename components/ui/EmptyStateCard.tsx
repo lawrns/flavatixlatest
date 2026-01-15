@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface EmptyStateCardProps {
-  image: string;
+  image?: string | React.ReactNode;
   headline: string;
   description: string;
   cta?: {
@@ -22,16 +22,27 @@ export const EmptyStateCard: React.FC<EmptyStateCardProps> = ({
   cta,
   secondaryCta,
 }) => {
+  const isReactComponent = React.isValidElement(image);
+  const isString = typeof image === 'string';
+
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4">
-      {/* Empty State Image */}
-      <div className="w-full max-w-xs h-48 sm:h-64 mb-8 rounded-2xl overflow-hidden">
-        <img
-          src={image}
-          alt={headline}
-          className="w-full h-full object-cover"
-        />
-      </div>
+      {/* Empty State Image/Icon */}
+      {image && (
+        <div className="w-full max-w-xs h-48 sm:h-64 mb-8 flex items-center justify-center">
+          {isReactComponent ? (
+            <div className="w-32 h-32 sm:w-40 sm:h-40 text-zinc-400 dark:text-zinc-500">
+              {image}
+            </div>
+          ) : isString ? (
+            <img
+              src={image}
+              alt={headline}
+              className="w-full h-full object-cover rounded-2xl"
+            />
+          ) : null}
+        </div>
+      )}
 
       {/* Text Content */}
       <div className="text-center space-y-4 max-w-md">
