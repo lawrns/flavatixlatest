@@ -6,16 +6,47 @@ import { useAuth } from '../../contexts/SimpleAuthContext';
 import { toast } from '../../lib/toast';
 import { z } from 'zod';
 import Container from '../layout/Container';
+import OnboardingCarousel from '../ui/OnboardingCarousel';
 
 const AuthSection = () => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [formData, setFormData] = useState<{ full_name?: string; email: string; password: string }>({ email: '', password: '' });
   const [loading, setLoading] = useState<boolean>(false);
   const [mounted, setMounted] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(true);
   const [showEmailForm, setShowEmailForm] = useState(false);
   const router = useRouter();
   const supabase = getSupabaseClient();
   const { user } = useAuth();
+
+  // Onboarding cards with generated images
+  const onboardingCards = [
+    {
+      id: 1,
+      image: '/generated-images/onboarding-discover.png',
+      headline: 'Discover Your Next Favorite',
+      description: 'Explore flavors across coffee, wine, spirits, and more',
+    },
+    {
+      id: 2,
+      image: '/generated-images/onboarding-taste.png',
+      headline: 'Master Your Palate',
+      description: 'Capture nuanced flavor profiles and develop your taste',
+    },
+    {
+      id: 3,
+      image: '/generated-images/onboarding-connect.png',
+      headline: 'Share & Compete',
+      description: 'Connect with fellow tasters, join tastings, and compete',
+    },
+    {
+      id: 4,
+      image: '/generated-images/onboarding-ready.png',
+      headline: 'Ready to Transform Your Palate?',
+      description: 'The one place for all your tasting needs',
+      ctaVariant: 'split' as const,
+    },
+  ];
 
   useEffect(() => {
     // Set mounted immediately to avoid blocking the UI
@@ -111,7 +142,20 @@ const AuthSection = () => {
     }
   };
 
-  // Removed mounted check to prevent indefinite loading
+  // Show onboarding carousel first, then form
+  if (showOnboarding) {
+    return (
+      <div className="font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
+        <Head>
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+        </Head>
+        <OnboardingCarousel
+          cards={onboardingCards}
+          onComplete={() => setShowOnboarding(false)}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="font-display text-zinc-900 dark:text-zinc-50">
@@ -248,13 +292,22 @@ const AuthSection = () => {
                 >
                   {loading ? 'Processing...' : (mode === 'login' ? 'Sign In' : 'Create Account')}
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setShowEmailForm(false)}
-                  className="w-full text-primary hover:text-primary/80 text-sm font-medium transition-colors"
-                >
-                  ← Back to options
-                </button>
+                <div className="space-y-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowEmailForm(false)}
+                    className="w-full text-primary hover:text-primary/80 text-sm font-medium transition-colors"
+                  >
+                    ← Back to options
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowOnboarding(true)}
+                    className="w-full text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 text-xs font-medium transition-colors"
+                  >
+                    Back to intro
+                  </button>
+                </div>
               </form>
             )}
             <div className="pt-2 text-center border-t border-zinc-200 dark:border-zinc-700">
