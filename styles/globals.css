@@ -8,6 +8,56 @@
 @import './component-tokens.css';
 
 /* ============================================================================
+   SPRING EASING & MOTION UTILITIES (2025 Design System Elevation)
+   ============================================================================ */
+
+/* Spring timing transitions */
+.transition-spring {
+  @apply transition-all duration-300 ease-spring;
+}
+
+.transition-spring-tight {
+  @apply transition-all duration-200 ease-spring-tight;
+}
+
+.transition-spring-gentle {
+  @apply transition-all duration-300 ease-spring-gentle;
+}
+
+/* ============================================================================
+   GLASSMORPHISM UTILITIES
+   ============================================================================ */
+
+.glass {
+  @apply bg-white/70 dark:bg-zinc-900/80
+    backdrop-blur-xl
+    border border-white/20 dark:border-zinc-700/30;
+}
+
+.glass-strong {
+  @apply bg-white/80 dark:bg-zinc-900/90
+    backdrop-blur-2xl
+    border border-white/30 dark:border-zinc-600/40;
+}
+
+.glass-soft {
+  @apply bg-white/50 dark:bg-zinc-900/60
+    backdrop-blur-lg
+    border border-white/10 dark:border-zinc-800/20;
+}
+
+/* ============================================================================
+   SAFE AREA INSET (for notch/dynamic island on mobile)
+   ============================================================================ */
+
+.safe-area-inset {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ============================================================================
    LEGACY COMPATIBILITY LAYER
    Maps old variable names to new design tokens for backward compatibility.
    New code should use design-tokens.css variables directly.
@@ -93,7 +143,22 @@ a {
 
 /* Custom component styles with dark mode support and mobile optimization */
 .btn-primary {
-  @apply bg-primary text-white rounded-[14px] px-5 py-3 min-h-[44px] font-semibold transition-all duration-200 hover:bg-primary-600 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0.5 active:scale-95 touch-manipulation;
+  @apply bg-primary text-white rounded-[14px] px-5 py-3 min-h-[44px] font-semibold
+    shadow-button
+    transition-spring-tight
+    hover:bg-primary-600
+    hover:shadow-button-hover
+    hover:[transform:scale(1.02)]
+    hover:-translate-y-0.5
+    active:[transform:scale(0.98)]
+    active:shadow-button-active
+    active:-translate-y-0
+    disabled:opacity-50
+    disabled:cursor-not-allowed
+    disabled:hover:[transform:none]
+    disabled:hover:shadow-button
+    disabled:hover:bg-primary
+    touch-manipulation;
 }
 
 .btn-secondary {
@@ -105,7 +170,19 @@ a {
 }
 
 .card {
-  @apply bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-[22px] shadow-md p-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
+  @apply bg-white dark:bg-zinc-800/50
+    border border-zinc-200 dark:border-zinc-700
+    rounded-[22px]
+    shadow-card
+    p-4
+    transition-spring-gentle
+    hover:shadow-card-hover
+    hover:-translate-y-1
+    cursor-pointer;
+}
+
+.card:hover {
+  border-color: rgba(198, 60, 34, 0.3);
 }
 
 .card-tasting {
@@ -113,7 +190,21 @@ a {
 }
 
 .input {
-  @apply bg-white dark:bg-zinc-800 border-2 border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-white rounded-[14px] px-3.5 py-3 min-h-[44px] focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-200 touch-manipulation;
+  @apply bg-white dark:bg-zinc-800
+    border-2 border-zinc-300 dark:border-zinc-600
+    text-zinc-900 dark:text-white
+    rounded-[14px]
+    px-3.5 py-3
+    min-h-[44px]
+    transition-spring-tight
+    focus:border-primary
+    focus:ring-4
+    focus:ring-primary/20
+    focus:shadow-lg
+    focus:outline-none
+    disabled:opacity-50
+    disabled:cursor-not-allowed
+    touch-manipulation;
 }
 
 .text-small {

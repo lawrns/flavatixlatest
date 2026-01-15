@@ -382,6 +382,8 @@ module.exports = {
         'shimmer': 'shimmer 2s linear infinite',
         'ripple': 'ripple 0.6s linear forwards',
         'gentle-pulse': 'gentlePulse 2s ease-in-out infinite',
+        'checkmark-pulse': 'checkmarkPulse 0.6s ease-spring',
+        'shake': 'shake 0.3s ease-in-out',
       },
       keyframes: {
         fadeIn: {
@@ -454,6 +456,16 @@ module.exports = {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0.7' },
         },
+        checkmarkPulse: {
+          '0%': { transform: 'scale(0)', opacity: '0' },
+          '50%': { transform: 'scale(1.2)', opacity: '1' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        shake: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '25%': { transform: 'translateX(-4px)' },
+          '75%': { transform: 'translateX(4px)' },
+        },
       },
       transitionDuration: {
         DEFAULT: '150ms',
@@ -475,6 +487,11 @@ module.exports = {
         'ease-in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
         'ease-out': 'cubic-bezier(0, 0, 0.2, 1)',
         'ease-in': 'cubic-bezier(0.4, 0, 1, 1)',
+        // Spring easing for 2025 premium feel
+        'spring': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+        'spring-tight': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+        'spring-gentle': 'cubic-bezier(0.215, 0.61, 0.355, 1)',
+        'spring-back': 'cubic-bezier(0.6, 0.04, 0.98, 0.335)',
       },
       screens: {
         'xs': '375px',
