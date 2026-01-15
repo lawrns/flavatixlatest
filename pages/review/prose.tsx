@@ -26,7 +26,9 @@ const ProseReviewPage: React.FC = () => {
   useEffect(() => {
     const loadReview = async () => {
       const { id } = router.query;
-      if (!id || typeof id !== 'string') return;
+      if (!id || typeof id !== 'string') {
+        return;
+      }
 
       setIsLoadingReview(true);
       try {
@@ -36,7 +38,9 @@ const ProseReviewPage: React.FC = () => {
           .eq('id', id)
           .single();
 
-        if (error) throw error;
+        if (error) {
+          throw error;
+        }
 
         // Populate form with existing data
         setReviewId(data.id);
@@ -51,7 +55,7 @@ const ProseReviewPage: React.FC = () => {
           batch_id: data.batch_id || '',
           upc_barcode: data.upc_barcode || '',
           category: data.category || '',
-          review_content: data.review_content || ''
+          review_content: data.review_content || '',
         });
 
         toast.success('Review loaded');
@@ -77,11 +81,13 @@ const ProseReviewPage: React.FC = () => {
       .from('tasting-photos')
       .upload(filePath, file);
 
-    if (uploadError) throw uploadError;
+    if (uploadError) {
+      throw uploadError;
+    }
 
-    const { data: { publicUrl } } = supabase.storage
-      .from('tasting-photos')
-      .getPublicUrl(filePath);
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from('tasting-photos').getPublicUrl(filePath);
 
     return publicUrl;
   };
@@ -89,7 +95,9 @@ const ProseReviewPage: React.FC = () => {
   const extractDescriptors = async (reviewId: string, reviewData: any) => {
     try {
       // Get current session for auth token
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         console.warn('No active session for descriptor extraction');
         return;
@@ -105,14 +113,14 @@ const ProseReviewPage: React.FC = () => {
           brand: reviewData.brand,
           country: reviewData.country,
           region: reviewData.region,
-        }
+        },
       };
 
       const response = await fetch('/api/flavor-wheels/extract-descriptors', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify(extractionPayload),
       });
@@ -126,7 +134,9 @@ const ProseReviewPage: React.FC = () => {
   };
 
   const handleSubmit = async (data: ProseReviewFormData, action: 'done' | 'save' | 'new') => {
-    if (!user) return;
+    if (!user) {
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -149,7 +159,7 @@ const ProseReviewPage: React.FC = () => {
         upc_barcode: data.upc_barcode,
         category: data.category,
         review_content: data.review_content,
-        status: status
+        status: status,
       };
 
       // Generate Review ID for new reviews only
@@ -174,16 +184,14 @@ const ProseReviewPage: React.FC = () => {
         error = result.error;
       } else {
         // Insert new review
-        const result = await supabase
-          .from('prose_reviews')
-          .insert(reviewData)
-          .select()
-          .single();
+        const result = await supabase.from('prose_reviews').insert(reviewData).select().single();
         review = result.data;
         error = result.error;
       }
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
       // Extract flavor descriptors in the background (don't block user flow)
       if (review?.id) {
@@ -248,6 +256,6 @@ export default ProseReviewPage;
 // Disable static generation for this page
 export async function getServerSideProps() {
   return {
-    props: {}
+    props: {},
   };
 }

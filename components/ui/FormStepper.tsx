@@ -1,6 +1,6 @@
 /**
  * FormStepper Component
- * 
+ *
  * Multi-step form wizard with progress indicator.
  * Provides navigation between steps with validation support.
  */
@@ -77,91 +77,98 @@ export const FormStepperProvider: React.FC<FormStepperProviderProps> = ({
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === totalSteps - 1;
 
-  const goToStep = useCallback((step: number) => {
-    if (step >= 0 && step < totalSteps) {
-      setCurrentStep(step);
-      onStepChange?.(step);
-    }
-  }, [totalSteps, onStepChange]);
+  const goToStep = useCallback(
+    (step: number) => {
+      if (step >= 0 && step < totalSteps) {
+        setCurrentStep(step);
+        onStepChange?.(step);
+      }
+    },
+    [totalSteps, onStepChange]
+  );
 
   const nextStep = useCallback(async () => {
     const currentStepConfig = steps[currentStep];
-    
+
     // Run validation if provided
     if (currentStepConfig.validate) {
       const isValid = await currentStepConfig.validate();
-      if (!isValid) return false;
+      if (!isValid) {
+        return false;
+      }
     }
 
     // Mark current step as complete
-    setCompletedSteps(prev => new Set(prev).add(currentStep));
+    setCompletedSteps((prev) => new Set(prev).add(currentStep));
 
     if (isLastStep) {
       onComplete?.();
       return true;
     }
 
-    setCurrentStep(prev => prev + 1);
+    setCurrentStep((prev) => prev + 1);
     onStepChange?.(currentStep + 1);
     return true;
   }, [currentStep, steps, isLastStep, onComplete, onStepChange]);
 
   const prevStep = useCallback(() => {
     if (!isFirstStep) {
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep((prev) => prev - 1);
       onStepChange?.(currentStep - 1);
     }
   }, [isFirstStep, currentStep, onStepChange]);
 
-  const isStepComplete = useCallback((stepIndex: number) => {
-    return completedSteps.has(stepIndex);
-  }, [completedSteps]);
+  const isStepComplete = useCallback(
+    (stepIndex: number) => {
+      return completedSteps.has(stepIndex);
+    },
+    [completedSteps]
+  );
 
   const markStepComplete = useCallback((stepIndex: number) => {
-    setCompletedSteps(prev => new Set(prev).add(stepIndex));
+    setCompletedSteps((prev) => new Set(prev).add(stepIndex));
   }, []);
 
   const markStepIncomplete = useCallback((stepIndex: number) => {
-    setCompletedSteps(prev => {
+    setCompletedSteps((prev) => {
       const newSet = new Set(prev);
       newSet.delete(stepIndex);
       return newSet;
     });
   }, []);
 
-  const value = useMemo<FormStepperContextValue>(() => ({
-    currentStep,
-    totalSteps,
-    steps,
-    goToStep,
-    nextStep,
-    prevStep,
-    isFirstStep,
-    isLastStep,
-    canGoNext: !isLastStep,
-    canGoPrev: !isFirstStep,
-    isStepComplete,
-    markStepComplete,
-    markStepIncomplete,
-  }), [
-    currentStep,
-    totalSteps,
-    steps,
-    goToStep,
-    nextStep,
-    prevStep,
-    isFirstStep,
-    isLastStep,
-    isStepComplete,
-    markStepComplete,
-    markStepIncomplete,
-  ]);
-
-  return (
-    <FormStepperContext.Provider value={value}>
-      {children}
-    </FormStepperContext.Provider>
+  const value = useMemo<FormStepperContextValue>(
+    () => ({
+      currentStep,
+      totalSteps,
+      steps,
+      goToStep,
+      nextStep,
+      prevStep,
+      isFirstStep,
+      isLastStep,
+      canGoNext: !isLastStep,
+      canGoPrev: !isFirstStep,
+      isStepComplete,
+      markStepComplete,
+      markStepIncomplete,
+    }),
+    [
+      currentStep,
+      totalSteps,
+      steps,
+      goToStep,
+      nextStep,
+      prevStep,
+      isFirstStep,
+      isLastStep,
+      isStepComplete,
+      markStepComplete,
+      markStepIncomplete,
+    ]
   );
+
+  return <FormStepperContext.Provider value={value}>{children}</FormStepperContext.Provider>;
 };
 
 // ============================================================================
@@ -195,8 +202,8 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
               index === currentStep
                 ? 'bg-primary scale-125'
                 : isStepComplete(index)
-                ? 'bg-primary/60'
-                : 'bg-zinc-300 dark:bg-zinc-600'
+                  ? 'bg-primary/60'
+                  : 'bg-zinc-300 dark:bg-zinc-600'
             )}
           />
         ))}
@@ -218,13 +225,18 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
                 index === currentStep
                   ? 'bg-primary text-white'
                   : isStepComplete(index)
-                  ? 'bg-primary/20 text-primary'
-                  : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400'
+                    ? 'bg-primary/20 text-primary'
+                    : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400'
               )}
             >
               {isStepComplete(index) ? (
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               ) : (
                 index + 1
@@ -251,10 +263,7 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
         {steps.map((step, index) => (
           <li
             key={step.id}
-            className={cn(
-              'relative flex-1',
-              index !== steps.length - 1 && 'pr-8 sm:pr-20'
-            )}
+            className={cn('relative flex-1', index !== steps.length - 1 && 'pr-8 sm:pr-20')}
           >
             <button
               onClick={() => goToStep(index)}
@@ -268,13 +277,18 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
                   index === currentStep
                     ? 'bg-primary text-white border-primary'
                     : isStepComplete(index)
-                    ? 'bg-primary/10 text-primary border-primary'
-                    : 'bg-white dark:bg-zinc-800 text-zinc-500 border-zinc-300 dark:border-zinc-600 group-hover:border-primary/50'
+                      ? 'bg-primary/10 text-primary border-primary'
+                      : 'bg-white dark:bg-zinc-800 text-zinc-500 border-zinc-300 dark:border-zinc-600 group-hover:border-primary/50'
                 )}
               >
                 {isStepComplete(index) ? (
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                 ) : step.icon ? (
                   step.icon
@@ -292,8 +306,8 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
                       index === currentStep
                         ? 'text-primary'
                         : isStepComplete(index)
-                        ? 'text-zinc-700 dark:text-zinc-300'
-                        : 'text-zinc-500 dark:text-zinc-400'
+                          ? 'text-zinc-700 dark:text-zinc-300'
+                          : 'text-zinc-500 dark:text-zinc-400'
                     )}
                   >
                     {step.title}
@@ -304,9 +318,7 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
                     </span>
                   )}
                   {step.isOptional && (
-                    <span className="text-xs text-zinc-400 dark:text-zinc-500">
-                      (Optional)
-                    </span>
+                    <span className="text-xs text-zinc-400 dark:text-zinc-500">(Optional)</span>
                   )}
                 </span>
               )}
@@ -386,7 +398,9 @@ export const StepperNavigation: React.FC<StepperNavigationProps> = ({
   const handleNext = async () => {
     setIsLoading(true);
     try {
-      if (onNext) await onNext();
+      if (onNext) {
+        await onNext();
+      }
       if (isLastStep && onComplete) {
         await onComplete();
       }
@@ -402,7 +416,12 @@ export const StepperNavigation: React.FC<StepperNavigationProps> = ({
   };
 
   return (
-    <div className={cn('flex items-center justify-between pt-6 border-t border-zinc-200 dark:border-zinc-700', className)}>
+    <div
+      className={cn(
+        'flex items-center justify-between pt-6 border-t border-zinc-200 dark:border-zinc-700',
+        className
+      )}
+    >
       {showPrev && !isFirstStep ? (
         <button
           type="button"
@@ -428,8 +447,19 @@ export const StepperNavigation: React.FC<StepperNavigationProps> = ({
       >
         {isLoading ? (
           <svg className="animate-spin h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
           </svg>
         ) : isLastStep ? (
           completeLabel

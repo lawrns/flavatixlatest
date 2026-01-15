@@ -1,18 +1,18 @@
 /**
  * Notification Service
- * 
+ *
  * Handles creating, fetching, and managing user notifications.
  * Integrates with Supabase for persistence.
  */
 import { supabase } from './supabase';
 
-export type NotificationType = 
-  | 'follow' 
-  | 'like' 
-  | 'comment' 
-  | 'tasting_invite' 
-  | 'achievement' 
-  | 'system' 
+export type NotificationType =
+  | 'follow'
+  | 'like'
+  | 'comment'
+  | 'tasting_invite'
+  | 'achievement'
+  | 'system'
   | 'review';
 
 export interface Notification {
@@ -57,14 +57,16 @@ class NotificationService {
   async getNotifications(userId: string, limit = 50): Promise<Notification[]> {
     const { data, error } = await supabase
       .from('notifications')
-      .select(`
+      .select(
+        `
         *,
         related_user:profiles!notifications_related_user_id_fkey(
           full_name,
           avatar_url,
           username
         )
-      `)
+      `
+      )
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(limit);
@@ -138,10 +140,7 @@ class NotificationService {
    * Delete a notification
    */
   async deleteNotification(notificationId: string): Promise<boolean> {
-    const { error } = await supabase
-      .from('notifications')
-      .delete()
-      .eq('id', notificationId);
+    const { error } = await supabase.from('notifications').delete().eq('id', notificationId);
 
     if (error) {
       console.error('Error deleting notification:', error);
@@ -155,11 +154,7 @@ class NotificationService {
    * Create a new notification
    */
   async createNotification(params: CreateNotificationParams): Promise<Notification | null> {
-    const { data, error } = await supabase
-      .from('notifications')
-      .insert(params)
-      .select()
-      .single();
+    const { data, error } = await supabase.from('notifications').insert(params).select().single();
 
     if (error) {
       console.error('Error creating notification:', error);
@@ -172,7 +167,11 @@ class NotificationService {
   /**
    * Create a follow notification
    */
-  async notifyFollow(followerId: string, followedUserId: string, followerName: string): Promise<void> {
+  async notifyFollow(
+    followerId: string,
+    followedUserId: string,
+    followerName: string
+  ): Promise<void> {
     await this.createNotification({
       user_id: followedUserId,
       type: 'follow',
@@ -188,14 +187,16 @@ class NotificationService {
    * Create a like notification
    */
   async notifyLike(
-    likerId: string, 
-    contentOwnerId: string, 
+    likerId: string,
+    contentOwnerId: string,
     likerName: string,
     contentType: 'tasting' | 'review',
     contentId: string
   ): Promise<void> {
     // Don't notify if user likes their own content
-    if (likerId === contentOwnerId) return;
+    if (likerId === contentOwnerId) {
+      return;
+    }
 
     await this.createNotification({
       user_id: contentOwnerId,
@@ -205,7 +206,9 @@ class NotificationService {
       action_url: contentType === 'tasting' ? `/tasting/${contentId}` : `/review/${contentId}`,
       action_text: `View ${contentType}`,
       related_user_id: likerId,
-      ...(contentType === 'tasting' ? { related_tasting_id: contentId } : { related_review_id: contentId }),
+      ...(contentType === 'tasting'
+        ? { related_tasting_id: contentId }
+        : { related_review_id: contentId }),
     });
   }
 
@@ -221,7 +224,9 @@ class NotificationService {
     commentPreview: string
   ): Promise<void> {
     // Don't notify if user comments on their own content
-    if (commenterId === contentOwnerId) return;
+    if (commenterId === contentOwnerId) {
+      return;
+    }
 
     await this.createNotification({
       user_id: contentOwnerId,
@@ -231,7 +236,9 @@ class NotificationService {
       action_url: contentType === 'tasting' ? `/tasting/${contentId}` : `/review/${contentId}`,
       action_text: 'View Comment',
       related_user_id: commenterId,
-      ...(contentType === 'tasting' ? { related_tasting_id: contentId } : { related_review_id: contentId }),
+      ...(contentType === 'tasting'
+        ? { related_tasting_id: contentId }
+        : { related_review_id: contentId }),
     });
   }
 
@@ -305,7 +312,9 @@ class NotificationService {
     reviewId: string,
     itemName: string
   ): Promise<void> {
-    if (reviewerId === targetUserId) return;
+    if (reviewerId === targetUserId) {
+      return;
+    }
 
     await this.createNotification({
       user_id: targetUserId,

@@ -46,7 +46,7 @@ const tastingPresets = [
     description: 'Standard tasting with all information visible',
     is_blind_participants: false,
     is_blind_items: false,
-    is_blind_attributes: false
+    is_blind_attributes: false,
   },
   {
     id: 'blind-items',
@@ -54,7 +54,7 @@ const tastingPresets = [
     description: 'Item names are hidden during tasting',
     is_blind_participants: false,
     is_blind_items: true,
-    is_blind_attributes: false
+    is_blind_attributes: false,
   },
   {
     id: 'full-blind',
@@ -62,7 +62,7 @@ const tastingPresets = [
     description: 'All information is hidden - participants, items, and attributes',
     is_blind_participants: true,
     is_blind_items: true,
-    is_blind_attributes: true
+    is_blind_attributes: true,
   },
 ];
 
@@ -81,7 +81,9 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
 
   useEffect(() => {
     setSessionName(session.session_name || '');
-    setIsBlindTasting(session.is_blind_participants || session.is_blind_items || session.is_blind_attributes);
+    setIsBlindTasting(
+      session.is_blind_participants || session.is_blind_items || session.is_blind_attributes
+    );
     setCustomCategoryName(session.custom_category_name || '');
   }, [session]);
 
@@ -95,7 +97,9 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
       toast.success('Tasting settings updated!');
       if (onSessionUpdate) {
@@ -116,7 +120,7 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
   };
 
   const handlePresetChange = (presetId: string) => {
-    const preset = tastingPresets.find(p => p.id === presetId);
+    const preset = tastingPresets.find((p) => p.id === presetId);
     if (preset) {
       setSelectedPreset(presetId);
       updateSession({
@@ -149,7 +153,9 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
       toast.success('Category updated!');
       if (onSessionUpdate) {
@@ -171,13 +177,15 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
           .from('quick_tastings')
           .update({
             custom_category_name: customCategoryName.trim(),
-            session_name: `${customCategoryName.trim()} Tasting`
+            session_name: `${customCategoryName.trim()} Tasting`,
           })
           .eq('id', session.id)
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {
+          throw error;
+        }
 
         toast.success('Custom category name updated!');
         if (onSessionUpdate) {
@@ -207,9 +215,7 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
       {/* Header */}
       <div className="p-6 border-b border-border-primary">
         <div>
-          <h2 className="text-xl font-heading font-semibold text-text-primary">
-            Edit Tasting
-          </h2>
+          <h2 className="text-xl font-heading font-semibold text-text-primary">Edit Tasting</h2>
           <p className="text-sm text-text-secondary mt-1">
             Customize your tasting session settings
           </p>
@@ -226,15 +232,23 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
               onClick={handleBlindTastingToggle}
               disabled={isLoading}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                isBlindTasting
-                  ? 'bg-purple-100 text-purple-800'
-                  : 'bg-gray-100 text-gray-800'
+                isBlindTasting ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'
               }`}
             >
               {isBlindTasting ? (
-                <><span className="material-symbols-outlined text-base mr-1 align-middle">visibility_off</span>On</>
+                <>
+                  <span className="material-symbols-outlined text-base mr-1 align-middle">
+                    visibility_off
+                  </span>
+                  On
+                </>
               ) : (
-                <><span className="material-symbols-outlined text-base mr-1 align-middle">visibility</span>Off</>
+                <>
+                  <span className="material-symbols-outlined text-base mr-1 align-middle">
+                    visibility
+                  </span>
+                  Off
+                </>
               )}
             </button>
           </div>
@@ -245,9 +259,7 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
       <div className="p-6 space-y-6">
         {/* Session Name */}
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-2">
-            Tasting Name
-          </label>
+          <label className="block text-sm font-medium text-text-primary mb-2">Tasting Name</label>
           <input
             type="text"
             value={sessionName}
@@ -261,16 +273,14 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
 
         {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-2">
-            Category
-          </label>
+          <label className="block text-sm font-medium text-text-primary mb-2">Category</label>
           <select
             value={session.category}
             onChange={(e) => handleCategoryChange(e.target.value)}
             className="w-full px-3 py-2 border border-border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             disabled={isLoading}
           >
-            {categories.map(category => (
+            {categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
               </option>
@@ -296,7 +306,9 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
               required
             />
             {session.category === 'other' && !customCategoryName.trim() && (
-              <p className="text-sm text-red-500 mt-1">Custom category name is required when "Other" is selected</p>
+              <p className="text-sm text-red-500 mt-1">
+                Custom category name is required when "Other" is selected
+              </p>
             )}
           </div>
         )}
@@ -312,7 +324,7 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
             className="w-full px-3 py-2 border border-border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">Select a preset...</option>
-            {tastingPresets.map(preset => (
+            {tastingPresets.map((preset) => (
               <option key={preset.id} value={preset.id}>
                 {preset.name}
               </option>
@@ -320,7 +332,7 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
           </select>
           {selectedPreset && (
             <p className="text-sm text-text-secondary mt-1">
-              {tastingPresets.find(p => p.id === selectedPreset)?.description}
+              {tastingPresets.find((p) => p.id === selectedPreset)?.description}
             </p>
           )}
         </div>

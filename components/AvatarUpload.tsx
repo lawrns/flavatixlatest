@@ -25,7 +25,7 @@ export default function AvatarUpload({
   displayName,
   onUploadSuccess,
   onUploadError,
-  className = ''
+  className = '',
 }: AvatarUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -43,7 +43,9 @@ export default function AvatarUpload({
   // Using static methods from AvatarService
 
   const handleFileUpload = async (file: File | null) => {
-    if (!file) return;
+    if (!file) {
+      return;
+    }
 
     setError(null);
     setSuccess(null);
@@ -55,7 +57,7 @@ export default function AvatarUpload({
         fileName: file.name,
         fileSize: file.size,
         fileType: file.type,
-        userId
+        userId,
       });
 
       // Create preview
@@ -64,7 +66,7 @@ export default function AvatarUpload({
 
       // Simulate progress for better UX
       const progressInterval = setInterval(() => {
-        setUploadProgress(prev => {
+        setUploadProgress((prev) => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return 90;
@@ -75,20 +77,20 @@ export default function AvatarUpload({
 
       // Upload file
       const result: AvatarUploadResult = await AvatarService.uploadAvatar(file, userId);
-      
+
       clearInterval(progressInterval);
       setUploadProgress(100);
 
       console.log('[AvatarUpload] Upload result:', {
         success: result.success,
         hasUrl: !!result.url,
-        error: result.error
+        error: result.error,
       });
 
       if (result.success && result.url) {
         setSuccess('Avatar uploaded successfully!');
         onUploadSuccess?.(result.url);
-        
+
         // Clean up old preview
         if (preview !== currentAvatarUrl) {
           URL.revokeObjectURL(preview);
@@ -101,13 +103,13 @@ export default function AvatarUpload({
       console.error('[AvatarUpload] Upload error:', {
         error: err,
         message: err instanceof Error ? err.message : 'Unknown error',
-        userId
+        userId,
       });
-      
+
       const errorMessage = err instanceof Error ? err.message : 'Upload failed';
       setError(errorMessage);
       onUploadError?.(errorMessage);
-      
+
       // Reset preview on error
       setPreviewUrl(currentAvatarUrl || null);
     } finally {
@@ -119,10 +121,13 @@ export default function AvatarUpload({
     }
   };
 
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    await handleFileUpload(file);
-  }, [userId, currentAvatarUrl, onUploadSuccess, onUploadError]);
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      await handleFileUpload(file);
+    },
+    [userId, currentAvatarUrl, onUploadSuccess, onUploadError]
+  );
 
   const handleCameraCapture = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -145,15 +150,17 @@ export default function AvatarUpload({
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
     onDrop,
     accept: {
-      'image/*': ['.jpeg', '.jpg', '.png', '.webp']
+      'image/*': ['.jpeg', '.jpg', '.png', '.webp'],
     },
     maxFiles: 1,
     maxSize: 5 * 1024 * 1024, // 5MB
-    disabled: uploading
+    disabled: uploading,
   });
 
   const removeAvatar = async () => {
-    if (!currentAvatarUrl) return;
+    if (!currentAvatarUrl) {
+      return;
+    }
 
     setUploading(true);
     setError(null);
@@ -188,7 +195,7 @@ export default function AvatarUpload({
             onClick={() => editInputRef.current?.click()}
             disabled={uploading}
             className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 dark:border-zinc-600 cursor-pointer hover:opacity-80 transition-opacity disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            aria-label={previewUrl ? "Change profile picture" : "Add profile picture"}
+            aria-label={previewUrl ? 'Change profile picture' : 'Add profile picture'}
           >
             {previewUrl ? (
               <Image
@@ -248,7 +255,7 @@ export default function AvatarUpload({
       {uploading && (
         <div className="space-y-xs">
           <div className="w-full bg-gray-200 dark:bg-zinc-700 rounded-full h-2">
-            <div 
+            <div
               className="bg-gradient-to-r from-[#1F5D4C] to-[#2E7D32] h-2 rounded-full transition-all duration-300"
               style={{ width: `${uploadProgress}%` }}
             ></div>
@@ -293,9 +300,9 @@ export default function AvatarUpload({
           `}
         >
           <input {...getInputProps()} />
-          
+
           <Upload className="w-8 h-8 mx-auto mb-xs text-gray-400 dark:text-zinc-500" />
-          
+
           {isDragActive ? (
             isDragReject ? (
               <p className="text-red-600">Invalid file type</p>

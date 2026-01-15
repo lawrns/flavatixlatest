@@ -41,7 +41,9 @@ class SimpleBarcodeReader {
     this.scanning = true;
 
     const scan = async () => {
-      if (!this.scanning) return;
+      if (!this.scanning) {
+        return;
+      }
 
       this.canvas.width = this.video.videoWidth;
       this.canvas.height = this.video.videoHeight;
@@ -51,7 +53,7 @@ class SimpleBarcodeReader {
         // Use the experimental BarcodeDetector API if available
         if ('BarcodeDetector' in window) {
           const barcodeDetector = new (window as any).BarcodeDetector({
-            formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39']
+            formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39'],
           });
 
           const barcodes = await barcodeDetector.detect(this.canvas);
@@ -77,7 +79,11 @@ class SimpleBarcodeReader {
   }
 }
 
-export default function BarcodeScanner({ onScan, onClose, category = 'wine' }: BarcodeScannerProps) {
+export default function BarcodeScanner({
+  onScan,
+  onClose,
+  category = 'wine',
+}: BarcodeScannerProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -107,8 +113,8 @@ export default function BarcodeScanner({ onScan, onClose, category = 'wine' }: B
         video: {
           facingMode: 'environment',
           width: { ideal: 1280 },
-          height: { ideal: 720 }
-        }
+          height: { ideal: 720 },
+        },
       });
 
       if (videoRef.current) {
@@ -133,7 +139,7 @@ export default function BarcodeScanner({ onScan, onClose, category = 'wine' }: B
 
   const stopCamera = () => {
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     }
     if (readerRef.current) {
@@ -143,14 +149,18 @@ export default function BarcodeScanner({ onScan, onClose, category = 'wine' }: B
   };
 
   const startScanning = () => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+      return;
+    }
 
     readerRef.current = new SimpleBarcodeReader(videoRef.current);
     readerRef.current.startScanning(handleBarcodeDetected);
   };
 
   const handleBarcodeDetected = async (code: string) => {
-    if (detectedCode) return; // Already detected
+    if (detectedCode) {
+      return;
+    } // Already detected
 
     console.log('Barcode detected:', code);
     setDetectedCode(code);
@@ -184,7 +194,7 @@ export default function BarcodeScanner({ onScan, onClose, category = 'wine' }: B
       const basicInfo: ProductInfo = {
         barcode,
         name: `Product ${barcode}`,
-        category: category
+        category: category,
       };
 
       setProductInfo(basicInfo);
@@ -204,22 +214,22 @@ export default function BarcodeScanner({ onScan, onClose, category = 'wine' }: B
         brand: 'Silver Oak',
         category: 'wine',
         vintage: '2018',
-        country: 'USA'
+        country: 'USA',
       },
       '5449000214898': {
         barcode: '5449000214898',
         name: 'Coca-Cola Original',
         brand: 'Coca-Cola',
         category: 'beverage',
-        description: 'Classic cola soft drink'
+        description: 'Classic cola soft drink',
       },
       '793573275950': {
         barcode: '793573275950',
         name: 'Ethiopian Yirgacheffe',
         brand: 'Blue Bottle Coffee',
         category: 'coffee',
-        description: 'Single origin, light roast'
-      }
+        description: 'Single origin, light roast',
+      },
     };
 
     return mockDatabase[barcode] || null;
@@ -265,13 +275,7 @@ export default function BarcodeScanner({ onScan, onClose, category = 'wine' }: B
       {/* Camera View */}
       {hasPermission && !detectedCode && (
         <>
-          <video
-            ref={videoRef}
-            className="w-full h-full object-cover"
-            playsInline
-            autoPlay
-            muted
-          />
+          <video ref={videoRef} className="w-full h-full object-cover" playsInline autoPlay muted />
 
           {/* Scanning Overlay */}
           <div className="absolute inset-0 flex items-center justify-center">

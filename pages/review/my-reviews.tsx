@@ -25,7 +25,9 @@ const MyReviewsPage: React.FC = () => {
   const supabase = getSupabaseClient() as any;
 
   const loadReviews = useCallback(async () => {
-    if (!user) return;
+    if (!user) {
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -36,7 +38,9 @@ const MyReviewsPage: React.FC = () => {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (quickReviewsError) throw quickReviewsError;
+      if (quickReviewsError) {
+        throw quickReviewsError;
+      }
 
       // Load prose reviews
       const { data: proseReviewsData, error: proseReviewsError } = await supabase
@@ -45,7 +49,9 @@ const MyReviewsPage: React.FC = () => {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (proseReviewsError) throw proseReviewsError;
+      if (proseReviewsError) {
+        throw proseReviewsError;
+      }
 
       setReviews(quickReviewsData || []);
       setProseReviews(proseReviewsData || []);
@@ -70,15 +76,24 @@ const MyReviewsPage: React.FC = () => {
     return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      completed: { label: 'Completed', color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
-      in_progress: { label: 'In Progress', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
-      published: { label: 'Published', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' }
+      completed: {
+        label: 'Completed',
+        color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+      },
+      in_progress: {
+        label: 'In Progress',
+        color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+      },
+      published: {
+        label: 'Published',
+        color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+      },
     };
 
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.in_progress;
@@ -90,10 +105,14 @@ const MyReviewsPage: React.FC = () => {
     );
   };
 
-  const completedReviews = reviews.filter(r => r.status === 'completed' || r.status === 'published');
-  const inProgressReviews = reviews.filter(r => r.status === 'in_progress');
-  const completedProseReviews = proseReviews.filter(r => r.status === 'completed' || r.status === 'published');
-  const inProgressProseReviews = proseReviews.filter(r => r.status === 'in_progress');
+  const completedReviews = reviews.filter(
+    (r) => r.status === 'completed' || r.status === 'published'
+  );
+  const inProgressReviews = reviews.filter((r) => r.status === 'in_progress');
+  const completedProseReviews = proseReviews.filter(
+    (r) => r.status === 'completed' || r.status === 'published'
+  );
+  const inProgressProseReviews = proseReviews.filter((r) => r.status === 'in_progress');
 
   if (loading || isLoading) {
     return (
@@ -113,21 +132,14 @@ const MyReviewsPage: React.FC = () => {
   }
 
   return (
-    <PageLayout
-      title="My Reviews"
-      subtitle="All review history"
-      showBack
-      backUrl="/review"
-    >
+    <PageLayout title="My Reviews" subtitle="All review history" showBack backUrl="/review">
       {/* Reviews Section */}
       <div className="space-y-6">
         {/* Completed Reviews */}
         <div className="bg-white dark:bg-zinc-800/50 rounded-[22px] border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
           <div className="flex items-center mb-4">
             <FileText size={24} className="text-primary mr-2" />
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-              Reviews
-            </h2>
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Reviews</h2>
             <span className="ml-auto text-sm text-zinc-500 dark:text-zinc-400">
               {completedReviews.length} {completedReviews.length === 1 ? 'review' : 'reviews'}
             </span>
@@ -157,9 +169,7 @@ const MyReviewsPage: React.FC = () => {
                         {formatDate(review.created_at)}
                       </div>
                     </div>
-                    <div className="ml-3 flex-shrink-0">
-                      {getStatusBadge(review.status)}
-                    </div>
+                    <div className="ml-3 flex-shrink-0">{getStatusBadge(review.status)}</div>
                   </div>
                 </button>
               ))}
@@ -171,11 +181,10 @@ const MyReviewsPage: React.FC = () => {
         <div className="bg-white dark:bg-zinc-800/50 rounded-[22px] border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
           <div className="flex items-center mb-4">
             <PenTool size={24} className="text-primary mr-2" />
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-              Prose Reviews
-            </h2>
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Prose Reviews</h2>
             <span className="ml-auto text-sm text-zinc-500 dark:text-zinc-400">
-              {completedProseReviews.length} {completedProseReviews.length === 1 ? 'review' : 'reviews'}
+              {completedProseReviews.length}{' '}
+              {completedProseReviews.length === 1 ? 'review' : 'reviews'}
             </span>
           </div>
 
@@ -203,9 +212,7 @@ const MyReviewsPage: React.FC = () => {
                         {formatDate(review.created_at)}
                       </div>
                     </div>
-                    <div className="ml-3 flex-shrink-0">
-                      {getStatusBadge(review.status)}
-                    </div>
+                    <div className="ml-3 flex-shrink-0">{getStatusBadge(review.status)}</div>
                   </div>
                 </button>
               ))}
@@ -221,7 +228,10 @@ const MyReviewsPage: React.FC = () => {
               Reviews in Progress
             </h2>
             <span className="ml-auto text-sm text-zinc-500 dark:text-zinc-400">
-              {inProgressReviews.length + inProgressProseReviews.length} {inProgressReviews.length + inProgressProseReviews.length === 1 ? 'review' : 'reviews'}
+              {inProgressReviews.length + inProgressProseReviews.length}{' '}
+              {inProgressReviews.length + inProgressProseReviews.length === 1
+                ? 'review'
+                : 'reviews'}
             </span>
           </div>
 
@@ -249,9 +259,7 @@ const MyReviewsPage: React.FC = () => {
                         Last updated: {formatDate(review.updated_at)}
                       </div>
                     </div>
-                    <div className="ml-3 flex-shrink-0">
-                      {getStatusBadge(review.status)}
-                    </div>
+                    <div className="ml-3 flex-shrink-0">{getStatusBadge(review.status)}</div>
                   </div>
                 </button>
               ))}
@@ -273,9 +281,7 @@ const MyReviewsPage: React.FC = () => {
                         Last updated: {formatDate(review.updated_at)}
                       </div>
                     </div>
-                    <div className="ml-3 flex-shrink-0">
-                      {getStatusBadge(review.status)}
-                    </div>
+                    <div className="ml-3 flex-shrink-0">{getStatusBadge(review.status)}</div>
                   </div>
                 </button>
               ))}
@@ -288,7 +294,6 @@ const MyReviewsPage: React.FC = () => {
 };
 
 export default MyReviewsPage;
-
 
 // Disable static generation for this page
 export async function getServerSideProps() {

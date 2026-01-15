@@ -55,15 +55,25 @@ export const CATEGORY_PACKS: Record<CategoryPackId, CategoryPack> = {
 };
 
 export function normalizeCategoryId(input: string | string[] | undefined): CategoryPackId | null {
-  if (!input) return null;
+  if (!input) {
+    return null;
+  }
 
   const raw = Array.isArray(input) ? input[0] : input;
   const value = raw.trim().toLowerCase();
 
-  if (value === 'whisky') return 'whiskey';
-  if (value === 'whiskey') return 'whiskey';
-  if (value === 'coffee') return 'coffee';
-  if (value === 'mezcal') return 'mezcal';
+  if (value === 'whisky') {
+    return 'whiskey';
+  }
+  if (value === 'whiskey') {
+    return 'whiskey';
+  }
+  if (value === 'coffee') {
+    return 'coffee';
+  }
+  if (value === 'mezcal') {
+    return 'mezcal';
+  }
 
   return null;
 }

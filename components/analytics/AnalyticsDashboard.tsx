@@ -19,9 +19,9 @@ interface AnalyticsDashboardProps {
   isAdmin?: boolean;
 }
 
-export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ 
-  userId, 
-  isAdmin = false 
+export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
+  userId,
+  isAdmin = false,
 }) => {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   const loadAnalytics = async () => {
     try {
       setLoading(true);
-      
+
       // Mock data for now - replace with actual API call
       const mockData: AnalyticsData = {
         totalTastings: 156,
@@ -48,7 +48,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           { name: 'Wine', count: 38 },
           { name: 'Beer', count: 32 },
           { name: 'Spirits', count: 28 },
-          { name: 'Tea', count: 13 }
+          { name: 'Tea', count: 13 },
         ],
         monthlyTrend: [
           { month: 'Jan', tastings: 12, reviews: 8 },
@@ -56,12 +56,12 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           { month: 'Mar', tastings: 23, reviews: 15 },
           { month: 'Apr', tastings: 19, reviews: 11 },
           { month: 'May', tastings: 25, reviews: 18 },
-          { month: 'Jun', tastings: 22, reviews: 14 }
-        ]
+          { month: 'Jun', tastings: 22, reviews: 14 },
+        ],
       };
 
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setData(mockData);
     } catch (error) {
       console.error('Error loading analytics:', error);
@@ -74,7 +74,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     return (
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map(i => (
+          {[1, 2, 3, 4].map((i) => (
             <Card key={i}>
               <CardContent>
                 <div className="animate-pulse">
@@ -89,22 +89,22 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     );
   }
 
-  if (!data) return null;
+  if (!data) {
+    return null;
+  }
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Analytics Dashboard
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Analytics Dashboard</h2>
           <p className="text-gray-600 dark:text-gray-400">
             {isAdmin ? 'Platform overview and insights' : 'Your tasting insights'}
           </p>
         </div>
         <div className="flex gap-2">
-          {(['7d', '30d', '90d', '1y'] as const).map(range => (
+          {(['7d', '30d', '90d', '1y'] as const).map((range) => (
             <Button
               key={range}
               variant={timeRange === range ? 'primary' : 'ghost'}
@@ -196,9 +196,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               {data.topCategories.map((category, index) => (
                 <div key={category.name} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-gray-500 w-6">
-                      {index + 1}
-                    </span>
+                    <span className="text-sm font-medium text-gray-500 w-6">{index + 1}</span>
                     <span className="text-sm font-medium text-gray-900 dark:text-white">
                       {category.name}
                     </span>
@@ -208,7 +206,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                       <div
                         className="bg-blue-500 h-2 rounded-full"
                         style={{
-                          width: `${(category.count / data.topCategories[0].count) * 100}%`
+                          width: `${(category.count / data.topCategories[0].count) * 100}%`,
                         }}
                       />
                     </div>
@@ -238,7 +236,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                         <div
                           className="bg-green-500 h-2 rounded-full"
                           style={{
-                            width: `${(month.tastings / Math.max(...data.monthlyTrend.map(m => m.tastings))) * 100}%`
+                            width: `${(month.tastings / Math.max(...data.monthlyTrend.map((m) => m.tastings))) * 100}%`,
                           }}
                         />
                       </div>
@@ -251,7 +249,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                         <div
                           className="bg-blue-500 h-2 rounded-full"
                           style={{
-                            width: `${(month.reviews / Math.max(...data.monthlyTrend.map(m => m.reviews))) * 100}%`
+                            width: `${(month.reviews / Math.max(...data.monthlyTrend.map((m) => m.reviews))) * 100}%`,
                           }}
                         />
                       </div>

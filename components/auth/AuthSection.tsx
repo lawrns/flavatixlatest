@@ -10,7 +10,9 @@ import OnboardingCarousel from '../ui/OnboardingCarousel';
 
 const AuthSection = () => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
-  const [formData, setFormData] = useState<{ full_name?: string; email: string; password: string }>({ email: '', password: '' });
+  const [formData, setFormData] = useState<{ full_name?: string; email: string; password: string }>(
+    { email: '', password: '' }
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const [mounted, setMounted] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(true);
@@ -19,29 +21,29 @@ const AuthSection = () => {
   const supabase = getSupabaseClient();
   const { user } = useAuth();
 
-  // Onboarding cards with generated images
+  // Onboarding cards with optimized WebP images
   const onboardingCards = [
     {
       id: 1,
-      image: '/generated-images/onboarding-discover.png',
+      image: '/generated-images/onboarding-discover.webp',
       headline: 'Discover Your Next Favorite',
       description: 'Explore flavors across coffee, wine, spirits, and more',
     },
     {
       id: 2,
-      image: '/generated-images/onboarding-taste.png',
+      image: '/generated-images/onboarding-taste.webp',
       headline: 'Master Your Palate',
       description: 'Capture nuanced flavor profiles and develop your taste',
     },
     {
       id: 3,
-      image: '/generated-images/onboarding-connect.png',
+      image: '/generated-images/onboarding-connect.webp',
       headline: 'Share & Compete',
       description: 'Connect with fellow tasters, join tastings, and compete',
     },
     {
       id: 4,
-      image: '/generated-images/onboarding-ready.png',
+      image: '/generated-images/onboarding-ready.webp',
       headline: 'Ready to Transform Your Palate?',
       description: 'The one place for all your tasting needs',
       ctaVariant: 'split' as const,
@@ -53,7 +55,7 @@ const AuthSection = () => {
     setMounted(true);
     console.log('AuthSection mounted, Supabase config:', {
       url: process.env.NEXT_PUBLIC_SUPABASE_URL,
-      key: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Not set'
+      key: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Not set',
     });
   }, []);
 
@@ -66,11 +68,14 @@ const AuthSection = () => {
   const emailSchema = z.object({
     email: z.string().email('Invalid email address'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
-    full_name: mode === 'register' ? z.string().min(2, 'Full name must be at least 2 characters') : z.string().optional(),
+    full_name:
+      mode === 'register'
+        ? z.string().min(2, 'Full name must be at least 2 characters')
+        : z.string().optional(),
   });
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleEmailAuth = async (e: React.FormEvent) => {
@@ -90,8 +95,8 @@ const AuthSection = () => {
           options: {
             data: {
               full_name: validatedData.full_name,
-            }
-          }
+            },
+          },
         });
 
         if (error) {
@@ -132,10 +137,12 @@ const AuthSection = () => {
         provider,
         options: {
           redirectTo: `${window.location.origin}/dashboard`,
-        }
+        },
       });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
     } catch (error: any) {
       console.error('Social auth error:', error);
       toast.error(error.message || 'Social authentication failed');
@@ -147,12 +154,12 @@ const AuthSection = () => {
     return (
       <div className="font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
         <Head>
-          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+          />
         </Head>
-        <OnboardingCarousel
-          cards={onboardingCards}
-          onComplete={() => setShowOnboarding(false)}
-        />
+        <OnboardingCarousel cards={onboardingCards} onComplete={() => setShowOnboarding(false)} />
       </div>
     );
   }
@@ -160,7 +167,10 @@ const AuthSection = () => {
   return (
     <div className="font-display text-zinc-900 dark:text-zinc-50">
       <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+        />
       </Head>
       {/* Premium Gradient Background - Same as homepage */}
       <div
@@ -173,7 +183,8 @@ const AuthSection = () => {
         <div
           className="absolute inset-0"
           style={{
-            background: 'radial-gradient(circle at 80% 20%, rgba(198, 60, 34, 0.08), transparent 60%)',
+            background:
+              'radial-gradient(circle at 80% 20%, rgba(198, 60, 34, 0.08), transparent 60%)',
           }}
         />
       </div>
@@ -193,7 +204,11 @@ const AuthSection = () => {
           {/* Heading */}
           <div className="text-center mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-              {showEmailForm ? (mode === 'login' ? 'Welcome Back' : 'Create Account') : 'Get Started'}
+              {showEmailForm
+                ? mode === 'login'
+                  ? 'Welcome Back'
+                  : 'Create Account'
+                : 'Get Started'}
             </h1>
             {!showEmailForm && (
               <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
@@ -211,7 +226,11 @@ const AuthSection = () => {
                   className="flex w-full items-center justify-center gap-3 rounded-lg bg-primary px-4 py-3 text-white font-bold transition-spring hover:bg-primary/90 active:scale-95"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path clipRule="evenodd" d="M2.99 5.5A1.5 1.5 0 0 1 4.5 4h11a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 15.5 16h-11A1.5 1.5 0 0 1 2.99 14.5v-9Zm1.5-1a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-11Z" fillRule="evenodd" />
+                    <path
+                      clipRule="evenodd"
+                      d="M2.99 5.5A1.5 1.5 0 0 1 4.5 4h11a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 15.5 16h-11A1.5 1.5 0 0 1 2.99 14.5v-9Zm1.5-1a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-11Z"
+                      fillRule="evenodd"
+                    />
                     <path d="M5.618 7.031a.5.5 0 0 1 .707-.022l3.675 2.94a.5.5 0 0 1 0 .782l-3.675 2.94a.5.5 0 0 1-.685-.728L8.835 10 5.64 7.736a.5.5 0 0 1-.022-.705Z" />
                   </svg>
                   <span>Continue with Email</span>
@@ -226,8 +245,16 @@ const AuthSection = () => {
                     onClick={() => handleSocialAuth('google')}
                     className="flex items-center justify-center gap-2 rounded-lg bg-white dark:bg-zinc-800 px-3 py-2.5 font-medium text-zinc-900 dark:text-zinc-50 ring-1 ring-zinc-200 dark:ring-zinc-700 transition-spring hover:-translate-y-0.5 hover:shadow-md active:scale-95"
                   >
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M21.35 11.1H12.18V13.83H18.68C18.36 17.64 15.19 19.27 12.19 19.27C8.36 19.27 5.03 16.25 5.03 12C5.03 7.75 8.36 4.73 12.19 4.73C14.02 4.73 15.64 5.33 16.89 6.48L19.06 4.45C17.02 2.61 14.71 1.73 12.19 1.73C6.73 1.73 2.5 6.22 2.5 12C2.5 17.78 6.73 22.27 12.19 22.27C17.65 22.27 21.5 18.25 21.5 12.33C21.5 11.77 21.43 11.43 21.35 11.1Z" fill="#4285F4" />
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M21.35 11.1H12.18V13.83H18.68C18.36 17.64 15.19 19.27 12.19 19.27C8.36 19.27 5.03 16.25 5.03 12C5.03 7.75 8.36 4.73 12.19 4.73C14.02 4.73 15.64 5.33 16.89 6.48L19.06 4.45C17.02 2.61 14.71 1.73 12.19 1.73C6.73 1.73 2.5 6.22 2.5 12C2.5 17.78 6.73 22.27 12.19 22.27C17.65 22.27 21.5 18.25 21.5 12.33C21.5 11.77 21.43 11.43 21.35 11.1Z"
+                        fill="#4285F4"
+                      />
                     </svg>
                     <span className="text-sm">Google</span>
                   </button>
@@ -290,7 +317,7 @@ const AuthSection = () => {
                   disabled={loading}
                   className="w-full bg-primary text-white py-3 px-4 rounded-lg font-semibold transition-spring hover:bg-primary/90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? 'Processing...' : (mode === 'login' ? 'Sign In' : 'Create Account')}
+                  {loading ? 'Processing...' : mode === 'login' ? 'Sign In' : 'Create Account'}
                 </button>
                 <div className="space-y-2">
                   <button
@@ -319,7 +346,9 @@ const AuthSection = () => {
                 }}
                 className="mt-4 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary transition-colors"
               >
-                {mode === 'login' ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
+                {mode === 'login'
+                  ? "Don't have an account? Sign up"
+                  : 'Already have an account? Sign in'}
               </button>
             </div>
           </div>

@@ -2,6 +2,23 @@
   "extends": "next/core-web-vitals",
   "rules": {
     "@next/next/no-html-link-for-pages": "warn",
-    "react/no-unescaped-entities": "warn"
+    "react/no-unescaped-entities": "warn",
+    "no-console": [
+      "warn",
+      {
+        "allow": ["warn", "error", "info", "debug"]
+      }
+    ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "prefer-const": "warn",
+    "no-var": "error",
+    "eqeqeq": ["warn", "always"],
+    "curly": ["warn", "all"],
+    "no-unused-vars": "warn",
+    "no-implicit-globals": "warn",
+    "react/display-name": "warn",
+    "react/no-children-prop": "warn",
+    "react/prop-types": "off"
   }
 }

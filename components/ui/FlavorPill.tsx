@@ -1,6 +1,6 @@
 /**
  * FlavorPill Component
- * 
+ *
  * A small pill/chip for displaying flavor descriptors with category-based colors.
  * Used consistently across flavor wheels, tasting notes, and social posts.
  */
@@ -54,22 +54,48 @@ interface FlavorPillProps {
  */
 const detectCategory = (flavor: string): string => {
   const flavorLower = flavor.toLowerCase();
-  
+
   // Check for category keywords
-  if (/berry|citrus|tropical|apple|cherry|grape|peach|plum|orange|lemon|lime/.test(flavorLower)) return 'fruity';
-  if (/chocolate|caramel|honey|vanilla|maple|sugar|molasses/.test(flavorLower)) return 'sweet';
-  if (/almond|hazelnut|walnut|peanut|pecan/.test(flavorLower)) return 'nutty';
-  if (/pepper|cinnamon|clove|ginger|nutmeg|cardamom/.test(flavorLower)) return 'spicy';
-  if (/rose|jasmine|lavender|violet|floral|blossom/.test(flavorLower)) return 'floral';
-  if (/earth|soil|mushroom|truffle|mineral|wet stone/.test(flavorLower)) return 'earthy';
-  if (/mint|basil|thyme|oregano|sage|eucalyptus|tea/.test(flavorLower)) return 'herbal';
-  if (/smoke|charcoal|peat|tobacco|ash/.test(flavorLower)) return 'smoky';
-  if (/oak|cedar|pine|wood|toast/.test(flavorLower)) return 'woody';
-  if (/malt|bread|biscuit|grain/.test(flavorLower)) return 'malty';
-  if (/hop|pine|resin/.test(flavorLower)) return 'hoppy';
-  if (/coffee|roast|burnt|char/.test(flavorLower)) return 'roasted';
-  if (/sour|tart|acidic|vinegar/.test(flavorLower)) return 'sour';
-  
+  if (/berry|citrus|tropical|apple|cherry|grape|peach|plum|orange|lemon|lime/.test(flavorLower)) {
+    return 'fruity';
+  }
+  if (/chocolate|caramel|honey|vanilla|maple|sugar|molasses/.test(flavorLower)) {
+    return 'sweet';
+  }
+  if (/almond|hazelnut|walnut|peanut|pecan/.test(flavorLower)) {
+    return 'nutty';
+  }
+  if (/pepper|cinnamon|clove|ginger|nutmeg|cardamom/.test(flavorLower)) {
+    return 'spicy';
+  }
+  if (/rose|jasmine|lavender|violet|floral|blossom/.test(flavorLower)) {
+    return 'floral';
+  }
+  if (/earth|soil|mushroom|truffle|mineral|wet stone/.test(flavorLower)) {
+    return 'earthy';
+  }
+  if (/mint|basil|thyme|oregano|sage|eucalyptus|tea/.test(flavorLower)) {
+    return 'herbal';
+  }
+  if (/smoke|charcoal|peat|tobacco|ash/.test(flavorLower)) {
+    return 'smoky';
+  }
+  if (/oak|cedar|pine|wood|toast/.test(flavorLower)) {
+    return 'woody';
+  }
+  if (/malt|bread|biscuit|grain/.test(flavorLower)) {
+    return 'malty';
+  }
+  if (/hop|pine|resin/.test(flavorLower)) {
+    return 'hoppy';
+  }
+  if (/coffee|roast|burnt|char/.test(flavorLower)) {
+    return 'roasted';
+  }
+  if (/sour|tart|acidic|vinegar/.test(flavorLower)) {
+    return 'sour';
+  }
+
   return 'default';
 };
 
@@ -86,20 +112,18 @@ export const FlavorPill: React.FC<FlavorPillProps> = ({
 }) => {
   const detectedCategory = category || detectCategory(flavor);
   const colors = FLAVOR_COLORS[detectedCategory] || FLAVOR_COLORS.default;
-  
+
   const sizeClasses = {
     sm: 'px-2 py-0.5 text-xs',
     md: 'px-3 py-1 text-sm',
     lg: 'px-4 py-1.5 text-base',
   };
-  
+
   // Use inline style for dynamic opacity since Tailwind doesn't support dynamic values
-  const intensityStyle = intensity
-    ? { opacity: Math.min(1, 0.6 + intensity * 0.1) }
-    : undefined;
-  
+  const intensityStyle = intensity ? { opacity: Math.min(1, 0.6 + intensity * 0.1) } : undefined;
+
   const isInteractive = !!onClick;
-  
+
   return (
     <span
       className={cn(
@@ -119,11 +143,7 @@ export const FlavorPill: React.FC<FlavorPillProps> = ({
       title={flavor}
     >
       {flavor}
-      {intensity && (
-        <span className="opacity-60 text-xs font-normal">
-          ({intensity})
-        </span>
-      )}
+      {intensity && <span className="opacity-60 text-xs font-normal">({intensity})</span>}
       {removable && onRemove && (
         <button
           type="button"

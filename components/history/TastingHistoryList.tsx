@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { TastingHistory, HistoryFilters, getUserTastingHistory, deleteTasting } from '../../lib/historyService';
+import {
+  TastingHistory,
+  HistoryFilters,
+  getUserTastingHistory,
+  deleteTasting,
+} from '../../lib/historyService';
 import TastingHistoryItem from './TastingHistoryItem';
 import { useAuth } from '../../contexts/SimpleAuthContext';
 
@@ -14,7 +19,7 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
   filters,
   onTastingClick,
   onTastingsLoaded,
-  limit = 20
+  limit = 20,
 }) => {
   const { user } = useAuth();
   const [tastings, setTastings] = useState<TastingHistory[]>([]);
@@ -24,15 +29,17 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
   const [offset, setOffset] = useState(0);
 
   const handleDeleteTasting = async (tastingId: string) => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      return;
+    }
 
     try {
       const { success, error: deleteError } = await deleteTasting(tastingId, user.id);
 
       if (success) {
         // Actualizar estado local removiendo la cata eliminada
-        setTastings(prev => prev.filter(t => t.id !== tastingId));
-        
+        setTastings((prev) => prev.filter((t) => t.id !== tastingId));
+
         // Mostrar notificación de éxito (usando alert por simplicidad)
         // Eliminación exitosa sin mensaje
       } else {
@@ -50,7 +57,9 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
   };
 
   const loadTastings = async (reset: boolean = false) => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -66,21 +75,21 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
     if (fetchError) {
       setError('Error al cargar el historial de catas');
       console.error('Error loading tasting history:', fetchError);
-      } else if (data) {
-        if (reset) {
-          setTastings(data);
-          setOffset(limit);
-        } else {
-          setTastings(prev => [...prev, ...data]);
-          setOffset(prev => prev + limit);
-        }
-        setHasMore(data.length === limit);
-
-        // Notify parent component about tastings availability
-        if (onTastingsLoaded) {
-          onTastingsLoaded(data.length > 0);
-        }
+    } else if (data) {
+      if (reset) {
+        setTastings(data);
+        setOffset(limit);
+      } else {
+        setTastings((prev) => [...prev, ...data]);
+        setOffset((prev) => prev + limit);
       }
+      setHasMore(data.length === limit);
+
+      // Notify parent component about tastings availability
+      if (onTastingsLoaded) {
+        onTastingsLoaded(data.length > 0);
+      }
+    }
 
     setLoading(false);
   };
@@ -99,7 +108,10 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
     return (
       <div className="space-y-4">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4 animate-pulse">
+          <div
+            key={i}
+            className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4 animate-pulse"
+          >
             <div className="flex justify-between items-start mb-3">
               <div className="flex-1">
                 <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
@@ -121,12 +133,22 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
         <div className="flex items-center">
-          <svg className="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            className="w-5 h-5 text-red-400 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           <span className="text-red-800">{error}</span>
         </div>
-        <button 
+        <button
           onClick={() => loadTastings(true)}
           className="mt-2 text-red-600 hover:text-red-800 font-medium"
         >
@@ -139,17 +161,27 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
   if (tastings.length === 0) {
     return (
       <div className="text-center py-12">
-        <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        <svg
+          className="w-16 h-16 text-gray-300 mx-auto mb-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+          />
         </svg>
         <h3 className="text-lg font-medium text-gray-900 mb-2">No hay catas registradas</h3>
         <p className="text-gray-500 mb-4">
-          {filters?.category || filters?.dateFrom || filters?.dateTo 
+          {filters?.category || filters?.dateFrom || filters?.dateTo
             ? 'No se encontraron catas con los filtros aplicados.'
             : 'Aún no has realizado ninguna cata. ¡Comienza tu primera sesión!'}
         </p>
         <button
-          onClick={() => window.location.href = '/quick-tasting'}
+          onClick={() => (window.location.href = '/quick-tasting')}
           className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
         >
           Comenzar nueva cata
@@ -168,7 +200,7 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
           onDelete={handleDeleteTasting}
         />
       ))}
-      
+
       {hasMore && (
         <div className="text-center pt-4">
           <button

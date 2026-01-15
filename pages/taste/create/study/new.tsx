@@ -34,7 +34,7 @@ const BASE_CATEGORIES = [
   'Hot Sauce',
   'Perfume',
   'Cigars',
-  'Other'
+  'Other',
 ];
 
 interface CategoryInput {
@@ -62,7 +62,7 @@ const NewStudyTastingPage: React.FC = () => {
   const [form, setForm] = useState<CreateStudyForm>({
     name: '',
     baseCategory: '',
-    categories: []
+    categories: [],
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,40 +76,44 @@ const NewStudyTastingPage: React.FC = () => {
   }, [user, loading, router]);
 
   // Load template if templateId is provided
-  const loadUserTemplate = useCallback(async (templateId: string) => {
-    const { data, error } = await supabase
-      .from('study_templates')
-      .select('*')
-      .eq('id', templateId)
-      .single();
+  const loadUserTemplate = useCallback(
+    async (templateId: string) => {
+      const { data, error } = await supabase
+        .from('study_templates')
+        .select('*')
+        .eq('id', templateId)
+        .single();
 
-    if (data) {
-       const templateData = data as any;
-       let categories = [];
-       try {
-         categories = typeof templateData.categories === 'string'
-           ? JSON.parse(templateData.categories)
-           : templateData.categories;
-       } catch (e) {
-         console.error('Error parsing template categories', e);
-         return;
-       }
+      if (data) {
+        const templateData = data as any;
+        let categories = [];
+        try {
+          categories =
+            typeof templateData.categories === 'string'
+              ? JSON.parse(templateData.categories)
+              : templateData.categories;
+        } catch (e) {
+          console.error('Error parsing template categories', e);
+          return;
+        }
 
-       setForm({
-         name: templateData.name,
-         baseCategory: templateData.base_category,
-         categories: categories.map((cat: any, index: number) => ({
-           id: `cat-${Date.now()}-${index}`,
-           name: cat.name,
-           hasText: cat.hasText,
-           hasScale: cat.hasScale,
-           hasBoolean: cat.hasBoolean,
-           scaleMax: cat.scaleMax || 100,
-           rankInSummary: cat.rankInSummary
-         }))
-       });
-    }
-  }, [supabase]);
+        setForm({
+          name: templateData.name,
+          baseCategory: templateData.base_category,
+          categories: categories.map((cat: any, index: number) => ({
+            id: `cat-${Date.now()}-${index}`,
+            name: cat.name,
+            hasText: cat.hasText,
+            hasScale: cat.hasScale,
+            hasBoolean: cat.hasBoolean,
+            scaleMax: cat.scaleMax || 100,
+            rankInSummary: cat.rankInSummary,
+          })),
+        });
+      }
+    },
+    [supabase]
+  );
 
   useEffect(() => {
     if (templateId && typeof templateId === 'string') {
@@ -126,8 +130,8 @@ const NewStudyTastingPage: React.FC = () => {
             hasScale: cat.hasScale,
             hasBoolean: cat.hasBoolean,
             scaleMax: cat.scaleMax || 100,
-            rankInSummary: cat.rankInSummary
-          }))
+            rankInSummary: cat.rankInSummary,
+          })),
         });
         return;
       }
@@ -185,28 +189,26 @@ const NewStudyTastingPage: React.FC = () => {
       hasScale: true,
       hasBoolean: false,
       scaleMax: 100,
-      rankInSummary: true  // Auto-enable ranking when scale is enabled by default
+      rankInSummary: true, // Auto-enable ranking when scale is enabled by default
     };
 
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      categories: [...prev.categories, newCategory]
+      categories: [...prev.categories, newCategory],
     }));
   };
 
   const removeCategory = (id: string) => {
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      categories: prev.categories.filter(cat => cat.id !== id)
+      categories: prev.categories.filter((cat) => cat.id !== id),
     }));
   };
 
   const updateCategory = (id: string, updates: Partial<CategoryInput>) => {
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      categories: prev.categories.map(cat =>
-        cat.id === id ? { ...cat, ...updates } : cat
-      )
+      categories: prev.categories.map((cat) => (cat.id === id ? { ...cat, ...updates } : cat)),
     }));
   };
 
@@ -222,7 +224,9 @@ const NewStudyTastingPage: React.FC = () => {
     }
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         toast.error('Session expired');
         return;
@@ -232,20 +236,20 @@ const NewStudyTastingPage: React.FC = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
           name: form.name,
           baseCategory: form.baseCategory,
-          categories: form.categories.map(cat => ({
+          categories: form.categories.map((cat) => ({
             name: cat.name,
             hasText: cat.hasText,
             hasScale: cat.hasScale,
             hasBoolean: cat.hasBoolean,
             scaleMax: cat.scaleMax,
-            rankInSummary: cat.rankInSummary
-          }))
-        })
+            rankInSummary: cat.rankInSummary,
+          })),
+        }),
       });
 
       if (!response.ok) {
@@ -280,7 +284,9 @@ const NewStudyTastingPage: React.FC = () => {
 
     try {
       console.log('[Study Mode] Getting auth session...');
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         console.error('[Study Mode] No auth session found');
         toast.error('Session expired. Please log in again.');
@@ -293,20 +299,20 @@ const NewStudyTastingPage: React.FC = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
           name: form.name,
           baseCategory: form.baseCategory,
-          categories: form.categories.map(cat => ({
+          categories: form.categories.map((cat) => ({
             name: cat.name,
             hasText: cat.hasText,
             hasScale: cat.hasScale,
             hasBoolean: cat.hasBoolean,
             scaleMax: cat.scaleMax,
-            rankInSummary: cat.rankInSummary
-          }))
-        })
+            rankInSummary: cat.rankInSummary,
+          })),
+        }),
       });
 
       console.log('[Study Mode] API response status:', response.status);
@@ -352,7 +358,9 @@ const NewStudyTastingPage: React.FC = () => {
     );
   }
 
-  if (!user) return null;
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
@@ -375,7 +383,13 @@ const NewStudyTastingPage: React.FC = () => {
             </p>
           </div>
 
-          <form onSubmit={(e) => { e.preventDefault(); handleSubmit(false); }} className="space-y-lg">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(false);
+            }}
+            className="space-y-lg"
+          >
             {/* Basic Info */}
             <Card>
               <CardHeader title="Basic Information" />
@@ -384,33 +398,35 @@ const NewStudyTastingPage: React.FC = () => {
                   <Input
                     label="Tasting Name *"
                     value={form.name}
-                    onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
                     placeholder="e.g., Colombian Coffee Cupping"
                     error={errors.name}
                     helperText={`${form.name.length}/120 characters`}
                     maxLength={120}
                   />
 
-                <div>
-                  <label className="block text-small font-body font-medium text-text-primary mb-xs">
-                    What's being tasted? *
-                  </label>
-                  <Combobox
-                    options={BASE_CATEGORIES}
-                    value={form.baseCategory}
-                    onChange={(value) => setForm(prev => ({ ...prev, baseCategory: value }))}
-                    placeholder="Select or type what you're tasting..."
-                    className={errors.baseCategory ? 'border-error' : ''}
-                    allowCustom={true}
-                  />
-                  <p className="text-xs text-text-secondary mt-1">
-                    Select from the list or type your own custom category
-                  </p>
-                  
-                  {errors.baseCategory && (
-                    <span className="text-small text-error mt-xs block">{errors.baseCategory}</span>
-                  )}
-                </div>
+                  <div>
+                    <label className="block text-small font-body font-medium text-text-primary mb-xs">
+                      What's being tasted? *
+                    </label>
+                    <Combobox
+                      options={BASE_CATEGORIES}
+                      value={form.baseCategory}
+                      onChange={(value) => setForm((prev) => ({ ...prev, baseCategory: value }))}
+                      placeholder="Select or type what you're tasting..."
+                      className={errors.baseCategory ? 'border-error' : ''}
+                      allowCustom={true}
+                    />
+                    <p className="text-xs text-text-secondary mt-1">
+                      Select from the list or type your own custom category
+                    </p>
+
+                    {errors.baseCategory && (
+                      <span className="text-small text-error mt-xs block">
+                        {errors.baseCategory}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -418,9 +434,7 @@ const NewStudyTastingPage: React.FC = () => {
             {/* Categories */}
             <div className="card p-md">
               <div className="mb-md">
-                <h2 className="text-h3 font-heading font-semibold text-text-primary">
-                  Categories
-                </h2>
+                <h2 className="text-h3 font-heading font-semibold text-text-primary">Categories</h2>
                 <p className="text-small text-text-secondary">
                   Define up to 20 evaluation categories
                 </p>
@@ -441,7 +455,10 @@ const NewStudyTastingPage: React.FC = () => {
               ) : (
                 <div className="space-y-md">
                   {form.categories.map((category, index) => (
-                    <div key={category.id} className="border border-border-default rounded-lg p-md bg-white dark:bg-zinc-800">
+                    <div
+                      key={category.id}
+                      className="border border-border-default rounded-lg p-md bg-white dark:bg-zinc-800"
+                    >
                       <div className="flex items-start justify-between mb-sm">
                         <span className="text-small font-body font-medium text-text-secondary">
                           Category {index + 1}
@@ -484,7 +501,9 @@ const NewStudyTastingPage: React.FC = () => {
                               <input
                                 type="checkbox"
                                 checked={category.hasText}
-                                onChange={(e) => updateCategory(category.id, { hasText: e.target.checked })}
+                                onChange={(e) =>
+                                  updateCategory(category.id, { hasText: e.target.checked })
+                                }
                                 className="form-checkbox mr-sm"
                               />
                               <span className="text-body font-body">Text Input</span>
@@ -494,11 +513,13 @@ const NewStudyTastingPage: React.FC = () => {
                               <input
                                 type="checkbox"
                                 checked={category.hasScale}
-                                onChange={(e) => updateCategory(category.id, {
-                                  hasScale: e.target.checked,
-                                  // Auto-enable ranking when scale input is enabled
-                                  rankInSummary: e.target.checked ? true : category.rankInSummary
-                                })}
+                                onChange={(e) =>
+                                  updateCategory(category.id, {
+                                    hasScale: e.target.checked,
+                                    // Auto-enable ranking when scale input is enabled
+                                    rankInSummary: e.target.checked ? true : category.rankInSummary,
+                                  })
+                                }
                                 className="form-checkbox mr-sm"
                               />
                               <span className="text-body font-body">Scale Input</span>
@@ -535,10 +556,14 @@ const NewStudyTastingPage: React.FC = () => {
                                       const numVal = parseInt(val);
                                       if (isNaN(numVal) || numVal < 5) {
                                         updateCategory(category.id, { scaleMax: 5 });
-                                        toast.error('Scale maximum must be at least 5. Set to minimum value.');
+                                        toast.error(
+                                          'Scale maximum must be at least 5. Set to minimum value.'
+                                        );
                                       } else if (numVal > 100) {
                                         updateCategory(category.id, { scaleMax: 100 });
-                                        toast.error('Scale maximum cannot exceed 100. Set to maximum value.');
+                                        toast.error(
+                                          'Scale maximum cannot exceed 100. Set to maximum value.'
+                                        );
                                       }
                                     }
                                   }}
@@ -558,7 +583,9 @@ const NewStudyTastingPage: React.FC = () => {
                               <input
                                 type="checkbox"
                                 checked={category.hasBoolean}
-                                onChange={(e) => updateCategory(category.id, { hasBoolean: e.target.checked })}
+                                onChange={(e) =>
+                                  updateCategory(category.id, { hasBoolean: e.target.checked })
+                                }
                                 className="form-checkbox mr-sm"
                               />
                               <span className="text-body font-body">Yes/No Toggle</span>
@@ -574,7 +601,10 @@ const NewStudyTastingPage: React.FC = () => {
                         {category.hasScale && (
                           <div className="p-sm bg-blue-50 border border-blue-200 rounded-lg">
                             <p className="text-small text-blue-800">
-                              <span className="material-symbols-outlined text-sm align-middle mr-1">check</span>This category will be included in ranking summary automatically
+                              <span className="material-symbols-outlined text-sm align-middle mr-1">
+                                check
+                              </span>
+                              This category will be included in ranking summary automatically
                             </p>
                           </div>
                         )}
@@ -600,11 +630,7 @@ const NewStudyTastingPage: React.FC = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-md justify-center">
-              <button
-                type="button"
-                onClick={() => router.back()}
-                className="btn-secondary"
-              >
+              <button type="button" onClick={() => router.back()} className="btn-secondary">
                 Back
               </button>
 
@@ -642,24 +668,23 @@ const NewStudyTastingPage: React.FC = () => {
 
       {/* Preview Modal */}
       {showPreview && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-md"
           onClick={(e) => e.target === e.currentTarget && setShowPreview(false)}
           onKeyDown={(e) => e.key === 'Escape' && setShowPreview(false)}
         >
-          <div 
+          <div
             className="bg-white dark:bg-zinc-800 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto"
             role="dialog"
             aria-modal="true"
             aria-labelledby="preview-modal-title"
           >
             <div className="sticky top-0 bg-white dark:bg-zinc-800 border-b border-border-default p-md flex justify-between items-center">
-              <h3 id="preview-modal-title" className="text-h3 font-heading font-semibold">Preview</h3>
+              <h3 id="preview-modal-title" className="text-h3 font-heading font-semibold">
+                Preview
+              </h3>
               <div className="flex gap-sm items-center">
-                <button
-                  onClick={handleSaveTemplate}
-                  className="btn-secondary text-small"
-                >
+                <button onClick={handleSaveTemplate} className="btn-secondary text-small">
                   Save to My Templates
                 </button>
                 <button
@@ -684,7 +709,9 @@ const NewStudyTastingPage: React.FC = () => {
               </div>
 
               <div>
-                <h4 className="font-semibold text-text-primary mb-sm">Categories ({form.categories.length})</h4>
+                <h4 className="font-semibold text-text-primary mb-sm">
+                  Categories ({form.categories.length})
+                </h4>
                 <div className="space-y-sm">
                   {form.categories.map((cat, index) => (
                     <div key={cat.id} className="border border-border-default rounded-lg p-sm">
@@ -692,10 +719,26 @@ const NewStudyTastingPage: React.FC = () => {
                         {index + 1}. {cat.name || 'Unnamed Category'}
                       </div>
                       <div className="text-small text-text-secondary">
-                        {cat.hasText && <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded mr-xs">Text</span>}
-                        {cat.hasScale && <span className="inline-block px-2 py-1 bg-green-100 text-green-800 rounded mr-xs">Scale (1-{cat.scaleMax})</span>}
-                        {cat.hasBoolean && <span className="inline-block px-2 py-1 bg-purple-100 text-purple-800 rounded mr-xs">Yes/No</span>}
-                        {cat.hasScale && cat.rankInSummary && <span className="inline-block px-2 py-1 bg-amber-100 text-amber-800 rounded">Ranked</span>}
+                        {cat.hasText && (
+                          <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded mr-xs">
+                            Text
+                          </span>
+                        )}
+                        {cat.hasScale && (
+                          <span className="inline-block px-2 py-1 bg-green-100 text-green-800 rounded mr-xs">
+                            Scale (1-{cat.scaleMax})
+                          </span>
+                        )}
+                        {cat.hasBoolean && (
+                          <span className="inline-block px-2 py-1 bg-purple-100 text-purple-800 rounded mr-xs">
+                            Yes/No
+                          </span>
+                        )}
+                        {cat.hasScale && cat.rankInSummary && (
+                          <span className="inline-block px-2 py-1 bg-amber-100 text-amber-800 rounded">
+                            Ranked
+                          </span>
+                        )}
                       </div>
                     </div>
                   ))}

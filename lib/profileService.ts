@@ -58,13 +58,10 @@ class ProfileService {
   /**
    * Update user profile
    */
-  static async updateProfile(
-    userId: string,
-    updates: ProfileUpdateData
-  ): Promise<boolean> {
+  static async updateProfile(userId: string, updates: ProfileUpdateData): Promise<boolean> {
     try {
       const supabase = getSupabaseClient();
-      
+
       // Validate bio length
       if (updates.bio && updates.bio.length > 200) {
         toast.error('Bio must be 200 characters or less');
@@ -75,7 +72,9 @@ class ProfileService {
       if (updates.username) {
         const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
         if (!usernameRegex.test(updates.username)) {
-          toast.error('Username must be 3-20 characters and contain only letters, numbers, and underscores');
+          toast.error(
+            'Username must be 3-20 characters and contain only letters, numbers, and underscores'
+          );
           return false;
         }
 
@@ -97,7 +96,7 @@ class ProfileService {
         .from('profiles')
         .update({
           ...updates,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('user_id', userId);
 
@@ -122,22 +121,19 @@ class ProfileService {
   static async isUsernameAvailable(username: string, currentUserId?: string): Promise<boolean> {
     try {
       const supabase = getSupabaseClient();
-      let query = supabase
-        .from('profiles')
-        .select('user_id')
-        .eq('username', username);
+      let query = supabase.from('profiles').select('user_id').eq('username', username);
 
       if (currentUserId) {
         query = query.neq('user_id', currentUserId);
       }
 
       const { data, error } = await query;
-      
+
       if (error) {
         console.error('Error checking username availability:', error);
         return false; // Assume unavailable on error for safety
       }
-      
+
       return !data || data.length === 0; // Available if no data found
     } catch (error) {
       console.error('Unexpected error checking username:', error);
@@ -151,7 +147,10 @@ class ProfileService {
   static async getCurrentUser() {
     try {
       const supabase = getSupabaseClient();
-      const { data: { user }, error } = await supabase.auth.getUser();
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
       if (error) {
         console.error('Error getting current user:', error);
         return null;
@@ -169,12 +168,14 @@ class ProfileService {
   static async getFullUserData() {
     try {
       const user = await this.getCurrentUser();
-      if (!user) return null;
+      if (!user) {
+        return null;
+      }
 
       const profile = await this.getProfile(user.id);
       return {
         auth: user,
-        profile
+        profile,
       };
     } catch (error) {
       console.error('Error getting full user data:', error);

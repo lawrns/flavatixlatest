@@ -6,7 +6,7 @@
 import { User } from '@supabase/supabase-js';
 
 export const testUser: Partial<User> = {
-  id: 'test-user-id-123',
+  id: '00000000-0000-4000-8000-000000000001',
   email: 'test@flavatix.com',
   created_at: '2024-01-01T00:00:00.000Z',
   updated_at: '2024-01-01T00:00:00.000Z',
@@ -16,7 +16,7 @@ export const testUser: Partial<User> = {
 };
 
 export const testUser2: Partial<User> = {
-  id: 'test-user-id-456',
+  id: '00000000-0000-4000-8000-000000000002',
   email: 'test2@flavatix.com',
   created_at: '2024-01-01T00:00:00.000Z',
   updated_at: '2024-01-01T00:00:00.000Z',
@@ -31,9 +31,3 @@ export const createTestUser = (overrides?: Partial<User>): Partial<User> => ({
   ...testUser,
   ...overrides,
 });
-
-
-
-
-
-

@@ -56,7 +56,9 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
         .eq('tasting_id', session.id)
         .order('created_at', { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
       setItems(data || []);
     } catch (error) {
       console.error('Error loading tasting items:', error);
@@ -67,40 +69,44 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
   };
 
   const calculateAverageScore = (): number => {
-    const scoredItems = items.filter(item => item.overall_score !== null && item.overall_score !== undefined);
-    if (scoredItems.length === 0) return 0;
-    
+    const scoredItems = items.filter(
+      (item) => item.overall_score !== null && item.overall_score !== undefined
+    );
+    if (scoredItems.length === 0) {
+      return 0;
+    }
+
     const total = scoredItems.reduce((sum, item) => sum + (item.overall_score || 0), 0);
     return Math.round((total / scoredItems.length) * 10) / 10;
   };
 
   const getTopFlavors = (): Array<{ flavor: string; count: number; avgScore: number }> => {
     const flavorMap = new Map<string, { count: number; totalScore: number }>();
-    
-    items.forEach(item => {
+
+    items.forEach((item) => {
       if (item.flavor_scores) {
         Object.entries(item.flavor_scores).forEach(([flavor, score]) => {
           const existing = flavorMap.get(flavor) || { count: 0, totalScore: 0 };
           flavorMap.set(flavor, {
             count: existing.count + 1,
-            totalScore: existing.totalScore + score
+            totalScore: existing.totalScore + score,
           });
         });
       }
     });
-    
+
     return Array.from(flavorMap.entries())
       .map(([flavor, data]) => ({
         flavor,
         count: data.count,
-        avgScore: Math.round((data.totalScore / data.count) * 10) / 10
+        avgScore: Math.round((data.totalScore / data.count) * 10) / 10,
       }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 5);
   };
 
   const getCategoryIcon = (category: string) => {
-    const iconProps = { size: 32, className: "text-primary-600" };
+    const iconProps = { size: 32, className: 'text-primary-600' };
     switch (category) {
       case 'coffee':
       case 'tea':
@@ -122,13 +128,15 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
   const averageScore = calculateAverageScore();
   const topFlavors = getTopFlavors();
-  const completedItems = items.filter(item => item.overall_score !== null && item.overall_score !== undefined);
+  const completedItems = items.filter(
+    (item) => item.overall_score !== null && item.overall_score !== undefined
+  );
 
   if (isLoading) {
     return (
@@ -147,13 +155,16 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
       <div className="card p-md">
         <div className="flex flex-col tablet:flex-row tablet:items-center tablet:justify-between gap-md mb-sm">
           <div className="flex items-center space-x-sm min-w-0 flex-1">
-            <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 tablet:w-16 tablet:h-16">{getCategoryIcon(session.category)}</div>
+            <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 tablet:w-16 tablet:h-16">
+              {getCategoryIcon(session.category)}
+            </div>
             <div className="min-w-0 flex-1">
               <h2 className="text-h3 tablet:text-h2 font-heading font-bold text-text-primary truncate">
                 {session.session_name}
               </h2>
               <p className="text-text-secondary text-small tablet:text-base">
-                {session.category.charAt(0).toUpperCase() + session.category.slice(1)} Tasting Session
+                {session.category.charAt(0).toUpperCase() + session.category.slice(1)} Tasting
+                Session
               </p>
               <p className="text-small font-body text-text-secondary">
                 Completed on {formatDate(session.completed_at || session.updated_at)}
@@ -171,7 +182,9 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
         {/* Session Notes */}
         {session.notes && (
           <div className="mt-sm p-sm bg-background-app rounded-lg">
-            <h3 className="text-small font-body font-medium text-text-secondary mb-xs">Other Notes</h3>
+            <h3 className="text-small font-body font-medium text-text-secondary mb-xs">
+              Other Notes
+            </h3>
             <p className="text-text-primary">{session.notes}</p>
           </div>
         )}
@@ -209,7 +222,9 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
       {/* Top Flavors */}
       {topFlavors.length > 0 && (
         <div className="card p-sm tablet:p-md">
-          <h3 className="text-h4 font-heading font-semibold text-text-primary mb-sm">Top Flavors</h3>
+          <h3 className="text-h4 font-heading font-semibold text-text-primary mb-sm">
+            Top Flavors
+          </h3>
           <div className="space-y-sm">
             {topFlavors.map((flavor, index) => (
               <div key={flavor.flavor} className="flex items-center justify-between gap-sm min-w-0">
@@ -239,7 +254,8 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
         <div className="space-y-sm">
           {items.map((item) => (
             <div key={item.id} className="border border-border-primary rounded-lg overflow-hidden">
-              <div className="p-sm bg-background-app cursor-pointer hover:bg-background-surface transition-colors"
+              <div
+                className="p-sm bg-background-app cursor-pointer hover:bg-background-surface transition-colors"
                 onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
               >
                 <div className="flex items-center justify-between gap-sm min-w-0">
@@ -264,14 +280,16 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
                   </div>
                 </div>
               </div>
-              
+
               {expandedItem === item.id && (
                 <div className="p-sm border-t border-border-default bg-background-app">
                   <div className="grid grid-cols-1 tablet:grid-cols-2 gap-md">
                     {/* Photo */}
                     {item.photo_url && (
                       <div>
-                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">Photo</h5>
+                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
+                          Photo
+                        </h5>
                         <img
                           src={item.photo_url}
                           alt={item.item_name}
@@ -279,36 +297,50 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
                         />
                       </div>
                     )}
-                    
+
                     {/* Aroma */}
                     {item.aroma && (
                       <div>
-                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">Aroma</h5>
-                        <p className="text-text-primary text-small font-body leading-relaxed">{item.aroma}</p>
+                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
+                          Aroma
+                        </h5>
+                        <p className="text-text-primary text-small font-body leading-relaxed">
+                          {item.aroma}
+                        </p>
                       </div>
                     )}
-                    
+
                     {/* Flavor */}
                     {item.flavor && (
                       <div>
-                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">Flavor</h5>
-                        <p className="text-text-primary text-small font-body leading-relaxed">{item.flavor}</p>
+                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
+                          Flavor
+                        </h5>
+                        <p className="text-text-primary text-small font-body leading-relaxed">
+                          {item.flavor}
+                        </p>
                       </div>
                     )}
-                    
+
                     {/* Notes */}
                     {item.notes && (
                       <div>
-                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">Notes</h5>
-                        <p className="text-text-primary text-small font-body leading-relaxed">{item.notes}</p>
+                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
+                          Notes
+                        </h5>
+                        <p className="text-text-primary text-small font-body leading-relaxed">
+                          {item.notes}
+                        </p>
                       </div>
                     )}
                   </div>
-                  
+
                   {/* Flavor Scores */}
                   {item.flavor_scores && Object.keys(item.flavor_scores).length > 0 && (
                     <div className="mt-sm">
-                      <h5 className="text-small font-body font-medium text-text-secondary mb-xs">Flavor Profile</h5>
+                      <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
+                        Flavor Profile
+                      </h5>
                       <div className="flex flex-wrap gap-xs">
                         {Object.entries(item.flavor_scores).map(([flavor, score]) => (
                           <div

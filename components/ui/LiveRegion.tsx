@@ -1,6 +1,6 @@
 /**
  * LiveRegion Component
- * 
+ *
  * Provides accessible announcements for screen readers.
  * Uses aria-live regions to announce dynamic content changes.
  */
@@ -69,36 +69,47 @@ export const LiveRegionProvider: React.FC<LiveRegionProviderProps> = ({
   // Generate unique ID for announcements
   const generateId = () => `announcement-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-  const announce = useCallback((message: string, politeness: Politeness = 'polite') => {
-    if (!message) return;
+  const announce = useCallback(
+    (message: string, politeness: Politeness = 'polite') => {
+      if (!message) {
+        return;
+      }
 
-    // Clear any pending timeout
-    if (clearTimeoutRef.current) {
-      clearTimeout(clearTimeoutRef.current);
-    }
+      // Clear any pending timeout
+      if (clearTimeoutRef.current) {
+        clearTimeout(clearTimeoutRef.current);
+      }
 
-    if (politeness === 'assertive') {
-      setAssertiveMessage(message);
-      setPoliteMessage('');
-    } else if (politeness === 'polite') {
-      setPoliteMessage(message);
-      setAssertiveMessage('');
-    }
+      if (politeness === 'assertive') {
+        setAssertiveMessage(message);
+        setPoliteMessage('');
+      } else if (politeness === 'polite') {
+        setPoliteMessage(message);
+        setAssertiveMessage('');
+      }
 
-    // Auto-clear after delay
-    clearTimeoutRef.current = setTimeout(() => {
-      setPoliteMessage('');
-      setAssertiveMessage('');
-    }, clearDelay);
-  }, [clearDelay]);
+      // Auto-clear after delay
+      clearTimeoutRef.current = setTimeout(() => {
+        setPoliteMessage('');
+        setAssertiveMessage('');
+      }, clearDelay);
+    },
+    [clearDelay]
+  );
 
-  const announcePolite = useCallback((message: string) => {
-    announce(message, 'polite');
-  }, [announce]);
+  const announcePolite = useCallback(
+    (message: string) => {
+      announce(message, 'polite');
+    },
+    [announce]
+  );
 
-  const announceAssertive = useCallback((message: string) => {
-    announce(message, 'assertive');
-  }, [announce]);
+  const announceAssertive = useCallback(
+    (message: string) => {
+      announce(message, 'assertive');
+    },
+    [announce]
+  );
 
   const clearAnnouncements = useCallback(() => {
     if (clearTimeoutRef.current) {
@@ -127,24 +138,14 @@ export const LiveRegionProvider: React.FC<LiveRegionProviderProps> = ({
   return (
     <LiveRegionContext.Provider value={value}>
       {children}
-      
+
       {/* Polite live region - for non-urgent updates */}
-      <div
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        className="sr-only"
-      >
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {politeMessage}
       </div>
-      
+
       {/* Assertive live region - for urgent updates */}
-      <div
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-        className="sr-only"
-      >
+      <div role="alert" aria-live="assertive" aria-atomic="true" className="sr-only">
         {assertiveMessage}
       </div>
     </LiveRegionContext.Provider>
@@ -183,7 +184,7 @@ export const LiveRegion: React.FC<LiveRegionProps> = ({
   useEffect(() => {
     if (message) {
       setCurrentMessage(message);
-      
+
       if (clearAfter) {
         const timeout = setTimeout(() => {
           setCurrentMessage('');
@@ -197,24 +198,14 @@ export const LiveRegion: React.FC<LiveRegionProps> = ({
 
   if (politeness === 'assertive') {
     return (
-      <div
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-        className={className || 'sr-only'}
-      >
+      <div role="alert" aria-live="assertive" aria-atomic="true" className={className || 'sr-only'}>
         {content}
       </div>
     );
   }
 
   return (
-    <div
-      role="status"
-      aria-live="polite"
-      aria-atomic="true"
-      className={className || 'sr-only'}
-    >
+    <div role="status" aria-live="polite" aria-atomic="true" className={className || 'sr-only'}>
       {content}
     </div>
   );
@@ -231,11 +222,7 @@ export const LoadingAnnouncement: React.FC<{
   isLoading: boolean;
   loadingMessage?: string;
   loadedMessage?: string;
-}> = ({
-  isLoading,
-  loadingMessage = 'Loading...',
-  loadedMessage = 'Content loaded',
-}) => {
+}> = ({ isLoading, loadingMessage = 'Loading...', loadedMessage = 'Content loaded' }) => {
   const [announced, setAnnounced] = useState(false);
 
   useEffect(() => {
@@ -249,7 +236,7 @@ export const LoadingAnnouncement: React.FC<{
 
   return (
     <LiveRegion politeness="polite">
-      {isLoading ? loadingMessage : (announced ? '' : loadedMessage)}
+      {isLoading ? loadingMessage : announced ? '' : loadedMessage}
     </LiveRegion>
   );
 };
@@ -260,13 +247,11 @@ export const LoadingAnnouncement: React.FC<{
 export const ErrorAnnouncement: React.FC<{
   error?: string | null;
 }> = ({ error }) => {
-  if (!error) return null;
+  if (!error) {
+    return null;
+  }
 
-  return (
-    <LiveRegion politeness="assertive">
-      Error: {error}
-    </LiveRegion>
-  );
+  return <LiveRegion politeness="assertive">Error: {error}</LiveRegion>;
 };
 
 /**
@@ -276,7 +261,9 @@ export const SuccessAnnouncement: React.FC<{
   message?: string | null;
   clearAfter?: number;
 }> = ({ message, clearAfter = 3000 }) => {
-  if (!message) return null;
+  if (!message) {
+    return null;
+  }
 
   return (
     <LiveRegion politeness="polite" clearAfter={clearAfter}>

@@ -1,6 +1,6 @@
 /**
  * Performance Monitoring Utilities
- * 
+ *
  * Provides utilities for measuring and reporting performance metrics.
  */
 
@@ -18,12 +18,12 @@ interface PerformanceMetric {
 }
 
 interface WebVitals {
-  LCP?: number;  // Largest Contentful Paint
-  FID?: number;  // First Input Delay
-  CLS?: number;  // Cumulative Layout Shift
-  FCP?: number;  // First Contentful Paint
+  LCP?: number; // Largest Contentful Paint
+  FID?: number; // First Input Delay
+  CLS?: number; // Cumulative Layout Shift
+  FCP?: number; // First Contentful Paint
   TTFB?: number; // Time to First Byte
-  INP?: number;  // Interaction to Next Paint
+  INP?: number; // Interaction to Next Paint
 }
 
 // ============================================================================
@@ -51,16 +51,17 @@ const metrics: PerformanceMetric[] = [];
  */
 export function reportWebVital(name: keyof WebVitals, value: number): void {
   webVitals[name] = value;
-  
+
   const threshold = PERFORMANCE_THRESHOLDS[name];
-  const status = value <= threshold.good 
-    ? 'good' 
-    : value <= threshold.needsImprovement 
-      ? 'needs-improvement' 
-      : 'poor';
-  
+  const status =
+    value <= threshold.good
+      ? 'good'
+      : value <= threshold.needsImprovement
+        ? 'needs-improvement'
+        : 'poor';
+
   logger.debug('Performance', `${name}: ${value.toFixed(2)}ms (${status})`);
-  
+
   // In production, you might send this to an analytics service
   if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined') {
     // Example: send to analytics
@@ -78,7 +79,7 @@ export function recordMetric(name: string, value: number, unit: string = 'ms'): 
     unit,
     timestamp: Date.now(),
   };
-  
+
   metrics.push(metric);
   logger.debug('Performance', `${name}: ${value}${unit}`);
 }
@@ -112,10 +113,7 @@ export function clearMetrics(): void {
 /**
  * Measure the execution time of a function
  */
-export async function measureAsync<T>(
-  name: string,
-  fn: () => Promise<T>
-): Promise<T> {
+export async function measureAsync<T>(name: string, fn: () => Promise<T>): Promise<T> {
   const start = performance.now();
   try {
     const result = await fn();
@@ -188,7 +186,7 @@ export function measureBetweenMarks(
 export function createRenderTracker(componentName: string) {
   let renderCount = 0;
   let totalRenderTime = 0;
-  
+
   return {
     startRender: () => {
       mark(`${componentName}_render_start_${renderCount}`);
@@ -252,9 +250,7 @@ export function getResourceTimings(): PerformanceResourceTiming[] {
  * Get slow resources (above threshold)
  */
 export function getSlowResources(thresholdMs: number = 1000): PerformanceResourceTiming[] {
-  return getResourceTimings().filter(
-    resource => resource.duration > thresholdMs
-  );
+  return getResourceTimings().filter((resource) => resource.duration > thresholdMs);
 }
 
 // ============================================================================
@@ -266,14 +262,16 @@ export function getSlowResources(thresholdMs: number = 1000): PerformanceResourc
  * Call this in _app.tsx
  */
 export function initPerformanceMonitoring(): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {
+    return;
+  }
 
   // Report navigation timing
   if (performance.timing) {
     const timing = performance.timing;
     const pageLoadTime = timing.loadEventEnd - timing.navigationStart;
     const domContentLoaded = timing.domContentLoadedEventEnd - timing.navigationStart;
-    
+
     if (pageLoadTime > 0) {
       recordMetric('page_load_time', pageLoadTime);
     }

@@ -49,7 +49,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
   predefinedCategories = [],
   onExportPDF,
   onSearch,
-  className = ''
+  className = '',
 }) => {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [expandedSubcategories, setExpandedSubcategories] = useState<Set<string>>(new Set());
@@ -59,26 +59,33 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
 
   // Filter and sort categories
   const filteredCategories = useMemo(() => {
-    let filtered = wheelData.categories.filter(category => {
+    const filtered = wheelData.categories.filter((category) => {
       // Type filter
       if (selectedType !== 'all') {
-        const hasMatchingType = category.descriptors?.some(d => d.type === selectedType) ||
-                               category.subcategories?.some(sub => 
-                                 sub.descriptors.some(d => d.type === selectedType)
-                               );
-        if (!hasMatchingType) return false;
+        const hasMatchingType =
+          category.descriptors?.some((d) => d.type === selectedType) ||
+          category.subcategories?.some((sub) =>
+            sub.descriptors.some((d) => d.type === selectedType)
+          );
+        if (!hasMatchingType) {
+          return false;
+        }
       }
 
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        const matchesSearch = category.name.toLowerCase().includes(query) ||
-                              category.descriptors?.some(d => d.text.toLowerCase().includes(query)) ||
-                              category.subcategories?.some(sub => 
-                                sub.name.toLowerCase().includes(query) ||
-                                sub.descriptors.some(d => d.text.toLowerCase().includes(query))
-                              );
-        if (!matchesSearch) return false;
+        const matchesSearch =
+          category.name.toLowerCase().includes(query) ||
+          category.descriptors?.some((d) => d.text.toLowerCase().includes(query)) ||
+          category.subcategories?.some(
+            (sub) =>
+              sub.name.toLowerCase().includes(query) ||
+              sub.descriptors.some((d) => d.text.toLowerCase().includes(query))
+          );
+        if (!matchesSearch) {
+          return false;
+        }
       }
 
       return true;
@@ -100,7 +107,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
   }, [wheelData.categories, searchQuery, selectedType, sortBy]);
 
   const toggleCategory = (categoryName: string) => {
-    setExpandedCategories(prev => {
+    setExpandedCategories((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(categoryName)) {
         newSet.delete(categoryName);
@@ -112,7 +119,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
   };
 
   const toggleSubcategory = (subcategoryKey: string) => {
-    setExpandedSubcategories(prev => {
+    setExpandedSubcategories((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(subcategoryKey)) {
         newSet.delete(subcategoryKey);
@@ -124,7 +131,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
   };
 
   const getCategoryColor = (categoryName: string): string => {
-    const predefined = predefinedCategories.find(cat => cat.name === categoryName);
+    const predefined = predefinedCategories.find((cat) => cat.name === categoryName);
     return predefined?.color_hex || '#6B7280';
   };
 
@@ -138,7 +145,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
       aroma: '#10B981',
       flavor: '#F59E0B',
       texture: '#8B5CF6',
-      metaphor: '#EC4899'
+      metaphor: '#EC4899',
     };
     return colors[type as keyof typeof colors] || '#6B7280';
   };
@@ -148,7 +155,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
       aroma: 'Aroma',
       flavor: 'Flavor',
       texture: 'Texture',
-      metaphor: 'Metaphor'
+      metaphor: 'Metaphor',
     };
     return labels[type as keyof typeof labels] || type;
   };
@@ -159,9 +166,11 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
       <div className="p-4 border-b border-gray-200 dark:border-zinc-700">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-zinc-50">
-            {wheelData.wheelType === 'combined' ? 'Flavor & Aroma Wheel' : 
-             wheelData.wheelType === 'metaphor' ? 'Metaphor Wheel' :
-             `${wheelData.wheelType.charAt(0).toUpperCase() + wheelData.wheelType.slice(1)} Wheel`}
+            {wheelData.wheelType === 'combined'
+              ? 'Flavor & Aroma Wheel'
+              : wheelData.wheelType === 'metaphor'
+                ? 'Metaphor Wheel'
+                : `${wheelData.wheelType.charAt(0).toUpperCase() + wheelData.wheelType.slice(1)} Wheel`}
           </h2>
           {onExportPDF && (
             <button
@@ -266,7 +275,8 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                           {category.name}
                         </h3>
                         <p className="text-sm text-gray-500 dark:text-zinc-400">
-                          {category.count} {category.count === 1 ? 'descriptor' : 'descriptors'} ({category.percentage.toFixed(1)}%)
+                          {category.count} {category.count === 1 ? 'descriptor' : 'descriptors'} (
+                          {category.percentage.toFixed(1)}%)
                         </p>
                       </div>
                     </div>
@@ -287,7 +297,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                                 key={index}
                                 className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-zinc-700 text-gray-700 dark:text-zinc-300"
                                 style={{
-                                  borderLeft: `3px solid ${getDescriptorTypeColor(descriptor.type || 'aroma')}`
+                                  borderLeft: `3px solid ${getDescriptorTypeColor(descriptor.type || 'aroma')}`,
                                 }}
                               >
                                 <span className="font-medium">{descriptor.text}</span>
@@ -308,7 +318,10 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                             const isSubExpanded = expandedSubcategories.has(subKey);
 
                             return (
-                              <div key={subcategory.name} className="border-l-2 border-gray-200 dark:border-zinc-600 pl-3">
+                              <div
+                                key={subcategory.name}
+                                className="border-l-2 border-gray-200 dark:border-zinc-600 pl-3"
+                              >
                                 <button
                                   onClick={() => toggleSubcategory(subKey)}
                                   className="flex items-center gap-2 text-left hover:bg-gray-50 dark:hover:bg-zinc-700 rounded p-1 transition-colors"
@@ -323,7 +336,8 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                                       {subcategory.name}
                                     </p>
                                     <p className="text-xs text-gray-500 dark:text-zinc-400">
-                                      {subcategory.count} {subcategory.count === 1 ? 'descriptor' : 'descriptors'}
+                                      {subcategory.count}{' '}
+                                      {subcategory.count === 1 ? 'descriptor' : 'descriptors'}
                                     </p>
                                   </div>
                                 </button>
@@ -336,7 +350,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                                           key={index}
                                           className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-gray-50 dark:bg-zinc-800 text-gray-600 dark:text-zinc-400"
                                           style={{
-                                            borderLeft: `2px solid ${getDescriptorTypeColor(descriptor.type || 'aroma')}`
+                                            borderLeft: `2px solid ${getDescriptorTypeColor(descriptor.type || 'aroma')}`,
                                           }}
                                         >
                                           <span>{descriptor.text}</span>

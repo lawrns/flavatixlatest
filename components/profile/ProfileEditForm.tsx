@@ -17,7 +17,7 @@ const CATEGORY_OPTIONS = [
   'Perfume',
   'Olive Oil',
   'Snacks',
-  'Other'
+  'Other',
 ];
 
 export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEditFormProps) {
@@ -26,7 +26,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
     username: '',
     bio: '',
     preferred_category: '',
-    avatar_url: ''
+    avatar_url: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
@@ -39,7 +39,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
         username: profile.username || '',
         bio: profile.bio || '',
         preferred_category: profile.preferred_category || '',
-        avatar_url: profile.avatar_url || ''
+        avatar_url: profile.avatar_url || '',
       });
     }
   }, [profile]);
@@ -62,7 +62,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
   };
 
   const handleInputChange = (field: keyof ProfileUpdateData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
 
     if (field === 'username') {
       const timeoutId = setTimeout(() => {
@@ -74,11 +74,13 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
 
   const handleAvatarUpload = async (avatarUrl: string) => {
     // Update local form state
-    setFormData(prev => ({ ...prev, avatar_url: avatarUrl }));
+    setFormData((prev) => ({ ...prev, avatar_url: avatarUrl }));
 
     // Auto-save avatar to profile immediately (don't require clicking Update Profile)
     if (profile) {
-      const success = await ProfileService.updateProfile(profile.user_id, { avatar_url: avatarUrl });
+      const success = await ProfileService.updateProfile(profile.user_id, {
+        avatar_url: avatarUrl,
+      });
       if (success) {
         // Fetch updated profile to sync state
         const updatedProfile = await ProfileService.getProfile(profile.user_id);
@@ -95,7 +97,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!profile) {
       toast.error('Profile not loaded');
       return;
@@ -107,9 +109,9 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
     }
 
     setIsLoading(true);
-    
+
     const success = await ProfileService.updateProfile(profile.user_id, formData);
-    
+
     if (success) {
       // Fetch updated profile
       const updatedProfile = await ProfileService.getProfile(profile.user_id);
@@ -117,14 +119,20 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
         onProfileUpdate(updatedProfile);
       }
     }
-    
+
     setIsLoading(false);
   };
 
   const getUsernameStatus = () => {
-    if (!formData.username || formData.username === profile?.username) return null;
-    if (checkingUsername) return 'checking';
-    if (formData.username.length < 3) return 'too-short';
+    if (!formData.username || formData.username === profile?.username) {
+      return null;
+    }
+    if (checkingUsername) {
+      return 'checking';
+    }
+    if (formData.username.length < 3) {
+      return 'too-short';
+    }
     return usernameAvailable ? 'available' : 'taken';
   };
 
@@ -135,11 +143,14 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
       <h3 className="text-h3 font-heading font-semibold text-text-primary dark:text-zinc-100 mb-6">
         Edit Profile
       </h3>
-      
+
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Full Name */}
         <div>
-          <label htmlFor="full_name" className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2">
+          <label
+            htmlFor="full_name"
+            className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2"
+          >
             Full Name
           </label>
           <input
@@ -158,7 +169,10 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
 
         {/* Username */}
         <div>
-          <label htmlFor="username" className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2">
+          <label
+            htmlFor="username"
+            className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2"
+          >
             Username
           </label>
           <div className="relative">
@@ -168,9 +182,11 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
               value={formData.username}
               onChange={(e) => handleInputChange('username', e.target.value)}
               className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary dark:text-zinc-100 dark:bg-zinc-800 dark:border-zinc-600 touch-manipulation ${
-                usernameStatus === 'available' ? 'border-success focus:border-success' :
-                usernameStatus === 'taken' || usernameStatus === 'too-short' ? 'border-error focus:border-error' :
-                'border-border focus:border-primary'
+                usernameStatus === 'available'
+                  ? 'border-success focus:border-success'
+                  : usernameStatus === 'taken' || usernameStatus === 'too-short'
+                    ? 'border-error focus:border-error'
+                    : 'border-border focus:border-primary'
               }`}
               placeholder="Choose a unique username"
               aria-describedby="username-help username-status"
@@ -183,12 +199,20 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
                 )}
                 {usernameStatus === 'available' && (
                   <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 )}
                 {(usernameStatus === 'taken' || usernameStatus === 'too-short') && (
                   <svg className="w-5 h-5 text-error" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 )}
               </div>
@@ -198,13 +222,30 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
             Choose a unique username for your profile
           </p>
           {usernameStatus === 'too-short' && (
-            <p id="username-status" className="text-small font-body text-error dark:text-red-400 mt-1" role="alert">Username must be at least 3 characters</p>
+            <p
+              id="username-status"
+              className="text-small font-body text-error dark:text-red-400 mt-1"
+              role="alert"
+            >
+              Username must be at least 3 characters
+            </p>
           )}
           {usernameStatus === 'taken' && (
-            <p id="username-status" className="text-small font-body text-error dark:text-red-400 mt-1" role="alert">Username is already taken</p>
+            <p
+              id="username-status"
+              className="text-small font-body text-error dark:text-red-400 mt-1"
+              role="alert"
+            >
+              Username is already taken
+            </p>
           )}
           {usernameStatus === 'available' && (
-            <p id="username-status" className="text-small font-body text-success dark:text-green-400 mt-1">Username is available</p>
+            <p
+              id="username-status"
+              className="text-small font-body text-success dark:text-green-400 mt-1"
+            >
+              Username is available
+            </p>
           )}
         </div>
 
@@ -237,8 +278,10 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
             className="w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary dark:text-zinc-100 dark:bg-zinc-800 dark:border-zinc-600 border-border focus:border-primary"
           >
             <option value="">Select a category</option>
-            {CATEGORY_OPTIONS.map(category => (
-              <option key={category} value={category}>{category}</option>
+            {CATEGORY_OPTIONS.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
             ))}
           </select>
         </div>

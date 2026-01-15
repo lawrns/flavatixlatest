@@ -10,7 +10,9 @@ interface PerformanceMetrics {
 
 export const PerformanceMonitor: React.FC = () => {
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+      return;
+    }
 
     const metrics: Partial<PerformanceMetrics> = {};
 
@@ -31,7 +33,8 @@ export const PerformanceMonitor: React.FC = () => {
           metrics.firstInputDelay = (entry as any).processingStart - entry.startTime;
         } else if (entry.entryType === 'layout-shift') {
           if (!(entry as any).hadRecentInput) {
-            metrics.cumulativeLayoutShift = (metrics.cumulativeLayoutShift || 0) + (entry as any).value;
+            metrics.cumulativeLayoutShift =
+              (metrics.cumulativeLayoutShift || 0) + (entry as any).value;
           }
         }
       }
@@ -39,7 +42,9 @@ export const PerformanceMonitor: React.FC = () => {
 
     // Observe all performance entry types
     try {
-      observer.observe({ entryTypes: ['paint', 'largest-contentful-paint', 'first-input', 'layout-shift'] });
+      observer.observe({
+        entryTypes: ['paint', 'largest-contentful-paint', 'first-input', 'layout-shift'],
+      });
     } catch (error) {
       console.log('Performance Observer not supported:', error);
     }

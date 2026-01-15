@@ -5,7 +5,12 @@
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import likesHandler from '@/pages/api/social/likes';
-import { createMockRequest, createMockResponse, expectSuccess, expectError } from '@/lib/test-utils/utils';
+import {
+  createMockRequest,
+  createMockResponse,
+  expectSuccess,
+  expectError,
+} from '@/lib/test-utils/utils';
 import { createMockAuthHeaders } from '@/lib/test-utils/mocks';
 import { testUser, testUser2 } from '@/lib/test-utils/fixtures';
 
@@ -17,18 +22,22 @@ describe('POST /api/social/likes', () => {
   let mockSupabase: any;
   let req: Partial<NextApiRequest>;
   let res: Partial<NextApiResponse>;
-  const tastingId = 'test-tasting-id';
+  const tastingId = '10000000-0000-4000-8000-000000000001';
 
   beforeEach(() => {
     jest.clearAllMocks();
 
-    mockSupabase = {
-      from: jest.fn().mockReturnThis(),
+    // Create a shared chainable mock for Supabase query builder
+    const queryBuilder: any = {
       select: jest.fn().mockReturnThis(),
       insert: jest.fn().mockReturnThis(),
       delete: jest.fn().mockReturnThis(),
       eq: jest.fn().mockReturnThis(),
       single: jest.fn(),
+    };
+
+    mockSupabase = {
+      from: jest.fn(() => queryBuilder),
       auth: {
         getUser: jest.fn().mockResolvedValue({
           data: { user: testUser },
@@ -36,6 +45,9 @@ describe('POST /api/social/likes', () => {
         }),
       },
     };
+
+    // Store reference to query builder for test setup
+    (mockSupabase as any).queryBuilder = queryBuilder;
 
     const { getSupabaseClient } = require('@/lib/supabase');
     getSupabaseClient.mockReturnValue(mockSupabase);
@@ -50,16 +62,21 @@ describe('POST /api/social/likes', () => {
       body: { tasting_id: tastingId },
     });
 
-    await likesHandler(req as NextApiRequest, res as NextApiResponse, {
-      startTime: Date.now(),
-      requestId: 'test-req',
-    });
+    await likesHandler(req as NextApiRequest, res as NextApiResponse);
 
     expectError(res as NextApiResponse, 401);
   });
 
   it('should return 404 when tasting does not exist', async () => {
-    mockSupabase.single.mockResolvedValue({
+    // Mock auth success
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: testUser },
+      error: null,
+    });
+
+    // Mock tasting not found
+    const queryBuilder = (mockSupabase as any).queryBuilder;
+    queryBuilder.single.mockResolvedValue({
       data: null,
       error: { message: 'Not found' },
     });
@@ -70,17 +87,22 @@ describe('POST /api/social/likes', () => {
       body: { tasting_id: tastingId },
     });
 
-    await likesHandler(req as NextApiRequest, res as NextApiResponse, {
-      user: testUser,
-      startTime: Date.now(),
-      requestId: 'test-req',
-    });
+    await likesHandler(req as NextApiRequest, res as NextApiResponse);
 
     expectError(res as NextApiResponse, 404);
   });
 
   it('should create a like when not already liked', async () => {
-    mockSupabase.single
+    // Mock auth success
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: testUser },
+      error: null,
+    });
+
+    const queryBuilder = (mockSupabase as any).queryBuilder;
+
+    // Mock tasting exists, like doesn't exist, then create succeeds
+    queryBuilder.single
       .mockResolvedValueOnce({
         data: { id: tastingId },
         error: null,
@@ -94,11 +116,11 @@ describe('POST /api/social/likes', () => {
         error: null,
       });
 
-    mockSupabase.select.mockReturnValue({
-      eq: jest.fn().mockReturnValue({
-        eq: jest.fn().mockReturnValue({
-          count: 1,
-        }),
+    // Mock count query for like count
+    queryBuilder.eq.mockReturnValue({
+      eq: jest.fn().mockResolvedValue({
+        count: 1,
+        error: null,
       }),
     });
 
@@ -108,22 +130,30 @@ describe('POST /api/social/likes', () => {
       body: { tasting_id: tastingId },
     });
 
-    await likesHandler(req as NextApiRequest, res as NextApiResponse, {
-      user: testUser,
-      startTime: Date.now(),
-      requestId: 'test-req',
-    });
+    await likesHandler(req as NextApiRequest, res as NextApiResponse);
 
-    expectSuccess(res as NextApiResponse, expect.objectContaining({
-      liked: true,
-      like_count: expect.any(Number),
-    }));
+    expectSuccess(
+      res as NextApiResponse,
+      expect.objectContaining({
+        liked: true,
+        like_count: expect.any(Number),
+      })
+    );
   });
 
   it('should delete a like when already liked', async () => {
     const existingLike = { id: 'like-id' };
 
-    mockSupabase.single
+    // Mock auth success
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: testUser },
+      error: null,
+    });
+
+    const queryBuilder = (mockSupabase as any).queryBuilder;
+
+    // Mock tasting exists, like exists
+    queryBuilder.single
       .mockResolvedValueOnce({
         data: { id: tastingId },
         error: null,
@@ -133,7 +163,8 @@ describe('POST /api/social/likes', () => {
         error: null,
       });
 
-    mockSupabase.delete.mockReturnValue({
+    // Mock delete and count
+    queryBuilder.delete.mockReturnValue({
       eq: jest.fn().mockReturnValue({
         eq: jest.fn().mockResolvedValue({
           error: null,
@@ -141,11 +172,10 @@ describe('POST /api/social/likes', () => {
       }),
     });
 
-    mockSupabase.select.mockReturnValue({
-      eq: jest.fn().mockReturnValue({
-        eq: jest.fn().mockReturnValue({
-          count: 0,
-        }),
+    queryBuilder.eq.mockReturnValue({
+      eq: jest.fn().mockResolvedValue({
+        count: 0,
+        error: null,
       }),
     });
 
@@ -155,16 +185,14 @@ describe('POST /api/social/likes', () => {
       body: { tasting_id: tastingId },
     });
 
-    await likesHandler(req as NextApiRequest, res as NextApiResponse, {
-      user: testUser,
-      startTime: Date.now(),
-      requestId: 'test-req',
-    });
+    await likesHandler(req as NextApiRequest, res as NextApiResponse);
 
-    expectSuccess(res as NextApiResponse, expect.objectContaining({
-      liked: false,
-      like_count: expect.any(Number),
-    }));
+    expectSuccess(
+      res as NextApiResponse,
+      expect.objectContaining({
+        liked: false,
+        like_count: expect.any(Number),
+      })
+    );
   });
 });
-

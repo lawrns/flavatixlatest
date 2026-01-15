@@ -14,7 +14,9 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
 
   useEffect(() => {
     const loadStats = async () => {
-      if (!user?.id) return;
+      if (!user?.id) {
+        return;
+      }
 
       setLoading(true);
       setError(null);
@@ -38,7 +40,10 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
     return (
       <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 ${className}`}>
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4 animate-pulse">
+          <div
+            key={i}
+            className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4 animate-pulse"
+          >
             <div className="h-8 bg-gray-200 rounded w-12 mb-2"></div>
             <div className="h-4 bg-gray-200 rounded w-20"></div>
           </div>
@@ -51,8 +56,18 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
     return (
       <div className={`bg-red-50 border border-red-200 rounded-lg p-4 ${className}`}>
         <div className="flex items-center">
-          <svg className="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            className="w-5 h-5 text-red-400 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           <span className="text-red-800">{error || 'Error al cargar estadísticas'}</span>
         </div>
@@ -62,28 +77,40 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
 
   const getCategoryIcon = (category: string) => {
     const icons: Record<string, string> = {
-      'coffee': 'coffee',
-      'wine': 'wine_bar',
-      'tea': 'local_cafe',
-      'chocolate': 'cookie',
-      'cheese': 'restaurant',
-      'beer': 'sports_bar',
-      'spirits': 'local_bar'
+      coffee: 'coffee',
+      wine: 'wine_bar',
+      tea: 'local_cafe',
+      chocolate: 'cookie',
+      cheese: 'restaurant',
+      beer: 'sports_bar',
+      spirits: 'local_bar',
     };
     return icons[category.toLowerCase()] || 'restaurant';
   };
 
   const getStreakColor = (streak: number) => {
-    if (streak >= 7) return 'text-green-600';
-    if (streak >= 3) return 'text-yellow-600';
-    if (streak >= 1) return 'text-blue-600';
+    if (streak >= 7) {
+      return 'text-green-600';
+    }
+    if (streak >= 3) {
+      return 'text-yellow-600';
+    }
+    if (streak >= 1) {
+      return 'text-blue-600';
+    }
     return 'text-gray-600';
   };
 
   const getRatingColor = (rating: number) => {
-    if (rating >= 4.5) return 'text-green-600';
-    if (rating >= 3.5) return 'text-yellow-600';
-    if (rating >= 2.5) return 'text-orange-600';
+    if (rating >= 4.5) {
+      return 'text-green-600';
+    }
+    if (rating >= 3.5) {
+      return 'text-yellow-600';
+    }
+    if (rating >= 2.5) {
+      return 'text-orange-600';
+    }
     return 'text-red-600';
   };
 
@@ -147,17 +174,21 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
           <h3 className="text-lg font-semibold text-gray-900 mb-3">Distribución por categorías</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {Object.entries(stats.categoriesCount)
-              .sort(([,a], [,b]) => b - a)
+              .sort(([, a], [, b]) => b - a)
               .map(([category, count]) => (
-                <div key={category} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                <div
+                  key={category}
+                  className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                >
                   <div className="flex items-center">
-                    <span className="material-symbols-outlined text-gray-600 mr-2">{getCategoryIcon(category)}</span>
+                    <span className="material-symbols-outlined text-gray-600 mr-2">
+                      {getCategoryIcon(category)}
+                    </span>
                     <span className="text-sm font-medium capitalize">{category}</span>
                   </div>
                   <span className="text-sm font-bold text-gray-700">{count}</span>
                 </div>
-              ))
-            }
+              ))}
           </div>
         </div>
       )}

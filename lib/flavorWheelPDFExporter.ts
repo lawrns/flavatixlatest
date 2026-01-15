@@ -28,7 +28,7 @@ interface PDFOptions {
 export class FlavorWheelPDFExporter {
   private static readonly PAPER_SIZES = {
     letter: { width: 8.5, height: 11 }, // inches
-    a4: { width: 8.27, height: 11.69 }  // inches
+    a4: { width: 8.27, height: 11.69 }, // inches
   };
 
   /**
@@ -53,9 +53,12 @@ export class FlavorWheelPDFExporter {
     title.style.fontWeight = 'bold';
     title.style.marginBottom = '20px';
     title.style.color = '#1F2937';
-    title.textContent = wheelData.wheelType === 'combined' ? 'Flavor & Aroma Wheel' : 
-                       wheelData.wheelType === 'metaphor' ? 'Metaphor Wheel' :
-                       `${wheelData.wheelType.charAt(0).toUpperCase() + wheelData.wheelType.slice(1)} Wheel`;
+    title.textContent =
+      wheelData.wheelType === 'combined'
+        ? 'Flavor & Aroma Wheel'
+        : wheelData.wheelType === 'metaphor'
+          ? 'Metaphor Wheel'
+          : `${wheelData.wheelType.charAt(0).toUpperCase() + wheelData.wheelType.slice(1)} Wheel`;
     container.appendChild(title);
 
     // Add stats
@@ -100,7 +103,7 @@ export class FlavorWheelPDFExporter {
         descriptorsList.style.display = 'flex';
         descriptorsList.style.flexWrap = 'wrap';
         descriptorsList.style.gap = '5px';
-        
+
         category.descriptors.slice(0, 10).forEach((descriptor) => {
           const descriptorSpan = document.createElement('span');
           descriptorSpan.style.backgroundColor = '#F3F4F6';
@@ -140,9 +143,11 @@ export class FlavorWheelPDFExporter {
     // Import the existing D3.js wheel rendering logic
     // This would need to be adapted from the existing FlavorWheelVisualization component
     // For now, we'll create a simple placeholder
-    
+
     const wheelContainer = document.getElementById('pdf-wheel-svg');
-    if (!wheelContainer) return;
+    if (!wheelContainer) {
+      return;
+    }
 
     // Create a simple SVG representation for now
     // In production, this would use the actual D3.js rendering logic
@@ -159,8 +164,10 @@ export class FlavorWheelPDFExporter {
     // Draw wheel segments
     wheelData.categories.forEach((category, index) => {
       const angle = (category.percentage / 100) * 2 * Math.PI;
-      const startAngle = wheelData.categories.slice(0, index).reduce((sum, cat) => sum + (cat.percentage / 100) * 2 * Math.PI, 0);
-      
+      const startAngle = wheelData.categories
+        .slice(0, index)
+        .reduce((sum, cat) => sum + (cat.percentage / 100) * 2 * Math.PI, 0);
+
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       const x1 = centerX + radius * Math.cos(startAngle);
       const y1 = centerY + radius * Math.sin(startAngle);
@@ -172,7 +179,7 @@ export class FlavorWheelPDFExporter {
         `M ${centerX} ${centerY}`,
         `L ${x1} ${y1}`,
         `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-        'Z'
+        'Z',
       ].join(' ');
 
       path.setAttribute('d', pathData);
@@ -184,8 +191,8 @@ export class FlavorWheelPDFExporter {
 
       // Add category label
       const labelAngle = startAngle + angle / 2;
-      const labelX = centerX + (radius * 0.7) * Math.cos(labelAngle);
-      const labelY = centerY + (radius * 0.7) * Math.sin(labelAngle);
+      const labelX = centerX + radius * 0.7 * Math.cos(labelAngle);
+      const labelY = centerY + radius * 0.7 * Math.sin(labelAngle);
 
       const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       text.setAttribute('x', labelX.toString());
@@ -206,33 +213,30 @@ export class FlavorWheelPDFExporter {
   /**
    * Exports the flavor wheel as a PDF
    */
-  static async exportToPDF(
-    wheelData: WheelData,
-    options: PDFOptions = {}
-  ): Promise<void> {
+  static async exportToPDF(wheelData: WheelData, options: PDFOptions = {}): Promise<void> {
     const {
       title = 'Flavor Wheel',
       includeStats = true,
       includeDescriptors = true,
-      paperSize = 'letter'
+      paperSize = 'letter',
     } = options;
 
     try {
       // Create hidden wheel element
       const container = this.createHiddenWheelElement(wheelData);
-      
+
       // Render the wheel
       await this.renderWheelInContainer(wheelData);
 
       // Wait for rendering to complete
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Capture the container as canvas
       const canvas = await html2canvas(container, {
         scale: 2, // Higher quality
         useCORS: true,
         allowTaint: true,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
       });
 
       // Remove the hidden container
@@ -243,15 +247,15 @@ export class FlavorWheelPDFExporter {
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'in',
-        format: paperSize
+        format: paperSize,
       });
 
       // Calculate dimensions to fit the wheel on the page
       const pageWidth = pdfSize.width;
       const pageHeight = pdfSize.height;
       const margin = 0.5; // 0.5 inch margins
-      const availableWidth = pageWidth - (margin * 2);
-      const availableHeight = pageHeight - (margin * 2);
+      const availableWidth = pageWidth - margin * 2;
+      const availableHeight = pageHeight - margin * 2;
 
       // Calculate image dimensions to maintain aspect ratio
       const imgAspectRatio = canvas.height / canvas.width;
@@ -274,7 +278,6 @@ export class FlavorWheelPDFExporter {
       // Save the PDF
       const filename = `${title.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`;
       pdf.save(filename);
-
     } catch (error) {
       console.error('Error generating PDF:', error);
       throw new Error('Failed to generate PDF. Please try again.');
@@ -286,12 +289,15 @@ export class FlavorWheelPDFExporter {
    */
   static async quickExport(wheelData: WheelData): Promise<void> {
     return this.exportToPDF(wheelData, {
-      title: wheelData.wheelType === 'combined' ? 'Flavor & Aroma Wheel' : 
-             wheelData.wheelType === 'metaphor' ? 'Metaphor Wheel' :
-             `${wheelData.wheelType.charAt(0).toUpperCase() + wheelData.wheelType.slice(1)} Wheel`,
+      title:
+        wheelData.wheelType === 'combined'
+          ? 'Flavor & Aroma Wheel'
+          : wheelData.wheelType === 'metaphor'
+            ? 'Metaphor Wheel'
+            : `${wheelData.wheelType.charAt(0).toUpperCase() + wheelData.wheelType.slice(1)} Wheel`,
       includeStats: true,
       includeDescriptors: true,
-      paperSize: 'letter'
+      paperSize: 'letter',
     });
   }
 }

@@ -37,7 +37,9 @@ export default function TastingSummaryPage() {
   }, [user, authLoading, router]);
 
   useEffect(() => {
-    if (!id || !user) return;
+    if (!id || !user) {
+      return;
+    }
 
     const loadSession = async () => {
       try {
@@ -48,7 +50,9 @@ export default function TastingSummaryPage() {
           .eq('id', id)
           .single<QuickTasting>();
 
-        if (error) throw error;
+        if (error) {
+          throw error;
+        }
 
         if (!data) {
           toast.error('Tasting session not found');
@@ -111,22 +115,22 @@ export default function TastingSummaryPage() {
             className="flex items-center text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-50 mb-2 transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             Back to My Tastings
           </button>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-            Tasting Summary
-          </h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Tasting Summary</h1>
         </div>
       </div>
 
       {/* Summary Content */}
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <QuickTastingSummary
-          session={session}
-          onStartNewSession={handleStartNewSession}
-        />
+        <QuickTastingSummary session={session} onStartNewSession={handleStartNewSession} />
       </div>
 
       {/* Bottom Navigation */}
@@ -139,4 +143,3 @@ export default function TastingSummaryPage() {
 export async function getServerSideProps() {
   return { props: {} };
 }
-

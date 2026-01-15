@@ -1,247 +1,99 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../contexts/SimpleAuthContext';
 import { getSupabaseClient } from '../lib/supabase';
 import { toast } from '../lib/toast';
 import CommentsModal from '../components/social/CommentsModal';
-import { SocialPostCard, TastingPost, TastingItem, getCategoryColor, formatTimeAgo } from '../components/social/SocialPostCard';
+import {
+  SocialPostCard,
+  getCategoryColor,
+  formatTimeAgo,
+} from '../components/social/SocialPostCard';
 import { SocialFeedFilters } from '../components/social/SocialFeedFilters';
 import notificationService from '@/lib/notificationService';
 import BottomNavigation from '@/components/navigation/BottomNavigation';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
+import {
+  useInfiniteFeed,
+  useLikeTasting,
+  useFollowUser,
+  useShareTasting,
+  TastingPost,
+} from '../lib/query/hooks/useFeed';
 
 export default function SocialPage() {
-  const { user, loading } = useAuth();
-  const [posts, setPosts] = useState<TastingPost[]>([]);
-  const [filteredPosts, setFilteredPosts] = useState<TastingPost[]>([]);
-  const [loadingPosts, setLoadingPosts] = useState(true);
-  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+  const { user, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<'all' | 'following'>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set());
   const [commentsModalOpen, setCommentsModalOpen] = useState(false);
   const [activePostId, setActivePostId] = useState<string | null>(null);
-  const [hasMore, setHasMore] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [page, setPage] = useState(0);
   const router = useRouter();
 
   const POSTS_PER_PAGE = 10;
 
-  const loadSocialFeed = useCallback(async (pageNum: number = 0, append: boolean = false) => {
-    if (!user?.id) return;
+  // React Query hooks
+  const {
+    data,
+    isLoading: loadingPosts,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useInfiniteFeed(user?.id, { tab: activeTab }, POSTS_PER_PAGE);
 
-    try {
-      if (!append) {
-        setLoadingPosts(true);
-      } else {
-        setLoadingMore(true);
-      }
-      const supabase = getSupabaseClient();
+  const likeMutation = useLikeTasting();
+  const followMutation = useFollowUser();
+  const shareMutation = useShareTasting();
 
-      // First, let's just get completed tastings without joins to debug
-      const offset = pageNum * POSTS_PER_PAGE;
-      const { data: tastingsData, error: tastingsError } = await supabase
-        .from('quick_tastings')
-        .select('*')
-        .not('completed_at', 'is', null) // Only completed tastings
-        .order('completed_at', { ascending: false })
-        .range(offset, offset + POSTS_PER_PAGE - 1);
-
-      if (tastingsError) {
-        console.error('Error fetching tastings:', tastingsError);
-        throw tastingsError;
-      }
-
-      // Now get profiles for these users
-      const userIds = (tastingsData as any[])?.map((t: any) => t.user_id) || [];
-      const { data: profilesData, error: profilesError } = await supabase
-        .from('profiles')
-        .select('user_id, full_name, username, avatar_url')
-        .in('user_id', userIds);
-
-      if (profilesError) {
-        console.error('Error fetching profiles:', profilesError);
-      }
-
-      // Get social stats for each tasting (likes, comments, shares)
-      const tastingIds = (tastingsData as any[])?.map((t: any) => t.id) || [];
-
-      // Fetch tasting items with photos
-      const { data: itemsData } = await supabase
-        .from('quick_tasting_items')
-        .select('id, tasting_id, item_name, photo_url, overall_score, notes')
-        .in('tasting_id', tastingIds)
-        .order('overall_score', { ascending: false });
-
-      let likesData: any[] = [];
-      let commentsData: any[] = [];
-      let sharesData: any[] = [];
-      let userLikes = new Set<string>();
-      let userFollows = new Set<string>();
-
-      try {
-        // Get likes count for each tasting
-        const likesResult = await supabase
-          .from('tasting_likes')
-          .select('tasting_id, user_id')
-          .in('tasting_id', tastingIds);
-        likesData = likesResult.data || [];
-      } catch (error) {
-        console.log('Likes table not available yet, using defaults');
-      }
-
-      try {
-        // Get comments count for each tasting
-        const commentsResult = await supabase
-          .from('tasting_comments')
-          .select('tasting_id')
-          .in('tasting_id', tastingIds);
-        commentsData = commentsResult.data || [];
-      } catch (error) {
-        console.log('Comments table not available yet, using defaults');
-      }
-
-      try {
-        // Get shares count for each tasting
-        const sharesResult = await supabase
-          .from('tasting_shares')
-          .select('tasting_id')
-          .in('tasting_id', tastingIds);
-        sharesData = sharesResult.data || [];
-      } catch (error) {
-        console.log('Shares table not available yet, using defaults');
-      }
-
-      if (user?.id) {
-        try {
-          const { data: userLikesData } = await supabase
-            .from('tasting_likes')
-            .select('tasting_id')
-            .eq('user_id', user.id)
-            .in('tasting_id', tastingIds);
-          userLikes = new Set((userLikesData as any[])?.map((l: any) => l.tasting_id) || []);
-        } catch (error) {
-          console.log('User likes query failed, using defaults');
-        }
-
-        try {
-          const { data: userFollowsData } = await supabase
-            .from('user_follows')
-            .select('following_id')
-            .eq('follower_id', user.id);
-          userFollows = new Set((userFollowsData as any[])?.map((f: any) => f.following_id) || []);
-        } catch (error) {
-          console.log('User follows query failed, using defaults');
-        }
-      }
-
-      // Combine the data
-      const data = (tastingsData as any[])?.map((tasting: any) => ({
-        ...tasting,
-        profiles: (profilesData as any[])?.find((p: any) => p.user_id === tasting.user_id)
-      }));
-
-      // Transform the data to match our interface
-      const transformedPosts: TastingPost[] = (data as any[])?.map(post => {
-        const likes = likesData?.filter(l => l.tasting_id === post.id) || [];
-        const comments = commentsData?.filter(c => c.tasting_id === post.id) || [];
-        const shares = sharesData?.filter(s => s.tasting_id === post.id) || [];
-
-        // Get items for this tasting
-        const postItems = (itemsData as any[])?.filter(item => item.tasting_id === post.id) || [];
-
-        // Extract photos
-        const photos = postItems
-          .map(item => item.photo_url)
-          .filter(url => url != null) as string[];
-
-        return {
-          id: post.id,
-          user_id: post.user_id,
-          category: post.category,
-          session_name: post.session_name,
-          notes: post.notes,
-          average_score: post.average_score,
-          created_at: post.created_at,
-          completed_at: post.completed_at,
-          total_items: post.total_items,
-          completed_items: post.completed_items,
-          user: Array.isArray(post.profiles) ? post.profiles[0] || {} : post.profiles || {},
-          stats: {
-            likes: likes.length,
-            comments: comments.length,
-            shares: shares.length
-          },
-          isLiked: userLikes.has(post.id),
-          isFollowed: userFollows.has(post.user_id),
-          items: postItems.map((item: any) => ({
-            id: item.id,
-            item_name: item.item_name,
-            photo_url: item.photo_url,
-            overall_score: item.overall_score,
-            notes: item.notes
-          })),
-          photos
-        };
-      }) || [];
-
-      // Check if there are more posts
-      setHasMore(transformedPosts.length === POSTS_PER_PAGE);
-
-      // Append or replace posts
-      if (append) {
-        setPosts(prev => [...prev, ...transformedPosts]);
-      } else {
-        setPosts(transformedPosts);
-      }
-    } catch (error) {
-      console.error('Error loading social feed:', error);
-    } finally {
-      setLoadingPosts(false);
-      setLoadingMore(false);
+  // Flatten pages into single posts array and apply filters
+  const posts = useMemo(() => {
+    if (!data?.pages) {
+      return [];
     }
-  }, [user]);
+    return data.pages.flatMap((page) => page.posts);
+  }, [data]);
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/auth');
-      return;
-    }
-
-    if (user) {
-      setPage(0);
-      setHasMore(true);
-      loadSocialFeed(0, false);
-    }
-  }, [user, loading, router, loadSocialFeed]);
-
-  // Filter posts based on active tab and category
-  useEffect(() => {
+  const filteredPosts = useMemo(() => {
     let filtered = [...posts];
 
-    // Filter by tab (all or following)
+    // Filter by tab (following is now handled by the query)
     if (activeTab === 'following') {
-      filtered = filtered.filter(post => post.isFollowed);
+      filtered = filtered.filter((post) => post.isFollowed);
     }
 
     // Filter by category
     if (categoryFilter !== 'all') {
-      filtered = filtered.filter(post => post.category.toLowerCase() === categoryFilter.toLowerCase());
+      filtered = filtered.filter(
+        (post) => post.category.toLowerCase() === categoryFilter.toLowerCase()
+      );
     }
 
-    setFilteredPosts(filtered);
+    return filtered;
   }, [posts, activeTab, categoryFilter]);
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/auth');
+      return;
+    }
+  }, [user, authLoading, router]);
 
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
 
-    if (diffInHours < 1) return 'Just now';
-    if (diffInHours < 24) return `${diffInHours}h`;
+    if (diffInHours < 1) {
+      return 'Just now';
+    }
+    if (diffInHours < 24) {
+      return `${diffInHours}h`;
+    }
     const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `${diffInDays}d`;
+    if (diffInDays < 7) {
+      return `${diffInDays}d`;
+    }
     const diffInWeeks = Math.floor(diffInDays / 7);
     return `${diffInWeeks}w`;
   };
@@ -254,7 +106,7 @@ export default function SocialPage() {
       beer: 'text-yellow-600',
       spirits: 'text-purple-600',
       tea: 'text-green-600',
-      chocolate: 'text-pink-600'
+      chocolate: 'text-pink-600',
     };
     return colors[category.toLowerCase()] || 'text-primary';
   };
@@ -265,86 +117,28 @@ export default function SocialPage() {
       return;
     }
 
-    try {
-      const supabase = getSupabaseClient();
-      const isCurrentlyLiked = likedPosts.has(postId);
-
-      if (isCurrentlyLiked) {
-        // Unlike
-        try {
-          const { error } = await (supabase as any)
-            .from('tasting_likes')
-            .delete()
-            .eq('user_id', user.id)
-            .eq('tasting_id', postId);
-
-          if (error) throw error;
-        } catch (dbError) {
-          console.log('Likes table not available, using local state only');
-        }
-
-        setLikedPosts(prev => {
-          const newSet = new Set(prev);
-          newSet.delete(postId);
-          return newSet;
-        });
-
-        // Update post stats
-        setPosts(prev => prev.map(post =>
-          post.id === postId
-            ? { ...post, stats: { ...post.stats, likes: Math.max(0, post.stats.likes - 1) }, isLiked: false }
-            : post
-        ));
-      } else {
-        // Like - optimistic update first
-        setLikedPosts(prev => {
-          const newSet = new Set(prev);
-          newSet.add(postId);
-          return newSet;
-        });
-
-        // Update post stats optimistically
-        setPosts(prev => prev.map(post =>
-          post.id === postId
-            ? { ...post, stats: { ...post.stats, likes: post.stats.likes + 1 }, isLiked: true }
-            : post
-        ));
-
-        // Then perform async operation
-        try {
-          const { error } = await (supabase as any)
-            .from('tasting_likes')
-            .insert({
-              user_id: user.id,
-              tasting_id: postId
-            });
-
-          if (error) throw error;
-          
-          // Success toast only after operation completes
-          toast.success('Post liked!');
-        } catch (dbError) {
-          // Rollback optimistic update on error
-          setLikedPosts(prev => {
-            const newSet = new Set(prev);
-            newSet.delete(postId);
-            return newSet;
-          });
-
-          setPosts(prev => prev.map(post =>
-            post.id === postId
-              ? { ...post, stats: { ...post.stats, likes: Math.max(0, post.stats.likes - 1) }, isLiked: false }
-              : post
-          ));
-
-          console.log('Likes table not available, using local state only');
-          toast.error('Failed to like post');
-        }
-      }
-    } catch (error) {
-      console.error('Error toggling like:', error);
-      toast.error('Failed to update like');
+    const post = posts.find((p) => p.id === postId);
+    if (!post) {
+      return;
     }
+
+    likeMutation.mutate(
+      {
+        tastingId: postId,
+        userId: user.id,
+        isLiking: !post.isLiked,
+      },
+      {
+        onSuccess: () => {
+          if (!post.isLiked) {
+            toast.success('Post liked!');
+          }
+        },
+        onError: () => {
+          toast.error('Failed to update like');
+        },
+      }
+    );
   };
 
   const handleFollow = async (targetUserId: string, targetUserName: string) => {
@@ -358,80 +152,41 @@ export default function SocialPage() {
       return;
     }
 
-    try {
-      const supabase = getSupabaseClient();
-      const post = posts.find(p => p.user_id === targetUserId);
-      const isCurrentlyFollowing = post?.isFollowed || false;
-
-      if (isCurrentlyFollowing) {
-        // Unfollow
-        try {
-          const { error } = await (supabase as any)
-            .from('user_follows')
-            .delete()
-            .eq('follower_id', user.id)
-            .eq('following_id', targetUserId);
-
-          if (error) throw error;
-        } catch (dbError) {
-          console.log('Follows table not available, using local state only');
-        }
-
-        // Update post
-        setPosts(prev => prev.map(post =>
-          post.user_id === targetUserId
-            ? { ...post, isFollowed: false }
-            : post
-        ));
-
-        toast.success(`Unfollowed ${targetUserName}`);
-      } else {
-        // Follow - optimistic update first
-        setPosts(prev => prev.map(post =>
-          post.user_id === targetUserId
-            ? { ...post, isFollowed: true }
-            : post
-        ));
-
-        // Then perform async operation
-        try {
-          const { error } = await (supabase as any)
-            .from('user_follows')
-            .insert({
-              follower_id: user.id,
-              following_id: targetUserId
-            });
-
-          if (error) throw error;
-
-          // Send notification to the followed user
-          const { data: currentUser } = await supabase
-            .from('profiles')
-            .select('full_name')
-            .eq('user_id', user.id)
-            .single();
-
-          const followerName = currentUser?.full_name || 'Someone';
-          await notificationService.notifyFollow(user.id, targetUserId, followerName);
-          
-          // Success toast only after operation completes
-          toast.success(`Following ${targetUserName}!`);
-        } catch (dbError) {
-          // Rollback optimistic update on error
-          setPosts(prev => prev.map(post =>
-            post.user_id === targetUserId
-              ? { ...post, isFollowed: false }
-              : post
-          ));
-
-          console.log('Follows table not available, using local state only');
-          toast.error('Failed to follow user');
-        }
-      }
-    } catch (error) {
-      console.error('Error toggling follow:', error);
-      toast.error('Failed to update follow status');
+    const post = posts.find((p) => p.user_id === targetUserId);
+    if (!post) {
+      return;
     }
+
+    followMutation.mutate(
+      {
+        targetUserId,
+        currentUserId: user.id,
+        isFollowing: !post.isFollowed,
+      },
+      {
+        onSuccess: async () => {
+          if (!post.isFollowed) {
+            // Send notification for new follow
+            const supabase = getSupabaseClient();
+            const { data: currentUser } = await supabase
+              .from('profiles')
+              .select('full_name')
+              .eq('user_id', user.id)
+              .single();
+
+            const followerName = currentUser?.full_name || 'Someone';
+            await notificationService.notifyFollow(user.id, targetUserId, followerName);
+
+            toast.success(`Following ${targetUserName}!`);
+          } else {
+            toast.success(`Unfollowed ${targetUserName}`);
+          }
+        },
+        onError: () => {
+          toast.error('Failed to update follow status');
+        },
+      }
+    );
   };
 
   const handleComment = (postId: string) => {
@@ -442,24 +197,16 @@ export default function SocialPage() {
   const handleCloseComments = () => {
     setCommentsModalOpen(false);
     setActivePostId(null);
-    // Reload feed to update comment counts
-    loadSocialFeed(0, false);
+    // Refetch to update comment counts
+    refetch();
   };
-
-  const loadMorePosts = useCallback(() => {
-    if (!loadingMore && hasMore) {
-      const nextPage = page + 1;
-      setPage(nextPage);
-      loadSocialFeed(nextPage, true);
-    }
-  }, [loadingMore, hasMore, page, loadSocialFeed]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loadingMore && !loadingPosts) {
-          loadMorePosts();
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage && !loadingPosts) {
+          fetchNextPage();
         }
       },
       { threshold: 0.1 }
@@ -475,7 +222,7 @@ export default function SocialPage() {
         observer.unobserve(sentinel);
       }
     };
-  }, [hasMore, loadingMore, loadingPosts, page, loadMorePosts]);
+  }, [hasNextPage, isFetchingNextPage, loadingPosts, fetchNextPage]);
 
   const handleShare = async (postId: string) => {
     if (!user?.id) {
@@ -483,48 +230,32 @@ export default function SocialPage() {
       return;
     }
 
-    try {
-      const supabase = getSupabaseClient();
-
-      // Record the share in database (if table exists)
-      try {
-        const { error } = await (supabase as any)
-          .from('tasting_shares')
-          .insert({
-            user_id: user.id,
-            tasting_id: postId
-          });
-
-        if (error && !error.message.includes('duplicate key')) {
-          throw error;
-        }
-      } catch (dbError) {
-        console.log('Shares table not available, skipping database record');
+    shareMutation.mutate(
+      { tastingId: postId, userId: user.id },
+      {
+        onSuccess: async () => {
+          // Use Web Share API or clipboard
+          try {
+            if (navigator.share) {
+              await navigator.share({
+                title: 'Check out this tasting!',
+                text: 'I found an interesting tasting session',
+                url: `${window.location.origin}/social`,
+              });
+              toast.success('Post shared!');
+            } else {
+              await navigator.clipboard.writeText(`${window.location.origin}/social`);
+              toast.success('Link copied to clipboard!');
+            }
+          } catch (error) {
+            console.error('Error using share API:', error);
+          }
+        },
+        onError: () => {
+          toast.error('Failed to share post');
+        },
       }
-
-      // Update post stats
-      setPosts(prev => prev.map(post =>
-        post.id === postId
-          ? { ...post, stats: { ...post.stats, shares: post.stats.shares + 1 } }
-          : post
-      ));
-
-      // Use Web Share API or clipboard
-      if (navigator.share) {
-        await navigator.share({
-          title: 'Check out this tasting!',
-          text: 'I found an interesting tasting session',
-          url: `${window.location.origin}/social`
-        });
-        toast.success('Post shared!');
-      } else {
-        await navigator.clipboard.writeText(`${window.location.origin}/social`);
-        toast.success('Link copied to clipboard!');
-      }
-    } catch (error) {
-      console.error('Error sharing:', error);
-      toast.error('Failed to share post');
-    }
+    );
   };
 
   // Skeleton Loading Component
@@ -550,7 +281,7 @@ export default function SocialPage() {
     </div>
   );
 
-  if (loading || loadingPosts) {
+  if (authLoading || loadingPosts) {
     return (
       <div className="bg-white dark:bg-zinc-900 font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
         <div className="flex min-h-screen flex-col">
@@ -577,108 +308,109 @@ export default function SocialPage() {
     <ErrorBoundary>
       <div className="bg-white dark:bg-zinc-900 font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
         <div className="flex min-h-screen flex-col">
-        {/* Header */}
-        <header className="border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 sticky top-0 z-40">
-          <div className="flex items-center justify-between p-4">
-            <button
-              onClick={() => router.back()}
-              className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
-            >
-              <span className="material-symbols-outlined">arrow_back</span>
-            </button>
-            <h1 className="text-xl font-bold">Social Feed</h1>
-            <button
-              onClick={() => router.push('/quick-tasting')}
-              className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
-            >
-              <span className="material-symbols-outlined">add_circle</span>
-            </button>
-          </div>
+          {/* Header */}
+          <header className="border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 sticky top-0 z-40">
+            <div className="flex items-center justify-between p-4">
+              <button
+                onClick={() => router.back()}
+                className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              >
+                <span className="material-symbols-outlined">arrow_back</span>
+              </button>
+              <h1 className="text-xl font-bold">Social Feed</h1>
+              <button
+                onClick={() => router.push('/quick-tasting')}
+                className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              >
+                <span className="material-symbols-outlined">add_circle</span>
+              </button>
+            </div>
 
-          {/* Filters */}
-          <SocialFeedFilters
-            activeTab={activeTab}
-            categoryFilter={categoryFilter}
-            categories={categories}
-            onTabChange={setActiveTab}
-            onCategoryChange={setCategoryFilter}
-          />
-        </header>
+            {/* Filters */}
+            <SocialFeedFilters
+              activeTab={activeTab}
+              categoryFilter={categoryFilter}
+              categories={categories}
+              onTabChange={setActiveTab}
+              onCategoryChange={setCategoryFilter}
+            />
+          </header>
 
-        {/* Main Content */}
-        <main className="flex-1 overflow-y-auto bg-white dark:bg-zinc-900">
-          <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
-            {filteredPosts.length === 0 ? (
-              <div className="p-8 text-center">
-                <div className="mb-4">
-                  <span className="material-symbols-outlined text-6xl text-primary">local_bar</span>
-                </div>
-                <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-2">No tastings yet</h3>
-                <p className="text-zinc-600 dark:text-zinc-300 mb-4">
-                  Be the first to share your tasting experience!
-                </p>
-                <button
-                  onClick={() => router.push('/quick-tasting')}
-                  className="btn-primary"
-                >
-                  Start Tasting
-                </button>
-              </div>
-            ) : (
-              filteredPosts.map((post) => (
-                <SocialPostCard
-                  key={post.id}
-                  post={post}
-                  currentUserId={user?.id}
-                  isExpanded={expandedPosts.has(post.id)}
-                  onToggleExpand={() => {
-                    const newExpanded = new Set(expandedPosts);
-                    if (newExpanded.has(post.id)) {
-                      newExpanded.delete(post.id);
-                    } else {
-                      newExpanded.add(post.id);
-                    }
-                    setExpandedPosts(newExpanded);
-                  }}
-                  onLike={() => handleLike(post.id)}
-                  onComment={() => handleComment(post.id)}
-                  onShare={() => handleShare(post.id)}
-                  onFollow={() => handleFollow(post.user_id, post.user.full_name || 'User')}
-                />
-              ))
-            )}
-
-            {/* Infinite Scroll Sentinel */}
-            {!loadingPosts && filteredPosts.length > 0 && (
-              <div id="scroll-sentinel" className="h-20 flex items-center justify-center">
-                {loadingMore && (
-                  <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-300">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-                    <span className="text-sm">Loading more...</span>
+          {/* Main Content */}
+          <main className="flex-1 overflow-y-auto bg-white dark:bg-zinc-900">
+            <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
+              {filteredPosts.length === 0 ? (
+                <div className="p-8 text-center">
+                  <div className="mb-4">
+                    <span className="material-symbols-outlined text-6xl text-primary">
+                      local_bar
+                    </span>
                   </div>
-                )}
-                {!hasMore && !loadingMore && (
-                  <p className="text-sm text-zinc-400">You've reached the end!</p>
-                )}
-              </div>
-            )}
-          </div>
-        </main>
+                  <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                    No tastings yet
+                  </h3>
+                  <p className="text-zinc-600 dark:text-zinc-300 mb-4">
+                    Be the first to share your tasting experience!
+                  </p>
+                  <button onClick={() => router.push('/quick-tasting')} className="btn-primary">
+                    Start Tasting
+                  </button>
+                </div>
+              ) : (
+                filteredPosts.map((post) => (
+                  <SocialPostCard
+                    key={post.id}
+                    post={post}
+                    currentUserId={user?.id}
+                    isExpanded={expandedPosts.has(post.id)}
+                    onToggleExpand={() => {
+                      const newExpanded = new Set(expandedPosts);
+                      if (newExpanded.has(post.id)) {
+                        newExpanded.delete(post.id);
+                      } else {
+                        newExpanded.add(post.id);
+                      }
+                      setExpandedPosts(newExpanded);
+                    }}
+                    onLike={() => handleLike(post.id)}
+                    onComment={() => handleComment(post.id)}
+                    onShare={() => handleShare(post.id)}
+                    onFollow={() => handleFollow(post.user_id, post.user.full_name || 'User')}
+                  />
+                ))
+              )}
 
-        {/* Bottom Navigation */}
-        <BottomNavigation />
-      </div>
+              {/* Infinite Scroll Sentinel */}
+              {!loadingPosts && filteredPosts.length > 0 && (
+                <div id="scroll-sentinel" className="h-20 flex items-center justify-center">
+                  {isFetchingNextPage && (
+                    <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-300">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                      <span className="text-sm">Loading more...</span>
+                    </div>
+                  )}
+                  {!hasNextPage && !isFetchingNextPage && (
+                    <p className="text-sm text-zinc-400">You've reached the end!</p>
+                  )}
+                </div>
+              )}
+            </div>
+          </main>
 
-      {/* Comments Modal */}
-      {activePostId && (
-        <CommentsModal
-          tastingId={activePostId}
-          tastingOwnerId={posts.find(p => p.id === activePostId)?.user_id}
-          isOpen={commentsModalOpen}
-          onClose={handleCloseComments}
-          initialCommentCount={posts.find(p => p.id === activePostId)?.stats.comments || 0}
-        />
-      )}
+          {/* Bottom Navigation */}
+          <BottomNavigation />
+        </div>
+
+        {/* Comments Modal */}
+        {activePostId && (
+          <CommentsModal
+            tastingId={activePostId}
+            tastingOwnerId={posts.find((p) => p.id === activePostId)?.user_id}
+            isOpen={commentsModalOpen}
+            onClose={handleCloseComments}
+            initialCommentCount={posts.find((p) => p.id === activePostId)?.stats.comments || 0}
+          />
+        )}
       </div>
     </ErrorBoundary>
   );

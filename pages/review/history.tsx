@@ -38,7 +38,9 @@ const MyReviewsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const loadReviews = useCallback(async () => {
-    if (!user) return;
+    if (!user) {
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -49,7 +51,9 @@ const MyReviewsPage: React.FC = () => {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (reviewsError) throw reviewsError;
+      if (reviewsError) {
+        throw reviewsError;
+      }
 
       // Load prose reviews
       const { data: proseData, error: proseError } = await supabase
@@ -58,15 +62,26 @@ const MyReviewsPage: React.FC = () => {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (proseError) throw proseError;
+      if (proseError) {
+        throw proseError;
+      }
 
       // Separate completed and drafts
-      const completedReviews = reviewsData?.filter((r: Review) => r.status === 'completed' || r.status === 'published') || [];
-      const completedProse = proseData?.filter((r: ProseReview) => r.status === 'completed' || r.status === 'published') || [];
+      const completedReviews =
+        reviewsData?.filter((r: Review) => r.status === 'completed' || r.status === 'published') ||
+        [];
+      const completedProse =
+        proseData?.filter(
+          (r: ProseReview) => r.status === 'completed' || r.status === 'published'
+        ) || [];
 
       // Add review_type to distinguish between structured and prose reviews
-      const structuredDrafts = (reviewsData?.filter((r: Review) => r.status === 'in_progress') || []).map((r: Review) => ({ ...r, review_type: 'structured' as const }));
-      const proseDrafts = (proseData?.filter((r: ProseReview) => r.status === 'in_progress') || []).map((r: ProseReview) => ({ ...r, review_type: 'prose' as const }));
+      const structuredDrafts = (
+        reviewsData?.filter((r: Review) => r.status === 'in_progress') || []
+      ).map((r: Review) => ({ ...r, review_type: 'structured' as const }));
+      const proseDrafts = (
+        proseData?.filter((r: ProseReview) => r.status === 'in_progress') || []
+      ).map((r: ProseReview) => ({ ...r, review_type: 'prose' as const }));
       const allDrafts = [...structuredDrafts, ...proseDrafts];
 
       setReviews(completedReviews);
@@ -126,13 +141,16 @@ const MyReviewsPage: React.FC = () => {
           <div className="bg-white dark:bg-zinc-800/50 rounded-[22px] border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
             <div className="flex items-center space-x-2 mb-4">
               <Clock className="text-yellow-500" size={24} />
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Reviews in Progress</h3>
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
+                Reviews in Progress
+              </h3>
             </div>
             <div className="space-y-3">
               {drafts.map((draft) => {
-                const reviewPath = draft.review_type === 'prose'
-                  ? `/review/prose?id=${draft.id}`
-                  : `/review/structured?id=${draft.id}`;
+                const reviewPath =
+                  draft.review_type === 'prose'
+                    ? `/review/prose?id=${draft.id}`
+                    : `/review/structured?id=${draft.id}`;
 
                 return (
                   <button
@@ -142,13 +160,18 @@ const MyReviewsPage: React.FC = () => {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-zinc-900 dark:text-white truncate">{draft.item_name}</p>
+                        <p className="font-medium text-zinc-900 dark:text-white truncate">
+                          {draft.item_name}
+                        </p>
                         <p className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
-                          {formatReviewId(draft)} • {draft.review_type === 'prose' ? 'Prose' : 'Structured'}
+                          {formatReviewId(draft)} •{' '}
+                          {draft.review_type === 'prose' ? 'Prose' : 'Structured'}
                         </p>
                       </div>
                       <div className="flex items-center gap-2 ml-3 flex-shrink-0">
-                        <span className="text-xs font-medium text-yellow-600 dark:text-yellow-400">Continue</span>
+                        <span className="text-xs font-medium text-yellow-600 dark:text-yellow-400">
+                          Continue
+                        </span>
                         <ChevronRight size={16} className="text-zinc-400" />
                       </div>
                     </div>
@@ -177,8 +200,12 @@ const MyReviewsPage: React.FC = () => {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-zinc-900 dark:text-white truncate">{review.item_name}</p>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400 truncate">{formatReviewId(review)}</p>
+                      <p className="font-medium text-zinc-900 dark:text-white truncate">
+                        {review.item_name}
+                      </p>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
+                        {formatReviewId(review)}
+                      </p>
                       {review.overall_score && (
                         <p className="text-sm text-primary font-bold mt-1">
                           Score: {review.overall_score}/100
@@ -200,7 +227,9 @@ const MyReviewsPage: React.FC = () => {
             <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Prose Reviews</h3>
           </div>
           {proseReviews.length === 0 ? (
-            <p className="text-zinc-500 dark:text-zinc-400 text-center py-8">No prose reviews yet</p>
+            <p className="text-zinc-500 dark:text-zinc-400 text-center py-8">
+              No prose reviews yet
+            </p>
           ) : (
             <div className="space-y-3">
               {proseReviews.map((review) => (
@@ -211,8 +240,12 @@ const MyReviewsPage: React.FC = () => {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-zinc-900 dark:text-white truncate">{review.item_name}</p>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400 truncate">{formatReviewId(review)}</p>
+                      <p className="font-medium text-zinc-900 dark:text-white truncate">
+                        {review.item_name}
+                      </p>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
+                        {formatReviewId(review)}
+                      </p>
                     </div>
                     <ChevronRight size={16} className="text-zinc-400 ml-3 flex-shrink-0" />
                   </div>
@@ -235,7 +268,6 @@ const MyReviewsPage: React.FC = () => {
 };
 
 export default MyReviewsPage;
-
 
 // Disable static generation for this page
 export async function getServerSideProps() {

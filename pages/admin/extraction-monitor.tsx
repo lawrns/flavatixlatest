@@ -39,7 +39,9 @@ export default function ExtractionMonitor() {
   const fetchStats = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/extraction-stats?period=${period}`);
-      if (!response.ok) throw new Error('Failed to fetch stats');
+      if (!response.ok) {
+        throw new Error('Failed to fetch stats');
+      }
       const data = await response.json();
       setStats(data);
       setLastUpdated(new Date());
@@ -56,7 +58,9 @@ export default function ExtractionMonitor() {
 
   // Auto-refresh every 30 seconds
   useEffect(() => {
-    if (!autoRefresh) return;
+    if (!autoRefresh) {
+      return;
+    }
 
     const interval = setInterval(() => {
       fetchStats();
@@ -73,18 +77,28 @@ export default function ExtractionMonitor() {
   }, [user, router]);
 
   const getStatusColor = (rate: number) => {
-    if (rate >= 95) return 'text-green-500';
-    if (rate >= 80) return 'text-yellow-500';
+    if (rate >= 95) {
+      return 'text-green-500';
+    }
+    if (rate >= 80) {
+      return 'text-yellow-500';
+    }
     return 'text-red-500';
   };
 
   const getStatusIcon = (rate: number) => {
-    if (rate >= 95) return <CheckCircle className="w-6 h-6 text-green-500" />;
-    if (rate >= 80) return <AlertTriangle className="w-6 h-6 text-yellow-500" />;
+    if (rate >= 95) {
+      return <CheckCircle className="w-6 h-6 text-green-500" />;
+    }
+    if (rate >= 80) {
+      return <AlertTriangle className="w-6 h-6 text-yellow-500" />;
+    }
     return <AlertTriangle className="w-6 h-6 text-red-500" />;
   };
 
-  if (!user) return null;
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -154,8 +168,12 @@ export default function ExtractionMonitor() {
               <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm p-6 border-l-4 border-primary-600">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Overall Extraction Rate</p>
-                    <p className={`text-3xl font-bold mt-2 ${getStatusColor(stats.extractionRate)}`}>
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      Overall Extraction Rate
+                    </p>
+                    <p
+                      className={`text-3xl font-bold mt-2 ${getStatusColor(stats.extractionRate)}`}
+                    >
                       {stats.extractionRate.toFixed(1)}%
                     </p>
                   </div>
@@ -169,27 +187,25 @@ export default function ExtractionMonitor() {
               <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm p-6">
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Items</p>
                 <p className="text-3xl font-bold text-gray-900 mt-2">{stats.totalItems}</p>
-                <p className="text-sm text-gray-600 mt-4">
-                  {stats.itemsWithContent} with content
-                </p>
+                <p className="text-sm text-gray-600 mt-4">{stats.itemsWithContent} with content</p>
               </div>
 
               <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm p-6">
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Items Extracted</p>
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  Items Extracted
+                </p>
                 <p className="text-3xl font-bold text-green-600 mt-2">{stats.itemsExtracted}</p>
-                <p className="text-sm text-gray-600 mt-4">
-                  Successfully processed
-                </p>
+                <p className="text-sm text-gray-600 mt-4">Successfully processed</p>
               </div>
 
               <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm p-6">
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Missing Extractions</p>
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  Missing Extractions
+                </p>
                 <p className="text-3xl font-bold text-red-600 mt-2">
                   {stats.itemsWithContent - stats.itemsExtracted}
                 </p>
-                <p className="text-sm text-gray-600 mt-4">
-                  Require attention
-                </p>
+                <p className="text-sm text-gray-600 mt-4">Require attention</p>
               </div>
             </div>
 
@@ -228,7 +244,7 @@ export default function ExtractionMonitor() {
                         <div
                           className="h-full bg-primary-600 flex items-center justify-end pr-2 text-white text-sm font-medium"
                           style={{
-                            width: `${Math.min((item.count / Math.max(...stats.recentExtractions.map(e => e.count))) * 100, 100)}%`
+                            width: `${Math.min((item.count / Math.max(...stats.recentExtractions.map((e) => e.count))) * 100, 100)}%`,
                           }}
                         >
                           {item.count > 0 && item.count}
@@ -278,7 +294,9 @@ export default function ExtractionMonitor() {
                           <div className="text-sm text-gray-900 dark:text-gray-50">{cat.total}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900 dark:text-gray-50">{cat.extracted}</div>
+                          <div className="text-sm text-gray-900 dark:text-gray-50">
+                            {cat.extracted}
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className={`text-sm font-medium ${getStatusColor(cat.rate)}`}>
@@ -309,9 +327,7 @@ export default function ExtractionMonitor() {
 
             {/* Instructions */}
             <div className="mt-8 bg-blue-50 rounded-lg p-6">
-              <h3 className="text-sm font-semibold text-blue-900 mb-2">
-                What to Monitor
-              </h3>
+              <h3 className="text-sm font-semibold text-blue-900 mb-2">What to Monitor</h3>
               <ul className="text-sm text-blue-800 space-y-1">
                 <li>• Target extraction rate: ≥95%</li>
                 <li>• Alert threshold: &lt;80% requires investigation</li>

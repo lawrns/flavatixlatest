@@ -1,6 +1,6 @@
 /**
  * LoadingState Component
- * 
+ *
  * Unified loading state wrapper that provides consistent loading UX.
  * Supports multiple loading variants and respects reduced motion preferences.
  */
@@ -8,26 +8,26 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { 
-  CardSkeleton, 
-  ListSkeleton, 
-  FormSkeleton, 
-  PageSkeleton, 
+import {
+  CardSkeleton,
+  ListSkeleton,
+  FormSkeleton,
+  PageSkeleton,
   FeedSkeleton,
   TastingItemSkeleton,
   StatsSkeleton,
-  DefaultLoadingSpinner 
+  DefaultLoadingSpinner,
 } from '@/lib/dynamicImports';
 
 // ============================================================================
 // TYPES
 // ============================================================================
 
-type LoadingVariant = 
-  | 'spinner' 
-  | 'skeleton-card' 
-  | 'skeleton-list' 
-  | 'skeleton-form' 
+type LoadingVariant =
+  | 'spinner'
+  | 'skeleton-card'
+  | 'skeleton-list'
+  | 'skeleton-form'
   | 'skeleton-page'
   | 'skeleton-feed'
   | 'skeleton-tasting'
@@ -73,7 +73,7 @@ interface LoadingStateProps {
 
 const DotsLoader: React.FC<{ className?: string }> = ({ className }) => {
   const prefersReducedMotion = useReducedMotion();
-  
+
   return (
     <div className={cn('flex items-center justify-center gap-1', className)}>
       {[0, 1, 2].map((i) => (
@@ -94,7 +94,7 @@ const DotsLoader: React.FC<{ className?: string }> = ({ className }) => {
 
 const PulseLoader: React.FC<{ className?: string }> = ({ className }) => {
   const prefersReducedMotion = useReducedMotion();
-  
+
   return (
     <div className={cn('flex items-center justify-center', className)}>
       <div
@@ -129,8 +129,10 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
 
   // Error state
   if (error) {
-    if (errorComponent) return <>{errorComponent}</>;
-    
+    if (errorComponent) {
+      return <>{errorComponent}</>;
+    }
+
     return (
       <div className={cn('flex flex-col items-center justify-center p-8 text-center', className)}>
         <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4">
@@ -197,14 +199,14 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
     };
 
     return (
-      <div 
+      <div
         className={cn(
           variant === 'spinner' || variant === 'dots' || variant === 'pulse'
             ? 'flex items-center justify-center min-h-[200px]'
             : '',
           className
-        )} 
-        role="status" 
+        )}
+        role="status"
         aria-label={loadingMessage}
       >
         <LoadingContent />
@@ -215,8 +217,10 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
 
   // Empty state
   if (isEmpty) {
-    if (emptyComponent) return <>{emptyComponent}</>;
-    
+    if (emptyComponent) {
+      return <>{emptyComponent}</>;
+    }
+
     return (
       <div className={cn('flex flex-col items-center justify-center p-8 text-center', className)}>
         <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-4">
@@ -252,10 +256,7 @@ interface InlineLoadingProps {
   className?: string;
 }
 
-export const InlineLoading: React.FC<InlineLoadingProps> = ({
-  size = 'md',
-  className,
-}) => {
+export const InlineLoading: React.FC<InlineLoadingProps> = ({ size = 'md', className }) => {
   const sizes = {
     sm: 'w-4 h-4',
     md: 'w-5 h-5',
@@ -269,14 +270,7 @@ export const InlineLoading: React.FC<InlineLoadingProps> = ({
       viewBox="0 0 24 24"
       aria-hidden="true"
     >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
       <path
         className="opacity-75"
         fill="currentColor"

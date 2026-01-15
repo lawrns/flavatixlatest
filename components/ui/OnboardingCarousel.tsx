@@ -43,12 +43,16 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
 
   // Handle swipe move
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
+    if (!isDragging) {
+      return;
+    }
     setTranslateX(e.clientX - startX);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
+    if (!isDragging) {
+      return;
+    }
     setTranslateX(e.touches[0].clientX - startX);
   };
 
@@ -141,9 +145,7 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
         <div
           className="transition-transform duration-300 ease-spring select-none w-full"
           style={{
-            transform: isDragging
-              ? `translateX(${translateX}px)`
-              : 'translateX(0)',
+            transform: isDragging ? `translateX(${translateX}px)` : 'translateX(0)',
           }}
         >
           <div className="flex flex-col items-center max-w-lg mx-auto">

@@ -3,7 +3,7 @@ import { getSupabaseClient } from '@/lib/supabase';
 import {
   extractDescriptorsWithIntensity,
   extractFromStructuredReview,
-  ExtractedDescriptor
+  ExtractedDescriptor,
 } from '@/lib/flavorDescriptorExtractor';
 import { extractDescriptorsWithAI } from '@/lib/ai/descriptorExtractionService';
 
@@ -41,10 +41,7 @@ interface ExtractResponse {
  * API Endpoint: Extract and save flavor descriptors
  * POST /api/flavor-wheels/extract-descriptors
  */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<ExtractResponse>
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<ExtractResponse>) {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method not allowed' });
   }
@@ -60,7 +57,10 @@ export default async function handler(
     const supabase = getSupabaseClient(req, res);
 
     // Get authenticated user using the token
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
       return res.status(401).json({ success: false, error: 'Unauthorized - invalid token' });
@@ -73,21 +73,21 @@ export default async function handler(
       structuredData,
       itemContext,
       category,
-      useAI = true // Default to AI extraction
+      useAI = true, // Default to AI extraction
     } = req.body as ExtractRequest;
 
     // Validate request
     if (!sourceType || !sourceId) {
       return res.status(400).json({
         success: false,
-        error: 'Missing required fields: sourceType, sourceId'
+        error: 'Missing required fields: sourceType, sourceId',
       });
     }
 
     if (!text && !structuredData) {
       return res.status(400).json({
         success: false,
-        error: 'Either text or structuredData must be provided'
+        error: 'Either text or structuredData must be provided',
       });
     }
 
@@ -98,8 +98,10 @@ export default async function handler(
         structuredData.aroma_notes || '',
         structuredData.flavor_notes || '',
         structuredData.texture_notes || '',
-        structuredData.other_notes || ''
-      ].filter(Boolean).join('. ');
+        structuredData.other_notes || '',
+      ]
+        .filter(Boolean)
+        .join('. ');
     }
 
     // Extract descriptors using AI or keyword-based
@@ -123,40 +125,35 @@ export default async function handler(
         }
 
         // Use AI extraction
-        const aiResult = await extractDescriptorsWithAI(
-          combinedText,
-          category,
-          taxonomyContext
-        );
+        const aiResult = await extractDescriptorsWithAI(combinedText, category, taxonomyContext);
 
-        descriptors = aiResult.descriptors.map(d => ({
+        descriptors = aiResult.descriptors.map((d) => ({
           text: d.text,
           type: d.type,
           category: d.category || null,
           subcategory: d.subcategory || null,
-          confidence: d.confidence
+          confidence: d.confidence,
         }));
 
         tokensUsed = aiResult.tokensUsed;
         processingTimeMs = aiResult.processingTimeMs;
         extractionMethod = 'ai';
 
-        // Log AI extraction
+        // Log AI extraction (store full input text, no truncation)
         // @ts-ignore - Supabase type inference issue
         await supabase.from('ai_extraction_logs').insert({
           user_id: user.id,
           tasting_id: sourceId,
           source_type: sourceType,
-          input_text: combinedText.substring(0, 1000),
+          input_text: combinedText, // Store full text, no arbitrary truncation
           input_category: category,
           model_used: 'claude-3-haiku-20240307',
           tokens_used: tokensUsed,
           processing_time_ms: processingTimeMs,
           descriptors_extracted: descriptors.length,
           extraction_successful: true,
-          raw_ai_response: { descriptors }
+          raw_ai_response: { descriptors },
         });
-
       } catch (aiError) {
         console.error('AI extraction failed, falling back to keyword:', aiError);
         // Fall back to keyword-based extraction
@@ -181,12 +178,12 @@ export default async function handler(
       return res.status(200).json({
         success: true,
         descriptors: [],
-        savedCount: 0
+        savedCount: 0,
       });
     }
 
-    // Save descriptors to database
-    const descriptorRecords = descriptors.map(descriptor => ({
+    // Save descriptors to database with case-insensitive deduplication
+    const descriptorRecords = descriptors.map((descriptor) => ({
       user_id: user.id,
       source_type: sourceType,
       source_id: sourceId,
@@ -198,16 +195,19 @@ export default async function handler(
       intensity: descriptor.intensity,
       item_name: itemContext?.itemName || null,
       item_category: itemContext?.itemCategory || null,
+      normalized_form: descriptor.text.toLowerCase().trim(), // Case-insensitive normalization
       ai_extracted: extractionMethod === 'ai',
-      extraction_model: extractionMethod === 'ai' ? 'claude-haiku-3-20240307' : null
+      extraction_model: extractionMethod === 'ai' ? 'claude-haiku-3-20240307' : null,
     }));
 
-    // Use upsert to handle duplicates
+    // Use upsert with normalized form to prevent case-sensitive duplicates
+    // The unique constraint is on (user_id, normalized_form, descriptor_type)
+    // This will prevent "Chocolate" and "chocolate" from both being inserted
     const { data: savedDescriptors, error: saveError } = await (supabase as any)
       .from('flavor_descriptors')
       .upsert(descriptorRecords, {
-        onConflict: 'source_type,source_id,descriptor_text,descriptor_type',
-        ignoreDuplicates: false
+        onConflict: 'user_id,normalized_form,descriptor_type',
+        ignoreDuplicates: false, // Update existing records with new data
       })
       .select('id');
 
@@ -215,7 +215,7 @@ export default async function handler(
       console.error('Error saving descriptors:', saveError);
       return res.status(500).json({
         success: false,
-        error: 'Failed to save descriptors'
+        error: 'Failed to save descriptors',
       });
     }
 
@@ -225,14 +225,13 @@ export default async function handler(
       savedCount: savedDescriptors?.length || 0,
       tokensUsed: extractionMethod === 'ai' ? tokensUsed : undefined,
       processingTimeMs: extractionMethod === 'ai' ? processingTimeMs : undefined,
-      extractionMethod
+      extractionMethod,
     });
-
   } catch (error) {
     console.error('Error in extract-descriptors:', error);
     return res.status(500).json({
       success: false,
-      error: error instanceof Error ? error.message : 'Internal server error'
+      error: error instanceof Error ? error.message : 'Internal server error',
     });
   }
 }

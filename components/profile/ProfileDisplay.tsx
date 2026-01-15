@@ -9,8 +9,6 @@ interface ProfileDisplayProps {
   authEmail?: string;
 }
 
-
-
 export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayProps) {
   const { user } = useAuth();
   const [realTimeTastingsCount, setRealTimeTastingsCount] = useState<number | null>(null);
@@ -19,8 +17,10 @@ export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayPro
   // Obtener el conteo real de tastings
   useEffect(() => {
     const fetchRealTastingsCount = async () => {
-      if (!profile || !user) return;
-      
+      if (!profile || !user) {
+        return;
+      }
+
       setIsLoadingStats(true);
       try {
         const result = await getUserTastingStats(user.id);
@@ -54,10 +54,12 @@ export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayPro
   }
 
   const getInitials = (name?: string) => {
-    if (!name) return '?';
+    if (!name) {
+      return '?';
+    }
     return name
       .split(' ')
-      .map(word => word.charAt(0))
+      .map((word) => word.charAt(0))
       .join('')
       .toUpperCase()
       .slice(0, 2);
@@ -67,21 +69,21 @@ export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayPro
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
   const getCategoryColor = (category?: string) => {
     const colors: { [key: string]: string } = {
-      'Coffee': 'bg-[#8C5A3A] text-white',
-      'Wine': 'bg-[#B53F3F] text-white',
-      'Beer': 'bg-[#DFAF2B] text-[#2C1810]',
-      'Spirits': 'bg-[#6B5B95] text-white',
-      'Mezcal': 'bg-[#C65A2E] text-white',
-      'Perfume': 'bg-[#E9A2AD] text-[#2C1810]',
+      Coffee: 'bg-[#8C5A3A] text-white',
+      Wine: 'bg-[#B53F3F] text-white',
+      Beer: 'bg-[#DFAF2B] text-[#2C1810]',
+      Spirits: 'bg-[#6B5B95] text-white',
+      Mezcal: 'bg-[#C65A2E] text-white',
+      Perfume: 'bg-[#E9A2AD] text-[#2C1810]',
       'Olive Oil': 'bg-[#57A773] text-white',
-      'Snacks': 'bg-[#E4572E] text-white',
-      'Other': 'bg-[#8B8B8B] text-white'
+      Snacks: 'bg-[#E4572E] text-white',
+      Other: 'bg-[#8B8B8B] text-white',
     };
     return colors[category || ''] || 'bg-[#F4E3CC] text-[#2C1810]';
   };
@@ -98,7 +100,7 @@ export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayPro
             size={64}
           />
         </div>
-        
+
         <div className="flex-1 min-w-0">
           <h2 className="text-h4 font-heading font-semibold text-text-primary truncate">
             {profile.full_name || 'No name set'}
@@ -108,7 +110,9 @@ export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayPro
           )}
           <p className="text-text-muted text-small font-body">{authEmail}</p>
           {profile.preferred_category && (
-            <span className={`inline-block px-3 py-1 rounded-full text-caption font-body font-medium mt-xs ${getCategoryColor(profile.preferred_category)}`}>
+            <span
+              className={`inline-block px-3 py-1 rounded-full text-caption font-body font-medium mt-xs ${getCategoryColor(profile.preferred_category)}`}
+            >
               {profile.preferred_category}
             </span>
           )}
@@ -129,20 +133,22 @@ export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayPro
           <div className="text-h2 font-heading font-bold text-[#1F5D4C]">
             {isLoadingStats ? (
               <span className="animate-pulse text-[#1F5D4C]/50">-</span>
+            ) : realTimeTastingsCount !== null ? (
+              realTimeTastingsCount
             ) : (
-              realTimeTastingsCount !== null ? realTimeTastingsCount : profile.tastings_count
+              profile.tastings_count
             )}
           </div>
           <div className="text-small font-body text-text-secondary">Tastings</div>
         </div>
-        
+
         <div className="bg-[#FEF3E7] rounded-xl p-sm text-center">
           <div className="text-h2 font-heading font-bold text-[#1F5D4C]">
             {profile.reviews_count}
           </div>
           <div className="text-small font-body text-text-secondary">Reviews</div>
         </div>
-        
+
         <div className="bg-[#F7F3EA] rounded-xl p-sm text-center">
           {(profile.followers_count || 0) === 0 ? (
             <div className="text-small font-body text-text-muted">No followers yet</div>
@@ -170,30 +176,50 @@ export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayPro
       <div className="space-y-3 text-small font-body">
         <div className="flex justify-between items-center">
           <span className="text-text-secondary font-body">Member since</span>
-          <span className="text-text-primary font-body font-medium">{formatDate(profile.created_at)}</span>
+          <span className="text-text-primary font-body font-medium">
+            {formatDate(profile.created_at)}
+          </span>
         </div>
-        
+
         {profile.last_tasted_at && (
           <div className="flex justify-between items-center">
             <span className="text-text-secondary font-body">Last tasting</span>
-            <span className="text-text-primary font-body font-medium">{formatDate(profile.last_tasted_at)}</span>
+            <span className="text-text-primary font-body font-medium">
+              {formatDate(profile.last_tasted_at)}
+            </span>
           </div>
         )}
-        
+
         <div className="flex justify-between items-center">
           <span className="text-text-secondary font-body">Email verified</span>
           <div className="flex items-center">
             {profile.email_confirmed ? (
               <>
-                <svg className="w-4 h-4 text-[#22C55E] mr-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                <svg
+                  className="w-4 h-4 text-[#22C55E] mr-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 <span className="text-success font-body font-medium">Verified</span>
               </>
             ) : (
               <>
-                <svg className="w-4 h-4 text-[#F59E0B] mr-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                <svg
+                  className="w-4 h-4 text-[#F59E0B] mr-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 <span className="text-warning font-body font-medium">Pending</span>
               </>

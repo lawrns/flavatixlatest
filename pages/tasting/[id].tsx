@@ -39,7 +39,9 @@ const TastingSessionPage: React.FC = () => {
   const supabase = getSupabaseClient();
 
   const loadSession = useCallback(async () => {
-    if (!id || typeof id !== 'string' || !user) return;
+    if (!id || typeof id !== 'string' || !user) {
+      return;
+    }
 
     // Validate UUID format
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -102,13 +104,11 @@ const TastingSessionPage: React.FC = () => {
         // If user is creator but not a participant record, add them as participant
         if (isCreator && !isParticipant) {
           try {
-            const { error: addError } = await supabase
-              .from('tasting_participants')
-              .insert({
-                tasting_id: id as string,
-                user_id: user.id,
-                role: 'host' // Creator gets host role
-              } as any);
+            const { error: addError } = await supabase.from('tasting_participants').insert({
+              tasting_id: id as string,
+              user_id: user.id,
+              role: 'host', // Creator gets host role
+            } as any);
 
             if (addError && !(addError as any)?.message?.includes('duplicate key')) {
               // Only fail if it's not a duplicate key error
@@ -159,7 +159,9 @@ const TastingSessionPage: React.FC = () => {
       <div className="min-h-screen bg-background-light flex items-center justify-center">
         <div className="flex flex-col items-center">
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-sm"></div>
-          <div className="text-text-primary text-h4 font-body font-medium">Loading tasting session...</div>
+          <div className="text-text-primary text-h4 font-body font-medium">
+            Loading tasting session...
+          </div>
         </div>
       </div>
     );
@@ -171,20 +173,25 @@ const TastingSessionPage: React.FC = () => {
         <div className="container mx-auto px-md py-lg max-w-2xl">
           <div className="text-center">
             <div className="w-16 h-16 bg-error/10 rounded-full flex items-center justify-center mx-auto mb-md">
-              <svg className="w-8 h-8 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              <svg
+                className="w-8 h-8 text-error"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                />
               </svg>
             </div>
             <h1 className="text-h1 font-heading font-bold text-text-primary mb-sm">
               Session Not Found
             </h1>
-            <p className="text-body text-text-secondary mb-lg">
-              {error}
-            </p>
-            <button
-              onClick={() => router.push('/dashboard')}
-              className="btn-primary"
-            >
+            <p className="text-body text-text-secondary mb-lg">{error}</p>
+            <button onClick={() => router.push('/dashboard')} className="btn-primary">
               Go to Dashboard
             </button>
           </div>
@@ -226,19 +233,31 @@ const TastingSessionPage: React.FC = () => {
       {/* Bottom Navigation */}
       <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
         <nav className="flex justify-around p-2">
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
+          <a
+            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            href="/dashboard"
+          >
             <span className="material-symbols-outlined">home</span>
             <span className="text-xs font-medium">Home</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/taste">
+          <a
+            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            href="/taste"
+          >
             <span className="material-symbols-outlined">restaurant</span>
             <span className="text-xs font-medium">Taste</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
+          <a
+            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            href="/review"
+          >
             <span className="material-symbols-outlined">reviews</span>
             <span className="text-xs font-medium">Review</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
+          <a
+            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            href="/flavor-wheels"
+          >
             <span className="material-symbols-outlined">donut_small</span>
             <span className="text-xs font-medium">Wheels</span>
           </a>

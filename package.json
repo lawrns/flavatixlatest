@@ -7,6 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "type-check": "tsc --noEmit",
     "test": "jest",
     "test:unit": "jest --testPathIgnorePatterns=e2e",
     "test:watch": "jest --watch",
@@ -14,7 +18,20 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
-    "test:all": "npm run test:unit && npm run test:e2e"
+    "test:all": "npm run test:unit && npm run test:e2e",
+    "security-audit": "npm audit --audit-level=moderate",
+    "check": "npm run lint && npm run type-check && npm run test:unit",
+    "check:all": "npm run lint && npm run type-check && npm run test:all",
+    "setup": "bash setup.sh",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write"
+    ],
+    "*.{json,md,yaml,yml}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.66.0",
@@ -58,17 +75,22 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^20",
+    "@types/prettier": "^2.7.3",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
     "dotenv": "^17.2.3",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
+    "husky": "^9.1.7",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
+    "lint-staged": "^16.2.7",
+    "msw": "^2.12.7",
     "netlify-cli": "^23.9.1",
     "node-mocks-http": "^1.17.2",
     "postcss": "^8",
+    "prettier": "^3.8.0",
     "puppeteer": "^24.22.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5",

@@ -26,7 +26,7 @@ const Modal: React.FC<ModalProps> = ({
   closeOnEscape = true,
   showCloseButton = true,
   className,
-  ariaDescription
+  ariaDescription,
 }) => {
   const modalId = useId();
   const titleId = `${modalId}-title`;
@@ -40,7 +40,9 @@ const Modal: React.FC<ModalProps> = ({
   });
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      return;
+    }
 
     // Prevent body scroll when modal is open
     document.body.style.overflow = 'hidden';
@@ -50,14 +52,16 @@ const Modal: React.FC<ModalProps> = ({
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
 
   const sizeClasses = {
     sm: 'max-w-md',
     md: 'max-w-lg',
     lg: 'max-w-2xl',
     xl: 'max-w-4xl',
-    full: 'max-w-full mx-4'
+    full: 'max-w-full mx-4',
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -93,14 +97,11 @@ const Modal: React.FC<ModalProps> = ({
             {ariaDescription}
           </p>
         )}
-        
+
         {(title || showCloseButton) && (
           <div className="flex items-center justify-between p-6 border-b border-zinc-200 dark:border-zinc-700">
             {title && (
-              <h2
-                id={titleId}
-                className="text-xl font-semibold text-zinc-900 dark:text-white"
-              >
+              <h2 id={titleId} className="text-xl font-semibold text-zinc-900 dark:text-white">
                 {title}
               </h2>
             )}
@@ -111,28 +112,26 @@ const Modal: React.FC<ModalProps> = ({
                 aria-label="Close modal"
                 type="button"
               >
-                <svg 
-                  className="w-5 h-5" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
                 >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M6 18L18 6M6 6l12 12" 
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
               </button>
             )}
           </div>
         )}
-        
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
-          {children}
-        </div>
+
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">{children}</div>
       </div>
     </div>
   );
@@ -144,11 +143,7 @@ interface ModalHeaderProps {
 }
 
 const ModalHeader: React.FC<ModalHeaderProps> = ({ children, className }) => {
-  return (
-    <div className={cn('mb-4', className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn('mb-4', className)}>{children}</div>;
 };
 
 interface ModalBodyProps {
@@ -157,11 +152,7 @@ interface ModalBodyProps {
 }
 
 const ModalBody: React.FC<ModalBodyProps> = ({ children, className }) => {
-  return (
-    <div className={cn('mb-4', className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn('mb-4', className)}>{children}</div>;
 };
 
 interface ModalFooterProps {
@@ -171,7 +162,12 @@ interface ModalFooterProps {
 
 const ModalFooter: React.FC<ModalFooterProps> = ({ children, className }) => {
   return (
-    <div className={cn('flex justify-end gap-3 pt-4 border-t border-zinc-200 dark:border-zinc-700', className)}>
+    <div
+      className={cn(
+        'flex justify-end gap-3 pt-4 border-t border-zinc-200 dark:border-zinc-700',
+        className
+      )}
+    >
       {children}
     </div>
   );

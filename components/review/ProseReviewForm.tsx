@@ -1,6 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Camera, X } from 'lucide-react';
-import { REVIEW_CATEGORIES, COUNTRIES, getStatesForCountry, hasStates } from '@/lib/reviewCategories';
+import {
+  REVIEW_CATEGORIES,
+  COUNTRIES,
+  getStatesForCountry,
+  hasStates,
+} from '@/lib/reviewCategories';
 import { toast } from '@/lib/toast';
 
 export interface ProseReviewFormData {
@@ -15,7 +20,7 @@ export interface ProseReviewFormData {
   batch_id?: string;
   upc_barcode?: string;
   category: string;
-  
+
   // Review content
   review_content: string;
 }
@@ -31,13 +36,13 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
   initialData,
   onSubmit,
   onPhotoUpload,
-  isSubmitting = false
+  isSubmitting = false,
 }) => {
   const [formData, setFormData] = useState<ProseReviewFormData>({
     item_name: '',
     category: '',
     review_content: '',
-    ...initialData
+    ...initialData,
   });
 
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
@@ -46,7 +51,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
   // Update form data when initialData changes
   useEffect(() => {
     if (initialData) {
-      setFormData(prev => ({ ...prev, ...initialData }));
+      setFormData((prev) => ({ ...prev, ...initialData }));
     }
   }, [initialData]);
 
@@ -54,12 +59,14 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
     field: K,
     value: ProseReviewFormData[K]
   ) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file || !onPhotoUpload) return;
+    if (!file || !onPhotoUpload) {
+      return;
+    }
 
     if (!file.type.startsWith('image/')) {
       toast.error('Please select an image file');
@@ -106,8 +113,10 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
     <div className="space-y-lg">
       {/* ITEM ID Section */}
       <div className="card p-md">
-        <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">Item Information</h2>
-        
+        <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">
+          Item Information
+        </h2>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
           {/* 1. Item Name/Variety (REQUIRED) */}
           <div className="md:col-span-2">
@@ -188,7 +197,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
               required
             >
               <option value="">Select a category</option>
-              {REVIEW_CATEGORIES.map(category => (
+              {REVIEW_CATEGORIES.map((category) => (
                 <option key={category} value={category}>
                   {category}
                 </option>
@@ -212,7 +221,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
               className="form-input w-full"
             >
               <option value="">Select a country</option>
-              {COUNTRIES.map(country => (
+              {COUNTRIES.map((country) => (
                 <option key={country} value={country}>
                   {country}
                 </option>
@@ -232,7 +241,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
                 className="form-input w-full"
               >
                 <option value="">Select a state</option>
-                {availableStates.map(state => (
+                {availableStates.map((state) => (
                   <option key={state} value={state}>
                     {state}
                   </option>
@@ -305,7 +314,9 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
 
       {/* Review Content Section */}
       <div className="card p-md">
-        <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">Write your review</h2>
+        <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">
+          Write your review
+        </h2>
         <textarea
           value={formData.review_content}
           onChange={(e) => updateField('review_content', e.target.value)}
@@ -347,4 +358,3 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
 };
 
 export default ProseReviewForm;
-

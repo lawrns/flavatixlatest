@@ -15,14 +15,20 @@ type CommentsModalProps = {
   initialCommentCount: number;
 };
 
-export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClose, initialCommentCount }: CommentsModalProps) {
+export default function CommentsModal({
+  tastingId,
+  tastingOwnerId,
+  isOpen,
+  onClose,
+  initialCommentCount,
+}: CommentsModalProps) {
   const { user } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [commentText, setCommentText] = useState('');
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  
+
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
@@ -51,7 +57,7 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
         onClose();
       }
     };
-    
+
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown);
     }
@@ -60,7 +66,9 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
 
   // Focus trap
   useEffect(() => {
-    if (!isOpen || !modalRef.current) return;
+    if (!isOpen || !modalRef.current) {
+      return;
+    }
 
     const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -69,7 +77,9 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
     const lastElement = focusableElements[focusableElements.length - 1];
 
     const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
+      if (e.key !== 'Tab') {
+        return;
+      }
 
       if (e.shiftKey) {
         if (document.activeElement === firstElement) {
@@ -153,7 +163,7 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
           user: profile || {},
           likes_count: likes.length,
           is_liked: userLikes.has(comment.id),
-          replies: []
+          replies: [],
         };
       });
 
@@ -161,15 +171,17 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
       const commentMap = new Map<string, Comment>();
       const rootComments: Comment[] = [];
 
-      transformedComments.forEach(comment => {
+      transformedComments.forEach((comment) => {
         commentMap.set(comment.id, comment);
       });
 
-      transformedComments.forEach(comment => {
+      transformedComments.forEach((comment) => {
         if (comment.parent_comment_id) {
           const parent = commentMap.get(comment.parent_comment_id);
           if (parent) {
-            if (!parent.replies) parent.replies = [];
+            if (!parent.replies) {
+              parent.replies = [];
+            }
             parent.replies.push(comment);
           }
         } else {
@@ -187,20 +199,20 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
   };
 
   const handleSubmitComment = async () => {
-    if (!commentText.trim() || !user?.id) return;
+    if (!commentText.trim() || !user?.id) {
+      return;
+    }
 
     try {
       setSubmitting(true);
       const supabase = getSupabaseClient();
 
-      const { error } = await supabase
-        .from('tasting_comments')
-        .insert({
-          tasting_id: tastingId,
-          user_id: user.id,
-          parent_comment_id: replyingTo,
-          comment_text: commentText.trim()
-        } as any);
+      const { error } = await supabase.from('tasting_comments').insert({
+        tasting_id: tastingId,
+        user_id: user.id,
+        parent_comment_id: replyingTo,
+        comment_text: commentText.trim(),
+      } as any);
 
       if (error) {
         console.error('Error posting comment:', error);
@@ -248,7 +260,9 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
     try {
       const supabase = getSupabaseClient();
       const comment = findComment(comments, commentId);
-      if (!comment) return;
+      if (!comment) {
+        return;
+      }
 
       if (comment.is_liked) {
         // Unlike
@@ -259,12 +273,10 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
           .eq('user_id', user.id);
       } else {
         // Like
-        await supabase
-          .from('comment_likes')
-          .insert({
-            comment_id: commentId,
-            user_id: user.id
-          } as any);
+        await supabase.from('comment_likes').insert({
+          comment_id: commentId,
+          user_id: user.id,
+        } as any);
       }
 
       loadComments();
@@ -276,10 +288,14 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
 
   const findComment = (commentList: Comment[], id: string): Comment | null => {
     for (const comment of commentList) {
-      if (comment.id === id) return comment;
+      if (comment.id === id) {
+        return comment;
+      }
       if (comment.replies) {
         const found = findComment(comment.replies, id);
-        if (found) return found;
+        if (found) {
+          return found;
+        }
       }
     }
     return null;
@@ -290,10 +306,18 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
     const now = new Date();
     const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    if (seconds < 60) return 'just now';
-    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-    if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+    if (seconds < 60) {
+      return 'just now';
+    }
+    if (seconds < 3600) {
+      return `${Math.floor(seconds / 60)}m ago`;
+    }
+    if (seconds < 86400) {
+      return `${Math.floor(seconds / 3600)}h ago`;
+    }
+    if (seconds < 604800) {
+      return `${Math.floor(seconds / 86400)}d ago`;
+    }
     return date.toLocaleDateString();
   };
 
@@ -347,7 +371,7 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
           {/* Replies */}
           {comment.replies && comment.replies.length > 0 && (
             <div className="mt-2">
-              {comment.replies.map(reply => renderComment(reply, depth + 1))}
+              {comment.replies.map((reply) => renderComment(reply, depth + 1))}
             </div>
           )}
         </div>
@@ -355,14 +379,16 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
     </div>
   );
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black bg-opacity-50 z-[100] flex items-end sm:items-center justify-center"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div 
+      <div
         ref={modalRef}
         role="dialog"
         aria-modal="true"
@@ -372,7 +398,9 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-700">
-          <h2 id="comments-modal-title" className="text-lg font-bold">Comments ({comments.length})</h2>
+          <h2 id="comments-modal-title" className="text-lg font-bold">
+            Comments ({comments.length})
+          </h2>
           <button
             ref={closeButtonRef}
             onClick={onClose}
@@ -394,19 +422,19 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
               <p>No comments yet. Be the first to comment!</p>
             </div>
           ) : (
-            comments.map(comment => renderComment(comment))
+            comments.map((comment) => renderComment(comment))
           )}
         </div>
 
         {/* Input */}
-        <div className="border-t border-zinc-200 dark:border-zinc-700 p-4 pb-safe" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+        <div
+          className="border-t border-zinc-200 dark:border-zinc-700 p-4 pb-safe"
+          style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
+        >
           {replyingTo && (
             <div className="flex items-center gap-2 mb-2 text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">
               <span>Replying to comment</span>
-              <button
-                onClick={() => setReplyingTo(null)}
-                className="text-primary font-semibold"
-              >
+              <button onClick={() => setReplyingTo(null)} className="text-primary font-semibold">
                 Cancel
               </button>
             </div>
@@ -434,4 +462,3 @@ export default function CommentsModal({ tastingId, tastingOwnerId, isOpen, onClo
     </div>
   );
 }
-

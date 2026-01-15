@@ -1,6 +1,6 @@
 /**
  * ScoreRing Component
- * 
+ *
  * Circular progress indicator for displaying scores with color gradients.
  * Features smooth animations and responsive sizing.
  */
@@ -43,12 +43,24 @@ const getScoreColor = (score: number): string => {
  * Get score label
  */
 const getScoreLabel = (score: number): string => {
-  if (score >= 90) return 'Exceptional';
-  if (score >= 80) return 'Excellent';
-  if (score >= 70) return 'Very Good';
-  if (score >= 60) return 'Good';
-  if (score >= 50) return 'Average';
-  if (score >= 40) return 'Below Avg';
+  if (score >= 90) {
+    return 'Exceptional';
+  }
+  if (score >= 80) {
+    return 'Excellent';
+  }
+  if (score >= 70) {
+    return 'Very Good';
+  }
+  if (score >= 60) {
+    return 'Good';
+  }
+  if (score >= 50) {
+    return 'Average';
+  }
+  if (score >= 40) {
+    return 'Below Avg';
+  }
   return 'Poor';
 };
 
@@ -79,11 +91,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
 
   return (
     <div className={cn('relative inline-flex flex-col items-center', className)}>
-      <svg
-        width={config.size}
-        height={config.size}
-        className="transform -rotate-90"
-      >
+      <svg width={config.size} height={config.size} className="transform -rotate-90">
         {/* Background circle */}
         <circle
           cx={config.size / 2}
@@ -94,7 +102,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
           strokeWidth={config.stroke}
           className="text-zinc-200 dark:text-zinc-700"
         />
-        
+
         {/* Gradient definition */}
         <defs>
           <linearGradient id={`scoreGradient-${score}`} x1="0%" y1="0%" x2="100%" y2="0%">
@@ -102,7 +110,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
             <stop offset="100%" stopColor={color} stopOpacity="1" />
           </linearGradient>
         </defs>
-        
+
         {/* Progress circle */}
         <circle
           cx={config.size / 2}
@@ -119,7 +127,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
             filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
           }}
         />
-        
+
         {/* Glow effect */}
         <circle
           cx={config.size / 2}
@@ -138,17 +146,14 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
           }}
         />
       </svg>
-      
+
       {/* Center content */}
       {showValue && (
-        <div 
+        <div
           className="absolute inset-0 flex flex-col items-center justify-center"
           style={{ transform: 'rotate(0deg)' }}
         >
-          <span 
-            className={cn('font-bold tabular-nums', config.fontSize)}
-            style={{ color }}
-          >
+          <span className={cn('font-bold tabular-nums', config.fontSize)} style={{ color }}>
             {Math.round(normalizedScore)}
           </span>
           {size !== 'sm' && (
@@ -158,7 +163,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
           )}
         </div>
       )}
-      
+
       {/* Label */}
       {label && (
         <span className={cn('mt-2 text-zinc-600 dark:text-zinc-400 font-medium', config.labelSize)}>
@@ -179,15 +184,15 @@ export const ScoreBadge: React.FC<{
 }> = ({ score, size = 'md', className }) => {
   const color = getScoreColor(score);
   const label = getScoreLabel(score);
-  
+
   return (
-    <div 
+    <div
       className={cn(
         'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1',
         size === 'sm' ? 'text-xs' : 'text-sm',
         className
       )}
-      style={{ 
+      style={{
         backgroundColor: `${color}15`,
         color: color,
       }}

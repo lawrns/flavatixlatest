@@ -42,7 +42,9 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
   const handleSubmitSuggestion = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!newSuggestion.trim()) return;
+    if (!newSuggestion.trim()) {
+      return;
+    }
 
     try {
       setSubmitting(true);
@@ -61,7 +63,11 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
         return;
       }
 
-      await studyModeService.submitSuggestion(tastingId, (participant as any).id, newSuggestion.trim());
+      await studyModeService.submitSuggestion(
+        tastingId,
+        (participant as any).id,
+        newSuggestion.trim()
+      );
       setNewSuggestion('');
       toast.success('Suggestion submitted!');
       loadSuggestions(); // Refresh list
@@ -78,9 +84,7 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
       await studyModeService.moderateSuggestion(suggestionId, userId, action, tastingId);
 
       toast.success(
-        action === 'approve'
-          ? 'Suggestion approved and added to tasting!'
-          : 'Suggestion rejected'
+        action === 'approve' ? 'Suggestion approved and added to tasting!' : 'Suggestion rejected'
       );
 
       loadSuggestions(); // Refresh list
@@ -92,19 +96,37 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'approved': return 'bg-green-100 text-green-800';
-      case 'rejected': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'approved':
+        return 'bg-green-100 text-green-800';
+      case 'rejected':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'pending': return <span className="material-symbols-outlined text-sm align-middle">hourglass_empty</span>;
-      case 'approved': return <span className="material-symbols-outlined text-sm align-middle text-green-600">check_circle</span>;
-      case 'rejected': return <span className="material-symbols-outlined text-sm align-middle text-red-600">cancel</span>;
-      default: return <span className="material-symbols-outlined text-sm align-middle">help</span>;
+      case 'pending':
+        return (
+          <span className="material-symbols-outlined text-sm align-middle">hourglass_empty</span>
+        );
+      case 'approved':
+        return (
+          <span className="material-symbols-outlined text-sm align-middle text-green-600">
+            check_circle
+          </span>
+        );
+      case 'rejected':
+        return (
+          <span className="material-symbols-outlined text-sm align-middle text-red-600">
+            cancel
+          </span>
+        );
+      default:
+        return <span className="material-symbols-outlined text-sm align-middle">help</span>;
     }
   };
 
@@ -118,8 +140,7 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
         <p className="text-sm text-text-secondary">
           {canModerate
             ? 'Review and moderate participant suggestions'
-            : 'Suggest items for the group tasting'
-          }
+            : 'Suggest items for the group tasting'}
         </p>
       </div>
 
@@ -128,7 +149,10 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
         <div className="bg-background-secondary p-4 rounded-lg">
           <form onSubmit={handleSubmitSuggestion} className="space-y-3">
             <div>
-              <label htmlFor="suggestion" className="block text-sm font-medium text-text-primary mb-1">
+              <label
+                htmlFor="suggestion"
+                className="block text-sm font-medium text-text-primary mb-1"
+              >
                 Suggest an Item
               </label>
               <input
@@ -162,7 +186,9 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
           </div>
         ) : suggestions.length === 0 ? (
           <div className="text-center py-8 text-text-secondary">
-            <span className="material-symbols-outlined text-4xl text-yellow-500 mb-2 block">lightbulb</span>
+            <span className="material-symbols-outlined text-4xl text-yellow-500 mb-2 block">
+              lightbulb
+            </span>
             <p>No suggestions yet</p>
             {canAddItems && !canModerate && (
               <p className="text-sm mt-1">Be the first to suggest an item!</p>
@@ -180,15 +206,18 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
                     <span className="font-medium text-text-primary">
                       {suggestion.suggested_item_name}
                     </span>
-                    <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(suggestion.status)}`}>
+                    <span
+                      className={`px-2 py-1 text-xs rounded-full ${getStatusColor(suggestion.status)}`}
+                    >
                       {getStatusIcon(suggestion.status)} {suggestion.status}
                     </span>
                   </div>
 
                   <div className="text-sm text-text-secondary">
-                    Suggested by {suggestion.participant?.profiles?.full_name ||
-                                 suggestion.participant?.profiles?.username ||
-                                 'Anonymous'}
+                    Suggested by{' '}
+                    {suggestion.participant?.profiles?.full_name ||
+                      suggestion.participant?.profiles?.username ||
+                      'Anonymous'}
                   </div>
 
                   {suggestion.moderated_at && (
@@ -228,19 +257,19 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <div className="text-2xl font-bold text-yellow-600">
-                {suggestions.filter(s => s.status === 'pending').length}
+                {suggestions.filter((s) => s.status === 'pending').length}
               </div>
               <div className="text-sm text-text-secondary">Pending</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-green-600">
-                {suggestions.filter(s => s.status === 'approved').length}
+                {suggestions.filter((s) => s.status === 'approved').length}
               </div>
               <div className="text-sm text-text-secondary">Approved</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-red-600">
-                {suggestions.filter(s => s.status === 'rejected').length}
+                {suggestions.filter((s) => s.status === 'rejected').length}
               </div>
               <div className="text-sm text-text-secondary">Rejected</div>
             </div>
@@ -250,5 +279,3 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
     </div>
   );
 };
-
-

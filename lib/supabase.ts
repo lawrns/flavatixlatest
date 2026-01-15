@@ -1,33 +1,33 @@
 /**
  * Supabase Client Configuration
- * 
+ *
  * This module provides the primary interface for all Supabase interactions in Flavatix.
- * 
+ *
  * ## Architecture
  * - Uses singleton pattern for client-side to prevent multiple GoTrue instances
  * - Server-side API routes get fresh clients with auth context from headers/cookies
  * - All database operations respect Row Level Security (RLS) policies
- * 
+ *
  * ## Auth Flow
  * - Client-side: Uses persistent session with auto-refresh
  * - Server-side: Extracts JWT from Authorization header or cookies
- * 
+ *
  * ## RLS Expectations
  * - All tables have RLS enabled
  * - Users can only access their own data (profiles, tastings, reviews)
  * - Some tables allow public read (e.g., profiles for social features)
- * 
+ *
  * ## Usage
  * ```ts
  * // Client-side (components, hooks)
  * import { supabase } from '@/lib/supabase';
  * const { data } = await supabase.from('profiles').select('*');
- * 
+ *
  * // Server-side (API routes)
  * import { getSupabaseClient } from '@/lib/supabase';
  * const supabase = getSupabaseClient(req, res);
  * ```
- * 
+ *
  * @module lib/supabase
  */
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
@@ -54,11 +54,15 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholde
 if (process.env.NODE_ENV === 'production') {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
     // eslint-disable-next-line no-console
-    console.warn('NEXT_PUBLIC_SUPABASE_URL is not set; using localhost fallback (likely misconfigured production env)');
+    console.warn(
+      'NEXT_PUBLIC_SUPABASE_URL is not set; using localhost fallback (likely misconfigured production env)'
+    );
   }
   if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     // eslint-disable-next-line no-console
-    console.warn('NEXT_PUBLIC_SUPABASE_ANON_KEY is not set; using placeholder key (likely misconfigured production env)');
+    console.warn(
+      'NEXT_PUBLIC_SUPABASE_ANON_KEY is not set; using placeholder key (likely misconfigured production env)'
+    );
   }
 }
 
@@ -108,11 +112,11 @@ export { SupabaseClientSingleton };
 
 /**
  * Get a Supabase client with proper auth context for API routes.
- * 
+ *
  * @param req - Next.js API request (optional for client-side)
  * @param res - Next.js API response (optional for client-side)
  * @returns Supabase client with auth context from headers/cookies
- * 
+ *
  * @example
  * // In an API route
  * export default async function handler(req, res) {
@@ -120,20 +124,27 @@ export { SupabaseClientSingleton };
  *   const { data } = await supabase.from('quick_tastings').select('*');
  * }
  */
-export const getSupabaseClient = (req?: NextApiRequest, res?: NextApiResponse): SupabaseClient<any> => {
+export const getSupabaseClient = (
+  req?: NextApiRequest,
+  res?: NextApiResponse
+): SupabaseClient<any> => {
   if (req && res) {
     // Server-side: Create client with cookies for auth context
     const authHeader = req.headers.authorization;
 
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.replace('Bearer ', '');
-      return createClient<Database, PublicSchema>(supabaseUrl as string, supabaseAnonKey as string, {
-        global: {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+      return createClient<Database, PublicSchema>(
+        supabaseUrl as string,
+        supabaseAnonKey as string,
+        {
+          global: {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
         }
-      }) as unknown as SupabaseClient<any>;
+      ) as unknown as SupabaseClient<any>;
     }
 
     // Try to get token from cookies
@@ -141,13 +152,17 @@ export const getSupabaseClient = (req?: NextApiRequest, res?: NextApiResponse): 
     const accessToken = cookies['sb-access-token'] || cookies['supabase-auth-token'];
 
     if (accessToken) {
-      return createClient<Database, PublicSchema>(supabaseUrl as string, supabaseAnonKey as string, {
-        global: {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
+      return createClient<Database, PublicSchema>(
+        supabaseUrl as string,
+        supabaseAnonKey as string,
+        {
+          global: {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
         }
-      }) as unknown as SupabaseClient<any>;
+      ) as unknown as SupabaseClient<any>;
     }
   }
 
@@ -284,13 +299,14 @@ export type Database = {
           notes: string | null;
           aroma: string | null;
           flavor: string | null;
-          flavor_scores: any | null;
+          flavor_scores: Record<string, number> | null;
           overall_score: number | null;
           photo_url: string | null;
           created_at: string;
           updated_at: string;
-          correct_answers: any | null;
+          correct_answers: Record<string, unknown> | null;
           include_in_ranking: boolean;
+          study_category_data: Record<string, unknown> | null;
         };
         Insert: {
           id?: string;
@@ -299,13 +315,14 @@ export type Database = {
           notes?: string | null;
           aroma?: string | null;
           flavor?: string | null;
-          flavor_scores?: any | null;
+          flavor_scores?: Record<string, number> | null;
           overall_score?: number | null;
           photo_url?: string | null;
           created_at?: string;
           updated_at?: string;
-          correct_answers?: any | null;
+          correct_answers?: Record<string, unknown> | null;
           include_in_ranking?: boolean;
+          study_category_data?: Record<string, unknown> | null;
         };
         Update: {
           id?: string;
@@ -314,13 +331,14 @@ export type Database = {
           notes?: string | null;
           aroma?: string | null;
           flavor?: string | null;
-          flavor_scores?: any | null;
+          flavor_scores?: Record<string, number> | null;
           overall_score?: number | null;
           photo_url?: string | null;
           created_at?: string;
           updated_at?: string;
-          correct_answers?: any | null;
+          correct_answers?: Record<string, unknown> | null;
           include_in_ranking?: boolean;
+          study_category_data?: Record<string, unknown> | null;
         };
       };
       tasting_participants: {
@@ -443,8 +461,8 @@ export type Database = {
           user_id: string | null;
           wheel_type: string;
           scope_type: string;
-          scope_filter: any;
-          wheel_data: any;
+          scope_filter: Record<string, unknown>;
+          wheel_data: Record<string, unknown>;
           total_descriptors: number;
           unique_descriptors: number;
           data_sources_count: number;
@@ -459,8 +477,8 @@ export type Database = {
           user_id?: string | null;
           wheel_type: string;
           scope_type: string;
-          scope_filter?: any;
-          wheel_data: any;
+          scope_filter?: Record<string, unknown>;
+          wheel_data: Record<string, unknown>;
           total_descriptors?: number;
           unique_descriptors?: number;
           data_sources_count?: number;
@@ -475,8 +493,8 @@ export type Database = {
           user_id?: string | null;
           wheel_type?: string;
           scope_type?: string;
-          scope_filter?: any;
-          wheel_data?: any;
+          scope_filter?: Record<string, unknown>;
+          wheel_data?: Record<string, unknown>;
           total_descriptors?: number;
           unique_descriptors?: number;
           data_sources_count?: number;
@@ -492,7 +510,7 @@ export type Database = {
           id: string;
           descriptor: string;
           descriptor_normalized: string;
-          molecules: any;
+          molecules: Array<{ name: string; cas?: string; concentration?: string }>;
           source: string | null;
           verified: boolean;
           created_at: string;
@@ -502,7 +520,7 @@ export type Database = {
           id?: string;
           descriptor: string;
           descriptor_normalized: string;
-          molecules: any;
+          molecules: Array<{ name: string; cas?: string; concentration?: string }>;
           source?: string | null;
           verified?: boolean;
           created_at?: string;
@@ -512,7 +530,7 @@ export type Database = {
           id?: string;
           descriptor?: string;
           descriptor_normalized?: string;
-          molecules?: any;
+          molecules?: Array<{ name: string; cas?: string; concentration?: string }>;
           source?: string | null;
           verified?: boolean;
           created_at?: string;

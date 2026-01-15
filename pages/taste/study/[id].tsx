@@ -42,7 +42,9 @@ const StudyTastingPage: React.FC = () => {
   }, [user, authLoading, router]);
 
   useEffect(() => {
-    if (!id || !user) return;
+    if (!id || !user) {
+      return;
+    }
 
     const loadSession = async () => {
       try {
@@ -53,7 +55,9 @@ const StudyTastingPage: React.FC = () => {
           .eq('id', id)
           .single();
 
-        if (error) throw error;
+        if (error) {
+          throw error;
+        }
 
         if (!data) {
           toast.error('Study session not found');
@@ -73,7 +77,7 @@ const StudyTastingPage: React.FC = () => {
           mode: data.mode,
           hasNotes: !!data.notes,
           notesLength: data.notes?.length || 0,
-          notesPreview: data.notes ? data.notes.substring(0, 100) : 'N/A'
+          notesPreview: data.notes ? data.notes.substring(0, 100) : 'N/A',
         });
 
         setSession(data);
@@ -133,7 +137,10 @@ const StudyTastingPage: React.FC = () => {
       {/* Bottom Navigation */}
       <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
         <nav className="flex justify-around p-2">
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
+          <a
+            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            href="/dashboard"
+          >
             <span className="material-symbols-outlined">home</span>
             <span className="text-xs font-medium">Home</span>
           </a>
@@ -141,11 +148,17 @@ const StudyTastingPage: React.FC = () => {
             <span className="material-symbols-outlined">restaurant</span>
             <span className="text-xs font-bold">Taste</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
+          <a
+            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            href="/review"
+          >
             <span className="material-symbols-outlined">reviews</span>
             <span className="text-xs font-medium">Review</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
+          <a
+            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            href="/flavor-wheels"
+          >
             <span className="material-symbols-outlined">donut_small</span>
             <span className="text-xs font-medium">Wheels</span>
           </a>
@@ -156,7 +169,6 @@ const StudyTastingPage: React.FC = () => {
 };
 
 export default StudyTastingPage;
-
 
 // Disable static generation for this page
 export async function getServerSideProps() {

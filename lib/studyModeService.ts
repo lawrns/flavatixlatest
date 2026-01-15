@@ -3,8 +3,10 @@ import { studyModeRealtime } from './studyModeRealtime';
 import { Database } from './supabase';
 
 type TastingItemSuggestion = Database['public']['Tables']['tasting_item_suggestions']['Row'];
-type TastingItemSuggestionInsert = Database['public']['Tables']['tasting_item_suggestions']['Insert'];
-type TastingItemSuggestionUpdate = Database['public']['Tables']['tasting_item_suggestions']['Update'];
+type TastingItemSuggestionInsert =
+  Database['public']['Tables']['tasting_item_suggestions']['Insert'];
+type TastingItemSuggestionUpdate =
+  Database['public']['Tables']['tasting_item_suggestions']['Update'];
 type TastingItemData = Database['public']['Tables']['quick_tasting_items']['Row'];
 
 type TastingParticipant = Database['public']['Tables']['tasting_participants']['Row'];
@@ -91,7 +93,8 @@ export class StudyModeService {
 
     let query = this.supabase
       .from('tasting_item_suggestions')
-      .select(`
+      .select(
+        `
         *,
         participant:tasting_participants(
           user_id,
@@ -101,7 +104,8 @@ export class StudyModeService {
             avatar_url
           )
         )
-      `)
+      `
+      )
       .eq('tasting_id', tastingId);
 
     if (status) {
@@ -230,10 +234,7 @@ export class StudyModeService {
   /**
    * Get user permissions for a tasting
    */
-  async getUserPermissions(
-    userId: string,
-    tastingId: string
-  ): Promise<StudyModePermissions> {
+  async getUserPermissions(userId: string, tastingId: string): Promise<StudyModePermissions> {
     const { data, error } = await this.supabase
       .from('tasting_participants')
       .select('role, can_moderate, can_add_items')
@@ -273,7 +274,9 @@ export class StudyModeService {
    * Validate user has access to tasting
    */
   private async validateTastingAccess(tastingId: string, userId?: string): Promise<void> {
-    if (!userId) return; // Allow anonymous access for some operations
+    if (!userId) {
+      return;
+    } // Allow anonymous access for some operations
 
     const { data, error } = await this.supabase
       .from('tasting_participants')

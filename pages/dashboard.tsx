@@ -1,9 +1,7 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/SimpleAuthContext';
-import ProfileService, { UserProfile } from '../lib/profileService';
-import { getUserTastingStats, getLatestTasting, getRecentTastings } from '../lib/historyService';
 import SocialFeedWidget from '../components/social/SocialFeedWidget';
 import BottomNavigation from '../components/navigation/BottomNavigation';
 import NotificationSystem from '../components/notifications/NotificationSystem';
@@ -14,54 +12,34 @@ import UserAvatarMenu from '@/components/navigation/UserAvatarMenu';
 import { CategoryStamp } from '@/components/ui';
 import { getUserPresets, DEFAULT_PRESETS } from '@/lib/presetService';
 import { CategoryPackId } from '@/lib/categoryPacks';
+import { useCurrentProfile } from '../lib/query/hooks/useProfile';
+import { useRecentTastings, useTastingStats } from '../lib/query/hooks/useTastings';
 
 export default function Dashboard() {
-   const { user, loading, signOut } = useAuth();
-   const [profile, setProfile] = useState<UserProfile | null>(null);
-   const [tastingStats, setTastingStats] = useState<any>(null);
-   const [latestTasting, setLatestTasting] = useState<any>(null);
-   const [recentTastings, setRecentTastings] = useState<any[]>([]);
-   const [quickPresets, setQuickPresets] = useState<CategoryPackId[]>(DEFAULT_PRESETS);
-   const router = useRouter();
+  const { user, loading: authLoading, signOut } = useAuth();
+  const [quickPresets, setQuickPresets] = useState<CategoryPackId[]>(DEFAULT_PRESETS);
+  const router = useRouter();
 
-  const initializeDashboard = useCallback(async () => {
-    try {
-      if (!user) return;
+  // React Query hooks for data fetching
+  const { data: profile, isLoading: profileLoading } = useCurrentProfile();
+  const { data: tastingStats, isLoading: statsLoading } = useTastingStats(user?.id);
+  const { data: recentTastings = [], isLoading: tastingsLoading } = useRecentTastings(user?.id, 5);
 
-      // Load quick presets from localStorage
-      const presets = getUserPresets();
-      setQuickPresets(presets);
-
-      // Fetch user profile
-      const userProfile = await ProfileService.getProfile(user.id);
-      setProfile(userProfile);
-
-      // Fetch tasting stats, latest tasting, and recent tastings
-      const [stats, latest, recent] = await Promise.all([
-        getUserTastingStats(user.id),
-        getLatestTasting(user.id),
-        getRecentTastings(user.id, 5)
-      ]);
-      setTastingStats(stats.data);
-      setLatestTasting(latest.data);
-      setRecentTastings(recent.data || []);
-
-    } catch (error) {
-      console.error('Error initializing dashboard:', error);
-      toast.error('Error loading dashboard');
-    }
-  }, [user]);
+  // Combined loading state
+  const loading = authLoading || profileLoading || statsLoading || tastingsLoading;
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!authLoading && !user) {
       router.push('/auth');
       return;
     }
-    
+
     if (user) {
-      initializeDashboard();
+      // Load quick presets from localStorage
+      const presets = getUserPresets();
+      setQuickPresets(presets);
     }
-  }, [user, loading, router, initializeDashboard]);
+  }, [user, authLoading, router]);
 
   const handleLogout = async () => {
     try {
@@ -71,11 +49,6 @@ export default function Dashboard() {
     } catch (error) {
       toast.error('Error logging out');
     }
-  };
-
-  const handleProfileUpdate = async (updatedProfile: UserProfile) => {
-    setProfile(updatedProfile);
-    toast.success('Profile updated successfully!');
   };
 
   if (!user) {
@@ -90,18 +63,22 @@ export default function Dashboard() {
             <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-orange-500 animate-pulse" />
             <div className="absolute inset-0 w-16 h-16 rounded-full border-4 border-primary/30 border-t-primary animate-spin" />
           </div>
-          <p className="mt-4 text-zinc-600 dark:text-zinc-300 font-medium">Loading your dashboard...</p>
+          <p className="mt-4 text-zinc-600 dark:text-zinc-300 font-medium">
+            Loading your dashboard...
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={cn(
-      'min-h-screen font-sans',
-      'bg-white dark:bg-zinc-900',
-      'text-gemini-text-dark dark:text-zinc-50'
-    )}>
+    <div
+      className={cn(
+        'min-h-screen font-sans',
+        'bg-white dark:bg-zinc-900',
+        'text-gemini-text-dark dark:text-zinc-50'
+      )}
+    >
       <div className="flex min-h-screen flex-col">
         {/* Gemini-style Header */}
         <header
@@ -121,9 +98,9 @@ export default function Dashboard() {
             <div className="flex items-center gap-3">
               {user && <NotificationSystem userId={user.id} />}
               <UserAvatarMenu
-                avatarUrl={profile?.avatar_url}
-                displayName={profile?.full_name}
-                email={user?.email}
+                avatarUrl={profile?.avatar_url || undefined}
+                displayName={profile?.full_name || undefined}
+                email={user?.email || undefined}
                 size={40}
               />
             </div>
@@ -131,53 +108,56 @@ export default function Dashboard() {
         </header>
 
         <main className="flex-1 overflow-y-auto pb-24">
-             <Container size="md" className="pt-6 animate-fade-in flex flex-col gap-8">
-               {/* Unified Compact Header */}
-               <div className={cn(
-                 'rounded-[22px] p-4',
-                 'bg-gemini-card dark:bg-zinc-800/80',
-                 'shadow-[0_1px_2px_rgba(0,0,0,0.06)]'
-               )}>
-                 {/* Avatar and Welcome */}
-                 <div className="flex items-center gap-3 mb-3">
-                   <AvatarWithFallback
-                     src={profile?.avatar_url}
-                     alt={profile?.full_name || 'Profile'}
-                     fallback={(profile?.full_name || user?.email || '?')[0].toUpperCase()}
-                     size={40}
-                   />
-                   <div className="flex-1 min-w-0">
-                     <h2 className="text-lg font-bold text-gemini-text-dark dark:text-white truncate">
-                       Welcome back, {profile?.full_name || user?.email?.split('@')[0]}
-                     </h2>
-                     <p className="text-sm text-gemini-text-gray dark:text-zinc-400">
-                       {profile?.username && `@${profile.username}`}
-                       {profile?.username && ' | '}
-                       {tastingStats?.totalTastings || profile?.tastings_count || 0} tastings
-                       {profile?.created_at && ` | Member since ${new Date(profile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`}
-                     </p>
-                   </div>
-                 </div>
+          <Container size="md" className="pt-6 animate-fade-in flex flex-col gap-8">
+            {/* Unified Compact Header */}
+            <div
+              className={cn(
+                'rounded-[22px] p-4',
+                'bg-gemini-card dark:bg-zinc-800/80',
+                'shadow-[0_1px_2px_rgba(0,0,0,0.06)]'
+              )}
+            >
+              {/* Avatar and Welcome */}
+              <div className="flex items-center gap-3 mb-3">
+                <AvatarWithFallback
+                  src={profile?.avatar_url}
+                  alt={profile?.full_name || 'Profile'}
+                  fallback={(profile?.full_name || user?.email || '?')[0].toUpperCase()}
+                  size={40}
+                />
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-lg font-bold text-gemini-text-dark dark:text-white truncate">
+                    Welcome back, {profile?.full_name || user?.email?.split('@')[0]}
+                  </h2>
+                  <p className="text-sm text-gemini-text-gray dark:text-zinc-400">
+                    {profile?.username && `@${profile.username}`}
+                    {profile?.username && ' | '}
+                    {tastingStats?.totalTastings || profile?.tastings_count || 0} tastings
+                    {profile?.created_at &&
+                      ` | Member since ${new Date(profile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`}
+                  </p>
+                </div>
+              </div>
 
-                 {/* Quick tasting presets */}
-                 <div>
-                   <p className="text-xs font-medium text-gemini-text-gray dark:text-zinc-400 mb-2">
-                     Quick tasting presets
-                   </p>
-                   <div className="flex flex-wrap gap-2">
-                     {quickPresets.map((category) => (
-                       <button
-                         key={category}
-                         type="button"
-                         onClick={() => router.push(`/quick-tasting?category=${category}`)}
-                         className="active:scale-[0.98]"
-                       >
-                         <CategoryStamp category={category} />
-                       </button>
-                     ))}
-                   </div>
-                 </div>
-               </div>
+              {/* Quick tasting presets */}
+              <div>
+                <p className="text-xs font-medium text-gemini-text-gray dark:text-zinc-400 mb-2">
+                  Quick tasting presets
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {quickPresets.map((category) => (
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() => router.push(`/quick-tasting?category=${category}`)}
+                      className="active:scale-[0.98]"
+                    >
+                      <CategoryStamp category={category} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
 
             {/* Quick Actions */}
             <div className="space-y-4">
@@ -219,9 +199,11 @@ export default function Dashboard() {
                           </span>
                           <span className="text-zinc-500 text-xs">
                             {tasting.created_at && !isNaN(new Date(tasting.created_at).getTime())
-                              ? new Date(tasting.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-                              : 'N/A'
-                            }
+                              ? new Date(tasting.created_at).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                })
+                              : 'N/A'}
                           </span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-300">
@@ -233,7 +215,7 @@ export default function Dashboard() {
                               <span className="text-zinc-400">•</span>
                             </>
                           )}
-                          <span>{tasting.items?.length || 0} items</span>
+                          <span>{tasting.total_items || 0} items</span>
                         </div>
                       </button>
                     ))}
@@ -242,12 +224,26 @@ export default function Dashboard() {
               ) : (
                 <div className="bg-white dark:bg-zinc-800 p-6 rounded-[22px] text-center">
                   <div className="text-zinc-400 mb-3">
-                    <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    <svg
+                      className="w-12 h-12 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                      />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-2">No Tastings Yet</h3>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-300 mb-4">Start your flavor journey today!</p>
+                  <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                    No Tastings Yet
+                  </h3>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-300 mb-4">
+                    Start your flavor journey today!
+                  </p>
                   <button
                     onClick={() => router.push('/taste')}
                     className="px-4 py-2 bg-primary text-white rounded-[14px] hover:bg-primary-hover transition-colors"
@@ -260,7 +256,7 @@ export default function Dashboard() {
               {/* Social Feed Widget */}
               {user && <SocialFeedWidget userId={user.id} limit={5} />}
             </div>
-            </Container>
+          </Container>
         </main>
 
         {/* Bottom Navigation */}

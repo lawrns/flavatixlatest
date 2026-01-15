@@ -1,16 +1,16 @@
 /**
  * API Middleware Layer
- * 
+ *
  * Centralized middleware for all API routes providing:
  * - Authentication
  * - Input validation
  * - Error handling
  * - Request logging
  * - Rate limiting
- * 
+ *
  * Usage:
  *   import { withAuth, withValidation, createApiHandler } from '@/lib/api/middleware';
- *   
+ *
  *   export default createApiHandler({
  *     POST: withAuth(withValidation(createTastingSchema, handler)),
  *     GET: publicHandler,
@@ -102,10 +102,7 @@ export function sendError(
   } as ApiErrorResponse);
 }
 
-export function sendValidationError(
-  res: NextApiResponse,
-  errors: Record<string, string>
-): void {
+export function sendValidationError(res: NextApiResponse, errors: Record<string, string>): void {
   sendError(res, ERROR_CODES.VALIDATION_FAILED, 'Validation failed', 400, errors);
 }
 
@@ -168,7 +165,10 @@ export function withAuth(handler: ApiHandler): ApiHandler {
       const supabase = getSupabaseClient(req, res);
 
       // Verify token and get user
-      const { data: { user }, error } = await supabase.auth.getUser(token);
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser(token);
 
       if (error || !user) {
         logger.debug('Auth', 'Invalid token', { errorMessage: error?.message });
@@ -216,7 +216,9 @@ export function withOptionalAuth(handler: ApiHandler): ApiHandler {
       if (authHeader?.startsWith('Bearer ')) {
         const token = authHeader.replace('Bearer ', '');
         const supabase = getSupabaseClient(req, res);
-        const { data: { user } } = await supabase.auth.getUser(token);
+        const {
+          data: { user },
+        } = await supabase.auth.getUser(token);
         context.user = user || undefined;
       }
 
@@ -239,10 +241,7 @@ export function withOptionalAuth(handler: ApiHandler): ApiHandler {
  * Middleware that validates request body against a Zod schema
  * Validated data replaces req.body
  */
-export function withValidation<T extends z.ZodSchema>(
-  schema: T,
-  handler: ApiHandler
-): ApiHandler {
+export function withValidation<T extends z.ZodSchema>(schema: T, handler: ApiHandler): ApiHandler {
   return async (req, res, context) => {
     try {
       const result = schema.safeParse(req.body);
@@ -324,7 +323,8 @@ export function withLogging(handler: ApiHandler): ApiHandler {
     // Wrap res.json to log response.
     // IMPORTANT: In unit tests, res.json is often a Jest mock; overriding it breaks assertions.
     const jsonAny = res.json as any;
-    const isJestMockJson = typeof jsonAny === 'function' && (jsonAny._isMockFunction || jsonAny.mock);
+    const isJestMockJson =
+      typeof jsonAny === 'function' && (jsonAny._isMockFunction || jsonAny.mock);
 
     if (!isJestMockJson) {
       const originalJson = res.json.bind(res);
@@ -422,17 +422,16 @@ export function withErrorHandling(handler: ApiHandler): ApiHandler {
 
 /**
  * Create a standardized API handler with method routing
- * 
+ *
  * @example
  * export default createApiHandler({
  *   GET: withOptionalAuth(getHandler),
  *   POST: withAuth(withValidation(schema, createHandler)),
  * });
  */
-export function createApiHandler(handlers: HandlerMap): (
-  req: NextApiRequest,
-  res: NextApiResponse
-) => Promise<void> {
+export function createApiHandler(
+  handlers: HandlerMap
+): (req: NextApiRequest, res: NextApiResponse) => Promise<void> {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     // Generate unique request ID for tracing
     const requestId = generateRequestId();
@@ -451,12 +450,7 @@ export function createApiHandler(handlers: HandlerMap): (
       if (!handler) {
         const allowedMethods = Object.keys(handlers).join(', ');
         res.setHeader('Allow', allowedMethods);
-        return sendError(
-          res,
-          'METHOD_NOT_ALLOWED',
-          `Method ${method} not allowed`,
-          405
-        );
+        return sendError(res, 'METHOD_NOT_ALLOWED', `Method ${method} not allowed`, 405);
       }
 
       // Wrap with error handling and logging
@@ -494,7 +488,9 @@ class InMemoryRateLimitStore implements RateLimitStore {
 
   async get(key: string): Promise<RateLimitEntry | null> {
     const entry = this.store.get(key);
-    if (!entry) return null;
+    if (!entry) {
+      return null;
+    }
     if (entry.resetAt < Date.now()) {
       this.store.delete(key);
       return null;
@@ -513,7 +509,7 @@ class InMemoryRateLimitStore implements RateLimitStore {
   async increment(key: string, ttlMs: number): Promise<RateLimitEntry> {
     const existing = await this.get(key);
     const now = Date.now();
-    
+
     if (!existing || existing.resetAt < now) {
       const newEntry: RateLimitEntry = {
         count: 1,
@@ -536,15 +532,19 @@ class RedisRateLimitStore implements RateLimitStore {
   private initialized = false;
 
   private async init() {
-    if (this.initialized) return;
-    
+    if (this.initialized) {
+      return;
+    }
+
     try {
       // Try to import Redis client (install with: npm install ioredis)
       const Redis = require('ioredis');
       const redisUrl = process.env.REDIS_URL || process.env.UPSTASH_REDIS_REST_URL;
-      
+
       if (!redisUrl) {
-        throw new Error('REDIS_URL or UPSTASH_REDIS_REST_URL environment variable required for Redis rate limiting');
+        throw new Error(
+          'REDIS_URL or UPSTASH_REDIS_REST_URL environment variable required for Redis rate limiting'
+        );
       }
 
       // Support both standard Redis and Upstash REST API
@@ -576,7 +576,7 @@ class RedisRateLimitStore implements RateLimitStore {
         // Standard Redis connection
         this.redis = new Redis(redisUrl);
       }
-      
+
       this.initialized = true;
     } catch (error) {
       console.warn('Redis not available, falling back to in-memory rate limiting:', error);
@@ -587,7 +587,9 @@ class RedisRateLimitStore implements RateLimitStore {
   async get(key: string): Promise<RateLimitEntry | null> {
     await this.init();
     const data = await this.redis.get(key);
-    if (!data) return null;
+    if (!data) {
+      return null;
+    }
     return JSON.parse(data);
   }
 
@@ -601,16 +603,16 @@ class RedisRateLimitStore implements RateLimitStore {
     await this.init();
     const now = Date.now();
     const resetAt = now + ttlMs;
-    
+
     // Use Redis INCR for atomic increment
     const count = await this.redis.incr(key);
-    
+
     // Set TTL if this is the first request
     if (count === 1) {
       const ttlSeconds = Math.ceil(ttlMs / 1000);
       await this.redis.setex(key, ttlSeconds, JSON.stringify({ count: 1, resetAt }));
     }
-    
+
     // Get current entry to return
     const data = await this.redis.get(key);
     if (data) {
@@ -618,7 +620,7 @@ class RedisRateLimitStore implements RateLimitStore {
       entry.count = count;
       return entry;
     }
-    
+
     return { count, resetAt };
   }
 }
@@ -631,13 +633,17 @@ if (process.env.REDIS_URL || process.env.UPSTASH_REDIS_REST_URL) {
     rateLimitStore = new RedisRateLimitStore();
   } catch {
     // Fallback to in-memory if Redis initialization fails
-    console.warn('⚠️ Redis rate limiting unavailable, using in-memory store (not suitable for production)');
+    console.warn(
+      '⚠️ Redis rate limiting unavailable, using in-memory store (not suitable for production)'
+    );
     rateLimitStore = new InMemoryRateLimitStore();
   }
 } else {
   rateLimitStore = new InMemoryRateLimitStore();
   if (process.env.NODE_ENV === 'production') {
-    console.warn('⚠️ Production environment detected but REDIS_URL not set. Rate limiting uses in-memory store which will not work across instances.');
+    console.warn(
+      '⚠️ Production environment detected but REDIS_URL not set. Rate limiting uses in-memory store which will not work across instances.'
+    );
   }
 }
 
@@ -713,17 +719,11 @@ export function withRateLimit(config: RateLimitConfig): (handler: ApiHandler) =>
       // Check if limit exceeded
       if (entry.count > maxRequests) {
         res.setHeader('Retry-After', resetInSeconds.toString());
-        return sendError(
-          res,
-          'RATE_LIMIT_EXCEEDED',
-          message,
-          429,
-          {
-            limit: maxRequests,
-            remaining: 0,
-            resetInSeconds,
-          }
-        );
+        return sendError(res, 'RATE_LIMIT_EXCEEDED', message, 429, {
+          limit: maxRequests,
+          remaining: 0,
+          resetInSeconds,
+        });
       }
 
       return handler(req, res, context);
@@ -777,12 +777,7 @@ export function withCsrfProtection(handler: ApiHandler): ApiHandler {
         method: req.method,
         url: req.url,
       });
-      return sendError(
-        res,
-        'CSRF_TOKEN_MISSING',
-        'CSRF token required for this operation',
-        403
-      );
+      return sendError(res, 'CSRF_TOKEN_MISSING', 'CSRF token required for this operation', 403);
     }
 
     // TODO(security): CSRF validation is incomplete. Currently only checks token presence,
@@ -813,7 +808,9 @@ export function generateCsrfToken(userId?: string): string {
 /**
  * Compose multiple middleware into one
  */
-export function compose(...middlewares: ((handler: ApiHandler) => ApiHandler)[]): (handler: ApiHandler) => ApiHandler {
+export function compose(
+  ...middlewares: ((handler: ApiHandler) => ApiHandler)[]
+): (handler: ApiHandler) => ApiHandler {
   return (handler: ApiHandler) => {
     return middlewares.reduceRight((h, middleware) => middleware(h), handler);
   };

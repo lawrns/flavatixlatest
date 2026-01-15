@@ -1,0 +1,26 @@
+# Subject line (50 characters max)
+#
+
+# Body (72 characters per line)
+#
+# - Use imperative mood ("add feature" not "added feature")
+# - Focus on WHY, not WHAT
+# - Reference issues with: fixes #123, relates to #456
+# - Separate multiple concerns into different commits
+#
+# Commit Types:
+# feat:     A new feature
+# fix:      A bug fix
+# docs:     Documentation changes
+# style:    Code style changes (formatting, etc)
+# refactor: Code refactoring without feature changes
+# test:     Adding or updating tests
+# chore:    Build process, dependencies, tooling
+# perf:     Performance improvements
+# ci:       CI/CD configuration changes
+#
+# Example:
+# feat: add dark mode toggle to settings
+#
+# Users can now customize the application theme.
+# Implements design system from #123.

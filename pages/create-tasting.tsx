@@ -56,7 +56,7 @@ const CreateTastingPage: React.FC = () => {
     items: [],
     notes: '',
     use_template: false,
-    template_id: null
+    template_id: null,
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,7 +68,7 @@ const CreateTastingPage: React.FC = () => {
   }, [user, loading, router]);
 
   const handleModeChange = (mode: TastingMode) => {
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
       mode,
       // Reset study approach when switching away from study mode
@@ -76,7 +76,7 @@ const CreateTastingPage: React.FC = () => {
       // Reset ranking when switching away from competition
       rank_participants: mode === 'competition' ? prev.rank_participants : false,
       // Clear items for study mode
-      items: mode === 'study' ? [] : prev.items
+      items: mode === 'study' ? [] : prev.items,
     }));
   };
 
@@ -85,27 +85,25 @@ const CreateTastingPage: React.FC = () => {
       id: `temp-${Date.now()}-${Math.random()}`,
       item_name: `Item ${form.items.length + 1}`,
       category: form.category || 'coffee',
-      include_in_ranking: true
+      include_in_ranking: true,
     };
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      items: [...prev.items, newItem]
+      items: [...prev.items, newItem],
     }));
   };
 
   const updateItem = (id: string, updates: Partial<TastingItem>) => {
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      items: prev.items.map(item =>
-        item.id === id ? { ...item, ...updates } : item
-      )
+      items: prev.items.map((item) => (item.id === id ? { ...item, ...updates } : item)),
     }));
   };
 
   const removeItem = (id: string) => {
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      items: prev.items.filter(item => item.id !== id)
+      items: prev.items.filter((item) => item.id !== id),
     }));
   };
 
@@ -148,19 +146,25 @@ const CreateTastingPage: React.FC = () => {
           mode: form.mode,
           study_approach: form.study_approach,
           category: form.category,
-          session_name: form.session_name || `${form.category.charAt(0).toUpperCase() + form.category.slice(1)} ${form.mode === 'study' ? 'Study' : form.mode === 'competition' ? 'Competition' : 'Tasting'}`,
+          session_name:
+            form.session_name ||
+            `${form.category.charAt(0).toUpperCase() + form.category.slice(1)} ${form.mode === 'study' ? 'Study' : form.mode === 'competition' ? 'Competition' : 'Tasting'}`,
           notes: form.notes || null,
           rank_participants: form.rank_participants,
           ranking_type: form.ranking_type,
           is_blind_participants: form.is_blind_participants,
           is_blind_items: form.is_blind_items,
           is_blind_attributes: form.is_blind_attributes,
-          items: (form.mode === 'competition' || (form.mode === 'study' && form.study_approach === 'predefined')) ? form.items.map(item => ({
-            item_name: item.item_name,
-            correct_answers: item.correct_answers,
-            include_in_ranking: item.include_in_ranking
-          })) : []
-        })
+          items:
+            form.mode === 'competition' ||
+            (form.mode === 'study' && form.study_approach === 'predefined')
+              ? form.items.map((item) => ({
+                  item_name: item.item_name,
+                  correct_answers: item.correct_answers,
+                  include_in_ranking: item.include_in_ranking,
+                }))
+              : [],
+        }),
       });
 
       if (!response.ok) {
@@ -173,7 +177,6 @@ const CreateTastingPage: React.FC = () => {
 
       // Navigate to the tasting session
       router.push(`/tasting/${data.tasting.id}`);
-
     } catch (error) {
       console.error('Error creating tasting:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to create tasting session');
@@ -192,7 +195,9 @@ const CreateTastingPage: React.FC = () => {
     );
   }
 
-  if (!user) return null;
+  if (!user) {
+    return null;
+  }
 
   return (
     <PageLayout
@@ -203,32 +208,32 @@ const CreateTastingPage: React.FC = () => {
     >
       {/* Mode Selection */}
       <div className="bg-gemini-card dark:bg-zinc-800 rounded-[22px] p-6 mt-2">
-            <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">Choose Mode</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
-              <button
-                type="button"
-                onClick={() => router.push('/taste/create/study')}
-                className="p-md rounded-lg border-2 border-border-default hover:border-primary-400 transition-all"
-              >
-                <BookOpen size={32} className="mx-auto mb-sm text-text-secondary" />
-                <h3 className="font-heading font-semibold mb-xs">Study Mode</h3>
-                <p className="text-small text-text-secondary">
-                  Structured tasting sessions with custom categories and templates.
-                </p>
-              </button>
+        <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">Choose Mode</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
+          <button
+            type="button"
+            onClick={() => router.push('/taste/create/study')}
+            className="p-md rounded-lg border-2 border-border-default hover:border-primary-400 transition-all"
+          >
+            <BookOpen size={32} className="mx-auto mb-sm text-text-secondary" />
+            <h3 className="font-heading font-semibold mb-xs">Study Mode</h3>
+            <p className="text-small text-text-secondary">
+              Structured tasting sessions with custom categories and templates.
+            </p>
+          </button>
 
-              <button
-                type="button"
-                onClick={() => router.push('/taste/create/competition')}
-                className="p-md rounded-lg border-2 border-border-default hover:border-primary-400 transition-all"
-              >
-                <Trophy size={32} className="mx-auto mb-sm text-text-secondary" />
-                <h3 className="font-heading font-semibold mb-xs">Competition Mode</h3>
-                <p className="text-small text-text-secondary">
-                  Preload items with correct answers. Enable participant ranking.
-                </p>
-              </button>
-            </div>
+          <button
+            type="button"
+            onClick={() => router.push('/taste/create/competition')}
+            className="p-md rounded-lg border-2 border-border-default hover:border-primary-400 transition-all"
+          >
+            <Trophy size={32} className="mx-auto mb-sm text-text-secondary" />
+            <h3 className="font-heading font-semibold mb-xs">Competition Mode</h3>
+            <p className="text-small text-text-secondary">
+              Preload items with correct answers. Enable participant ranking.
+            </p>
+          </button>
+        </div>
       </div>
     </PageLayout>
   );
@@ -239,6 +244,6 @@ export default CreateTastingPage;
 // Disable static generation for this page
 export async function getServerSideProps() {
   return {
-    props: {}
+    props: {},
   };
 }

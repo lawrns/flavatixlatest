@@ -37,25 +37,23 @@ async function getPredefinedCategories(): Promise<{
   metaphorCategories: PredefinedCategory[];
 }> {
   const supabase = getSupabaseClient();
-  
+
   try {
     const [flavorResult, metaphorResult] = await Promise.all([
-      supabase
-        .from('active_flavor_categories')
-        .select('*')
-        .order('display_order'),
-      supabase
-        .from('active_metaphor_categories')
-        .select('*')
-        .order('display_order')
+      supabase.from('active_flavor_categories').select('*').order('display_order'),
+      supabase.from('active_metaphor_categories').select('*').order('display_order'),
     ]);
 
-    if (flavorResult.error) throw flavorResult.error;
-    if (metaphorResult.error) throw metaphorResult.error;
+    if (flavorResult.error) {
+      throw flavorResult.error;
+    }
+    if (metaphorResult.error) {
+      throw metaphorResult.error;
+    }
 
     return {
       flavorCategories: flavorResult.data || [],
-      metaphorCategories: metaphorResult.data || []
+      metaphorCategories: metaphorResult.data || [],
     };
   } catch (error) {
     logger.error('DescriptorExtraction', 'Error fetching predefined categories', error);
@@ -64,7 +62,7 @@ async function getPredefinedCategories(): Promise<{
     // 3) Throw error to skip AI extraction entirely when categories unavailable.
     return {
       flavorCategories: [],
-      metaphorCategories: []
+      metaphorCategories: [],
     };
   }
 }
@@ -75,45 +73,48 @@ function findClosestCategory(
 ): PredefinedCategory | null {
   // Simple fuzzy matching - can be enhanced with more sophisticated algorithms
   const aiLower = aiCategory.toLowerCase();
-  
+
   // Direct match
-  let match = predefinedCategories.find(cat => 
-    cat.name.toLowerCase() === aiLower
-  );
-  if (match) return match;
-  
+  let match = predefinedCategories.find((cat) => cat.name.toLowerCase() === aiLower);
+  if (match) {
+    return match;
+  }
+
   // Partial match
-  match = predefinedCategories.find(cat => 
-    cat.name.toLowerCase().includes(aiLower) || 
-    aiLower.includes(cat.name.toLowerCase())
+  match = predefinedCategories.find(
+    (cat) => cat.name.toLowerCase().includes(aiLower) || aiLower.includes(cat.name.toLowerCase())
   );
-  if (match) return match;
-  
+  if (match) {
+    return match;
+  }
+
   // Keyword matching
   const keywords: { [key: string]: string[] } = {
-    'Fruit': ['fruit', 'berry', 'citrus', 'apple', 'lemon', 'orange'],
-    'Floral': ['floral', 'flower', 'blossom', 'rose', 'lavender'],
-    'Herbal': ['herbal', 'herb', 'mint', 'basil', 'oregano'],
-    'Spice': ['spice', 'spicy', 'pepper', 'cinnamon', 'clove'],
+    Fruit: ['fruit', 'berry', 'citrus', 'apple', 'lemon', 'orange'],
+    Floral: ['floral', 'flower', 'blossom', 'rose', 'lavender'],
+    Herbal: ['herbal', 'herb', 'mint', 'basil', 'oregano'],
+    Spice: ['spice', 'spicy', 'pepper', 'cinnamon', 'clove'],
     'Sweetness / Sugary / Confection': ['sweet', 'sugar', 'honey', 'candy', 'confection'],
     'Earthy / Mineral': ['earthy', 'mineral', 'soil', 'stone', 'dirt'],
     'Vegetal / Green': ['vegetal', 'green', 'grass', 'vegetable', 'leaf'],
     'Nutty / Grain / Cereal': ['nut', 'nutty', 'grain', 'cereal', 'oat'],
     'Ferment / Funky': ['ferment', 'funky', 'yeast', 'barnyard'],
     'Roasted / Toasted / Smoke': ['roast', 'toasted', 'smoke', 'burnt', 'char'],
-    'Chemical': ['chemical', 'medicinal', 'petroleum', 'plastic'],
+    Chemical: ['chemical', 'medicinal', 'petroleum', 'plastic'],
     'Animal / Must': ['animal', 'must', 'leather', 'musky'],
     'Dairy / Fatty': ['dairy', 'fat', 'fatty', 'cream', 'butter'],
-    'Wood / Resin': ['wood', 'oak', 'pine', 'resin', 'cedar']
+    'Wood / Resin': ['wood', 'oak', 'pine', 'resin', 'cedar'],
   };
-  
+
   for (const [categoryName, keywordList] of Object.entries(keywords)) {
-    if (keywordList.some(keyword => aiLower.includes(keyword))) {
-      const category = predefinedCategories.find(cat => cat.name === categoryName);
-      if (category) return category;
+    if (keywordList.some((keyword) => aiLower.includes(keyword))) {
+      const category = predefinedCategories.find((cat) => cat.name === categoryName);
+      if (category) {
+        return category;
+      }
     }
   }
-  
+
   return null;
 }
 
@@ -123,7 +124,10 @@ export async function extractDescriptorsWithAI(
   taxonomyContext?: any
 ): Promise<AIExtractionResult> {
   const startTime = Date.now();
-  logger.debug('DescriptorExtraction', 'Starting AI extraction', { category, textLength: text.length });
+  logger.debug('DescriptorExtraction', 'Starting AI extraction', {
+    category,
+    textLength: text.length,
+  });
 
   if (!process.env.ANTHROPIC_API_KEY) {
     logger.error('DescriptorExtraction', 'ANTHROPIC_API_KEY not configured');
@@ -143,10 +147,10 @@ CLASSIFICATION RULES:
 
 CATEGORIZATION GUIDELINES:
 For AROMA, FLAVOR, and TEXTURE types, you MUST use one of these predefined categories:
-${flavorCategories.map(cat => `- ${cat.name}`).join('\n')}
+${flavorCategories.map((cat) => `- ${cat.name}`).join('\n')}
 
 For METAPHOR type, you MUST use one of these predefined categories:
-${metaphorCategories.map(cat => `- ${cat.name}`).join('\n')}
+${metaphorCategories.map((cat) => `- ${cat.name}`).join('\n')}
 
 IMPORTANT:
 - Preserve exact user wording (keep "chocolatey" not "chocolate", "lemony" not "lemon")
@@ -181,12 +185,12 @@ Extract ALL descriptors, even if confidence is medium. Be thorough.`;
     const anthropic = getAnthropicClient();
 
     aiLogger.apiCall('Anthropic', model, 'descriptor_extraction', {
-      metadata: { textLength: text.length, category }
+      metadata: { textLength: text.length, category },
     });
 
     const response = await anthropic.messages.create({
       model,
-      max_tokens: 2048,
+      max_tokens: 4096, // Increased from 2048 to handle longer responses with many descriptors
       system: systemPrompt,
       messages: [
         {
@@ -201,11 +205,17 @@ Extract ALL descriptors, even if confidence is medium. Be thorough.`;
 
     // Estimate cost (Claude Haiku pricing: $0.25/MTok input, $1.25/MTok output)
     const estimatedCost =
-      (response.usage.input_tokens / 1_000_000 * 0.25) +
-      (response.usage.output_tokens / 1_000_000 * 1.25);
+      (response.usage.input_tokens / 1_000_000) * 0.25 +
+      (response.usage.output_tokens / 1_000_000) * 1.25;
 
     aiLogger.completion('Anthropic', model, totalTokens, apiDuration, estimatedCost);
-    aiLogger.tokenUsage('Anthropic', model, response.usage.input_tokens, response.usage.output_tokens, estimatedCost);
+    aiLogger.tokenUsage(
+      'Anthropic',
+      model,
+      response.usage.input_tokens,
+      response.usage.output_tokens,
+      estimatedCost
+    );
 
     const content = response.content[0];
     if (content.type !== 'text') {
@@ -225,31 +235,30 @@ Extract ALL descriptors, even if confidence is medium. Be thorough.`;
       subcategory?: string;
       confidence: number;
     }>;
-    
+
     // Post-process to map AI categories to predefined category IDs
     const processedDescriptors = rawDescriptors.map((descriptor) => {
-      const predefinedCategories = descriptor.type === 'metaphor' 
-        ? metaphorCategories 
-        : flavorCategories;
-      
+      const predefinedCategories =
+        descriptor.type === 'metaphor' ? metaphorCategories : flavorCategories;
+
       const closestCategory = findClosestCategory(descriptor.category, predefinedCategories);
-      
+
       return {
         text: descriptor.text,
         type: descriptor.type,
         category: descriptor.category,
         subcategory: descriptor.subcategory,
         predefined_category_id: closestCategory?.id || undefined,
-        confidence: descriptor.confidence
+        confidence: descriptor.confidence,
       };
     });
-    
+
     const processingTimeMs = Date.now() - startTime;
 
     logger.info('DescriptorExtraction', 'AI extraction completed', {
       descriptorCount: processedDescriptors.length,
       tokensUsed: response.usage.input_tokens + response.usage.output_tokens,
-      processingTimeMs
+      processingTimeMs,
     });
 
     return {
@@ -264,7 +273,7 @@ Extract ALL descriptors, even if confidence is medium. Be thorough.`;
     }
 
     aiLogger.error('Anthropic', 'claude-3-haiku-20240307', error as Error, {
-      metadata: { textLength: text.length, category }
+      metadata: { textLength: text.length, category },
     });
 
     logger.error('DescriptorExtraction', 'AI extraction failed', error);

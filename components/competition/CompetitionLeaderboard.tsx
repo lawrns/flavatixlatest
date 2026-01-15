@@ -48,17 +48,21 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
       // Get participants with scores
       const { data: participants, error } = await supabase
         .from('tasting_participants')
-        .select(`
+        .select(
+          `
           id,
           user_id,
           score,
           created_at
-        `)
+        `
+        )
         .eq('tasting_id', sessionId)
         .not('score', 'is', null)
         .order('score', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
       // Get user profiles
       const userIds = participants?.map((p: any) => p.user_id) || [];
@@ -74,7 +78,7 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
       const entries: LeaderboardEntry[] = (participants || []).map((p: any, index: number) => {
         const profile = (profiles as any)?.find((pr: any) => pr.user_id === p.user_id);
         const authUser = users?.users.find((u: any) => u.id === p.user_id);
-        
+
         return {
           id: p.id,
           user_id: p.user_id,
@@ -82,18 +86,17 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
           rank: index + 1,
           user_email: authUser?.email || 'Unknown',
           user_name: profile?.full_name || null,
-          created_at: p.created_at
+          created_at: p.created_at,
         };
       });
 
       setLeaderboard(entries);
 
       // Find current user's rank
-      const currentUserEntry = entries.find(e => e.user_id === user?.id);
+      const currentUserEntry = entries.find((e) => e.user_id === user?.id);
       if (currentUserEntry) {
         setUserRank(currentUserEntry.rank);
       }
-
     } catch (error) {
       console.error('Error loading leaderboard:', error);
     } finally {
@@ -153,12 +156,8 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
           <div className="flex items-center gap-md">
             <Trophy size={32} className="text-primary" />
             <div>
-              <h1 className="text-h2 font-heading font-bold text-text-primary">
-                Leaderboard
-              </h1>
-              <p className="text-small text-text-secondary">
-                {sessionName}
-              </p>
+              <h1 className="text-h2 font-heading font-bold text-text-primary">Leaderboard</h1>
+              <p className="text-small text-text-secondary">{sessionName}</p>
             </div>
           </div>
         </div>
@@ -185,9 +184,7 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
                     <p className="text-small font-semibold text-text-primary truncate">
                       {leaderboard[1].user_name || leaderboard[1].user_email.split('@')[0]}
                     </p>
-                    <p className="text-h2 font-bold text-primary mt-xs">
-                      {leaderboard[1].score}%
-                    </p>
+                    <p className="text-h2 font-bold text-primary mt-xs">{leaderboard[1].score}%</p>
                   </div>
                 </div>
 
@@ -198,9 +195,7 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
                     <p className="text-body font-semibold text-text-primary truncate">
                       {leaderboard[0].user_name || leaderboard[0].user_email.split('@')[0]}
                     </p>
-                    <p className="text-h1 font-bold text-primary mt-xs">
-                      {leaderboard[0].score}%
-                    </p>
+                    <p className="text-h1 font-bold text-primary mt-xs">{leaderboard[0].score}%</p>
                   </div>
                 </div>
 
@@ -211,9 +206,7 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
                     <p className="text-small font-semibold text-text-primary truncate">
                       {leaderboard[2].user_name || leaderboard[2].user_email.split('@')[0]}
                     </p>
-                    <p className="text-h2 font-bold text-primary mt-xs">
-                      {leaderboard[2].score}%
-                    </p>
+                    <p className="text-h2 font-bold text-primary mt-xs">{leaderboard[2].score}%</p>
                   </div>
                 </div>
               </div>
@@ -251,9 +244,7 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-h3 font-bold text-primary">
-                        {entry.score}%
-                      </p>
+                      <p className="text-h3 font-bold text-primary">{entry.score}%</p>
                     </div>
                   </div>
                 ))}
@@ -269,7 +260,11 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
                     <div>
                       <p className="text-small font-semibold text-text-primary">Your Rank</p>
                       <p className="text-xs text-text-secondary">
-                        {userRank === 1 ? 'Champion!' : userRank <= 3 ? 'Podium finish!' : 'Keep practicing!'}
+                        {userRank === 1
+                          ? 'Champion!'
+                          : userRank <= 3
+                            ? 'Podium finish!'
+                            : 'Keep practicing!'}
                       </p>
                     </div>
                   </div>
@@ -286,4 +281,3 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
     </div>
   );
 };
-

@@ -1,6 +1,6 @@
 /**
  * SessionHeader Component
- * 
+ *
  * Displays and manages the header section of a tasting session including:
  * - Editable session name
  * - Category selector
@@ -53,7 +53,9 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
   const canEditName = itemsCount <= 1;
 
   const startEditing = () => {
-    if (!canEditName) return;
+    if (!canEditName) {
+      return;
+    }
     setIsEditingName(true);
     setEditingName(session.session_name || '');
   };
@@ -71,8 +73,12 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') saveName();
-    if (e.key === 'Escape') cancelEditing();
+    if (e.key === 'Enter') {
+      saveName();
+    }
+    if (e.key === 'Escape') {
+      cancelEditing();
+    }
   };
 
   return (
@@ -97,7 +103,9 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
                     placeholder="Enter session name..."
                     autoFocus
                   />
-                  <span className="text-xs text-gemini-text-muted flex-shrink-0">Enter to save</span>
+                  <span className="text-xs text-gemini-text-muted flex-shrink-0">
+                    Enter to save
+                  </span>
                 </div>
               </div>
             </div>
@@ -105,12 +113,14 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
             <div className="mb-2">
               <div
                 className={`flex items-center gap-2 p-2 -m-2 rounded-lg ${
-                  canEditName 
-                    ? 'hover:bg-white dark:hover:bg-zinc-700/50 cursor-pointer' 
+                  canEditName
+                    ? 'hover:bg-white dark:hover:bg-zinc-700/50 cursor-pointer'
                     : 'opacity-60 cursor-not-allowed'
                 } transition-colors group`}
                 onClick={canEditName ? startEditing : undefined}
-                title={canEditName ? 'Click to edit session name' : 'Cannot edit after adding items'}
+                title={
+                  canEditName ? 'Click to edit session name' : 'Cannot edit after adding items'
+                }
               >
                 <div className="min-w-0 flex-1">
                   <div className="text-xs font-medium text-gemini-text-muted uppercase tracking-wider mb-0.5">
@@ -121,7 +131,10 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
                       {session.session_name || 'Quick Tasting'}
                     </h2>
                     {canEditName && (
-                      <Edit size={14} className="text-gemini-text-muted opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                      <Edit
+                        size={14}
+                        className="text-gemini-text-muted opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                      />
                     )}
                   </div>
                 </div>
@@ -147,24 +160,22 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
             )}
             <div className="flex flex-wrap items-center space-x-2 text-xs">
               {session.mode === 'study' && session.study_approach && (
-                <span>• {session.study_approach.charAt(0).toUpperCase() + session.study_approach.slice(1)}</span>
+                <span>
+                  •{' '}
+                  {session.study_approach.charAt(0).toUpperCase() + session.study_approach.slice(1)}
+                </span>
               )}
               {session.rank_participants && <span>• Ranked Competition</span>}
-              {(session.is_blind_participants || session.is_blind_items || session.is_blind_attributes) && (
-                <span>• Blind Tasting</span>
-              )}
+              {(session.is_blind_participants ||
+                session.is_blind_items ||
+                session.is_blind_attributes) && <span>• Blind Tasting</span>}
             </div>
           </div>
 
           {/* Role Indicator */}
           {userRole && session.mode !== 'quick' && (
             <div className="mt-2">
-              <RoleIndicator
-                role={userRole}
-                userId={userId}
-                currentUserId={userId}
-                size="sm"
-              />
+              <RoleIndicator role={userRole} userId={userId} currentUserId={userId} size="sm" />
             </div>
           )}
         </div>
@@ -183,24 +194,28 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
           )}
 
           {/* Suggestions Button - Collaborative study mode only */}
-          {session.mode === 'study' && session.study_approach === 'collaborative' && phase === 'setup' && (
-            <button
-              onClick={onToggleSuggestions}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-[14px] text-sm font-medium transition-colors ${
-                showSuggestions
-                  ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300'
-                  : 'text-gemini-text-gray hover:bg-white dark:hover:bg-zinc-700'
-              }`}
-            >
-              <span className="material-symbols-outlined text-base">lightbulb</span>
-              Tips
-            </button>
-          )}
+          {session.mode === 'study' &&
+            session.study_approach === 'collaborative' &&
+            phase === 'setup' && (
+              <button
+                onClick={onToggleSuggestions}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-[14px] text-sm font-medium transition-colors ${
+                  showSuggestions
+                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300'
+                    : 'text-gemini-text-gray hover:bg-white dark:hover:bg-zinc-700'
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">lightbulb</span>
+                Tips
+              </button>
+            )}
 
           {/* Stats */}
           <div className="flex items-center gap-3 pl-2 border-l border-gemini-border dark:border-zinc-600">
             <div className="text-center">
-              <div className="text-2xl font-bold text-gemini-text-dark dark:text-white tabular-nums">{itemsCount}</div>
+              <div className="text-2xl font-bold text-gemini-text-dark dark:text-white tabular-nums">
+                {itemsCount}
+              </div>
               <div className="text-xs text-gemini-text-muted">Total items</div>
             </div>
             <div className="text-center">

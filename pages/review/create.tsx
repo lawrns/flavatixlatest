@@ -29,17 +29,21 @@ const CreateReviewPage: React.FC = () => {
       .from('tasting-photos')
       .upload(filePath, file);
 
-    if (uploadError) throw uploadError;
+    if (uploadError) {
+      throw uploadError;
+    }
 
-    const { data: { publicUrl } } = supabase.storage
-      .from('tasting-photos')
-      .getPublicUrl(filePath);
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from('tasting-photos').getPublicUrl(filePath);
 
     return publicUrl;
   };
 
   const handleSubmit = async (data: ReviewFormData, action: 'done' | 'save' | 'new') => {
-    if (!user) return;
+    if (!user) {
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -90,7 +94,7 @@ const CreateReviewPage: React.FC = () => {
           complexity_score: data.complexity_score || null,
           other_notes: data.other_notes,
           overall_score: data.overall_score || null,
-          status: status
+          status: status,
         })
         .select()
         .single();
@@ -163,7 +167,6 @@ const CreateReviewPage: React.FC = () => {
 };
 
 export default CreateReviewPage;
-
 
 // Disable static generation for this page
 export async function getServerSideProps() {

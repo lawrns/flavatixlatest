@@ -1,6 +1,6 @@
 /**
  * Flavor Wheel Query Hooks
- * 
+ *
  * React Query hooks for flavor wheel data fetching and generation.
  */
 
@@ -50,7 +50,7 @@ async function fetchUserFlavorWheel(
   wheelType: WheelType = 'combined'
 ): Promise<FlavorWheel | null> {
   const supabase = getSupabaseClient();
-  
+
   const { data, error } = await supabase
     .from('flavor_wheels')
     .select('*')
@@ -60,30 +60,32 @@ async function fetchUserFlavorWheel(
     .order('updated_at', { ascending: false })
     .limit(1)
     .single();
-  
+
   if (error) {
-    if (error.code === 'PGRST116') return null; // Not found
+    if (error.code === 'PGRST116') {
+      return null;
+    } // Not found
     logger.error('FlavorWheels', 'Failed to fetch wheel', error, { userId, wheelType });
     throw error;
   }
-  
+
   return data as FlavorWheel;
 }
 
 async function fetchUserDescriptors(userId: string): Promise<any[]> {
   const supabase = getSupabaseClient();
-  
+
   const { data, error } = await supabase
     .from('flavor_descriptors')
     .select('*')
     .eq('user_id', userId)
     .order('created_at', { ascending: false });
-  
+
   if (error) {
     logger.error('FlavorWheels', 'Failed to fetch descriptors', error, { userId });
     throw error;
   }
-  
+
   return data || [];
 }
 
@@ -95,17 +97,17 @@ async function generateFlavorWheel(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`,
+      Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify(params),
   });
-  
+
   if (!response.ok) {
     const error = await response.json();
     logger.error('FlavorWheels', 'Failed to generate wheel', error);
     throw new Error(error.message || 'Failed to generate flavor wheel');
   }
-  
+
   const result = await response.json();
   return result.data;
 }
@@ -118,17 +120,17 @@ async function extractDescriptors(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`,
+      Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify(params),
   });
-  
+
   if (!response.ok) {
     const error = await response.json();
     logger.error('FlavorWheels', 'Failed to extract descriptors', error);
     throw new Error(error.message || 'Failed to extract descriptors');
   }
-  
+
   const result = await response.json();
   return result.data.descriptors;
 }
@@ -140,10 +142,7 @@ async function extractDescriptors(
 /**
  * Hook to fetch user's flavor wheel
  */
-export function useFlavorWheel(
-  userId: string | undefined,
-  wheelType: WheelType = 'combined'
-) {
+export function useFlavorWheel(userId: string | undefined, wheelType: WheelType = 'combined') {
   return useQuery({
     queryKey: queryKeys.flavorWheels.byType(wheelType, userId || ''),
     queryFn: () => fetchUserFlavorWheel(userId!, wheelType),
@@ -169,24 +168,24 @@ export function useFlavorDescriptors(userId: string | undefined) {
  */
 export function useGenerateFlavorWheel() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ params, authToken }: { params: GenerateWheelParams; authToken: string }) =>
       generateFlavorWheel(params, authToken),
-    
+
     onSuccess: (data, { params }) => {
       // Update cache with new wheel
       queryClient.setQueryData(
         queryKeys.flavorWheels.byType(params.wheelType, params.scopeFilter?.userId || ''),
         data
       );
-      
+
       // Invalidate related queries
       queryClient.invalidateQueries({ queryKey: queryKeys.flavorWheels.all });
-      
+
       logger.debug('FlavorWheels', 'Wheel generated and cached');
     },
-    
+
     onError: (error) => {
       logger.error('FlavorWheels', 'Generate wheel mutation failed', error);
     },
@@ -198,9 +197,14 @@ export function useGenerateFlavorWheel() {
  */
 export function useExtractDescriptors() {
   return useMutation({
-    mutationFn: async ({ params, authToken }: { params: ExtractDescriptorsParams; authToken: string }) =>
-      extractDescriptors(params, authToken),
-    
+    mutationFn: async ({
+      params,
+      authToken,
+    }: {
+      params: ExtractDescriptorsParams;
+      authToken: string;
+    }) => extractDescriptors(params, authToken),
+
     onError: (error) => {
       logger.error('FlavorWheels', 'Extract descriptors mutation failed', error);
     },

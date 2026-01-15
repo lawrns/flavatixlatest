@@ -1,6 +1,6 @@
 /**
  * Formatting Utilities
- * 
+ *
  * Common formatting functions used across the application.
  */
 
@@ -16,23 +16,35 @@ export function formatTimeAgo(dateString: string): string {
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-  if (diffInSeconds < 60) return 'Just now';
-  
+  if (diffInSeconds < 60) {
+    return 'Just now';
+  }
+
   const diffInMinutes = Math.floor(diffInSeconds / 60);
-  if (diffInMinutes < 60) return `${diffInMinutes}m`;
-  
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes}m`;
+  }
+
   const diffInHours = Math.floor(diffInMinutes / 60);
-  if (diffInHours < 24) return `${diffInHours}h`;
-  
+  if (diffInHours < 24) {
+    return `${diffInHours}h`;
+  }
+
   const diffInDays = Math.floor(diffInHours / 24);
-  if (diffInDays < 7) return `${diffInDays}d`;
-  
+  if (diffInDays < 7) {
+    return `${diffInDays}d`;
+  }
+
   const diffInWeeks = Math.floor(diffInDays / 7);
-  if (diffInWeeks < 4) return `${diffInWeeks}w`;
-  
+  if (diffInWeeks < 4) {
+    return `${diffInWeeks}w`;
+  }
+
   const diffInMonths = Math.floor(diffInDays / 30);
-  if (diffInMonths < 12) return `${diffInMonths}mo`;
-  
+  if (diffInMonths < 12) {
+    return `${diffInMonths}mo`;
+  }
+
   const diffInYears = Math.floor(diffInDays / 365);
   return `${diffInYears}y`;
 }
@@ -45,7 +57,7 @@ export function formatDate(dateString: string): string {
   return date.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
-    year: 'numeric'
+    year: 'numeric',
   });
 }
 
@@ -59,7 +71,7 @@ export function formatDateTime(dateString: string): string {
     day: 'numeric',
     year: 'numeric',
     hour: 'numeric',
-    minute: '2-digit'
+    minute: '2-digit',
   });
 }
 
@@ -78,9 +90,15 @@ export function formatNumber(num: number): string {
  * Format a number as a compact string (e.g., 1500 -> "1.5K")
  */
 export function formatCompactNumber(num: number): string {
-  if (num < 1000) return num.toString();
-  if (num < 1000000) return `${(num / 1000).toFixed(1).replace(/\.0$/, '')}K`;
-  if (num < 1000000000) return `${(num / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
+  if (num < 1000) {
+    return num.toString();
+  }
+  if (num < 1000000) {
+    return `${(num / 1000).toFixed(1).replace(/\.0$/, '')}K`;
+  }
+  if (num < 1000000000) {
+    return `${(num / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
+  }
   return `${(num / 1000000000).toFixed(1).replace(/\.0$/, '')}B`;
 }
 
@@ -88,7 +106,9 @@ export function formatCompactNumber(num: number): string {
  * Format a score (0-100) with optional decimal places
  */
 export function formatScore(score: number | null | undefined, decimals: number = 1): string {
-  if (score === null || score === undefined) return '-';
+  if (score === null || score === undefined) {
+    return '-';
+  }
   return score.toFixed(decimals);
 }
 
@@ -107,7 +127,9 @@ export function formatPercentage(value: number, decimals: number = 0): string {
  * Capitalize the first letter of a string
  */
 export function capitalize(str: string): string {
-  if (!str) return '';
+  if (!str) {
+    return '';
+  }
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
@@ -115,11 +137,13 @@ export function capitalize(str: string): string {
  * Convert a string to title case
  */
 export function toTitleCase(str: string): string {
-  if (!str) return '';
+  if (!str) {
+    return '';
+  }
   return str
     .toLowerCase()
     .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
 
@@ -127,7 +151,9 @@ export function toTitleCase(str: string): string {
  * Truncate a string with ellipsis
  */
 export function truncate(str: string, maxLength: number): string {
-  if (!str || str.length <= maxLength) return str;
+  if (!str || str.length <= maxLength) {
+    return str;
+  }
   return str.slice(0, maxLength - 3) + '...';
 }
 
@@ -135,10 +161,12 @@ export function truncate(str: string, maxLength: number): string {
  * Convert snake_case to Title Case
  */
 export function snakeToTitle(str: string): string {
-  if (!str) return '';
+  if (!str) {
+    return '';
+  }
   return str
     .split('_')
-    .map(word => capitalize(word))
+    .map((word) => capitalize(word))
     .join(' ');
 }
 
@@ -146,10 +174,12 @@ export function snakeToTitle(str: string): string {
  * Convert camelCase to Title Case
  */
 export function camelToTitle(str: string): string {
-  if (!str) return '';
+  if (!str) {
+    return '';
+  }
   return str
     .replace(/([A-Z])/g, ' $1')
-    .replace(/^./, s => s.toUpperCase())
+    .replace(/^./, (s) => s.toUpperCase())
     .trim();
 }
 
@@ -213,11 +243,21 @@ export function getCategoryBgColor(category: string): string {
  * Get color class based on score value
  */
 export function getScoreColor(score: number | null | undefined): string {
-  if (score === null || score === undefined) return 'text-gray-400';
-  if (score >= 90) return 'text-green-600';
-  if (score >= 80) return 'text-lime-600';
-  if (score >= 70) return 'text-yellow-600';
-  if (score >= 60) return 'text-orange-600';
+  if (score === null || score === undefined) {
+    return 'text-gray-400';
+  }
+  if (score >= 90) {
+    return 'text-green-600';
+  }
+  if (score >= 80) {
+    return 'text-lime-600';
+  }
+  if (score >= 70) {
+    return 'text-yellow-600';
+  }
+  if (score >= 60) {
+    return 'text-orange-600';
+  }
   return 'text-red-600';
 }
 
@@ -225,14 +265,32 @@ export function getScoreColor(score: number | null | undefined): string {
  * Get score label based on value
  */
 export function getScoreLabel(score: number | null | undefined): string {
-  if (score === null || score === undefined) return 'Not rated';
-  if (score >= 95) return 'Exceptional';
-  if (score >= 90) return 'Outstanding';
-  if (score >= 85) return 'Excellent';
-  if (score >= 80) return 'Very Good';
-  if (score >= 75) return 'Good';
-  if (score >= 70) return 'Above Average';
-  if (score >= 60) return 'Average';
-  if (score >= 50) return 'Below Average';
+  if (score === null || score === undefined) {
+    return 'Not rated';
+  }
+  if (score >= 95) {
+    return 'Exceptional';
+  }
+  if (score >= 90) {
+    return 'Outstanding';
+  }
+  if (score >= 85) {
+    return 'Excellent';
+  }
+  if (score >= 80) {
+    return 'Very Good';
+  }
+  if (score >= 75) {
+    return 'Good';
+  }
+  if (score >= 70) {
+    return 'Above Average';
+  }
+  if (score >= 60) {
+    return 'Average';
+  }
+  if (score >= 50) {
+    return 'Below Average';
+  }
   return 'Poor';
 }

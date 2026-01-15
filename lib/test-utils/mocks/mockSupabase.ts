@@ -12,7 +12,7 @@ export const createMockSupabaseClient = () => {
   };
 
   const mockFrom = (table: string) => {
-    let currentQuery: any = {
+    const currentQuery: any = {
       table,
       filters: [],
       orderBy: null,
@@ -224,9 +224,3 @@ export const createMockSupabaseClient = () => {
 };
 
 export type MockSupabaseClient = ReturnType<typeof createMockSupabaseClient>;
-
-
-
-
-
-

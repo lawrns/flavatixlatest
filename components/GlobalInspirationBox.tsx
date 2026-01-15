@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 // Dynamically import to avoid SSR issues with viewport calculations
 const InspirationBox = dynamic(() => import('./ui/inspiration-box'), {
   ssr: false,
-  loading: () => null
+  loading: () => null,
 });
 
 interface GlobalInspirationBoxProps {
@@ -28,7 +28,9 @@ export const usePageWhitespace = () => {
 
   useEffect(() => {
     const checkWhitespace = () => {
-      if (!containerRef.current) return;
+      if (!containerRef.current) {
+        return;
+      }
 
       const viewportHeight = window.innerHeight;
       const containerRect = containerRef.current.getBoundingClientRect();

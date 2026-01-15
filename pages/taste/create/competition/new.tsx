@@ -3,7 +3,18 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { toast } from '@/lib/toast';
-import { ChevronLeft, Plus, Trash2, Eye, X, Package, EyeOff, ArrowRight, ArrowLeft, Check } from 'lucide-react';
+import {
+  ChevronLeft,
+  Plus,
+  Trash2,
+  Eye,
+  X,
+  Package,
+  EyeOff,
+  ArrowRight,
+  ArrowLeft,
+  Check,
+} from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
@@ -21,10 +32,16 @@ const BASE_CATEGORIES = [
   'Spirits',
   'Tea',
   'Chocolate',
-  'Other'
+  'Other',
 ];
 
-type ParameterType = 'multiple_choice' | 'true_false' | 'contains' | 'exact_match' | 'range' | 'numeric';
+type ParameterType =
+  | 'multiple_choice'
+  | 'true_false'
+  | 'contains'
+  | 'exact_match'
+  | 'range'
+  | 'numeric';
 
 // Shared parameter template (defined once, applied to all items)
 interface ParameterTemplate {
@@ -89,7 +106,7 @@ const NewCompetitionPage: React.FC = () => {
     rankParticipants: true,
     rankingType: 'points',
     isBlindTasting: false,
-    includeSubjectiveInputs: true
+    includeSubjectiveInputs: true,
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -119,7 +136,10 @@ const NewCompetitionPage: React.FC = () => {
       if (!param.name.trim()) {
         newErrors[`param-${index}-name`] = 'Parameter name is required';
       }
-      if (param.type === 'multiple_choice' && (!param.options || param.options.filter(o => o.trim()).length < 2)) {
+      if (
+        param.type === 'multiple_choice' &&
+        (!param.options || param.options.filter((o) => o.trim()).length < 2)
+      ) {
         newErrors[`param-${index}-options`] = 'Multiple choice needs at least 2 options';
       }
     });
@@ -138,18 +158,28 @@ const NewCompetitionPage: React.FC = () => {
     // Validate each item has answers for all parameters
     form.items.forEach((item, itemIndex) => {
       form.parameterTemplates.forEach((template) => {
-        const answer = item.parameterAnswers.find(a => a.parameterId === template.id);
+        const answer = item.parameterAnswers.find((a) => a.parameterId === template.id);
         if (!answer) {
           newErrors[`item-${itemIndex}-param-${template.id}`] = 'Answer required';
         } else {
           // Validate answer based on type
-          if (template.type === 'multiple_choice' && (!answer.correctOptions || answer.correctOptions.length === 0)) {
-            newErrors[`item-${itemIndex}-param-${template.id}`] = 'Select at least one correct answer';
+          if (
+            template.type === 'multiple_choice' &&
+            (!answer.correctOptions || answer.correctOptions.length === 0)
+          ) {
+            newErrors[`item-${itemIndex}-param-${template.id}`] =
+              'Select at least one correct answer';
           }
-          if ((template.type === 'exact_match' || template.type === 'contains') && !answer.correctValueText?.trim()) {
+          if (
+            (template.type === 'exact_match' || template.type === 'contains') &&
+            !answer.correctValueText?.trim()
+          ) {
             newErrors[`item-${itemIndex}-param-${template.id}`] = 'Provide correct text value';
           }
-          if (template.type === 'range' && (answer.correctValueMin === undefined || answer.correctValueMax === undefined)) {
+          if (
+            template.type === 'range' &&
+            (answer.correctValueMin === undefined || answer.correctValueMax === undefined)
+          ) {
             newErrors[`item-${itemIndex}-param-${template.id}`] = 'Provide min and max values';
           }
         }
@@ -184,7 +214,7 @@ const NewCompetitionPage: React.FC = () => {
       name: '',
       type: 'multiple_choice',
       points: 1,
-      options: ['', '']
+      options: ['', ''],
     };
 
     setForm({ ...form, parameterTemplates: [...form.parameterTemplates, newTemplate] });
@@ -193,21 +223,21 @@ const NewCompetitionPage: React.FC = () => {
   const removeParameterTemplate = (paramId: string) => {
     setForm({
       ...form,
-      parameterTemplates: form.parameterTemplates.filter(p => p.id !== paramId),
+      parameterTemplates: form.parameterTemplates.filter((p) => p.id !== paramId),
       // Also remove answers for this parameter from all items
-      items: form.items.map(item => ({
+      items: form.items.map((item) => ({
         ...item,
-        parameterAnswers: item.parameterAnswers.filter(a => a.parameterId !== paramId)
-      }))
+        parameterAnswers: item.parameterAnswers.filter((a) => a.parameterId !== paramId),
+      })),
     });
   };
 
   const updateParameterTemplate = (paramId: string, updates: Partial<ParameterTemplate>) => {
     setForm({
       ...form,
-      parameterTemplates: form.parameterTemplates.map(p =>
+      parameterTemplates: form.parameterTemplates.map((p) =>
         p.id === paramId ? { ...p, ...updates } : p
-      )
+      ),
     });
   };
 
@@ -219,14 +249,14 @@ const NewCompetitionPage: React.FC = () => {
     }
 
     // Create empty answers for all parameter templates
-    const emptyAnswers: ParameterAnswer[] = form.parameterTemplates.map(template => ({
+    const emptyAnswers: ParameterAnswer[] = form.parameterTemplates.map((template) => ({
       parameterId: template.id,
       correctOptions: template.type === 'multiple_choice' ? [] : undefined,
       correctValueText: undefined,
       correctValueBoolean: undefined,
       correctValueMin: undefined,
       correctValueMax: undefined,
-      correctValueNumeric: undefined
+      correctValueNumeric: undefined,
     }));
 
     const newItem: CompetitionItem = {
@@ -238,8 +268,8 @@ const NewCompetitionPage: React.FC = () => {
       subjective: {
         correctAroma: '',
         correctFlavor: '',
-        correctOverallScore: 80
-      }
+        correctOverallScore: 80,
+      },
     };
 
     setForm({ ...form, items: [...form.items, newItem] });
@@ -248,7 +278,7 @@ const NewCompetitionPage: React.FC = () => {
 
   const removeItem = (itemId: string) => {
     const updatedItems = form.items
-      .filter(item => item.id !== itemId)
+      .filter((item) => item.id !== itemId)
       .map((item, index) => ({ ...item, number: index + 1 }));
 
     setForm({ ...form, items: updatedItems });
@@ -261,37 +291,43 @@ const NewCompetitionPage: React.FC = () => {
   const updateItem = (itemId: string, updates: Partial<CompetitionItem>) => {
     setForm({
       ...form,
-      items: form.items.map(item =>
-        item.id === itemId ? { ...item, ...updates } : item
-      )
+      items: form.items.map((item) => (item.id === itemId ? { ...item, ...updates } : item)),
     });
   };
 
-  const updateItemAnswer = (itemId: string, parameterId: string, answerUpdates: Partial<ParameterAnswer>) => {
+  const updateItemAnswer = (
+    itemId: string,
+    parameterId: string,
+    answerUpdates: Partial<ParameterAnswer>
+  ) => {
     setForm({
       ...form,
-      items: form.items.map(item => {
-        if (item.id !== itemId) return item;
+      items: form.items.map((item) => {
+        if (item.id !== itemId) {
+          return item;
+        }
         return {
           ...item,
-          parameterAnswers: item.parameterAnswers.map(a =>
+          parameterAnswers: item.parameterAnswers.map((a) =>
             a.parameterId === parameterId ? { ...a, ...answerUpdates } : a
-          )
+          ),
         };
-      })
+      }),
     });
   };
 
   const updateItemSubjective = (itemId: string, updates: Partial<SubjectiveInputs>) => {
     setForm({
       ...form,
-      items: form.items.map(item => {
-        if (item.id !== itemId) return item;
+      items: form.items.map((item) => {
+        if (item.id !== itemId) {
+          return item;
+        }
         return {
           ...item,
-          subjective: { ...item.subjective, ...updates }
+          subjective: { ...item.subjective, ...updates },
         };
-      })
+      }),
     });
   };
 
@@ -305,7 +341,7 @@ const NewCompetitionPage: React.FC = () => {
 
     try {
       // Create competition session
-      const { data: session, error: sessionError } = await supabase
+      const { data: session, error: sessionError } = (await supabase
         .from('quick_tastings')
         .insert({
           user_id: user.id,
@@ -316,53 +352,65 @@ const NewCompetitionPage: React.FC = () => {
           ranking_type: form.rankingType,
           total_items: form.items.length,
           completed_items: 0,
-          is_blind_items: form.isBlindTasting
+          is_blind_items: form.isBlindTasting,
         } as any)
         .select()
-        .single() as { data: { id: string } | null, error: any };
+        .single()) as { data: { id: string } | null; error: any };
 
-      if (sessionError) throw sessionError;
-      if (!session) throw new Error('Failed to create session');
+      if (sessionError) {
+        throw sessionError;
+      }
+      if (!session) {
+        throw new Error('Failed to create session');
+      }
 
       // Create items with parameters and answer keys
       for (const item of form.items) {
         // Create tasting item with subjective correct answers
-        const { data: tastingItem, error: itemError } = await supabase
+        const { data: tastingItem, error: itemError } = (await supabase
           .from('quick_tasting_items')
           .insert({
             tasting_id: session.id,
             item_name: item.name,
             item_order: item.number,
             // Store subjective correct answers in the item
-            correct_answers: form.includeSubjectiveInputs ? {
-              aroma: item.subjective.correctAroma,
-              flavor: item.subjective.correctFlavor,
-              overall_score: item.subjective.correctOverallScore
-            } : null,
-            include_in_ranking: true
+            correct_answers: form.includeSubjectiveInputs
+              ? {
+                  aroma: item.subjective.correctAroma,
+                  flavor: item.subjective.correctFlavor,
+                  overall_score: item.subjective.correctOverallScore,
+                }
+              : null,
+            include_in_ranking: true,
           } as any)
           .select()
-          .single() as { data: { id: string } | null, error: any };
+          .single()) as { data: { id: string } | null; error: any };
 
-        if (itemError) throw itemError;
-        if (!tastingItem) throw new Error('Failed to create tasting item');
+        if (itemError) {
+          throw itemError;
+        }
+        if (!tastingItem) {
+          throw new Error('Failed to create tasting item');
+        }
 
         // Create competition item metadata
-        const { error: metadataError } = await supabase
-          .from('competition_item_metadata')
-          .insert({
-            item_id: tastingItem.id,
-            tasting_id: session.id,
-            item_order: item.number,
-            is_blind: form.isBlindTasting || item.isBlind
-          } as any);
+        const { error: metadataError } = await supabase.from('competition_item_metadata').insert({
+          item_id: tastingItem.id,
+          tasting_id: session.id,
+          item_order: item.number,
+          is_blind: form.isBlindTasting || item.isBlind,
+        } as any);
 
-        if (metadataError) throw metadataError;
+        if (metadataError) {
+          throw metadataError;
+        }
 
         // Create answer keys for each parameter
         for (const answer of item.parameterAnswers) {
-          const template = form.parameterTemplates.find(t => t.id === answer.parameterId);
-          if (!template) continue;
+          const template = form.parameterTemplates.find((t) => t.id === answer.parameterId);
+          if (!template) {
+            continue;
+          }
 
           // Build correct_answer as JSONB based on parameter type
           let correctAnswer: any = {};
@@ -395,20 +443,21 @@ const NewCompetitionPage: React.FC = () => {
             parameter_type: template.type,
             correct_answer: correctAnswer,
             answer_options: answerOptions,
-            points: template.points || 1
+            points: template.points || 1,
           };
 
           const { error: answerError } = await supabase
             .from('competition_answer_keys')
             .insert(answerKey);
 
-          if (answerError) throw answerError;
+          if (answerError) {
+            throw answerError;
+          }
         }
       }
 
       toast.success('Competition created successfully!');
       router.push(`/competition/${session.id}/host`);
-
     } catch (error: any) {
       console.error('Error creating competition:', error);
       toast.error(error.message || 'Failed to create competition');
@@ -437,9 +486,7 @@ const NewCompetitionPage: React.FC = () => {
             <ChevronLeft size={20} className="mr-1" />
             Back
           </button>
-          <h1 className="text-3xl font-display font-bold text-text-primary">
-            Create Competition
-          </h1>
+          <h1 className="text-3xl font-display font-bold text-text-primary">Create Competition</h1>
           <p className="text-text-secondary font-body mt-1">
             Design a competition with parameters, items, and scoring
           </p>
@@ -447,19 +494,27 @@ const NewCompetitionPage: React.FC = () => {
 
         {/* Step Indicator */}
         <div className="flex items-center gap-4 mb-8">
-          <div className={`flex items-center gap-2 ${currentStep === 'setup' ? 'text-primary' : 'text-text-secondary'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-              currentStep === 'setup' ? 'bg-primary text-white' : 'bg-green-500 text-white'
-            }`}>
+          <div
+            className={`flex items-center gap-2 ${currentStep === 'setup' ? 'text-primary' : 'text-text-secondary'}`}
+          >
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                currentStep === 'setup' ? 'bg-primary text-white' : 'bg-green-500 text-white'
+              }`}
+            >
               {currentStep === 'items' ? <Check size={16} /> : '1'}
             </div>
             <span className="font-medium">Setup & Parameters</span>
           </div>
           <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-700"></div>
-          <div className={`flex items-center gap-2 ${currentStep === 'items' ? 'text-primary' : 'text-text-secondary'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-              currentStep === 'items' ? 'bg-primary text-white' : 'bg-zinc-200 dark:bg-zinc-700'
-            }`}>
+          <div
+            className={`flex items-center gap-2 ${currentStep === 'items' ? 'text-primary' : 'text-text-secondary'}`}
+          >
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                currentStep === 'items' ? 'bg-primary text-white' : 'bg-zinc-200 dark:bg-zinc-700'
+              }`}
+            >
               2
             </div>
             <span className="font-medium">Items & Answers</span>
@@ -477,9 +532,7 @@ const NewCompetitionPage: React.FC = () => {
               <CardContent>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">
-                      Competition Name *
-                    </label>
+                    <label className="block text-sm font-medium mb-1">Competition Name *</label>
                     <Input
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -489,15 +542,11 @@ const NewCompetitionPage: React.FC = () => {
                     <p className="text-xs text-text-secondary mt-1">
                       {form.name.length}/120 characters
                     </p>
-                    {errors.name && (
-                      <p className="text-xs text-red-600 mt-1">{errors.name}</p>
-                    )}
+                    {errors.name && <p className="text-xs text-red-600 mt-1">{errors.name}</p>}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-1">
-                      Base Category *
-                    </label>
+                    <label className="block text-sm font-medium mb-1">Base Category *</label>
                     <Combobox
                       value={form.baseCategory}
                       onChange={(value) => setForm({ ...form, baseCategory: value })}
@@ -537,9 +586,7 @@ const NewCompetitionPage: React.FC = () => {
 
                   {form.rankParticipants && (
                     <div>
-                      <label className="block text-sm font-medium mb-1">
-                        Ranking Method
-                      </label>
+                      <label className="block text-sm font-medium mb-1">Ranking Method</label>
                       <select
                         value={form.rankingType}
                         onChange={(e) => setForm({ ...form, rankingType: e.target.value as any })}
@@ -557,12 +604,18 @@ const NewCompetitionPage: React.FC = () => {
                       <input
                         type="checkbox"
                         checked={form.includeSubjectiveInputs}
-                        onChange={(e) => setForm({ ...form, includeSubjectiveInputs: e.target.checked })}
+                        onChange={(e) =>
+                          setForm({ ...form, includeSubjectiveInputs: e.target.checked })
+                        }
                         className="w-5 h-5 rounded text-primary focus:ring-primary"
                       />
                       <div>
-                        <span className="text-sm font-medium block">Include Subjective Scoring</span>
-                        <span className="text-xs text-text-secondary">Allow participants to enter aroma, flavor notes, and overall score</span>
+                        <span className="text-sm font-medium block">
+                          Include Subjective Scoring
+                        </span>
+                        <span className="text-xs text-text-secondary">
+                          Allow participants to enter aroma, flavor notes, and overall score
+                        </span>
                       </div>
                     </label>
                   </div>
@@ -668,7 +721,9 @@ const NewCompetitionPage: React.FC = () => {
                         onToggle={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
                         onUpdate={(updates) => updateItem(item.id, updates)}
                         onRemove={() => removeItem(item.id)}
-                        onUpdateAnswer={(paramId, updates) => updateItemAnswer(item.id, paramId, updates)}
+                        onUpdateAnswer={(paramId, updates) =>
+                          updateItemAnswer(item.id, paramId, updates)
+                        }
                         onUpdateSubjective={(updates) => updateItemSubjective(item.id, updates)}
                         errors={errors}
                         sessionIsBlind={form.isBlindTasting}
@@ -688,9 +743,7 @@ const NewCompetitionPage: React.FC = () => {
                   Add Item
                 </Button>
 
-                {errors.items && (
-                  <p className="text-xs text-red-600 mt-2">{errors.items}</p>
-                )}
+                {errors.items && <p className="text-xs text-red-600 mt-2">{errors.items}</p>}
               </CardContent>
             </Card>
 
@@ -711,10 +764,7 @@ const NewCompetitionPage: React.FC = () => {
                   Preview
                 </Button>
 
-                <Button
-                  onClick={handleCreate}
-                  disabled={isSubmitting || form.items.length === 0}
-                >
+                <Button onClick={handleCreate} disabled={isSubmitting || form.items.length === 0}>
                   {isSubmitting ? 'Creating...' : 'Create & Start'}
                 </Button>
               </div>
@@ -726,12 +776,7 @@ const NewCompetitionPage: React.FC = () => {
       <BottomNavigation />
 
       {/* Preview Modal */}
-      {showPreview && (
-        <PreviewModal
-          form={form}
-          onClose={() => setShowPreview(false)}
-        />
-      )}
+      {showPreview && <PreviewModal form={form} onClose={() => setShowPreview(false)} />}
     </div>
   );
 };
@@ -750,7 +795,7 @@ const ParameterTemplateCard: React.FC<ParameterTemplateCardProps> = ({
   index,
   onUpdate,
   onRemove,
-  errors
+  errors,
 }) => {
   const addOption = () => {
     onUpdate({ options: [...(template.options || []), ''] });
@@ -770,9 +815,7 @@ const ParameterTemplateCard: React.FC<ParameterTemplateCardProps> = ({
   return (
     <div className="bg-gray-50 dark:bg-zinc-800 p-4 rounded-lg">
       <div className="flex items-start justify-between mb-3">
-        <span className="text-sm font-medium text-text-secondary">
-          Parameter {index + 1}
-        </span>
+        <span className="text-sm font-medium text-text-secondary">Parameter {index + 1}</span>
         <button
           onClick={onRemove}
           className="p-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
@@ -784,9 +827,7 @@ const ParameterTemplateCard: React.FC<ParameterTemplateCardProps> = ({
 
       <div className="space-y-3">
         <div>
-          <label className="block text-sm font-medium mb-1">
-            Parameter Name *
-          </label>
+          <label className="block text-sm font-medium mb-1">Parameter Name *</label>
           <Input
             value={template.name}
             onChange={(e) => onUpdate({ name: e.target.value })}
@@ -895,7 +936,7 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
   onUpdateSubjective,
   errors,
   sessionIsBlind,
-  includeSubjective
+  includeSubjective,
 }) => {
   return (
     <div className="border rounded-lg p-4 dark:border-zinc-700">
@@ -904,7 +945,7 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
           onClick={onToggle}
           className="flex items-center gap-2 text-lg font-display font-semibold hover:text-primary transition-colors"
         >
-          {(sessionIsBlind || item.isBlind) ? (
+          {sessionIsBlind || item.isBlind ? (
             <EyeOff size={20} className="text-amber-600" />
           ) : (
             <Package size={20} className="text-primary" />
@@ -924,9 +965,7 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
       {expanded && (
         <div className="mt-4 space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Item Name
-            </label>
+            <label className="block text-sm font-medium mb-1">Item Name</label>
             <Input
               value={item.name}
               onChange={(e) => onUpdate({ name: e.target.value })}
@@ -950,14 +989,14 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
           {includeSubjective && (
             <div className="border-t pt-4 dark:border-zinc-700">
               <h4 className="font-semibold mb-3 flex items-center gap-2">
-                <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded">Subjective</span>
+                <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded">
+                  Subjective
+                </span>
                 Correct Aroma, Flavor & Score
               </h4>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Correct Aroma Notes
-                  </label>
+                  <label className="block text-sm font-medium mb-1">Correct Aroma Notes</label>
                   <textarea
                     value={item.subjective.correctAroma}
                     onChange={(e) => onUpdateSubjective({ correctAroma: e.target.value })}
@@ -966,9 +1005,7 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Correct Flavor Notes
-                  </label>
+                  <label className="block text-sm font-medium mb-1">Correct Flavor Notes</label>
                   <textarea
                     value={item.subjective.correctFlavor}
                     onChange={(e) => onUpdateSubjective({ correctFlavor: e.target.value })}
@@ -985,7 +1022,9 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
                     min="1"
                     max="100"
                     value={item.subjective.correctOverallScore}
-                    onChange={(e) => onUpdateSubjective({ correctOverallScore: parseInt(e.target.value) })}
+                    onChange={(e) =>
+                      onUpdateSubjective({ correctOverallScore: parseInt(e.target.value) })
+                    }
                     className="w-full"
                   />
                   <div className="flex justify-between text-xs text-text-secondary">
@@ -1003,7 +1042,7 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
               <h4 className="font-semibold mb-3">Parameter Answers</h4>
               <div className="space-y-4">
                 {parameterTemplates.map((template) => {
-                  const answer = item.parameterAnswers.find(a => a.parameterId === template.id);
+                  const answer = item.parameterAnswers.find((a) => a.parameterId === template.id);
                   return (
                     <ParameterAnswerInput
                       key={template.id}
@@ -1038,7 +1077,7 @@ const ParameterAnswerInput: React.FC<ParameterAnswerInputProps> = ({
   answer,
   onUpdate,
   itemIndex,
-  errors
+  errors,
 }) => {
   const errorKey = `item-${itemIndex}-param-${template.id}`;
 
@@ -1061,7 +1100,7 @@ const ParameterAnswerInput: React.FC<ParameterAnswerInputProps> = ({
                   if (e.target.checked) {
                     onUpdate({ correctOptions: [...current, option] });
                   } else {
-                    onUpdate({ correctOptions: current.filter(o => o !== option) });
+                    onUpdate({ correctOptions: current.filter((o) => o !== option) });
                   }
                 }}
                 disabled={!option.trim()}
@@ -1099,7 +1138,9 @@ const ParameterAnswerInput: React.FC<ParameterAnswerInputProps> = ({
         <Input
           value={answer?.correctValueText || ''}
           onChange={(e) => onUpdate({ correctValueText: e.target.value })}
-          placeholder={template.type === 'contains' ? 'Text that must be present' : 'Exact correct answer'}
+          placeholder={
+            template.type === 'contains' ? 'Text that must be present' : 'Exact correct answer'
+          }
         />
       )}
 
@@ -1129,9 +1170,7 @@ const ParameterAnswerInput: React.FC<ParameterAnswerInputProps> = ({
         />
       )}
 
-      {errors[errorKey] && (
-        <p className="text-xs text-red-600 mt-1">{errors[errorKey]}</p>
-      )}
+      {errors[errorKey] && <p className="text-xs text-red-600 mt-1">{errors[errorKey]}</p>}
     </div>
   );
 };
@@ -1145,7 +1184,9 @@ interface PreviewModalProps {
 const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onClose();
+      }
     };
     document.addEventListener('keydown', handleKeyDown);
     document.body.style.overflow = 'hidden';
@@ -1168,7 +1209,9 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
       >
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <h3 id="preview-modal-title" className="text-2xl font-bold">Preview</h3>
+            <h3 id="preview-modal-title" className="text-2xl font-bold">
+              Preview
+            </h3>
             <button
               onClick={onClose}
               className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
@@ -1190,12 +1233,16 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
             </div>
 
             <div>
-              <h4 className="font-semibold text-lg mb-2">Parameters ({form.parameterTemplates.length})</h4>
+              <h4 className="font-semibold text-lg mb-2">
+                Parameters ({form.parameterTemplates.length})
+              </h4>
               <div className="space-y-2">
                 {form.parameterTemplates.map((param) => (
                   <div key={param.id} className="bg-gray-50 dark:bg-zinc-800 p-2 rounded text-sm">
                     <span className="font-medium">{param.name}</span>
-                    <span className="text-text-secondary ml-2">({param.type} - {param.points} pts)</span>
+                    <span className="text-text-secondary ml-2">
+                      ({param.type} - {param.points} pts)
+                    </span>
                   </div>
                 ))}
               </div>
@@ -1207,7 +1254,9 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
                 {form.items.map((item) => (
                   <div key={item.id} className="border dark:border-zinc-700 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-semibold">{item.number}. {item.name}</span>
+                      <span className="font-semibold">
+                        {item.number}. {item.name}
+                      </span>
                       {(form.isBlindTasting || item.isBlind) && (
                         <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
                           Blind

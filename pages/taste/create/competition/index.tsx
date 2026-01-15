@@ -1,7 +1,17 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
-import { ChevronLeft, Trophy, Users, Target, BarChart3, Award, Eye, UsersRound, Smartphone } from 'lucide-react';
+import {
+  ChevronLeft,
+  Trophy,
+  Users,
+  Target,
+  BarChart3,
+  Award,
+  Eye,
+  UsersRound,
+  Smartphone,
+} from 'lucide-react';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Button from '@/components/ui/Button';
 import BottomNavigation from '@/components/navigation/BottomNavigation';
@@ -24,7 +34,9 @@ const CompetitionIndexPage: React.FC = () => {
     );
   }
 
-  if (!user) return null;
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-background-light pb-40">
@@ -62,7 +74,8 @@ const CompetitionIndexPage: React.FC = () => {
                   Create New Competition
                 </h2>
                 <p className="text-text-secondary mb-4">
-                  Set up items with answer keys, define parameters, and configure scoring. Participants will be ranked based on their accuracy.
+                  Set up items with answer keys, define parameters, and configure scoring.
+                  Participants will be ranked based on their accuracy.
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <span className="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
@@ -93,7 +106,8 @@ const CompetitionIndexPage: React.FC = () => {
                   Join Competition
                 </h2>
                 <p className="text-text-secondary">
-                  Enter a competition code to participate. Submit your answers and see how you rank against other participants.
+                  Enter a competition code to participate. Submit your answers and see how you rank
+                  against other participants.
                 </p>
               </div>
             </div>
@@ -112,7 +126,8 @@ const CompetitionIndexPage: React.FC = () => {
                 Answer Keys
               </h4>
               <p className="text-sm font-body text-text-secondary">
-                Define correct answers for each parameter. Supports multiple choice, true/false, exact match, contains text, and numeric ranges.
+                Define correct answers for each parameter. Supports multiple choice, true/false,
+                exact match, contains text, and numeric ranges.
               </p>
             </div>
 
@@ -122,7 +137,8 @@ const CompetitionIndexPage: React.FC = () => {
                 Automatic Scoring
               </h4>
               <p className="text-sm font-body text-text-secondary">
-                Participants are automatically scored based on accuracy. Configure point values for each parameter.
+                Participants are automatically scored based on accuracy. Configure point values for
+                each parameter.
               </p>
             </div>
 
@@ -132,7 +148,8 @@ const CompetitionIndexPage: React.FC = () => {
                 Leaderboards
               </h4>
               <p className="text-sm font-body text-text-secondary">
-                Real-time ranking of participants. Choose from total points, accuracy percentage, or weighted scoring.
+                Real-time ranking of participants. Choose from total points, accuracy percentage, or
+                weighted scoring.
               </p>
             </div>
 
@@ -152,7 +169,8 @@ const CompetitionIndexPage: React.FC = () => {
                 Multi-User Support
               </h4>
               <p className="text-sm font-body text-text-secondary">
-                Invite unlimited participants with a simple join code. Real-time synchronization across devices.
+                Invite unlimited participants with a simple join code. Real-time synchronization
+                across devices.
               </p>
             </div>
 
@@ -162,7 +180,8 @@ const CompetitionIndexPage: React.FC = () => {
                 Mobile Friendly
               </h4>
               <p className="text-sm font-body text-text-secondary">
-                Optimized for mobile devices. Participants can join and submit answers from any device.
+                Optimized for mobile devices. Participants can join and submit answers from any
+                device.
               </p>
             </div>
           </div>
@@ -170,32 +189,34 @@ const CompetitionIndexPage: React.FC = () => {
 
         {/* Use Cases */}
         <div className="mt-8 bg-white dark:bg-zinc-800 rounded-xl p-8 border border-gray-200 dark:border-zinc-700">
-          <h3 className="text-xl font-display font-semibold text-text-primary mb-4">
-            Perfect For
-          </h3>
+          <h3 className="text-xl font-display font-semibold text-text-primary mb-4">Perfect For</h3>
           <ul className="space-y-3">
             <li className="flex items-start gap-3">
               <span className="text-primary text-xl flex-shrink-0 font-body">•</span>
               <span className="font-body text-text-secondary">
-                <strong className="font-display text-text-primary">Coffee Cuppings:</strong> Blind tastings with origin identification and quality scoring
+                <strong className="font-display text-text-primary">Coffee Cuppings:</strong> Blind
+                tastings with origin identification and quality scoring
               </span>
             </li>
             <li className="flex items-start gap-3">
               <span className="text-primary text-xl flex-shrink-0 font-body">•</span>
               <span className="font-body text-text-secondary">
-                <strong className="font-display text-text-primary">Wine Competitions:</strong> Varietal identification and flavor profile matching
+                <strong className="font-display text-text-primary">Wine Competitions:</strong>{' '}
+                Varietal identification and flavor profile matching
               </span>
             </li>
             <li className="flex items-start gap-3">
               <span className="text-primary text-xl flex-shrink-0 font-body">•</span>
               <span className="font-body text-text-secondary">
-                <strong className="font-display text-text-primary">Educational Sessions:</strong> Teach students to identify key characteristics
+                <strong className="font-display text-text-primary">Educational Sessions:</strong>{' '}
+                Teach students to identify key characteristics
               </span>
             </li>
             <li className="flex items-start gap-3">
               <span className="text-primary text-xl flex-shrink-0 font-body">•</span>
               <span className="font-body text-text-secondary">
-                <strong className="font-display text-text-primary">Team Building:</strong> Friendly competitions with scoring and rankings
+                <strong className="font-display text-text-primary">Team Building:</strong> Friendly
+                competitions with scoring and rankings
               </span>
             </li>
           </ul>
@@ -212,4 +233,3 @@ export default CompetitionIndexPage;
 export async function getServerSideProps() {
   return { props: {} };
 }
-

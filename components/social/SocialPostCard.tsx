@@ -1,6 +1,6 @@
 /**
  * SocialPostCard Component
- * 
+ *
  * Displays a single social feed post with user info, content, photos, and engagement buttons.
  */
 import React from 'react';
@@ -69,10 +69,18 @@ export const formatTimeAgo = (dateString: string): string => {
   const date = new Date(dateString);
   const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-  if (seconds < 60) return 'Just now';
-  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-  if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+  if (seconds < 60) {
+    return 'Just now';
+  }
+  if (seconds < 3600) {
+    return `${Math.floor(seconds / 60)}m ago`;
+  }
+  if (seconds < 86400) {
+    return `${Math.floor(seconds / 3600)}h ago`;
+  }
+  if (seconds < 604800) {
+    return `${Math.floor(seconds / 86400)}d ago`;
+  }
   return date.toLocaleDateString();
 };
 
@@ -87,7 +95,7 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
   onFollow,
 }) => {
   return (
-    <article 
+    <article
       className={cn(
         'bg-white dark:bg-zinc-800/90 p-4 sm:p-5',
         'border-b border-zinc-100 dark:border-zinc-700/50',
@@ -99,11 +107,13 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
       {/* User Header */}
       <div className="flex items-start space-x-3 mb-4">
         {/* Avatar with ring effect */}
-        <div className={cn(
-          'relative w-11 h-11 rounded-full flex-shrink-0',
-          'bg-gradient-to-br from-primary to-orange-500',
-          'p-[2px] shadow-lg shadow-primary/20'
-        )}>
+        <div
+          className={cn(
+            'relative w-11 h-11 rounded-full flex-shrink-0',
+            'bg-gradient-to-br from-primary to-orange-500',
+            'p-[2px] shadow-lg shadow-primary/20'
+          )}
+        >
           {post.user.avatar_url ? (
             <img
               src={post.user.avatar_url}
@@ -163,19 +173,22 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
 
       {/* Notes */}
       {post.notes && (
-        <p className="text-zinc-700 dark:text-zinc-200 mb-3 leading-relaxed">
-          {post.notes}
-        </p>
+        <p className="text-zinc-700 dark:text-zinc-200 mb-3 leading-relaxed">{post.notes}</p>
       )}
 
       {/* Photo Grid */}
       {post.photos && post.photos.length > 0 && (
-        <div className={`mb-3 rounded-xl overflow-hidden ${
-          post.photos.length === 1 ? '' :
-          post.photos.length === 2 ? 'grid grid-cols-2 gap-1' :
-          post.photos.length === 3 ? 'grid grid-cols-3 gap-1' :
-          'grid grid-cols-2 gap-1'
-        }`}>
+        <div
+          className={`mb-3 rounded-xl overflow-hidden ${
+            post.photos.length === 1
+              ? ''
+              : post.photos.length === 2
+                ? 'grid grid-cols-2 gap-1'
+                : post.photos.length === 3
+                  ? 'grid grid-cols-3 gap-1'
+                  : 'grid grid-cols-2 gap-1'
+          }`}
+        >
           {post.photos.slice(0, 4).map((photo, idx) => (
             <div key={idx} className="relative aspect-square bg-zinc-100 dark:bg-zinc-800">
               <img
@@ -185,9 +198,7 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
               />
               {idx === 3 && post.photos && post.photos.length > 4 && (
                 <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-                  <span className="text-white text-2xl font-bold">
-                    +{post.photos.length - 4}
-                  </span>
+                  <span className="text-white text-2xl font-bold">+{post.photos.length - 4}</span>
                 </div>
               )}
             </div>
@@ -219,23 +230,27 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
                 <div key={item.id} className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <span className="text-zinc-400">{idx + 1}.</span>
-                    <span className="text-zinc-900 dark:text-zinc-50 truncate">{item.item_name}</span>
+                    <span className="text-zinc-900 dark:text-zinc-50 truncate">
+                      {item.item_name}
+                    </span>
                   </div>
                   {item.overall_score && (
-                    <span className={`font-semibold ml-2 ${
-                      item.overall_score >= 80 ? 'text-green-600' :
-                      item.overall_score >= 60 ? 'text-yellow-600' :
-                      'text-orange-600'
-                    }`}>
+                    <span
+                      className={`font-semibold ml-2 ${
+                        item.overall_score >= 80
+                          ? 'text-green-600'
+                          : item.overall_score >= 60
+                            ? 'text-yellow-600'
+                            : 'text-orange-600'
+                      }`}
+                    >
                       {item.overall_score}/100
                     </span>
                   )}
                 </div>
               ))}
               {post.items.length > 5 && (
-                <p className="text-xs text-zinc-500 pl-5">
-                  +{post.items.length - 5} more items
-                </p>
+                <p className="text-xs text-zinc-500 pl-5">+{post.items.length - 5} more items</p>
               )}
             </div>
           )}

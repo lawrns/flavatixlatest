@@ -25,7 +25,7 @@ interface CompetitionRankingProps {
 const CompetitionRanking: React.FC<CompetitionRankingProps> = ({
   tastingId,
   isRankingEnabled,
-  currentUserId
+  currentUserId,
 }) => {
   const [participants, setParticipants] = useState<TastingParticipant[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,19 +41,23 @@ const CompetitionRanking: React.FC<CompetitionRankingProps> = ({
     try {
       const { data, error } = await supabase
         .from('tasting_participants')
-        .select(`
+        .select(
+          `
           *,
           profiles:user_id (
             full_name,
             username,
             avatar_url
           )
-        `)
+        `
+        )
         .eq('tasting_id', tastingId)
         .order('rank', { ascending: true })
         .order('score', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
       setParticipants(data || []);
     } catch (error) {
       console.error('Error loading participants:', error);
@@ -118,16 +122,17 @@ const CompetitionRanking: React.FC<CompetitionRankingProps> = ({
       ) : (
         <div className="space-y-sm">
           {participants.map((participant, index) => {
-            const displayName = participant.profiles?.full_name ||
-                              participant.profiles?.username ||
-                              'Anonymous User';
+            const displayName =
+              participant.profiles?.full_name || participant.profiles?.username || 'Anonymous User';
             const isCurrentUser = participant.user_id === currentUserId;
 
             return (
               <div
                 key={participant.id}
                 className={`flex items-center justify-between p-sm rounded-lg ${
-                  isCurrentUser ? 'bg-primary-50 border border-primary-200' : 'bg-background-surface'
+                  isCurrentUser
+                    ? 'bg-primary-50 border border-primary-200'
+                    : 'bg-background-surface'
                 }`}
               >
                 <div className="flex items-center">
@@ -139,7 +144,9 @@ const CompetitionRanking: React.FC<CompetitionRankingProps> = ({
                       <Users size={16} className="text-primary-600" />
                     </div>
                     <div>
-                      <span className={`font-body font-medium ${isCurrentUser ? 'text-primary-600' : 'text-text-primary'}`}>
+                      <span
+                        className={`font-body font-medium ${isCurrentUser ? 'text-primary-600' : 'text-text-primary'}`}
+                      >
                         {displayName}
                         {isCurrentUser && ' (You)'}
                       </span>
@@ -154,13 +161,9 @@ const CompetitionRanking: React.FC<CompetitionRankingProps> = ({
 
                 <div className={`text-right ${getRankColor(participant.rank)}`}>
                   {participant.rank ? (
-                    <span className="text-body font-bold">
-                      #{participant.rank}
-                    </span>
+                    <span className="text-body font-bold">#{participant.rank}</span>
                   ) : (
-                    <span className="text-small text-text-secondary">
-                      Pending
-                    </span>
+                    <span className="text-small text-text-secondary">Pending</span>
                   )}
                 </div>
               </div>

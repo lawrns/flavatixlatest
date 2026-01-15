@@ -62,12 +62,12 @@ export class RealtimeManager {
       config: {
         broadcast: {
           self: false, // Don't receive own broadcasts
-          ack: true    // Wait for server acknowledgment
+          ack: true, // Wait for server acknowledgment
         },
         presence: {
-          key: this.userId
-        }
-      }
+          key: this.userId,
+        },
+      },
     });
 
     // Set up presence tracking
@@ -105,7 +105,7 @@ export class RealtimeManager {
           event: 'UPDATE',
           schema: 'public',
           table: 'quick_tasting_items',
-          filter: `tasting_id=eq.${this.sessionId}`
+          filter: `tasting_id=eq.${this.sessionId}`,
         },
         (payload) => {
           this.handleDatabaseUpdate('item', payload);
@@ -117,7 +117,7 @@ export class RealtimeManager {
           event: 'INSERT',
           schema: 'public',
           table: 'quick_tasting_items',
-          filter: `tasting_id=eq.${this.sessionId}`
+          filter: `tasting_id=eq.${this.sessionId}`,
         },
         (payload) => {
           this.handleDatabaseUpdate('item_added', payload);
@@ -130,7 +130,7 @@ export class RealtimeManager {
         await this.updatePresence({
           userId: this.userId,
           userName: this.userName,
-          lastActivity: Date.now()
+          lastActivity: Date.now(),
         });
 
         this.emit('connected', { sessionId: this.sessionId });
@@ -143,13 +143,15 @@ export class RealtimeManager {
    * Update user presence
    */
   async updatePresence(state: Partial<PresenceState>) {
-    if (!this.channel) return;
+    if (!this.channel) {
+      return;
+    }
 
     const fullState: PresenceState = {
       userId: this.userId,
       userName: this.userName,
       lastActivity: Date.now(),
-      ...state
+      ...state,
     };
 
     await this.channel.track(fullState);
@@ -159,7 +161,9 @@ export class RealtimeManager {
    * Send cursor position
    */
   sendCursor(itemId: string, field: string, position?: number) {
-    if (!this.channel) return;
+    if (!this.channel) {
+      return;
+    }
 
     const cursor: Cursor = {
       userId: this.userId,
@@ -168,13 +172,13 @@ export class RealtimeManager {
       field,
       position,
       color: this.getUserColor(this.userId),
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     this.channel.send({
       type: 'broadcast',
       event: 'cursor',
-      payload: cursor
+      payload: cursor,
     });
   }
 
@@ -182,7 +186,9 @@ export class RealtimeManager {
    * Send typing indicator
    */
   sendTypingIndicator(itemId: string, field: string, isTyping: boolean) {
-    if (!this.channel) return;
+    if (!this.channel) {
+      return;
+    }
 
     this.channel.send({
       type: 'broadcast',
@@ -193,8 +199,8 @@ export class RealtimeManager {
         itemId,
         field,
         isTyping,
-        timestamp: Date.now()
-      }
+        timestamp: Date.now(),
+      },
     });
 
     // Update our presence
@@ -205,7 +211,9 @@ export class RealtimeManager {
    * Broadcast item update (optimistic update)
    */
   broadcastItemUpdate(itemId: string, field: string, value: any) {
-    if (!this.channel) return;
+    if (!this.channel) {
+      return;
+    }
 
     const update: RealtimeUpdate = {
       type: 'item_update',
@@ -213,13 +221,13 @@ export class RealtimeManager {
       field,
       value,
       userId: this.userId,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     this.channel.send({
       type: 'broadcast',
       event: 'item_update',
-      payload: update
+      payload: update,
     });
   }
 
@@ -227,7 +235,9 @@ export class RealtimeManager {
    * Broadcast score update
    */
   broadcastScoreUpdate(itemId: string, scoreType: string, value: number) {
-    if (!this.channel) return;
+    if (!this.channel) {
+      return;
+    }
 
     this.channel.send({
       type: 'broadcast',
@@ -238,15 +248,17 @@ export class RealtimeManager {
         value,
         userId: this.userId,
         userName: this.userName,
-        timestamp: Date.now()
-      }
+        timestamp: Date.now(),
+      },
     });
   }
 
   // Event Handlers
   private syncPresence() {
     const state = this.channel?.presenceState();
-    if (!state) return;
+    if (!state) {
+      return;
+    }
 
     this.presenceState.clear();
     Object.entries(state).forEach(([key, presence]) => {
@@ -278,22 +290,30 @@ export class RealtimeManager {
   }
 
   private handleCursorUpdate(cursor: Cursor) {
-    if (cursor.userId === this.userId) return; // Ignore own cursor
+    if (cursor.userId === this.userId) {
+      return;
+    } // Ignore own cursor
     this.emit('cursor_update', cursor);
   }
 
   private handleTypingIndicator(payload: any) {
-    if (payload.userId === this.userId) return;
+    if (payload.userId === this.userId) {
+      return;
+    }
     this.emit('typing_indicator', payload);
   }
 
   private handleItemUpdate(update: RealtimeUpdate) {
-    if (update.userId === this.userId) return; // Ignore own updates
+    if (update.userId === this.userId) {
+      return;
+    } // Ignore own updates
     this.emit('remote_item_update', update);
   }
 
   private handleScoreUpdate(payload: any) {
-    if (payload.userId === this.userId) return;
+    if (payload.userId === this.userId) {
+      return;
+    }
     this.emit('remote_score_update', payload);
   }
 
@@ -303,7 +323,7 @@ export class RealtimeManager {
       type,
       data: payload.new || payload.old,
       eventType: payload.eventType,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 
@@ -331,7 +351,7 @@ export class RealtimeManager {
    */
   private emit(event: string, data: any) {
     const callbacks = this.callbacks.get(event) || [];
-    callbacks.forEach(callback => callback(data));
+    callbacks.forEach((callback) => callback(data));
   }
 
   /**
@@ -365,7 +385,11 @@ export class RealtimeManager {
 // Singleton instance manager
 let currentManager: RealtimeManager | null = null;
 
-export function getRealtimeManager(sessionId?: string, userId?: string, userName?: string): RealtimeManager | null {
+export function getRealtimeManager(
+  sessionId?: string,
+  userId?: string,
+  userName?: string
+): RealtimeManager | null {
   if (!sessionId || !userId || !userName) {
     return currentManager;
   }

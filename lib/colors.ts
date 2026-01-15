@@ -186,11 +186,21 @@ export const SCORE_COLORS = {
 } as const;
 
 export function getScoreColors(score: number) {
-  if (score >= 9) return SCORE_COLORS.excellent;
-  if (score >= 8) return SCORE_COLORS.great;
-  if (score >= 7) return SCORE_COLORS.good;
-  if (score >= 5) return SCORE_COLORS.average;
-  if (score >= 3) return SCORE_COLORS.below_average;
+  if (score >= 9) {
+    return SCORE_COLORS.excellent;
+  }
+  if (score >= 8) {
+    return SCORE_COLORS.great;
+  }
+  if (score >= 7) {
+    return SCORE_COLORS.good;
+  }
+  if (score >= 5) {
+    return SCORE_COLORS.average;
+  }
+  if (score >= 3) {
+    return SCORE_COLORS.below_average;
+  }
   return SCORE_COLORS.poor;
 }
 

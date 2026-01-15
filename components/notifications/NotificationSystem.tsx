@@ -3,7 +3,18 @@ import { useRouter } from 'next/router';
 import { Card, CardContent, CardHeader } from '../ui/Card';
 import Button from '../ui/Button';
 import { Modal, ModalBody, ModalFooter } from '../ui/Modal';
-import { Bell, X, CheckCircle, AlertCircle, Info, Star, UserPlus, Heart, MessageCircle, Users } from 'lucide-react';
+import {
+  Bell,
+  X,
+  CheckCircle,
+  AlertCircle,
+  Info,
+  Star,
+  UserPlus,
+  Heart,
+  MessageCircle,
+  Users,
+} from 'lucide-react';
 import notificationService, { Notification, NotificationType } from '@/lib/notificationService';
 
 interface NotificationSystemProps {
@@ -21,8 +32,10 @@ export const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }
   const router = useRouter();
 
   const loadNotifications = useCallback(async () => {
-    if (!userId) return;
-    
+    if (!userId) {
+      return;
+    }
+
     try {
       setLoading(true);
       const [notifs, count] = await Promise.all([
@@ -42,13 +55,10 @@ export const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }
     loadNotifications();
 
     // Subscribe to real-time notifications
-    const unsubscribe = notificationService.subscribeToNotifications(
-      userId,
-      (newNotification) => {
-        setNotifications(prev => [newNotification, ...prev]);
-        setUnreadCount(prev => prev + 1);
-      }
-    );
+    const unsubscribe = notificationService.subscribeToNotifications(userId, (newNotification) => {
+      setNotifications((prev) => [newNotification, ...prev]);
+      setUnreadCount((prev) => prev + 1);
+    });
 
     return () => {
       unsubscribe();
@@ -58,32 +68,28 @@ export const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }
   const markAsRead = async (notificationId: string) => {
     const success = await notificationService.markAsRead(notificationId);
     if (success) {
-      setNotifications(prev => 
-        prev.map(n => 
-          n.id === notificationId ? { ...n, read: true } : n
-        )
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === notificationId ? { ...n, read: true } : n))
       );
-      setUnreadCount(prev => Math.max(0, prev - 1));
+      setUnreadCount((prev) => Math.max(0, prev - 1));
     }
   };
 
   const markAllAsRead = async () => {
     const success = await notificationService.markAllAsRead(userId);
     if (success) {
-      setNotifications(prev => 
-        prev.map(n => ({ ...n, read: true }))
-      );
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
       setUnreadCount(0);
     }
   };
 
   const deleteNotification = async (notificationId: string) => {
-    const notification = notifications.find(n => n.id === notificationId);
+    const notification = notifications.find((n) => n.id === notificationId);
     const success = await notificationService.deleteNotification(notificationId);
     if (success) {
-      setNotifications(prev => prev.filter(n => n.id !== notificationId));
+      setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
       if (notification && !notification.read) {
-        setUnreadCount(prev => Math.max(0, prev - 1));
+        setUnreadCount((prev) => Math.max(0, prev - 1));
       }
     }
   };
@@ -144,12 +150,7 @@ export const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }
     <>
       {/* Notification Bell */}
       <div className="relative">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setShowModal(true)}
-          className="relative"
-        >
+        <Button variant="ghost" size="sm" onClick={() => setShowModal(true)} className="relative">
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -160,12 +161,7 @@ export const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }
       </div>
 
       {/* Notifications Modal */}
-      <Modal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        title="Notifications"
-        size="md"
-      >
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Notifications" size="md">
         <ModalBody>
           <div className="space-y-4">
             {notifications.length === 0 ? (
@@ -177,16 +173,12 @@ export const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }
               <>
                 {unreadCount > 0 && (
                   <div className="flex justify-end">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={markAllAsRead}
-                    >
+                    <Button variant="ghost" size="sm" onClick={markAllAsRead}>
                       Mark all as read
                     </Button>
                   </div>
                 )}
-                
+
                 <div className="space-y-3 max-h-96 overflow-y-auto">
                   {notifications.map((notification) => (
                     <Card

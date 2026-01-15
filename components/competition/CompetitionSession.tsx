@@ -73,7 +73,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
     aroma: '',
     flavor: '',
     overall_score: 50,
-    notes: ''
+    notes: '',
   });
 
   useEffect(() => {
@@ -93,7 +93,9 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
         .eq('id', sessionId)
         .single();
 
-      if (sessionError) throw sessionError;
+      if (sessionError) {
+        throw sessionError;
+      }
       setSession(sessionData);
 
       const { data: itemsData, error: itemsError } = await supabase
@@ -102,9 +104,10 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
         .eq('tasting_id', sessionId)
         .order('created_at', { ascending: true });
 
-      if (itemsError) throw itemsError;
+      if (itemsError) {
+        throw itemsError;
+      }
       setItems(itemsData || []);
-
     } catch (error) {
       console.error('Error loading competition:', error);
       toast.error('Failed to load competition');
@@ -112,7 +115,9 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
   };
 
   const saveCurrentAnswer = () => {
-    if (!items[currentItemIndex]) return;
+    if (!items[currentItemIndex]) {
+      return;
+    }
 
     const timeSpent = Math.floor((Date.now() - itemStartTime) / 1000);
     const answer: ParticipantAnswer = {
@@ -121,16 +126,16 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
       flavor: currentAnswer.flavor,
       overall_score: currentAnswer.overall_score,
       notes: currentAnswer.notes,
-      time_spent: timeSpent
+      time_spent: timeSpent,
     };
 
-    setAnswers(prev => new Map(prev).set(items[currentItemIndex].id, answer));
+    setAnswers((prev) => new Map(prev).set(items[currentItemIndex].id, answer));
   };
 
   const handleNext = () => {
     saveCurrentAnswer();
     if (currentItemIndex < items.length - 1) {
-      setCurrentItemIndex(prev => prev + 1);
+      setCurrentItemIndex((prev) => prev + 1);
       // Load saved answer if exists
       const savedAnswer = answers.get(items[currentItemIndex + 1]?.id);
       if (savedAnswer) {
@@ -138,7 +143,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
           aroma: savedAnswer.aroma,
           flavor: savedAnswer.flavor,
           overall_score: savedAnswer.overall_score,
-          notes: savedAnswer.notes
+          notes: savedAnswer.notes,
         });
       } else {
         setCurrentAnswer({ aroma: '', flavor: '', overall_score: 50, notes: '' });
@@ -149,7 +154,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
   const handlePrevious = () => {
     saveCurrentAnswer();
     if (currentItemIndex > 0) {
-      setCurrentItemIndex(prev => prev - 1);
+      setCurrentItemIndex((prev) => prev - 1);
       // Load saved answer
       const savedAnswer = answers.get(items[currentItemIndex - 1]?.id);
       if (savedAnswer) {
@@ -157,7 +162,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
           aroma: savedAnswer.aroma,
           flavor: savedAnswer.flavor,
           overall_score: savedAnswer.overall_score,
-          notes: savedAnswer.notes
+          notes: savedAnswer.notes,
         });
       }
     }
@@ -168,8 +173,10 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
     let maxScore = 0;
 
     answers.forEach((answer, itemId) => {
-      const item = items.find(i => i.id === itemId);
-      if (!item || !item.correct_answers || !item.include_in_ranking) return;
+      const item = items.find((i) => i.id === itemId);
+      if (!item || !item.correct_answers || !item.include_in_ranking) {
+        return;
+      }
 
       const correctAnswers = item.correct_answers;
       let itemScore = 0;
@@ -204,14 +211,22 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
   };
 
   const calculateTextMatch = (userAnswer: string, correctAnswer: string): number => {
-    const userWords = userAnswer.toLowerCase().split(/\s+/).filter(w => w.length > 2);
-    const correctWords = correctAnswer.toLowerCase().split(/\s+/).filter(w => w.length > 2);
-    
-    if (correctWords.length === 0) return 0;
+    const userWords = userAnswer
+      .toLowerCase()
+      .split(/\s+/)
+      .filter((w) => w.length > 2);
+    const correctWords = correctAnswer
+      .toLowerCase()
+      .split(/\s+/)
+      .filter((w) => w.length > 2);
+
+    if (correctWords.length === 0) {
+      return 0;
+    }
 
     let matches = 0;
-    correctWords.forEach(word => {
-      if (userWords.some(uw => uw.includes(word) || word.includes(uw))) {
+    correctWords.forEach((word) => {
+      if (userWords.some((uw) => uw.includes(word) || word.includes(uw))) {
         matches++;
       }
     });
@@ -236,20 +251,20 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
       const totalTime = Math.floor((Date.now() - startTime) / 1000);
 
       // Save participant record with score
-      const { error: participantError } = await supabase
-        .from('tasting_participants')
-        .upsert({
-          tasting_id: sessionId,
-          user_id: user!.id,
-          role: 'participant',
-          score: calculatedScore
-        } as any);
+      const { error: participantError } = await supabase.from('tasting_participants').upsert({
+        tasting_id: sessionId,
+        user_id: user!.id,
+        role: 'participant',
+        score: calculatedScore,
+      } as any);
 
-      if (participantError) throw participantError;
+      if (participantError) {
+        throw participantError;
+      }
 
       // Save all answers to items and extract descriptors
       for (const [itemId, answer] of Array.from(answers.entries())) {
-        const item = items.find(i => i.id === itemId);
+        const item = items.find((i) => i.id === itemId);
 
         // Update item with answer
         await (supabase as any)
@@ -258,7 +273,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
             aroma: answer.aroma,
             flavor: answer.flavor,
             overall_score: answer.overall_score,
-            notes: answer.notes
+            notes: answer.notes,
           })
           .eq('id', itemId);
 
@@ -266,7 +281,9 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
         if (item && (answer.aroma || answer.flavor || answer.notes)) {
           try {
             // Get current session for auth token
-            const { data: { session: authSession } } = await supabase.auth.getSession();
+            const {
+              data: { session: authSession },
+            } = await supabase.auth.getSession();
             if (!authSession) {
               console.warn('No active session for descriptor extraction');
               return;
@@ -276,7 +293,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authSession.access_token}`
+                Authorization: `Bearer ${authSession.access_token}`,
               },
               body: JSON.stringify({
                 sourceType: 'quick_tasting',
@@ -284,13 +301,13 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
                 structuredData: {
                   aroma_notes: answer.aroma,
                   flavor_notes: answer.flavor,
-                  other_notes: answer.notes
+                  other_notes: answer.notes,
                 },
                 itemContext: {
                   itemName: item.item_name,
-                  itemCategory: session?.category
-                }
-              })
+                  itemCategory: session?.category,
+                },
+              }),
             });
           } catch (error) {
             console.error('Error extracting descriptors:', error);
@@ -302,7 +319,6 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
       setScore(calculatedScore);
       setShowResults(true);
       toast.success(`Competition submitted! Your score: ${calculatedScore}%`);
-
     } catch (error) {
       console.error('Error submitting competition:', error);
       toast.error('Failed to submit competition');
@@ -331,9 +347,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
             <h1 className="text-h1 font-heading font-bold text-text-primary mb-sm">
               Competition Complete!
             </h1>
-            <div className="text-6xl font-bold text-primary mb-md">
-              {score}%
-            </div>
+            <div className="text-6xl font-bold text-primary mb-md">{score}%</div>
             <p className="text-body text-text-secondary mb-lg">
               You answered {answers.size} out of {items.length} items
             </p>
@@ -344,10 +358,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
               >
                 View Leaderboard
               </button>
-              <button
-                onClick={() => router.push('/my-tastings')}
-                className="btn-secondary"
-              >
+              <button onClick={() => router.push('/my-tastings')} className="btn-secondary">
                 My Tastings
               </button>
             </div>
@@ -383,7 +394,9 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
             <div className="flex items-center gap-md">
               <div className="flex items-center text-text-secondary">
                 <Target size={16} className="mr-xs" />
-                <span className="text-small">{answers.size}/{items.length}</span>
+                <span className="text-small">
+                  {answers.size}/{items.length}
+                </span>
               </div>
             </div>
           </div>
@@ -413,7 +426,9 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
                   </label>
                   <textarea
                     value={currentAnswer.aroma}
-                    onChange={(e) => setCurrentAnswer(prev => ({ ...prev, aroma: e.target.value }))}
+                    onChange={(e) =>
+                      setCurrentAnswer((prev) => ({ ...prev, aroma: e.target.value }))
+                    }
                     placeholder="Describe the aromas you detect..."
                     className="form-input w-full h-24 resize-none"
                   />
@@ -425,7 +440,9 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
                   </label>
                   <textarea
                     value={currentAnswer.flavor}
-                    onChange={(e) => setCurrentAnswer(prev => ({ ...prev, flavor: e.target.value }))}
+                    onChange={(e) =>
+                      setCurrentAnswer((prev) => ({ ...prev, flavor: e.target.value }))
+                    }
                     placeholder="Describe the flavors you taste..."
                     className="form-input w-full h-24 resize-none"
                   />
@@ -442,7 +459,9 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
                 min="1"
                 max="100"
                 value={currentAnswer.overall_score}
-                onChange={(e) => setCurrentAnswer(prev => ({ ...prev, overall_score: parseInt(e.target.value) }))}
+                onChange={(e) =>
+                  setCurrentAnswer((prev) => ({ ...prev, overall_score: parseInt(e.target.value) }))
+                }
                 className="w-full"
               />
               <div className="flex justify-between text-xs text-text-secondary mt-xs">
@@ -457,7 +476,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
               </label>
               <textarea
                 value={currentAnswer.notes}
-                onChange={(e) => setCurrentAnswer(prev => ({ ...prev, notes: e.target.value }))}
+                onChange={(e) => setCurrentAnswer((prev) => ({ ...prev, notes: e.target.value }))}
                 placeholder="Any other observations..."
                 className="form-input w-full h-24 resize-none"
               />
@@ -476,10 +495,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
             </button>
 
             {currentItemIndex < items.length - 1 ? (
-              <button
-                onClick={handleNext}
-                className="btn-primary flex items-center"
-              >
+              <button onClick={handleNext} className="btn-primary flex items-center">
                 Next
                 <ChevronRight size={16} className="ml-xs" />
               </button>
@@ -506,8 +522,8 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
                   answers.has(item.id)
                     ? 'bg-success'
                     : index === currentItemIndex
-                    ? 'bg-primary'
-                    : 'bg-border-default'
+                      ? 'bg-primary'
+                      : 'bg-border-default'
                 }`}
               />
             ))}
@@ -518,4 +534,3 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
     </div>
   );
 };
-

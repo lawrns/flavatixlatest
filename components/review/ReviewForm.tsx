@@ -1,6 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Camera, X } from 'lucide-react';
-import { REVIEW_CATEGORIES, COUNTRIES, getStatesForCountry, hasStates } from '@/lib/reviewCategories';
+import {
+  REVIEW_CATEGORIES,
+  COUNTRIES,
+  getStatesForCountry,
+  hasStates,
+} from '@/lib/reviewCategories';
 import CharacteristicSlider from './CharacteristicSlider';
 import { toast } from '@/lib/toast';
 
@@ -16,7 +21,7 @@ export interface ReviewFormData {
   batch_id?: string;
   upc_barcode?: string;
   category: string;
-  
+
   // Characteristics (12 fields)
   aroma_notes?: string;
   aroma_intensity: number;
@@ -52,7 +57,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   onSubmit,
   onPhotoUpload,
   isSubmitting = false,
-  onReset
+  onReset,
 }) => {
   const [formData, setFormData] = useState<ReviewFormData>({
     item_name: '',
@@ -67,7 +72,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     typicity_score: 0,
     complexity_score: 0,
     overall_score: 0,
-    ...initialData
+    ...initialData,
   });
 
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
@@ -76,15 +81,12 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   // Update form data when initialData changes
   useEffect(() => {
     if (initialData) {
-      setFormData(prev => ({ ...prev, ...initialData }));
+      setFormData((prev) => ({ ...prev, ...initialData }));
     }
   }, [initialData]);
 
-  const updateField = <K extends keyof ReviewFormData>(
-    field: K,
-    value: ReviewFormData[K]
-  ) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const updateField = <K extends keyof ReviewFormData>(field: K, value: ReviewFormData[K]) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const resetForm = () => {
@@ -117,20 +119,22 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
       spiciness_notes: undefined,
       flavor_notes: undefined,
       texture_notes: undefined,
-      other_notes: undefined
+      other_notes: undefined,
     });
-    
+
     // Clear file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-    
+
     toast.success('Form reset successfully');
   };
 
   const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file || !onPhotoUpload) return;
+    if (!file || !onPhotoUpload) {
+      return;
+    }
 
     if (!file.type.startsWith('image/')) {
       toast.error('Please select an image file');
@@ -164,7 +168,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
       toast.error('Category is required');
       return;
     }
-    
+
     if (action === 'new') {
       // First submit the current review, then reset the form
       onSubmit(formData, action);
@@ -181,8 +185,10 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     <div className="space-y-lg">
       {/* ITEM ID Section */}
       <div className="card p-md">
-        <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">Item Information</h2>
-        
+        <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">
+          Item Information
+        </h2>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
           {/* 1. Item Name/Variety (REQUIRED) */}
           <div className="md:col-span-2">
@@ -263,7 +269,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               required
             >
               <option value="">Select a category</option>
-              {REVIEW_CATEGORIES.map(category => (
+              {REVIEW_CATEGORIES.map((category) => (
                 <option key={category} value={category}>
                   {category}
                 </option>
@@ -288,7 +294,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               className="form-input w-full"
             >
               <option value="">Select a country</option>
-              {COUNTRIES.map(country => (
+              {COUNTRIES.map((country) => (
                 <option key={country} value={country}>
                   {country}
                 </option>
@@ -308,7 +314,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                 className="form-input w-full"
               >
                 <option value="">Select a state</option>
-                {availableStates.map(state => (
+                {availableStates.map((state) => (
                   <option key={state} value={state}>
                     {state}
                   </option>
@@ -381,7 +387,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
       {/* Characteristics Section */}
       <div className="card p-md">
-        <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">Characteristics</h2>
+        <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">
+          Characteristics
+        </h2>
 
         <div className="space-y-lg">
           {/* 1. Aroma: Text input + Slider */}
@@ -577,4 +585,3 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 };
 
 export default ReviewForm;
-

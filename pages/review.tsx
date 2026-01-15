@@ -1,15 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
-import { 
-  ClipboardList, 
-  Edit3, 
-  Clock, 
-  Share2, 
-  ChevronRight,
-  HelpCircle,
-  X
-} from 'lucide-react';
+import { ClipboardList, Edit3, Clock, Share2, ChevronRight, HelpCircle, X } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 
 // Review mode card component with motion
@@ -30,7 +22,7 @@ const ReviewModeCard: React.FC<ReviewModeCardProps> = ({
   iconBgColor,
   iconColor,
   onClick,
-  delay = 0
+  delay = 0,
 }) => {
   return (
     <button
@@ -43,7 +35,7 @@ const ReviewModeCard: React.FC<ReviewModeCardProps> = ({
     >
       <div className="flex items-center gap-4">
         {/* Icon Badge */}
-        <div 
+        <div
           className={`flex-shrink-0 w-12 h-12 rounded-full ${iconBgColor} 
                       flex items-center justify-center`}
         >
@@ -62,9 +54,7 @@ const ReviewModeCard: React.FC<ReviewModeCardProps> = ({
 
         {/* Chevron */}
         <div className="flex-shrink-0">
-          <ChevronRight 
-            className="w-5 h-5 text-gemini-text-muted dark:text-zinc-500" 
-          />
+          <ChevronRight className="w-5 h-5 text-gemini-text-muted dark:text-zinc-500" />
         </div>
       </div>
     </button>
@@ -73,16 +63,15 @@ const ReviewModeCard: React.FC<ReviewModeCardProps> = ({
 
 // Help modal component
 const HelpModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+
       {/* Modal */}
       <div className="relative bg-white dark:bg-zinc-800 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-scale-in">
         <button
@@ -92,9 +81,7 @@ const HelpModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen,
           <X className="w-5 h-5 text-zinc-500" />
         </button>
 
-        <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
-          About Reviews
-        </h2>
+        <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">About Reviews</h2>
 
         <div className="space-y-4 text-sm text-zinc-600 dark:text-zinc-400">
           <div className="flex gap-3">
@@ -102,8 +89,13 @@ const HelpModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen,
               <ClipboardList className="w-4 h-4 text-primary" />
             </div>
             <div>
-              <p className="font-semibold text-zinc-900 dark:text-zinc-100 mb-1">Structured Review</p>
-              <p>Conduct an in-depth analysis with structured scoring (1-100) across 12 characteristics including aroma, flavor, texture, and more.</p>
+              <p className="font-semibold text-zinc-900 dark:text-zinc-100 mb-1">
+                Structured Review
+              </p>
+              <p>
+                Conduct an in-depth analysis with structured scoring (1-100) across 12
+                characteristics including aroma, flavor, texture, and more.
+              </p>
             </div>
           </div>
 
@@ -113,7 +105,10 @@ const HelpModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen,
             </div>
             <div>
               <p className="font-semibold text-zinc-900 dark:text-zinc-100 mb-1">Quick Note</p>
-              <p>Write a free-form review in your own words. Descriptors from your text will be automatically added to your flavor wheels.</p>
+              <p>
+                Write a free-form review in your own words. Descriptors from your text will be
+                automatically added to your flavor wheels.
+              </p>
             </div>
           </div>
 
@@ -172,7 +167,7 @@ const ReviewPage: React.FC = () => {
       icon: ClipboardList,
       iconBgColor: 'bg-primary/10 dark:bg-primary/20',
       iconColor: 'text-primary',
-      path: '/review/create'
+      path: '/review/create',
     },
     {
       title: 'Quick Note',
@@ -180,7 +175,7 @@ const ReviewPage: React.FC = () => {
       icon: Edit3,
       iconBgColor: 'bg-amber-500/10 dark:bg-amber-500/20',
       iconColor: 'text-amber-600 dark:text-amber-500',
-      path: '/review/prose'
+      path: '/review/prose',
     },
     {
       title: 'Review History',
@@ -188,7 +183,7 @@ const ReviewPage: React.FC = () => {
       icon: Clock,
       iconBgColor: 'bg-blue-500/10 dark:bg-blue-500/20',
       iconColor: 'text-blue-600 dark:text-blue-500',
-      path: '/review/my-reviews'
+      path: '/review/my-reviews',
     },
     {
       title: 'Export & Share',
@@ -196,8 +191,8 @@ const ReviewPage: React.FC = () => {
       icon: Share2,
       iconBgColor: 'bg-purple-500/10 dark:bg-purple-500/20',
       iconColor: 'text-purple-600 dark:text-purple-500',
-      path: '/review/my-reviews?action=export'
-    }
+      path: '/review/my-reviews?action=export',
+    },
   ];
 
   const helpButton = (
@@ -221,19 +216,19 @@ const ReviewPage: React.FC = () => {
     >
       {/* Review Options */}
       <div className="flex flex-col gap-3 mt-2">
-          {reviewOptions.map((option, index) => (
-            <ReviewModeCard
-              key={option.path}
-              title={option.title}
-              description={option.description}
-              icon={option.icon}
-              iconBgColor={option.iconBgColor}
-              iconColor={option.iconColor}
-              onClick={() => router.push(option.path)}
-              delay={index * 50}
-            />
-          ))}
-        </div>
+        {reviewOptions.map((option, index) => (
+          <ReviewModeCard
+            key={option.path}
+            title={option.title}
+            description={option.description}
+            icon={option.icon}
+            iconBgColor={option.iconBgColor}
+            iconColor={option.iconColor}
+            onClick={() => router.push(option.path)}
+            delay={index * 50}
+          />
+        ))}
+      </div>
 
       {/* Value proposition */}
       <div className="mt-8 p-4 rounded-[22px] bg-gemini-card dark:bg-zinc-800">
@@ -249,7 +244,6 @@ const ReviewPage: React.FC = () => {
 };
 
 export default ReviewPage;
-
 
 // Disable static generation for this page
 export async function getServerSideProps() {

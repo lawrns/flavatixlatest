@@ -6,8 +6,8 @@
 import { QuickTasting, TastingItem } from '@/lib/repositories/tastings';
 
 export const testTasting: Partial<QuickTasting> = {
-  id: 'test-tasting-id-123',
-  user_id: 'test-user-id-123',
+  id: '10000000-0000-4000-8000-000000000001',
+  user_id: '00000000-0000-4000-8000-000000000001',
   category: 'Wine',
   session_name: 'Test Wine Tasting',
   notes: 'Test tasting notes',
@@ -27,8 +27,8 @@ export const testTasting: Partial<QuickTasting> = {
 };
 
 export const testTastingItem: Partial<TastingItem> = {
-  id: 'test-item-id-123',
-  tasting_id: 'test-tasting-id-123',
+  id: '20000000-0000-4000-8000-000000000001',
+  tasting_id: '10000000-0000-4000-8000-000000000001',
   item_name: 'Test Wine 1',
   notes: 'Rich and fruity',
   aroma: 'Berries, oak',
@@ -49,7 +49,7 @@ export const testTastingItems: Partial<TastingItem>[] = [
   testTastingItem,
   {
     ...testTastingItem,
-    id: 'test-item-id-456',
+    id: '20000000-0000-4000-8000-000000000002',
     item_name: 'Test Wine 2',
     notes: 'Light and crisp',
     aroma: 'Citrus, floral',
@@ -63,7 +63,7 @@ export const testTastingItems: Partial<TastingItem>[] = [
   },
   {
     ...testTastingItem,
-    id: 'test-item-id-789',
+    id: '20000000-0000-4000-8000-000000000003',
     item_name: 'Test Wine 3',
     notes: 'Bold and tannic',
     aroma: 'Blackberry, pepper',
@@ -86,9 +86,3 @@ export const createTestTastingItem = (overrides?: Partial<TastingItem>): Partial
   ...testTastingItem,
   ...overrides,
 });
-
-
-
-
-
-

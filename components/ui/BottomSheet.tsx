@@ -30,7 +30,9 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   });
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      return;
+    }
 
     document.body.style.overflow = 'hidden';
     return () => {
@@ -38,13 +40,17 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <div
       className="fixed inset-0 z-[100] flex items-end justify-center bg-black/40"
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
       }}
       role="presentation"
     >
@@ -67,7 +73,11 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
         )}
         style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
       >
-        {ariaDescription ? <p id={descriptionId} className="sr-only">{ariaDescription}</p> : null}
+        {ariaDescription ? (
+          <p id={descriptionId} className="sr-only">
+            {ariaDescription}
+          </p>
+        ) : null}
 
         <div className="px-6 pt-3 pb-4">
           <div className="mx-auto h-1.5 w-10 rounded-full bg-zinc-200 dark:bg-zinc-700" />
@@ -75,7 +85,10 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
           <div className="mt-4 flex items-start justify-between gap-3">
             <div className="min-w-0">
               {title ? (
-                <h2 id={titleId} className="text-lg font-semibold text-gemini-text-dark dark:text-white truncate">
+                <h2
+                  id={titleId}
+                  className="text-lg font-semibold text-gemini-text-dark dark:text-white truncate"
+                >
                   {title}
                 </h2>
               ) : null}
@@ -87,14 +100,14 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
               className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full hover:bg-gemini-card dark:hover:bg-zinc-800 transition-colors flex items-center justify-center"
               aria-label="Close"
             >
-              <span className="text-lg leading-none text-gemini-text-gray dark:text-zinc-300">×</span>
+              <span className="text-lg leading-none text-gemini-text-gray dark:text-zinc-300">
+                ×
+              </span>
             </button>
           </div>
         </div>
 
-        <div className="px-6 pb-6 overflow-y-auto max-h-[calc(85vh-84px)]">
-          {children}
-        </div>
+        <div className="px-6 pb-6 overflow-y-auto max-h-[calc(85vh-84px)]">{children}</div>
       </div>
     </div>
   );

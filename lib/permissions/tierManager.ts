@@ -39,7 +39,7 @@ export const TIER_LIMITS: Record<UserTier, TierLimits> = {
     sessionHistory: 30,
     customCategories: false,
     advancedFilters: false,
-    apiAccess: false
+    apiAccess: false,
   },
   pro: {
     tastingsPerMonth: -1, // unlimited
@@ -56,7 +56,7 @@ export const TIER_LIMITS: Record<UserTier, TierLimits> = {
     sessionHistory: 365,
     customCategories: true,
     advancedFilters: true,
-    apiAccess: false
+    apiAccess: false,
   },
   team: {
     tastingsPerMonth: -1,
@@ -73,8 +73,8 @@ export const TIER_LIMITS: Record<UserTier, TierLimits> = {
     sessionHistory: -1, // unlimited
     customCategories: true,
     advancedFilters: true,
-    apiAccess: true
-  }
+    apiAccess: true,
+  },
 };
 
 export interface UserQuota {
@@ -95,7 +95,7 @@ export class TierManager {
       tastingsThisMonth: 0,
       storageUsed: 0,
       teamMembersCount: 1,
-      ...quota
+      ...quota,
     };
   }
 
@@ -130,7 +130,7 @@ export class TierManager {
     if (this.quota.tastingsThisMonth >= limits.tastingsPerMonth) {
       return {
         allowed: false,
-        reason: `You've reached your monthly limit of ${limits.tastingsPerMonth} tastings. Upgrade to Pro for unlimited tastings.`
+        reason: `You've reached your monthly limit of ${limits.tastingsPerMonth} tastings. Upgrade to Pro for unlimited tastings.`,
       };
     }
 
@@ -150,7 +150,7 @@ export class TierManager {
     if (currentItemCount >= limits.itemsPerTasting) {
       return {
         allowed: false,
-        reason: `Free tier is limited to ${limits.itemsPerTasting} items per tasting. Upgrade to Pro for unlimited items.`
+        reason: `Free tier is limited to ${limits.itemsPerTasting} items per tasting. Upgrade to Pro for unlimited items.`,
       };
     }
 
@@ -166,7 +166,7 @@ export class TierManager {
     if (this.quota.storageUsed + fileSizeMB > limits.photoStorage) {
       return {
         allowed: false,
-        reason: `Storage limit reached (${limits.photoStorage}MB). Upgrade for more storage.`
+        reason: `Storage limit reached (${limits.photoStorage}MB). Upgrade for more storage.`,
       };
     }
 
@@ -180,7 +180,7 @@ export class TierManager {
     if (!this.hasFeature('aiRecommendations')) {
       return {
         allowed: false,
-        reason: 'AI recommendations are available in Pro and Team tiers.'
+        reason: 'AI recommendations are available in Pro and Team tiers.',
       };
     }
 
@@ -194,7 +194,7 @@ export class TierManager {
     if (!this.hasFeature('pdfExport')) {
       return {
         allowed: false,
-        reason: 'PDF export is available in Pro and Team tiers.'
+        reason: 'PDF export is available in Pro and Team tiers.',
       };
     }
 
@@ -208,7 +208,7 @@ export class TierManager {
     if (!this.hasFeature('collaborativeTastings')) {
       return {
         allowed: false,
-        reason: 'Collaborative tastings are available in Pro and Team tiers.'
+        reason: 'Collaborative tastings are available in Pro and Team tiers.',
       };
     }
 
@@ -280,18 +280,21 @@ export class TierManager {
    * Check if user should see upgrade prompt
    */
   shouldPromptUpgrade(): boolean {
-    if (this.tier === 'team') return false;
+    if (this.tier === 'team') {
+      return false;
+    }
 
     const limits = TIER_LIMITS[this.tier];
 
     // Check if approaching limits
-    if (limits.tastingsPerMonth !== -1 &&
-        this.quota.tastingsThisMonth >= limits.tastingsPerMonth * 0.8) {
+    if (
+      limits.tastingsPerMonth !== -1 &&
+      this.quota.tastingsThisMonth >= limits.tastingsPerMonth * 0.8
+    ) {
       return true;
     }
 
-    if (limits.photoStorage !== -1 &&
-        this.quota.storageUsed >= limits.photoStorage * 0.8) {
+    if (limits.photoStorage !== -1 && this.quota.storageUsed >= limits.photoStorage * 0.8) {
       return true;
     }
 

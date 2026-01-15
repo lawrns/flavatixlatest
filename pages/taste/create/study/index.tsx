@@ -21,7 +21,9 @@ const StudyModeLanding: React.FC = () => {
     );
   }
 
-  if (!user) return null;
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
@@ -35,9 +37,7 @@ const StudyModeLanding: React.FC = () => {
               <ChevronLeft size={20} className="mr-2" />
               Back
             </button>
-            <h1 className="text-h1 font-heading font-bold text-text-primary mb-xs">
-              Study Mode
-            </h1>
+            <h1 className="text-h1 font-heading font-bold text-text-primary mb-xs">Study Mode</h1>
             <p className="text-body font-body text-text-secondary">
               Create a structured tasting session for learning and evaluation
             </p>
@@ -106,7 +106,10 @@ const StudyModeLanding: React.FC = () => {
 
       <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
         <nav className="flex justify-around p-2">
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/dashboard">
+          <a
+            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            href="/dashboard"
+          >
             <span className="material-symbols-outlined">home</span>
             <span className="text-xs font-medium">Home</span>
           </a>
@@ -114,11 +117,17 @@ const StudyModeLanding: React.FC = () => {
             <span className="material-symbols-outlined">restaurant</span>
             <span className="text-xs font-bold">Taste</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
+          <a
+            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            href="/review"
+          >
             <span className="material-symbols-outlined">reviews</span>
             <span className="text-xs font-medium">Review</span>
           </a>
-          <a className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
+          <a
+            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            href="/flavor-wheels"
+          >
             <span className="material-symbols-outlined">donut_small</span>
             <span className="text-xs font-medium">Wheels</span>
           </a>

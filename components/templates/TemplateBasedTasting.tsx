@@ -15,29 +15,32 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
   itemName,
   onSave,
   onCancel,
-  initialData = {}
+  initialData = {},
 }) => {
   const [formData, setFormData] = useState<Record<string, any>>(initialData);
   const [currentSection, setCurrentSection] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
 
   // Group fields by category
-  const sections = template.fields.reduce((acc, field) => {
-    const category = field.category || 'other';
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(field);
-    return {};
-  }, {} as Record<string, TemplateField[]>);
+  const sections = template.fields.reduce(
+    (acc, field) => {
+      const category = field.category || 'other';
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(field);
+      return {};
+    },
+    {} as Record<string, TemplateField[]>
+  );
 
   const sectionNames = Object.keys(sections);
   const currentFields = sections[sectionNames[currentSection]] || [];
 
   const handleFieldChange = (fieldId: string, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [fieldId]: value
+      [fieldId]: value,
     }));
   };
 
@@ -113,8 +116,10 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
             required={field.required}
           >
             <option value="">Select...</option>
-            {field.options?.map(option => (
-              <option key={option} value={option}>{option}</option>
+            {field.options?.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
             ))}
           </select>
         );
@@ -122,7 +127,7 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
       case 'multiselect':
         return (
           <div className="space-y-xs">
-            {field.options?.map(option => (
+            {field.options?.map((option) => (
               <label key={option} className="flex items-center">
                 <input
                   type="checkbox"
@@ -161,12 +166,14 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
   };
 
   const calculateScore = (): number => {
-    if (!template.scoringMethod || !template.maxScore) return 0;
+    if (!template.scoringMethod || !template.maxScore) {
+      return 0;
+    }
 
     let totalScore = 0;
     let totalWeight = 0;
 
-    template.fields.forEach(field => {
+    template.fields.forEach((field) => {
       const value = formData[field.id];
       const weight = field.weight || 1;
 
@@ -201,7 +208,7 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
       await onSave({
         ...formData,
         calculated_score: score,
-        template_id: template.id
+        template_id: template.id,
       });
     } catch (error) {
       console.error('Error saving:', error);
@@ -211,8 +218,10 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
   };
 
   const isLastSection = currentSection === sectionNames.length - 1;
-  const canProceed = currentFields.every(field => 
-    !field.required || (formData[field.id] !== undefined && formData[field.id] !== null && formData[field.id] !== '')
+  const canProceed = currentFields.every(
+    (field) =>
+      !field.required ||
+      (formData[field.id] !== undefined && formData[field.id] !== null && formData[field.id] !== '')
   );
 
   return (
@@ -220,13 +229,8 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
       {/* Header */}
       <div className="mb-lg">
         <div className="flex items-center justify-between mb-sm">
-          <h2 className="text-h2 font-heading font-bold text-text-primary">
-            {itemName}
-          </h2>
-          <button
-            onClick={onCancel}
-            className="text-text-secondary hover:text-text-primary"
-          >
+          <h2 className="text-h2 font-heading font-bold text-text-primary">{itemName}</h2>
+          <button onClick={onCancel} className="text-text-secondary hover:text-text-primary">
             <ChevronLeft size={20} />
           </button>
         </div>
@@ -245,8 +249,8 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
                 index === currentSection
                   ? 'bg-primary'
                   : index < currentSection
-                  ? 'bg-success'
-                  : 'bg-border-default'
+                    ? 'bg-success'
+                    : 'bg-border-default'
               }`}
             />
           ))}
@@ -259,7 +263,7 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
       {/* Fields */}
       <div className="card p-lg mb-lg">
         <div className="space-y-md">
-          {currentFields.map(field => (
+          {currentFields.map((field) => (
             <div key={field.id}>
               <label className="block text-small font-body font-medium text-text-primary mb-xs">
                 {field.label}
@@ -274,7 +278,7 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
       {/* Navigation */}
       <div className="flex items-center justify-between">
         <button
-          onClick={() => setCurrentSection(prev => Math.max(0, prev - 1))}
+          onClick={() => setCurrentSection((prev) => Math.max(0, prev - 1))}
           disabled={currentSection === 0}
           className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
         >
@@ -293,7 +297,7 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
           </button>
         ) : (
           <button
-            onClick={() => setCurrentSection(prev => Math.min(sectionNames.length - 1, prev + 1))}
+            onClick={() => setCurrentSection((prev) => Math.min(sectionNames.length - 1, prev + 1))}
             disabled={!canProceed}
             className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
           >
@@ -315,4 +319,3 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
     </div>
   );
 };
-

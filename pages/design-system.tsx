@@ -20,11 +20,33 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { ScoreRing, ScoreBadge } from '@/components/ui/ScoreRing';
 import { FlavorPill } from '@/components/ui/FlavorPill';
 import { AvatarWithFallback } from '@/components/ui/AvatarWithFallback';
-import { FormStepper, StepperProgress, StepContent, StepperNavigation, FormStepperProvider } from '@/components/ui/FormStepper';
+import {
+  FormStepper,
+  StepperProgress,
+  StepContent,
+  StepperNavigation,
+  FormStepperProvider,
+} from '@/components/ui/FormStepper';
 import Combobox from '@/components/ui/Combobox';
 
 // Icons
-import { Sun, Moon, Search, Mail, Lock, Eye, ChevronRight, Heart, Share2, Star, Check, AlertCircle, Info, AlertTriangle, X } from 'lucide-react';
+import {
+  Sun,
+  Moon,
+  Search,
+  Mail,
+  Lock,
+  Eye,
+  ChevronRight,
+  Heart,
+  Share2,
+  Star,
+  Check,
+  AlertCircle,
+  Info,
+  AlertTriangle,
+  X,
+} from 'lucide-react';
 
 // ============================================================================
 // NAVIGATION
@@ -55,7 +77,10 @@ interface SectionProps {
 }
 
 const Section: React.FC<SectionProps> = ({ id, title, description, children }) => (
-  <section id={id} className="scroll-mt-24 py-12 border-b border-zinc-200 dark:border-zinc-800 last:border-0">
+  <section
+    id={id}
+    className="scroll-mt-24 py-12 border-b border-zinc-200 dark:border-zinc-800 last:border-0"
+  >
     <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">{title}</h2>
     {description && (
       <p className="text-zinc-600 dark:text-zinc-400 mb-8 max-w-2xl">{description}</p>
@@ -96,7 +121,7 @@ const ColorSwatch: React.FC<ColorSwatchProps> = ({
   variable,
   tailwind,
   usage,
-  textColor = 'light'
+  textColor = 'light',
 }) => (
   <div className="flex flex-col">
     <div
@@ -130,9 +155,7 @@ interface ShowcaseProps {
 const Showcase: React.FC<ShowcaseProps> = ({ title, children }) => (
   <div className="mb-6">
     <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-3">{title}</p>
-    <div className="flex flex-wrap items-center gap-4">
-      {children}
-    </div>
+    <div className="flex flex-wrap items-center gap-4">{children}</div>
   </div>
 );
 
@@ -172,7 +195,9 @@ export default function DesignSystemPage() {
 
     sections.forEach(({ id }) => {
       const element = document.getElementById(id);
-      if (element) observer.observe(element);
+      if (element) {
+        observer.observe(element);
+      }
     });
 
     return () => observer.disconnect();
@@ -197,7 +222,10 @@ export default function DesignSystemPage() {
     <>
       <Head>
         <title>Design System | Flavatix</title>
-        <meta name="description" content="Flavatix Design System - UI components, colors, and patterns" />
+        <meta
+          name="description"
+          content="Flavatix Design System - UI components, colors, and patterns"
+        />
       </Head>
 
       <div className="min-h-screen bg-white dark:bg-zinc-900 transition-colors">
@@ -234,8 +262,18 @@ export default function DesignSystemPage() {
                   className="lg:hidden p-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                   aria-label="Toggle navigation"
                 >
-                  <svg className="w-5 h-5 text-zinc-600 dark:text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  <svg
+                    className="w-5 h-5 text-zinc-600 dark:text-zinc-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
                   </svg>
                 </button>
               </div>
@@ -293,7 +331,6 @@ export default function DesignSystemPage() {
 
             {/* Main content */}
             <main className="flex-1 min-w-0 py-8">
-
               {/* ================================================================ */}
               {/* COLORS SECTION */}
               {/* ================================================================ */}
@@ -305,51 +342,204 @@ export default function DesignSystemPage() {
                 {/* Primary Colors */}
                 <SubSection title="Primary Colors - Gemini Rust Red">
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4">
-                    <ColorSwatch name="Primary 50" value="#fef2f0" variable="--color-primary-50" tailwind="bg-primary-50" textColor="dark" />
-                    <ColorSwatch name="Primary 100" value="#fde4df" variable="--color-primary-100" tailwind="bg-primary-100" textColor="dark" />
-                    <ColorSwatch name="Primary 200" value="#fbc9bf" variable="--color-primary-200" tailwind="bg-primary-200" textColor="dark" />
-                    <ColorSwatch name="Primary 300" value="#f7a08f" variable="--color-primary-300" tailwind="bg-primary-300" textColor="dark" />
-                    <ColorSwatch name="Primary 400" value="#f0705a" variable="--color-primary-400" tailwind="bg-primary-400" />
-                    <ColorSwatch name="Primary 500" value="#C63C22" variable="--color-primary" tailwind="bg-primary" usage="Primary buttons, CTAs" />
-                    <ColorSwatch name="Primary 600" value="#b3351e" variable="--color-primary-600" tailwind="bg-primary-600" usage="Hover state" />
-                    <ColorSwatch name="Primary 700" value="#962c19" variable="--color-primary-700" tailwind="bg-primary-700" />
-                    <ColorSwatch name="Primary 800" value="#7a2415" variable="--color-primary-800" tailwind="bg-primary-800" />
-                    <ColorSwatch name="Primary 900" value="#651e11" variable="--color-primary-900" tailwind="bg-primary-900" />
+                    <ColorSwatch
+                      name="Primary 50"
+                      value="#fef2f0"
+                      variable="--color-primary-50"
+                      tailwind="bg-primary-50"
+                      textColor="dark"
+                    />
+                    <ColorSwatch
+                      name="Primary 100"
+                      value="#fde4df"
+                      variable="--color-primary-100"
+                      tailwind="bg-primary-100"
+                      textColor="dark"
+                    />
+                    <ColorSwatch
+                      name="Primary 200"
+                      value="#fbc9bf"
+                      variable="--color-primary-200"
+                      tailwind="bg-primary-200"
+                      textColor="dark"
+                    />
+                    <ColorSwatch
+                      name="Primary 300"
+                      value="#f7a08f"
+                      variable="--color-primary-300"
+                      tailwind="bg-primary-300"
+                      textColor="dark"
+                    />
+                    <ColorSwatch
+                      name="Primary 400"
+                      value="#f0705a"
+                      variable="--color-primary-400"
+                      tailwind="bg-primary-400"
+                    />
+                    <ColorSwatch
+                      name="Primary 500"
+                      value="#C63C22"
+                      variable="--color-primary"
+                      tailwind="bg-primary"
+                      usage="Primary buttons, CTAs"
+                    />
+                    <ColorSwatch
+                      name="Primary 600"
+                      value="#b3351e"
+                      variable="--color-primary-600"
+                      tailwind="bg-primary-600"
+                      usage="Hover state"
+                    />
+                    <ColorSwatch
+                      name="Primary 700"
+                      value="#962c19"
+                      variable="--color-primary-700"
+                      tailwind="bg-primary-700"
+                    />
+                    <ColorSwatch
+                      name="Primary 800"
+                      value="#7a2415"
+                      variable="--color-primary-800"
+                      tailwind="bg-primary-800"
+                    />
+                    <ColorSwatch
+                      name="Primary 900"
+                      value="#651e11"
+                      variable="--color-primary-900"
+                      tailwind="bg-primary-900"
+                    />
                   </div>
                 </SubSection>
 
                 {/* Secondary Colors */}
                 <SubSection title="Secondary Colors - Mexican Green">
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4">
-                    <ColorSwatch name="Secondary 50" value="#ecfdf5" variable="--color-secondary-50" tailwind="bg-secondary-50" textColor="dark" />
-                    <ColorSwatch name="Secondary 100" value="#d1fae5" variable="--color-secondary-100" tailwind="bg-secondary-100" textColor="dark" />
-                    <ColorSwatch name="Secondary 200" value="#a7f3d0" variable="--color-secondary-200" tailwind="bg-secondary-200" textColor="dark" />
-                    <ColorSwatch name="Secondary 300" value="#6ee7b7" variable="--color-secondary-300" tailwind="bg-secondary-300" textColor="dark" />
-                    <ColorSwatch name="Secondary 400" value="#34d399" variable="--color-secondary-400" tailwind="bg-secondary-400" />
-                    <ColorSwatch name="Secondary 500" value="#10b981" variable="--color-secondary" tailwind="bg-secondary" usage="Success states" />
-                    <ColorSwatch name="Secondary 600" value="#059669" variable="--color-secondary-600" tailwind="bg-secondary-600" />
-                    <ColorSwatch name="Secondary 700" value="#047857" variable="--color-secondary-700" tailwind="bg-secondary-700" />
-                    <ColorSwatch name="Secondary 800" value="#065f46" variable="--color-secondary-800" tailwind="bg-secondary-800" />
-                    <ColorSwatch name="Secondary 900" value="#064e3b" variable="--color-secondary-900" tailwind="bg-secondary-900" />
+                    <ColorSwatch
+                      name="Secondary 50"
+                      value="#ecfdf5"
+                      variable="--color-secondary-50"
+                      tailwind="bg-secondary-50"
+                      textColor="dark"
+                    />
+                    <ColorSwatch
+                      name="Secondary 100"
+                      value="#d1fae5"
+                      variable="--color-secondary-100"
+                      tailwind="bg-secondary-100"
+                      textColor="dark"
+                    />
+                    <ColorSwatch
+                      name="Secondary 200"
+                      value="#a7f3d0"
+                      variable="--color-secondary-200"
+                      tailwind="bg-secondary-200"
+                      textColor="dark"
+                    />
+                    <ColorSwatch
+                      name="Secondary 300"
+                      value="#6ee7b7"
+                      variable="--color-secondary-300"
+                      tailwind="bg-secondary-300"
+                      textColor="dark"
+                    />
+                    <ColorSwatch
+                      name="Secondary 400"
+                      value="#34d399"
+                      variable="--color-secondary-400"
+                      tailwind="bg-secondary-400"
+                    />
+                    <ColorSwatch
+                      name="Secondary 500"
+                      value="#10b981"
+                      variable="--color-secondary"
+                      tailwind="bg-secondary"
+                      usage="Success states"
+                    />
+                    <ColorSwatch
+                      name="Secondary 600"
+                      value="#059669"
+                      variable="--color-secondary-600"
+                      tailwind="bg-secondary-600"
+                    />
+                    <ColorSwatch
+                      name="Secondary 700"
+                      value="#047857"
+                      variable="--color-secondary-700"
+                      tailwind="bg-secondary-700"
+                    />
+                    <ColorSwatch
+                      name="Secondary 800"
+                      value="#065f46"
+                      variable="--color-secondary-800"
+                      tailwind="bg-secondary-800"
+                    />
+                    <ColorSwatch
+                      name="Secondary 900"
+                      value="#064e3b"
+                      variable="--color-secondary-900"
+                      tailwind="bg-secondary-900"
+                    />
                   </div>
                 </SubSection>
 
                 {/* Status Colors */}
                 <SubSection title="Status Colors">
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <ColorSwatch name="Success" value="#10b981" variable="--color-success" tailwind="bg-success" usage="Confirmations, valid" />
-                    <ColorSwatch name="Warning" value="#f59e0b" variable="--color-warning" tailwind="bg-warning" usage="Caution, attention" />
-                    <ColorSwatch name="Error" value="#ef4444" variable="--color-error" tailwind="bg-error" usage="Errors, destructive" />
-                    <ColorSwatch name="Info" value="#3b82f6" variable="--color-info" tailwind="bg-info" usage="Information" />
+                    <ColorSwatch
+                      name="Success"
+                      value="#10b981"
+                      variable="--color-success"
+                      tailwind="bg-success"
+                      usage="Confirmations, valid"
+                    />
+                    <ColorSwatch
+                      name="Warning"
+                      value="#f59e0b"
+                      variable="--color-warning"
+                      tailwind="bg-warning"
+                      usage="Caution, attention"
+                    />
+                    <ColorSwatch
+                      name="Error"
+                      value="#ef4444"
+                      variable="--color-error"
+                      tailwind="bg-error"
+                      usage="Errors, destructive"
+                    />
+                    <ColorSwatch
+                      name="Info"
+                      value="#3b82f6"
+                      variable="--color-info"
+                      tailwind="bg-info"
+                      usage="Information"
+                    />
                   </div>
                 </SubSection>
 
                 {/* Brand Colors */}
                 <SubSection title="Brand Colors">
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    <ColorSwatch name="Agave" value="#1F5D4C" variable="--color-brand-agave" tailwind="bg-brand-agave" usage="Heritage, tradition" />
-                    <ColorSwatch name="Earth" value="#C65A2E" variable="--color-brand-earth" tailwind="bg-brand-earth" usage="Warmth, richness" />
-                    <ColorSwatch name="Gold" value="#D4AF37" variable="--color-brand-gold" tailwind="bg-brand-gold" usage="Premium, awards" />
+                    <ColorSwatch
+                      name="Agave"
+                      value="#1F5D4C"
+                      variable="--color-brand-agave"
+                      tailwind="bg-brand-agave"
+                      usage="Heritage, tradition"
+                    />
+                    <ColorSwatch
+                      name="Earth"
+                      value="#C65A2E"
+                      variable="--color-brand-earth"
+                      tailwind="bg-brand-earth"
+                      usage="Warmth, richness"
+                    />
+                    <ColorSwatch
+                      name="Gold"
+                      value="#D4AF37"
+                      variable="--color-brand-gold"
+                      tailwind="bg-brand-gold"
+                      usage="Premium, awards"
+                    />
                   </div>
                 </SubSection>
 
@@ -373,15 +563,30 @@ export default function DesignSystemPage() {
                 <SubSection title="Flavor Profile Colors">
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                     <ColorSwatch name="Fruity" value="#E4572E" tailwind="flavor-fruity" />
-                    <ColorSwatch name="Floral" value="#E9A2AD" tailwind="flavor-floral" textColor="dark" />
+                    <ColorSwatch
+                      name="Floral"
+                      value="#E9A2AD"
+                      tailwind="flavor-floral"
+                      textColor="dark"
+                    />
                     <ColorSwatch name="Vegetal" value="#57A773" tailwind="flavor-vegetal" />
                     <ColorSwatch name="Smoky" value="#6B5B95" tailwind="flavor-smoky" />
-                    <ColorSwatch name="Sweet" value="#DFAF2B" tailwind="flavor-sweet" textColor="dark" />
+                    <ColorSwatch
+                      name="Sweet"
+                      value="#DFAF2B"
+                      tailwind="flavor-sweet"
+                      textColor="dark"
+                    />
                     <ColorSwatch name="Spicy" value="#B53F3F" tailwind="flavor-spicy" />
                     <ColorSwatch name="Bitter" value="#2F4858" tailwind="flavor-bitter" />
                     <ColorSwatch name="Sour" value="#3B9ED8" tailwind="flavor-sour" />
                     <ColorSwatch name="Roasted" value="#8C5A3A" tailwind="flavor-roasted" />
-                    <ColorSwatch name="Nutty" value="#C29F6D" tailwind="flavor-nutty" textColor="dark" />
+                    <ColorSwatch
+                      name="Nutty"
+                      value="#C29F6D"
+                      tailwind="flavor-nutty"
+                      textColor="dark"
+                    />
                     <ColorSwatch name="Mineral" value="#7A8A8C" tailwind="flavor-mineral" />
                     <ColorSwatch name="Earthy" value="#6D7F4B" tailwind="flavor-earthy" />
                   </div>
@@ -391,12 +596,16 @@ export default function DesignSystemPage() {
                 <SubSection title="Background & Surface Colors">
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                     <div className="p-4 rounded-xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900">
-                      <p className="text-sm font-medium text-zinc-900 dark:text-white">App Background</p>
+                      <p className="text-sm font-medium text-zinc-900 dark:text-white">
+                        App Background
+                      </p>
                       <p className="text-xs text-zinc-500 font-mono">--color-background-app</p>
                       <p className="text-xs text-zinc-400">Light: #FFFFFF / Dark: #18181b</p>
                     </div>
                     <div className="p-4 rounded-xl bg-gemini-card dark:bg-zinc-800">
-                      <p className="text-sm font-medium text-zinc-900 dark:text-white">Surface / Card</p>
+                      <p className="text-sm font-medium text-zinc-900 dark:text-white">
+                        Surface / Card
+                      </p>
                       <p className="text-xs text-zinc-500 font-mono">--color-background-surface</p>
                       <p className="text-xs text-zinc-400">Light: #F6F6F6 / Dark: #27272a</p>
                     </div>
@@ -421,28 +630,52 @@ export default function DesignSystemPage() {
                 <SubSection title="Heading Scale">
                   <div className="space-y-6 bg-gemini-card dark:bg-zinc-800 rounded-2xl p-6">
                     <div className="border-b border-zinc-200 dark:border-zinc-700 pb-4">
-                      <h1 className="text-h1 font-bold text-zinc-900 dark:text-white">Heading 1 - Page Titles</h1>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">text-h1 · clamp(2.25rem, 1.9rem + 1.75vw, 3rem) · font-bold</p>
+                      <h1 className="text-h1 font-bold text-zinc-900 dark:text-white">
+                        Heading 1 - Page Titles
+                      </h1>
+                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                        text-h1 · clamp(2.25rem, 1.9rem + 1.75vw, 3rem) · font-bold
+                      </p>
                     </div>
                     <div className="border-b border-zinc-200 dark:border-zinc-700 pb-4">
-                      <h2 className="text-h2 font-semibold text-zinc-900 dark:text-white">Heading 2 - Section Headers</h2>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">text-h2 · clamp(1.875rem, 1.6rem + 1.375vw, 2.25rem) · font-semibold</p>
+                      <h2 className="text-h2 font-semibold text-zinc-900 dark:text-white">
+                        Heading 2 - Section Headers
+                      </h2>
+                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                        text-h2 · clamp(1.875rem, 1.6rem + 1.375vw, 2.25rem) · font-semibold
+                      </p>
                     </div>
                     <div className="border-b border-zinc-200 dark:border-zinc-700 pb-4">
-                      <h3 className="text-h3 font-semibold text-zinc-900 dark:text-white">Heading 3 - Subsections</h3>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">text-h3 · clamp(1.5rem, 1.3rem + 1vw, 1.875rem) · font-semibold</p>
+                      <h3 className="text-h3 font-semibold text-zinc-900 dark:text-white">
+                        Heading 3 - Subsections
+                      </h3>
+                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                        text-h3 · clamp(1.5rem, 1.3rem + 1vw, 1.875rem) · font-semibold
+                      </p>
                     </div>
                     <div className="border-b border-zinc-200 dark:border-zinc-700 pb-4">
-                      <h4 className="text-h4 font-medium text-zinc-900 dark:text-white">Heading 4 - Card Titles</h4>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">text-h4 · clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem) · font-medium</p>
+                      <h4 className="text-h4 font-medium text-zinc-900 dark:text-white">
+                        Heading 4 - Card Titles
+                      </h4>
+                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                        text-h4 · clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem) · font-medium
+                      </p>
                     </div>
                     <div className="border-b border-zinc-200 dark:border-zinc-700 pb-4">
-                      <h5 className="text-h5 font-medium text-zinc-900 dark:text-white">Heading 5 - Labels</h5>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">text-h5 · clamp(1.125rem, 1rem + 0.625vw, 1.25rem) · font-medium</p>
+                      <h5 className="text-h5 font-medium text-zinc-900 dark:text-white">
+                        Heading 5 - Labels
+                      </h5>
+                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                        text-h5 · clamp(1.125rem, 1rem + 0.625vw, 1.25rem) · font-medium
+                      </p>
                     </div>
                     <div>
-                      <h6 className="text-h6 font-medium text-zinc-900 dark:text-white">Heading 6 - Small Headers</h6>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">text-h6 · clamp(1rem, 0.9rem + 0.5vw, 1.125rem) · font-medium</p>
+                      <h6 className="text-h6 font-medium text-zinc-900 dark:text-white">
+                        Heading 6 - Small Headers
+                      </h6>
+                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                        text-h6 · clamp(1rem, 0.9rem + 0.5vw, 1.125rem) · font-medium
+                      </p>
                     </div>
                   </div>
                 </SubSection>
@@ -451,20 +684,39 @@ export default function DesignSystemPage() {
                 <SubSection title="Body Text Scale">
                   <div className="space-y-6 bg-gemini-card dark:bg-zinc-800 rounded-2xl p-6">
                     <div>
-                      <p className="text-lg text-zinc-900 dark:text-white">Large body text for hero sections and feature highlights. Used sparingly for emphasis.</p>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">text-lg · clamp(1.125rem, 1rem + 0.625vw, 1.25rem)</p>
+                      <p className="text-lg text-zinc-900 dark:text-white">
+                        Large body text for hero sections and feature highlights. Used sparingly for
+                        emphasis.
+                      </p>
+                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                        text-lg · clamp(1.125rem, 1rem + 0.625vw, 1.25rem)
+                      </p>
                     </div>
                     <div>
-                      <p className="text-base text-zinc-900 dark:text-white">Default body text for paragraphs and descriptions. This is the standard reading size optimized for comfortable reading across all screen sizes.</p>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">text-base · clamp(1rem, 0.9rem + 0.5vw, 1.125rem)</p>
+                      <p className="text-base text-zinc-900 dark:text-white">
+                        Default body text for paragraphs and descriptions. This is the standard
+                        reading size optimized for comfortable reading across all screen sizes.
+                      </p>
+                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                        text-base · clamp(1rem, 0.9rem + 0.5vw, 1.125rem)
+                      </p>
                     </div>
                     <div>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">Small text for captions, helper text, and secondary information. Also used for timestamps.</p>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">text-sm · clamp(0.875rem, 0.8rem + 0.375vw, 1rem)</p>
+                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                        Small text for captions, helper text, and secondary information. Also used
+                        for timestamps.
+                      </p>
+                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                        text-sm · clamp(0.875rem, 0.8rem + 0.375vw, 1rem)
+                      </p>
                     </div>
                     <div>
-                      <p className="text-xs text-zinc-500">Extra small text for labels, badges, and metadata.</p>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">text-xs · clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem)</p>
+                      <p className="text-xs text-zinc-500">
+                        Extra small text for labels, badges, and metadata.
+                      </p>
+                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                        text-xs · clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem)
+                      </p>
                     </div>
                   </div>
                 </SubSection>
@@ -474,15 +726,21 @@ export default function DesignSystemPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <Card variant="default" padding="md">
                       <p className="text-xs text-zinc-500 mb-1">Tasting ID</p>
-                      <p className="font-mono text-sm text-zinc-900 dark:text-white">TST-2024-001234</p>
+                      <p className="font-mono text-sm text-zinc-900 dark:text-white">
+                        TST-2024-001234
+                      </p>
                     </Card>
                     <Card variant="default" padding="md">
                       <p className="text-xs text-zinc-500 mb-1">Score Display</p>
-                      <p className="text-3xl font-bold text-primary tabular-nums">92<span className="text-lg text-zinc-400">/100</span></p>
+                      <p className="text-3xl font-bold text-primary tabular-nums">
+                        92<span className="text-lg text-zinc-400">/100</span>
+                      </p>
                     </Card>
                     <Card variant="default" padding="md">
                       <p className="text-xs text-zinc-500 mb-1">Spirit Name</p>
-                      <p className="text-lg font-semibold text-zinc-900 dark:text-white">Casa Noble Añejo</p>
+                      <p className="text-lg font-semibold text-zinc-900 dark:text-white">
+                        Casa Noble Añejo
+                      </p>
                       <p className="text-sm text-zinc-500">Jalisco, Mexico</p>
                     </Card>
                     <Card variant="default" padding="md">
@@ -492,7 +750,9 @@ export default function DesignSystemPage() {
                     </Card>
                     <Card variant="default" padding="md">
                       <p className="text-xs text-zinc-500 mb-1">Price Display</p>
-                      <p className="text-xl font-semibold text-zinc-900 dark:text-white">$89<span className="text-sm text-zinc-400">.99</span></p>
+                      <p className="text-xl font-semibold text-zinc-900 dark:text-white">
+                        $89<span className="text-sm text-zinc-400">.99</span>
+                      </p>
                     </Card>
                     <Card variant="default" padding="md">
                       <p className="text-xs text-zinc-500 mb-1">Status Label</p>
@@ -542,38 +802,62 @@ export default function DesignSystemPage() {
                 <SubSection title="Button Variants">
                   <Showcase title="Primary - Main CTAs, form submissions">
                     <Button variant="primary">Primary Button</Button>
-                    <Button variant="primary" disabled>Disabled</Button>
-                    <Button variant="primary" loading>Loading</Button>
+                    <Button variant="primary" disabled>
+                      Disabled
+                    </Button>
+                    <Button variant="primary" loading>
+                      Loading
+                    </Button>
                   </Showcase>
 
                   <Showcase title="Secondary - Alternative actions">
                     <Button variant="secondary">Secondary Button</Button>
-                    <Button variant="secondary" disabled>Disabled</Button>
-                    <Button variant="secondary" loading>Loading</Button>
+                    <Button variant="secondary" disabled>
+                      Disabled
+                    </Button>
+                    <Button variant="secondary" loading>
+                      Loading
+                    </Button>
                   </Showcase>
 
                   <Showcase title="Ghost - Subtle actions, inline">
                     <Button variant="ghost">Ghost Button</Button>
-                    <Button variant="ghost" disabled>Disabled</Button>
-                    <Button variant="ghost" loading>Loading</Button>
+                    <Button variant="ghost" disabled>
+                      Disabled
+                    </Button>
+                    <Button variant="ghost" loading>
+                      Loading
+                    </Button>
                   </Showcase>
 
                   <Showcase title="Danger - Destructive actions">
                     <Button variant="danger">Delete</Button>
-                    <Button variant="danger" disabled>Disabled</Button>
-                    <Button variant="danger" loading>Loading</Button>
+                    <Button variant="danger" disabled>
+                      Disabled
+                    </Button>
+                    <Button variant="danger" loading>
+                      Loading
+                    </Button>
                   </Showcase>
 
                   <Showcase title="Success - Positive confirmations">
                     <Button variant="success">Confirm</Button>
-                    <Button variant="success" disabled>Disabled</Button>
-                    <Button variant="success" loading>Loading</Button>
+                    <Button variant="success" disabled>
+                      Disabled
+                    </Button>
+                    <Button variant="success" loading>
+                      Loading
+                    </Button>
                   </Showcase>
 
                   <Showcase title="Gradient - Premium CTAs">
                     <Button variant="gradient">Get Started</Button>
-                    <Button variant="gradient" disabled>Disabled</Button>
-                    <Button variant="gradient" loading>Loading</Button>
+                    <Button variant="gradient" disabled>
+                      Disabled
+                    </Button>
+                    <Button variant="gradient" loading>
+                      Loading
+                    </Button>
                   </Showcase>
                 </SubSection>
 
@@ -590,10 +874,18 @@ export default function DesignSystemPage() {
                 {/* Button with Icons */}
                 <SubSection title="Buttons with Icons">
                   <Showcase title="Icon positions">
-                    <Button icon={<Search className="w-4 h-4" />} iconPosition="left">Search</Button>
-                    <Button icon={<ChevronRight className="w-4 h-4" />} iconPosition="right">Continue</Button>
-                    <Button icon={<Heart className="w-4 h-4" />} variant="secondary">Like</Button>
-                    <Button icon={<Share2 className="w-4 h-4" />} variant="ghost">Share</Button>
+                    <Button icon={<Search className="w-4 h-4" />} iconPosition="left">
+                      Search
+                    </Button>
+                    <Button icon={<ChevronRight className="w-4 h-4" />} iconPosition="right">
+                      Continue
+                    </Button>
+                    <Button icon={<Heart className="w-4 h-4" />} variant="secondary">
+                      Like
+                    </Button>
+                    <Button icon={<Share2 className="w-4 h-4" />} variant="ghost">
+                      Share
+                    </Button>
                   </Showcase>
                 </SubSection>
 
@@ -601,8 +893,12 @@ export default function DesignSystemPage() {
                 <SubSection title="Pill Style Buttons">
                   <Showcase title="Rounded full">
                     <Button pill>Pill Button</Button>
-                    <Button pill variant="secondary">Secondary Pill</Button>
-                    <Button pill variant="secondary" icon={<Star className="w-4 h-4" />}>Rate</Button>
+                    <Button pill variant="secondary">
+                      Secondary Pill
+                    </Button>
+                    <Button pill variant="secondary" icon={<Star className="w-4 h-4" />}>
+                      Rate
+                    </Button>
                   </Showcase>
                 </SubSection>
 
@@ -610,8 +906,12 @@ export default function DesignSystemPage() {
                 <SubSection title="Full Width Buttons">
                   <div className="max-w-md space-y-3">
                     <Button fullWidth>Full Width Primary</Button>
-                    <Button fullWidth variant="secondary">Full Width Secondary</Button>
-                    <Button fullWidth variant="ghost">Full Width Ghost</Button>
+                    <Button fullWidth variant="secondary">
+                      Full Width Secondary
+                    </Button>
+                    <Button fullWidth variant="ghost">
+                      Full Width Ghost
+                    </Button>
                   </div>
                 </SubSection>
               </Section>
@@ -628,7 +928,11 @@ export default function DesignSystemPage() {
                 <SubSection title="Input Sizes">
                   <div className="max-w-md space-y-4">
                     <Input label="Small Input" inputSize="sm" placeholder="Small size" />
-                    <Input label="Medium Input (default)" inputSize="md" placeholder="Medium size" />
+                    <Input
+                      label="Medium Input (default)"
+                      inputSize="md"
+                      placeholder="Medium size"
+                    />
                     <Input label="Large Input" inputSize="lg" placeholder="Large size" />
                   </div>
                 </SubSection>
@@ -670,11 +974,7 @@ export default function DesignSystemPage() {
                       maxLength={200}
                       showCount
                     />
-                    <Input
-                      label="Disabled"
-                      placeholder="Disabled input"
-                      disabled
-                    />
+                    <Input label="Disabled" placeholder="Disabled input" disabled />
                   </div>
                 </SubSection>
 
@@ -686,7 +986,14 @@ export default function DesignSystemPage() {
                         Spirit Type
                       </label>
                       <Combobox
-                        options={['Blanco', 'Reposado', 'Añejo', 'Extra Añejo', 'Cristalino', 'Joven']}
+                        options={[
+                          'Blanco',
+                          'Reposado',
+                          'Añejo',
+                          'Extra Añejo',
+                          'Cristalino',
+                          'Joven',
+                        ]}
                         value={comboValue}
                         onChange={setComboValue}
                         placeholder="Select or type..."
@@ -715,7 +1022,9 @@ export default function DesignSystemPage() {
                       </p>
                     </CardContent>
                     <CardFooter>
-                      <Button size="sm" variant="ghost">Action</Button>
+                      <Button size="sm" variant="ghost">
+                        Action
+                      </Button>
                     </CardFooter>
                   </Card>
 
@@ -850,16 +1159,39 @@ export default function DesignSystemPage() {
               >
                 <SubSection title="Modal Sizes">
                   <div className="flex flex-wrap gap-4">
-                    <Button onClick={() => { setModalSize('sm'); setIsModalOpen(true); }}>
+                    <Button
+                      onClick={() => {
+                        setModalSize('sm');
+                        setIsModalOpen(true);
+                      }}
+                    >
                       Small Modal
                     </Button>
-                    <Button variant="secondary" onClick={() => { setModalSize('md'); setIsModalOpen(true); }}>
+                    <Button
+                      variant="secondary"
+                      onClick={() => {
+                        setModalSize('md');
+                        setIsModalOpen(true);
+                      }}
+                    >
                       Medium Modal
                     </Button>
-                    <Button variant="outline" onClick={() => { setModalSize('lg'); setIsModalOpen(true); }}>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setModalSize('lg');
+                        setIsModalOpen(true);
+                      }}
+                    >
                       Large Modal
                     </Button>
-                    <Button variant="ghost" onClick={() => { setModalSize('xl'); setIsModalOpen(true); }}>
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        setModalSize('xl');
+                        setIsModalOpen(true);
+                      }}
+                    >
                       Extra Large Modal
                     </Button>
                   </div>
@@ -874,12 +1206,15 @@ export default function DesignSystemPage() {
                 >
                   <ModalBody>
                     <p className="text-zinc-600 dark:text-zinc-400 mb-4">
-                      This is a {modalSize} modal. It has focus trapping, closes on Escape, and supports overlay click to close.
+                      This is a {modalSize} modal. It has focus trapping, closes on Escape, and
+                      supports overlay click to close.
                     </p>
                     <Input label="Example Input" placeholder="Focus is trapped inside the modal" />
                   </ModalBody>
                   <ModalFooter>
-                    <Button variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                    <Button variant="ghost" onClick={() => setIsModalOpen(false)}>
+                      Cancel
+                    </Button>
                     <Button onClick={() => setIsModalOpen(false)}>Confirm</Button>
                   </ModalFooter>
                 </Modal>
@@ -957,7 +1292,9 @@ export default function DesignSystemPage() {
                       <Info className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="font-medium text-blue-900 dark:text-blue-100">Information</p>
-                        <p className="text-sm text-blue-700 dark:text-blue-300">This is an informational message with helpful tips.</p>
+                        <p className="text-sm text-blue-700 dark:text-blue-300">
+                          This is an informational message with helpful tips.
+                        </p>
                       </div>
                     </div>
 
@@ -966,7 +1303,9 @@ export default function DesignSystemPage() {
                       <Check className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="font-medium text-green-900 dark:text-green-100">Success</p>
-                        <p className="text-sm text-green-700 dark:text-green-300">Your tasting has been saved successfully.</p>
+                        <p className="text-sm text-green-700 dark:text-green-300">
+                          Your tasting has been saved successfully.
+                        </p>
                       </div>
                     </div>
 
@@ -975,7 +1314,9 @@ export default function DesignSystemPage() {
                       <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="font-medium text-amber-900 dark:text-amber-100">Warning</p>
-                        <p className="text-sm text-amber-700 dark:text-amber-300">You have unsaved changes that may be lost.</p>
+                        <p className="text-sm text-amber-700 dark:text-amber-300">
+                          You have unsaved changes that may be lost.
+                        </p>
                       </div>
                     </div>
 
@@ -984,7 +1325,9 @@ export default function DesignSystemPage() {
                       <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
                       <div className="flex-1">
                         <p className="font-medium text-red-900 dark:text-red-100">Error</p>
-                        <p className="text-sm text-red-700 dark:text-red-300">Failed to save your tasting. Please try again.</p>
+                        <p className="text-sm text-red-700 dark:text-red-300">
+                          Failed to save your tasting. Please try again.
+                        </p>
                       </div>
                       <button className="text-red-400 hover:text-red-600 dark:hover:text-red-300">
                         <X className="w-5 h-5" />
@@ -1033,7 +1376,9 @@ export default function DesignSystemPage() {
                 <SubSection title="Form Stepper">
                   <div className="space-y-8">
                     <div>
-                      <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-4">Full Variant (with labels)</p>
+                      <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-4">
+                        Full Variant (with labels)
+                      </p>
                       <Card variant="default" className="max-w-2xl">
                         <FormStepperProvider steps={demoSteps} initialStep={1}>
                           <StepperProgress variant="full" showLabels />
@@ -1042,7 +1387,9 @@ export default function DesignSystemPage() {
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-4">Numbers Variant</p>
+                      <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-4">
+                        Numbers Variant
+                      </p>
                       <Card variant="default" className="max-w-md">
                         <FormStepperProvider steps={demoSteps} initialStep={1}>
                           <StepperProgress variant="numbers" />
@@ -1051,7 +1398,9 @@ export default function DesignSystemPage() {
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-4">Dots Variant</p>
+                      <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-4">
+                        Dots Variant
+                      </p>
                       <Card variant="default" className="max-w-xs">
                         <FormStepperProvider steps={demoSteps} initialStep={1}>
                           <StepperProgress variant="dots" />
@@ -1188,7 +1537,9 @@ export default function DesignSystemPage() {
                     </div>
                     <div className="p-4 bg-zinc-900 dark:bg-white rounded-xl">
                       <p className="text-white dark:text-zinc-900 font-medium">Inverse Text</p>
-                      <p className="text-xs text-white/80 dark:text-zinc-600 mt-1">WCAG AAA compliant</p>
+                      <p className="text-xs text-white/80 dark:text-zinc-600 mt-1">
+                        WCAG AAA compliant
+                      </p>
                     </div>
                   </div>
                 </SubSection>
@@ -1196,8 +1547,12 @@ export default function DesignSystemPage() {
                 {/* Reduced Motion */}
                 <SubSection title="Reduced Motion">
                   <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-2xl">
-                    All animations respect the <code className="px-1.5 py-0.5 bg-zinc-100 dark:bg-zinc-800 rounded text-xs font-mono">prefers-reduced-motion</code> media query.
-                    When enabled, transitions and animations are disabled or minimized to prevent vestibular issues.
+                    All animations respect the{' '}
+                    <code className="px-1.5 py-0.5 bg-zinc-100 dark:bg-zinc-800 rounded text-xs font-mono">
+                      prefers-reduced-motion
+                    </code>{' '}
+                    media query. When enabled, transitions and animations are disabled or minimized
+                    to prevent vestibular issues.
                   </p>
                 </SubSection>
 
@@ -1205,20 +1560,36 @@ export default function DesignSystemPage() {
                 <SubSection title="Keyboard Navigation">
                   <div className="space-y-3 max-w-2xl">
                     <div className="flex items-center gap-4">
-                      <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded text-sm font-mono">Tab</kbd>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">Navigate between interactive elements</p>
+                      <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded text-sm font-mono">
+                        Tab
+                      </kbd>
+                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                        Navigate between interactive elements
+                      </p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded text-sm font-mono">Enter / Space</kbd>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">Activate buttons and links</p>
+                      <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded text-sm font-mono">
+                        Enter / Space
+                      </kbd>
+                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                        Activate buttons and links
+                      </p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded text-sm font-mono">Escape</kbd>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">Close modals and dropdowns</p>
+                      <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded text-sm font-mono">
+                        Escape
+                      </kbd>
+                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                        Close modals and dropdowns
+                      </p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded text-sm font-mono">Arrow Keys</kbd>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">Navigate within components (combobox, stepper)</p>
+                      <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded text-sm font-mono">
+                        Arrow Keys
+                      </kbd>
+                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                        Navigate within components (combobox, stepper)
+                      </p>
                     </div>
                   </div>
                 </SubSection>
