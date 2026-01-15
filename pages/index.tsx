@@ -31,45 +31,45 @@ export default function Home() {
               />
 
               {/* Tagline */}
-              <p className="text-h3 text-white font-medium">
+              <p className="text-h3 text-zinc-900 font-semibold">
                 The one place for all your tasting needs
               </p>
             </div>
             
             {/* Key Features Preview */}
             <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-xl max-w-2xl mx-auto">
-              <div className="text-center">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-sm rounded-full mx-auto mb-3 flex items-center justify-center border border-white/30">
-                  <FileText className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+              <div className="text-center p-4 sm:p-6 rounded-lg glass transition-spring hover:shadow-lg hover:-translate-y-1">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center border border-primary/20">
+                  <FileText className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
                 </div>
-                <h3 className="font-semibold text-sm sm:text-base text-white mb-1">
+                <h3 className="font-semibold text-sm sm:text-base text-zinc-900 mb-1">
                   Tasting Notes
                 </h3>
-                <p className="text-xs sm:text-sm text-white/80 hidden sm:block">
+                <p className="text-xs sm:text-sm text-zinc-600 hidden sm:block">
                   Capture and analyze flavors
                 </p>
               </div>
 
-              <div className="text-center">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-sm rounded-full mx-auto mb-3 flex items-center justify-center border border-white/30">
-                  <Users className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+              <div className="text-center p-4 sm:p-6 rounded-lg glass transition-spring hover:shadow-lg hover:-translate-y-1">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center border border-primary/20">
+                  <Users className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
                 </div>
-                <h3 className="font-semibold text-sm sm:text-base text-white mb-1">
+                <h3 className="font-semibold text-sm sm:text-base text-zinc-900 mb-1">
                   Group Tastings
                 </h3>
-                <p className="text-xs sm:text-sm text-white/80 hidden sm:block">
+                <p className="text-xs sm:text-sm text-zinc-600 hidden sm:block">
                   Studies and competitions
                 </p>
               </div>
 
-              <div className="text-center">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-sm rounded-full mx-auto mb-3 flex items-center justify-center border border-white/30">
-                  <PieChart className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+              <div className="text-center p-4 sm:p-6 rounded-lg glass transition-spring hover:shadow-lg hover:-translate-y-1">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center border border-primary/20">
+                  <PieChart className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
                 </div>
-                <h3 className="font-semibold text-sm sm:text-base text-white mb-1">
+                <h3 className="font-semibold text-sm sm:text-base text-zinc-900 mb-1">
                   Flavor Wheels
                 </h3>
-                <p className="text-xs sm:text-sm text-white/80 hidden sm:block">
+                <p className="text-xs sm:text-sm text-zinc-600 hidden sm:block">
                   AI-generated visualizations
                 </p>
               </div>

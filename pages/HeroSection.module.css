@@ -1,19 +1,22 @@
 .hero {
   position: relative;
-  background-image: url('https://kobuclkvlacdwvxmakvq.supabase.co/storage/v1/object/public/images/coffee-bg.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: white;
+  /* Premium gradient background - warm cream to soft beige */
+  background: radial-gradient(90% 120% at 0% 0%, #FDF4E6 0%, #F7E9D6 60%, #F4E3CC 100%);
+  color: #111;
   min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* Subtle rust red glow accent overlay */
 .hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 40%, rgba(0,0,0,0) 100%);
+  background: radial-gradient(circle at 80% 20%, rgba(198, 60, 34, 0.08), transparent 60%);
   z-index: 0;
+  pointer-events: none;
 }
 
 .hero * {
