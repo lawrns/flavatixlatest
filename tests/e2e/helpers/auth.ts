@@ -13,26 +13,29 @@ export async function login(page: Page) {
   await page.goto('/auth');
   await page.waitForLoadState('networkidle');
 
-  // Handle onboarding carousel if present - click Skip or swipe through
+  // Handle onboarding carousel if present - click Skip
   const skipButton = page.getByRole('button', { name: /skip/i });
   if (await skipButton.isVisible({ timeout: 3000 }).catch(() => false)) {
     await skipButton.click();
     await page.waitForTimeout(500);
   }
 
-  // Also try clicking through carousel if Skip didn't work
-  const getStartedButton = page.getByRole('button', { name: /get started|sign up|create account/i });
-  if (await getStartedButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-    await getStartedButton.click();
+  // After carousel, we land on "Get Started" screen
+  // Click "Already have an account? Sign in" to get to login form
+  const alreadyHaveAccountButton = page.getByRole('button', {
+    name: /already have an account|sign in/i,
+  });
+  if (await alreadyHaveAccountButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+    await alreadyHaveAccountButton.click();
     await page.waitForTimeout(500);
   }
 
-  // First click "Sign in with Email" to show the email form
-  const signInWithEmailButton = page.getByRole('button', { name: /sign in with email/i });
-
-  // Check if button exists and is visible (may already be on email form)
-  if (await signInWithEmailButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-    await signInWithEmailButton.click();
+  // Now click "Continue with Email" or "Sign in with Email" to show the email form
+  const continueWithEmailButton = page.getByRole('button', {
+    name: /continue with email|sign in with email/i,
+  });
+  if (await continueWithEmailButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+    await continueWithEmailButton.click();
     await page.waitForTimeout(500);
   }
 
@@ -41,7 +44,7 @@ export async function login(page: Page) {
   await page.fill('input[type="email"]', TEST_USER.email);
   await page.fill('input[type="password"]', TEST_USER.password);
 
-  // Click sign in
+  // Click sign in button
   const signInButton = page.getByRole('button', { name: /^sign in$/i });
   await signInButton.click();
 
