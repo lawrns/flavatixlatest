@@ -32,14 +32,14 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 async function createDevUser() {
   try {
     console.log('Creating dev user...');
-    
+
     // Create user with email and password
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-      email: 'dev@devtix.com',
-      password: '123test',
+      email: 'han@han.com',
+      password: 'hennie12',
       email_confirm: true, // Skip email confirmation
       user_metadata: {
-        full_name: 'Dev User'
+        full_name: 'Han Account'
       }
     });
 
@@ -55,8 +55,8 @@ async function createDevUser() {
       .from('profiles')
       .insert({
         user_id: authData.user.id,
-        full_name: 'Dev User',
-        username: 'devuser',
+        full_name: 'Han Account',
+        username: 'han',
         bio: 'Development test user',
         email_confirmed: true,
         created_at: new Date().toISOString(),
@@ -70,8 +70,8 @@ async function createDevUser() {
 
     console.log('Profile created successfully');
     console.log('✅ Dev user created with credentials:');
-    console.log('   Email: dev@devtix.com');
-    console.log('   Password: 123test');
+    console.log('   Email: han@han.com');
+    console.log('   Password: hennie12');
     console.log('   User ID:', authData.user.id);
 
   } catch (error) {

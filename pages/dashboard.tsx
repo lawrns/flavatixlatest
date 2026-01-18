@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { AvatarWithFallback } from '@/components/ui/AvatarWithFallback';
 import UserAvatarMenu from '@/components/navigation/UserAvatarMenu';
 import { CategoryStamp } from '@/components/ui';
+import EmptyStateCard from '@/components/ui/EmptyStateCard';
 import { getUserPresets, DEFAULT_PRESETS } from '@/lib/presetService';
 import { CategoryPackId } from '@/lib/categoryPacks';
 import { useCurrentProfile } from '../lib/query/hooks/useProfile';
@@ -211,34 +212,21 @@ export default function Dashboard() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-white dark:bg-zinc-800 p-6 rounded-[22px] text-center">
-                  <div className="text-zinc-400 mb-3">
-                    <svg
-                      className="w-12 h-12 mx-auto"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                      />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
-                    No Tastings Yet
-                  </h3>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-300 mb-4">
-                    Start your flavor journey today!
-                  </p>
-                  <button
-                    onClick={() => router.push('/taste')}
-                    className="px-4 py-2 bg-primary text-white rounded-[14px] hover:bg-primary-hover transition-colors"
-                  >
-                    Create Your First Tasting
-                  </button>
+                <div className="bg-white dark:bg-zinc-800 p-6 rounded-[22px]">
+                  <EmptyStateCard
+                    image="/generated-images/empty-tastings.webp"
+                    headline="No tastings yet — start your first flight"
+                    description="Capture a few notes and you'll unlock a personalized flavor wheel that evolves with every session."
+                    cta={{
+                      label: 'Start a Tasting',
+                      onClick: () => router.push('/taste'),
+                      variant: 'primary',
+                    }}
+                    secondaryCta={{
+                      label: 'Explore Flavor Wheels',
+                      onClick: () => router.push('/flavor-wheels'),
+                    }}
+                  />
                 </div>
               )}
 

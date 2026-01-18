@@ -617,6 +617,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                         value={localScore}
                         onChange={(e) => handleScoreChange(parseInt(e.target.value))}
                         className="w-full h-2 rounded-full appearance-none cursor-pointer"
+                        aria-label="Overall Score"
                         style={{
                           background: `linear-gradient(to right,
                           #C63C22 0%,

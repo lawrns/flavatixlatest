@@ -229,6 +229,21 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
         return;
       }
 
+      // RACE CONDITION FIX: Double-check if items exist in DB if we think we are adding the first item
+      // This prevents duplicate "Item 1" creation if auto-add triggers twice or during loading
+      if (items.length === 0) {
+        const { count } = await supabase
+          .from('quick_tasting_items')
+          .select('*', { count: 'exact', head: true })
+          .eq('tasting_id', session.id);
+
+        if (count && count > 0) {
+          logger.debug('[ADD] Items already exist in DB, skipping creation and reloading');
+          await loadTastingItems();
+          return;
+        }
+      }
+
       const newIndex = items.length;
       const itemName = `Item ${newIndex + 1}`;
       logger.debug('Tasting', `Creating item: ${itemName}`, {
@@ -242,31 +257,30 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
           .insert({
             tasting_id: session.id,
             item_name: itemName,
+            overall_score: null,
           })
           .select()
           .single();
 
         if (error) {
-          console.error('[ERROR] QuickTastingSession: Error inserting item:', error);
           throw error;
         }
 
-        logger.debug('[SUCCESS] QuickTastingSession: Item created successfully:', data.id);
-        setItems((prev) => [...prev, data]);
-        setCurrentItemIndex(newIndex);
-        toast.success('New item added!');
+        logger.debug('[SUCCESS] QuickTastingSession: Item created:', data.id);
 
-        // Scroll to the new item form instead of top
+        // Update local state and navigate to new item
+        setItems((prevItems) => [...prevItems, data]);
+
+        if (onSessionUpdate && session) {
+          onSessionUpdate({
+            ...session,
+            total_items: newIndex + 1,
+          });
+        }
         setTimeout(() => {
-          const itemElement = document.querySelector(`[data-item-id="${data.id}"]`);
-          if (itemElement) {
-            itemElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          } else {
-            // Fallback: scroll to the tasting form area
-            const formElement = document.querySelector('.tasting-form');
-            if (formElement) {
-              formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+          setCurrentItemIndex(newIndex);
+          if (phase !== 'tasting') {
+            setPhase('tasting');
           }
         }, 100);
       } catch (error) {
@@ -322,6 +336,15 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
         const newItems = items.slice(0, -1);
         setItems(newItems);
 
+        if (onSessionUpdate && session) {
+          const newCompleted = newItems.filter((item) => item.overall_score !== null).length;
+          onSessionUpdate({
+            ...session,
+            total_items: newItems.length,
+            completed_items: newCompleted,
+          });
+        }
+
         // Move to the new last item
         setCurrentItemIndex(Math.max(0, newItems.length - 1));
 
@@ -370,15 +393,21 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
 
         logger.debug('[SUCCESS] QuickTastingSession: Item updated successfully:', data.id);
 
-        const updatedItems = items.map((item) =>
-          item.id === itemId ? { ...item, ...data } : item
-        );
-        setItems(updatedItems);
+        setItems((prevItems) => {
+          const updatedItems = prevItems.map((item) =>
+            (item.id === itemId ? { ...item, ...data } : item)
+          );
 
-        const newCompleted = updatedItems.filter((item) => item.overall_score !== null).length;
-        if (onSessionUpdate && session) {
-          onSessionUpdate({ ...session, completed_items: newCompleted });
-        }
+          if (onSessionUpdate && session) {
+            const newCompleted = updatedItems.filter((item) => item.overall_score !== null).length;
+            onSessionUpdate({
+              ...session,
+              completed_items: newCompleted,
+            });
+          }
+
+          return updatedItems;
+        });
 
         // Debounce AI extraction - only run after user stops typing for 2 seconds
         const shouldExtract = updates.notes || updates.aroma || updates.flavor;
@@ -425,14 +454,12 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
           hasFlavor: !!itemData.flavor,
         });
 
-        // AI processing indicator removed for better UX
-
-        // Prepare extraction data - use aroma field for aroma_notes
+        // Prepare extraction data
         const extractionPayload = {
           sourceType: 'quick_tasting',
           sourceId: itemId,
           structuredData: {
-            aroma_notes: itemData.aroma || itemData.notes || '', // Use aroma field first, fallback to notes
+            aroma_notes: itemData.aroma || itemData.notes || '',
             flavor_notes: itemData.flavor || '',
             other_notes: itemData.notes || '',
           },
@@ -442,26 +469,10 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
           },
         };
 
-        // Get current session for auth token
-        const {
-          data: { session: authSession },
-        } = await supabase.auth.getSession();
-        if (!authSession) {
-          console.error('[ERROR] No active auth session for descriptor extraction');
-          // Try to refresh the session
-          const {
-            data: { session: refreshedSession },
-          } = await supabase.auth.refreshSession();
-          if (!refreshedSession) {
-            console.error('[ERROR] Failed to refresh auth session');
-            return;
-          }
-          logger.debug('[SUCCESS] Auth session refreshed successfully');
-        }
+        // Get auth token
+        const { data: { session: authSession } } = await supabase.auth.getSession();
+        const token = authSession?.access_token;
 
-        const token =
-          authSession?.access_token ||
-          (await supabase.auth.getSession()).data.session?.access_token;
         if (!token) {
           console.error('[ERROR] No auth token available for extraction');
           return;
@@ -499,16 +510,12 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
           logger.debug(
             `[SUCCESS] Successfully extracted ${result.savedCount} flavor descriptors from item ${itemId}`
           );
-          // Success notifications removed for better UX
         } else if (result.success && result.savedCount === 0) {
           logger.debug('[INFO] No descriptors found in the content');
         }
       } catch (error) {
         console.error('[ERROR] Error extracting descriptors:', error);
 
-        // Error handling without toast notifications
-
-        // Log the full error for debugging
         if (error instanceof Error) {
           console.error('Error details:', {
             message: error.message,
@@ -748,10 +755,8 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
         }
       }
 
-      // Only load user roles for study mode sessions
-      if (session.mode === 'study') {
-        loadUserRole();
-      }
+      // Load user roles for all modes to ensure permissions are set
+      loadUserRole();
     }, [session?.id, session?.mode, session?.notes]);
 
     // Auto-add first item for Quick Tasting and predefined Study Mode

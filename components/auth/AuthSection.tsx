@@ -65,6 +65,31 @@ const AuthSection = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+
+    const forceEmailForm =
+      router.query.showEmail === 'true' ||
+      router.query.showEmail === '1' ||
+      router.query.email === '1';
+    const skipOnboarding =
+      router.query.skipOnboarding === 'true' ||
+      router.query.onboarding === 'false';
+
+    if (forceEmailForm) {
+      setShowEmailForm(true);
+    }
+
+    if (skipOnboarding) {
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('flavatix:onboarding-seen', 'true');
+      }
+      setShowOnboarding(false);
+    }
+  }, [router.isReady, router.query]);
+
   const handleOnboardingComplete = useCallback(() => {
     if (typeof window !== 'undefined') {
       window.localStorage.setItem('flavatix:onboarding-seen', 'true');

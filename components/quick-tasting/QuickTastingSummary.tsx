@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { supabase } from '../../lib/supabase';
 import { toast } from '../../lib/toast';
-import { Coffee, Wine, Beer, Utensils, Star } from 'lucide-react';
+import { Coffee, Wine, Beer, Utensils, Star, PieChart } from 'lucide-react';
+import { EmptyState } from '../ui/EmptyState';
 
 interface QuickTasting {
   id: string;
@@ -43,6 +45,7 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
   const [items, setItems] = useState<TastingItemData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     loadTastingItems();
@@ -67,6 +70,11 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
       setIsLoading(false);
     }
   };
+
+  const getCategoryLabel = (category: string): string =>
+    category
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
 
   const calculateAverageScore = (): number => {
     const scoredItems = items.filter(
@@ -134,6 +142,8 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
 
   const averageScore = calculateAverageScore();
   const topFlavors = getTopFlavors();
+  const categoryLabel = getCategoryLabel(session.category);
+  const sessionTitle = session.session_name || `${categoryLabel} Tasting`;
   const completedItems = items.filter(
     (item) => item.overall_score !== null && item.overall_score !== undefined
   );
@@ -160,23 +170,31 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
             </div>
             <div className="min-w-0 flex-1">
               <h2 className="text-h3 tablet:text-h2 font-heading font-bold text-text-primary truncate">
-                {session.session_name}
+                {sessionTitle}
               </h2>
               <p className="text-text-secondary text-small tablet:text-base">
-                {session.category.charAt(0).toUpperCase() + session.category.slice(1)} Tasting
-                Session
+                {categoryLabel} Tasting Session
               </p>
               <p className="text-small font-body text-text-secondary">
                 Completed on {formatDate(session.completed_at || session.updated_at)}
               </p>
             </div>
           </div>
-          <button
-            onClick={onStartNewSession}
-            className="btn-primary w-full tablet:w-auto flex-shrink-0"
-          >
-            Start New Session
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3 w-full tablet:w-auto">
+            <button
+              onClick={() => router.push('/flavor-wheels')}
+              className="btn-secondary w-full tablet:w-auto flex-shrink-0 flex items-center justify-center gap-2"
+            >
+              <PieChart size={18} />
+              Generate Flavor Wheel
+            </button>
+            <button
+              onClick={onStartNewSession}
+              className="btn-primary w-full tablet:w-auto flex-shrink-0"
+            >
+              Start New Session
+            </button>
+          </div>
         </div>
 
         {/* Session Notes */}
@@ -251,113 +269,123 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
       {/* Items List */}
       <div className="card p-sm tablet:p-md">
         <h3 className="text-h4 font-heading font-semibold text-text-primary mb-sm">Tasted Items</h3>
-        <div className="space-y-sm">
-          {items.map((item) => (
-            <div key={item.id} className="border border-border-primary rounded-lg overflow-hidden">
-              <div
-                className="p-sm bg-background-app cursor-pointer hover:bg-background-surface transition-colors"
-                onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
-              >
-                <div className="flex items-center justify-between gap-sm min-w-0">
-                  <div className="flex items-center space-x-sm min-w-0 flex-1">
-                    <h4 className="font-medium text-text-primary truncate">{item.item_name}</h4>
-                    {item.overall_score && (
-                      <div className="flex items-center space-x-xs flex-shrink-0">
-                        <Star className="w-4 h-4 text-warning fill-current" />
-                        <span className="text-small font-body font-medium text-text-primary whitespace-nowrap">
-                          {item.overall_score}/100
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex items-center space-x-xs flex-shrink-0">
-                    {item.photo_url && (
-                      <span className="text-small font-body text-text-secondary">📸</span>
-                    )}
-                    <span className="text-text-secondary">
-                      {expandedItem === item.id ? '▼' : '▶'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {expandedItem === item.id && (
-                <div className="p-sm border-t border-border-default bg-background-app">
-                  <div className="grid grid-cols-1 tablet:grid-cols-2 gap-md">
-                    {/* Photo */}
-                    {item.photo_url && (
-                      <div>
-                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
-                          Photo
-                        </h5>
-                        <img
-                          src={item.photo_url}
-                          alt={item.item_name}
-                          className="w-full h-48 object-cover rounded-lg"
-                        />
-                      </div>
-                    )}
-
-                    {/* Aroma */}
-                    {item.aroma && (
-                      <div>
-                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
-                          Aroma
-                        </h5>
-                        <p className="text-text-primary text-small font-body leading-relaxed">
-                          {item.aroma}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Flavor */}
-                    {item.flavor && (
-                      <div>
-                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
-                          Flavor
-                        </h5>
-                        <p className="text-text-primary text-small font-body leading-relaxed">
-                          {item.flavor}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Notes */}
-                    {item.notes && (
-                      <div>
-                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
-                          Notes
-                        </h5>
-                        <p className="text-text-primary text-small font-body leading-relaxed">
-                          {item.notes}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Flavor Scores */}
-                  {item.flavor_scores && Object.keys(item.flavor_scores).length > 0 && (
-                    <div className="mt-sm">
-                      <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
-                        Flavor Profile
-                      </h5>
-                      <div className="flex flex-wrap gap-xs">
-                        {Object.entries(item.flavor_scores).map(([flavor, score]) => (
-                          <div
-                            key={flavor}
-                            className="px-sm py-xs bg-primary/10 text-primary rounded-full text-small font-body font-medium"
-                          >
-                            {flavor} ({score}/100)
-                          </div>
-                        ))}
-                      </div>
+        {items.length === 0 ? (
+          <EmptyState
+            icon="📝"
+            title="No items in this tasting yet"
+            description="Once items are added, you'll see their notes, scores, and flavor profiles here."
+            action={{ label: 'Start a New Tasting', onClick: onStartNewSession }}
+            secondaryAction={{ label: 'Back to Taste', onClick: () => router.push('/taste') }}
+          />
+        ) : (
+          <div className="space-y-sm">
+            {items.map((item) => (
+              <div key={item.id} className="border border-border-primary rounded-lg overflow-hidden">
+                <div
+                  className="p-sm bg-background-app cursor-pointer hover:bg-background-surface transition-colors"
+                  onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
+                >
+                  <div className="flex items-center justify-between gap-sm min-w-0">
+                    <div className="flex items-center space-x-sm min-w-0 flex-1">
+                      <h4 className="font-medium text-text-primary truncate">{item.item_name}</h4>
+                      {item.overall_score && (
+                        <div className="flex items-center space-x-xs flex-shrink-0">
+                          <Star className="w-4 h-4 text-warning fill-current" />
+                          <span className="text-small font-body font-medium text-text-primary whitespace-nowrap">
+                            {item.overall_score}/100
+                          </span>
+                        </div>
+                      )}
                     </div>
-                  )}
+                    <div className="flex items-center space-x-xs flex-shrink-0">
+                      {item.photo_url && (
+                        <span className="text-small font-body text-text-secondary">📸</span>
+                      )}
+                      <span className="text-text-secondary">
+                        {expandedItem === item.id ? '▼' : '▶'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
+
+                {expandedItem === item.id && (
+                  <div className="p-sm border-t border-border-default bg-background-app">
+                    <div className="grid grid-cols-1 tablet:grid-cols-2 gap-md">
+                      {/* Photo */}
+                      {item.photo_url && (
+                        <div>
+                          <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
+                            Photo
+                          </h5>
+                          <img
+                            src={item.photo_url}
+                            alt={item.item_name}
+                            className="w-full h-48 object-cover rounded-lg"
+                          />
+                        </div>
+                      )}
+
+                      {/* Aroma */}
+                      {item.aroma && (
+                        <div>
+                          <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
+                            Aroma
+                          </h5>
+                          <p className="text-text-primary text-small font-body leading-relaxed">
+                            {item.aroma}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Flavor */}
+                      {item.flavor && (
+                        <div>
+                          <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
+                            Flavor
+                          </h5>
+                          <p className="text-text-primary text-small font-body leading-relaxed">
+                            {item.flavor}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Notes */}
+                      {item.notes && (
+                        <div>
+                          <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
+                            Notes
+                          </h5>
+                          <p className="text-text-primary text-small font-body leading-relaxed">
+                            {item.notes}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Flavor Scores */}
+                    {item.flavor_scores && Object.keys(item.flavor_scores).length > 0 && (
+                      <div className="mt-sm">
+                        <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
+                          Flavor Profile
+                        </h5>
+                        <div className="flex flex-wrap gap-xs">
+                          {Object.entries(item.flavor_scores).map(([flavor, score]) => (
+                            <div
+                              key={flavor}
+                              className="px-sm py-xs bg-primary/10 text-primary rounded-full text-small font-body font-medium"
+                            >
+                              {flavor} ({score}/100)
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

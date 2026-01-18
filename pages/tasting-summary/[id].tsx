@@ -5,6 +5,7 @@ import { getSupabaseClient } from '../../lib/supabase';
 import QuickTastingSummary from '../../components/quick-tasting/QuickTastingSummary';
 import { toast } from '../../lib/toast';
 import BottomNavigation from '../../components/navigation/BottomNavigation';
+import { EmptyState } from '../../components/ui/EmptyState';
 
 interface QuickTasting {
   id: string;
@@ -38,11 +39,13 @@ export default function TastingSummaryPage() {
 
   useEffect(() => {
     if (!id || !user) {
+      console.log('[TastingSummary] Waiting for id or user', { id, hasUser: !!user });
       return;
     }
 
     const loadSession = async () => {
       try {
+        console.log('[TastingSummary] Loading session...', id);
         setLoading(true);
         const { data, error } = await supabase
           .from('quick_tastings')
@@ -51,10 +54,12 @@ export default function TastingSummaryPage() {
           .single<QuickTasting>();
 
         if (error) {
+          console.error('[TastingSummary] Supabase error:', error);
           throw error;
         }
 
         if (!data) {
+          console.error('[TastingSummary] No data returned');
           toast.error('Tasting session not found');
           router.push('/my-tastings');
           return;
@@ -62,11 +67,13 @@ export default function TastingSummaryPage() {
 
         // Verify user has access
         if (data.user_id !== user.id) {
+          console.error('[TastingSummary] User ID mismatch', { expected: user.id, actual: data.user_id });
           toast.error('You do not have access to this tasting');
           router.push('/my-tastings');
           return;
         }
 
+        console.log('[TastingSummary] Session loaded successfully');
         setSession(data);
       } catch (error) {
         console.error('Error loading tasting session:', error);
@@ -97,10 +104,14 @@ export default function TastingSummaryPage() {
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-text-secondary">Session not found</p>
-        </div>
+      <div className="min-h-screen bg-background-light flex items-center justify-center px-4">
+        <EmptyState
+          icon="🧭"
+          title="We couldn't find that tasting"
+          description="It may have been deleted or you no longer have access. Start a new tasting or browse your history."
+          action={{ label: 'Start a New Tasting', onClick: () => router.push('/quick-tasting') }}
+          secondaryAction={{ label: 'Back to My Tastings', onClick: () => router.push('/my-tastings') }}
+        />
       </div>
     );
   }

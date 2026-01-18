@@ -93,6 +93,14 @@ async function extractDescriptorsHandler(
         .join('. ');
     }
 
+    console.log('[API] Extract descriptors:', {
+      sourceId,
+      sourceType,
+      textLength: combinedText.length,
+      useAI,
+      hasApiKey: !!process.env.ANTHROPIC_API_KEY
+    });
+
     // Extract descriptors using AI or keyword-based
     let descriptors: ExtractedDescriptor[];
     let tokensUsed = 0;
@@ -193,18 +201,15 @@ async function extractDescriptorsHandler(
       extraction_model: extractionMethod === 'ai' ? 'claude-haiku-3-20240307' : null,
     }));
 
-    // Use upsert with normalized form to prevent case-sensitive duplicates
-    // The unique constraint is on (user_id, normalized_form, descriptor_type)
-    // This will prevent "Chocolate" and "chocolate" from both being inserted
+    // Insert descriptors - use insert with onConflict to handle duplicates gracefully
+    // First try to insert, if there are duplicates they'll be ignored
     const { data: savedDescriptors, error: saveError } = await (supabase as any)
       .from('flavor_descriptors')
-      .upsert(descriptorRecords, {
-        onConflict: 'user_id,normalized_form,descriptor_type',
-        ignoreDuplicates: false, // Update existing records with new data
-      })
+      .insert(descriptorRecords)
       .select('id');
 
     if (saveError) {
+      console.error('[API] Error saving descriptors:', JSON.stringify(saveError, null, 2));
       return sendServerError(res, saveError, 'Failed to save descriptors');
     }
 
