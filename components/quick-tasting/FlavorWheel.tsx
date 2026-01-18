@@ -510,7 +510,8 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
           {/* Botón de Alternancia */}
           <button
             onClick={toggleWheel}
-            className="absolute top-4 right-4 bg-primary-500 hover:bg-primary-600 text-white p-sm rounded-full shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
+            aria-label="Toggle flavor wheel view"
+            className="absolute top-4 right-4 bg-primary-500 hover:bg-primary-600 text-white p-sm rounded-full shadow-lg transition-transform duration-300 hover:scale-110 active:scale-95"
             style={{
               background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
               boxShadow: '0 8px 25px rgba(59, 130, 246, 0.3)',

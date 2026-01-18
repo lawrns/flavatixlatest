@@ -7,6 +7,7 @@ import { toast } from '../../lib/toast';
 import { z } from 'zod';
 import Container from '../layout/Container';
 import OnboardingCarousel from '../ui/OnboardingCarousel';
+import LoadingSpinner from '../ui/LoadingSpinner';
 
 const AuthSection = () => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
@@ -14,8 +15,7 @@ const AuthSection = () => {
     { email: '', password: '' }
   );
   const [loading, setLoading] = useState<boolean>(false);
-  const [mounted, setMounted] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null);
   const [showEmailForm, setShowEmailForm] = useState(false);
   const router = useRouter();
   const supabase = getSupabaseClient();
@@ -51,17 +51,36 @@ const AuthSection = () => {
   ];
 
   useEffect(() => {
-    // Set mounted immediately to avoid blocking the UI
-    setMounted(true);
-    console.log('AuthSection mounted, Supabase config:', {
-      url: process.env.NEXT_PUBLIC_SUPABASE_URL,
-      key: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Not set',
-    });
+    const hasSeenOnboarding =
+      typeof window !== 'undefined' &&
+      window.localStorage.getItem('flavatix:onboarding-seen') === 'true';
+
+    setShowOnboarding(!hasSeenOnboarding);
+
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('AuthSection mounted, Supabase config:', {
+        url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+        key: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Not set',
+      });
+    }
+  }, []);
+
+  const handleOnboardingComplete = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('flavatix:onboarding-seen', 'true');
+    }
+    setShowOnboarding(false);
   }, []);
 
   useEffect(() => {
-    if (user && router.pathname !== '/dashboard') {
-      router.push('/dashboard');
+    if (user) {
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('flavatix:onboarding-seen', 'true');
+      }
+      setShowOnboarding(false);
+      if (router.pathname !== '/dashboard') {
+        router.push('/dashboard');
+      }
     }
   }, [user, router]);
 
@@ -161,6 +180,14 @@ const AuthSection = () => {
     }
   };
 
+  if (showOnboarding === null) {
+    return (
+      <div className="font-display text-zinc-900 dark:text-zinc-50 min-h-screen flex items-center justify-center">
+        <LoadingSpinner text="Preparing your experience..." />
+      </div>
+    );
+  }
+
   // Show onboarding carousel first, then form
   if (showOnboarding) {
     return (
@@ -171,7 +198,7 @@ const AuthSection = () => {
             content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
           />
         </Head>
-        <OnboardingCarousel cards={onboardingCards} onComplete={() => setShowOnboarding(false)} />
+        <OnboardingCarousel cards={onboardingCards} onComplete={handleOnboardingComplete} />
       </div>
     );
   }
@@ -285,11 +312,13 @@ const AuthSection = () => {
               <form onSubmit={handleEmailAuth} className="space-y-4">
                 {mode === 'register' && (
                   <div>
-                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+                    <label htmlFor="auth-full-name" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
                       Full Name
                     </label>
                     <input
+                      id="auth-full-name"
                       type="text"
+                      autoComplete="name"
                       value={formData.full_name || ''}
                       onChange={(e) => handleInputChange('full_name', e.target.value)}
                       className="w-full px-4 py-2.5 border-2 border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 placeholder-zinc-500 dark:placeholder-zinc-400 transition-spring focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
@@ -299,11 +328,14 @@ const AuthSection = () => {
                   </div>
                 )}
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+                  <label htmlFor="auth-email" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
                     Email Address
                   </label>
                   <input
+                    id="auth-email"
                     type="email"
+                    autoComplete="email"
+                    spellCheck={false}
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     className="w-full px-4 py-2.5 border-2 border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 placeholder-zinc-500 dark:placeholder-zinc-400 transition-spring focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
@@ -312,11 +344,13 @@ const AuthSection = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+                  <label htmlFor="auth-password" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
                     Password
                   </label>
                   <input
+                    id="auth-password"
                     type="password"
+                    autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
                     className="w-full px-4 py-2.5 border-2 border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 placeholder-zinc-500 dark:placeholder-zinc-400 transition-spring focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"

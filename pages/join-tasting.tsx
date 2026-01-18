@@ -113,6 +113,7 @@ export default function JoinTastingPage() {
               <input
                 id="tastingCode"
                 type="text"
+                autoComplete="off"
                 value={tastingCode}
                 onChange={(e) => setTastingCode(e.target.value)}
                 placeholder="Enter the code shared by the host"
