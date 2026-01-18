@@ -863,7 +863,19 @@ export function generateCsrfToken(userId?: string): string {
   const tokenData = `${userPart}-${timestamp}-${randomBytes}`;
 
   // Create HMAC signature to prevent tampering
-  const secret = process.env.CSRF_SECRET || process.env.JWT_SECRET || 'default-secret-change-in-production';
+  const secret = process.env.CSRF_SECRET || process.env.JWT_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('CSRF_SECRET or JWT_SECRET environment variable is required in production');
+    }
+    // Development-only fallback - never use in production
+    const devSecret = 'dev-only-csrf-secret-not-for-production';
+    const signature = crypto
+      .createHmac('sha256', devSecret)
+      .update(tokenData)
+      .digest('hex');
+    return `${tokenData}.${signature}`;
+  }
   const signature = crypto
     .createHmac('sha256', secret)
     .update(tokenData)
@@ -890,15 +902,31 @@ export function validateCsrfToken(token: string): boolean {
 
     // Verify signature
     const crypto = require('crypto');
-    const secret = process.env.CSRF_SECRET || process.env.JWT_SECRET || 'default-secret-change-in-production';
-    const expectedSignature = crypto
-      .createHmac('sha256', secret)
-      .update(tokenData)
-      .digest('hex');
+    const secret = process.env.CSRF_SECRET || process.env.JWT_SECRET;
+    if (!secret) {
+      if (process.env.NODE_ENV === 'production') {
+        logger.error('CSRF', 'CSRF_SECRET or JWT_SECRET environment variable is required in production');
+        return false;
+      }
+      // Development-only fallback - must match generateCsrfToken
+      const devSecret = 'dev-only-csrf-secret-not-for-production';
+      const expectedSignature = crypto
+        .createHmac('sha256', devSecret)
+        .update(tokenData)
+        .digest('hex');
+      if (!timingSafeEqual(providedSignature, expectedSignature)) {
+        return false;
+      }
+    } else {
+      const expectedSignature = crypto
+        .createHmac('sha256', secret)
+        .update(tokenData)
+        .digest('hex');
 
-    // Constant-time comparison to prevent timing attacks
-    if (!timingSafeEqual(providedSignature, expectedSignature)) {
-      return false;
+      // Constant-time comparison to prevent timing attacks
+      if (!timingSafeEqual(providedSignature, expectedSignature)) {
+        return false;
+      }
     }
 
     // Extract timestamp and validate expiry (24 hours)

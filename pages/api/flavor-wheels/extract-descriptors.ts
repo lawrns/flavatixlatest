@@ -201,11 +201,14 @@ async function extractDescriptorsHandler(
       extraction_model: extractionMethod === 'ai' ? 'claude-haiku-3-20240307' : null,
     }));
 
-    // Insert descriptors - use insert with onConflict to handle duplicates gracefully
-    // First try to insert, if there are duplicates they'll be ignored
-    const { data: savedDescriptors, error: saveError } = await (supabase as any)
+    // Upsert descriptors - use upsert to handle duplicates gracefully
+    // This updates existing descriptors and inserts new ones
+    const { data: savedDescriptors, error: saveError } = await supabase
       .from('flavor_descriptors')
-      .insert(descriptorRecords)
+      .upsert(descriptorRecords, {
+        onConflict: 'source_type,source_id,descriptor_text,descriptor_type',
+        ignoreDuplicates: false, // Update existing records
+      })
       .select('id');
 
     if (saveError) {

@@ -139,12 +139,12 @@ const AuthSection = () => {
     setLoading(true);
 
     try {
-      console.log('Starting authentication...', { mode, email: formData.email });
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Starting authentication...', { mode });
+      }
       const validatedData = emailSchema.parse(formData);
-      console.log('Data validated successfully');
 
       if (mode === 'register') {
-        console.log('Attempting to sign up...');
         const { data, error } = await supabase.auth.signUp({
           email: validatedData.email,
           password: validatedData.password,
@@ -156,31 +156,34 @@ const AuthSection = () => {
         });
 
         if (error) {
-          console.error('Signup error:', error);
+          if (process.env.NODE_ENV !== 'production') {
+            console.error('Signup error:', error);
+          }
           throw error;
         }
 
-        console.log('Signup successful:', data);
         toast.success('Check your email for the confirmation link!');
         setMode('login');
       } else {
-        console.log('Attempting to sign in...');
         const { data, error } = await supabase.auth.signInWithPassword({
           email: validatedData.email,
           password: validatedData.password,
         });
 
         if (error) {
-          console.error('Signin error:', error);
+          if (process.env.NODE_ENV !== 'production') {
+            console.error('Signin error:', error);
+          }
           throw error;
         }
 
-        console.log('Signin successful:', data);
         toast.success('Welcome back!');
         router.push('/dashboard');
       }
     } catch (error: any) {
-      console.error('Auth error:', error);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Auth error:', error);
+      }
       toast.error(error.message || 'Authentication failed');
     } finally {
       setLoading(false);
@@ -200,7 +203,9 @@ const AuthSection = () => {
         throw error;
       }
     } catch (error: any) {
-      console.error('Social auth error:', error);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Social auth error:', error);
+      }
       toast.error(error.message || 'Social authentication failed');
     }
   };
