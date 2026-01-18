@@ -457,7 +457,7 @@ const NewCompetitionPage: React.FC = () => {
       }
 
       toast.success('Competition created successfully!');
-      router.push(`/competition/${session.id}/host`);
+      router.push(`/competition/${session.id}`);
     } catch (error: any) {
       console.error('Error creating competition:', error);
       toast.error(error.message || 'Failed to create competition');

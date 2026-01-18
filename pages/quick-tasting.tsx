@@ -125,8 +125,7 @@ const QuickTastingPage: React.FC = () => {
   }, [router.query.category, user, loading, currentSession, isLoading, handleCategorySelect]);
 
   const handleSessionComplete = async (sessionData: QuickTastingWithNull) => {
-    setCurrentSession(sessionData);
-    setCurrentStep('summary');
+    router.push(`/tasting-summary/${sessionData.id}`);
   };
 
   const handleStartNewSession = () => {

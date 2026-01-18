@@ -50,7 +50,12 @@ function requiresCsrfProtection(pathname: string, method: string): boolean {
  * Check if route is public (no auth required)
  */
 function isPublicRoute(pathname: string): boolean {
-  return PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
+  return PUBLIC_ROUTES.some((route) => {
+    if (route === '/') {
+      return pathname === '/';
+    }
+    return pathname.startsWith(route);
+  });
 }
 
 /**
@@ -116,6 +121,16 @@ export function middleware(request: NextRequest) {
     const isValidCsrf = validateCsrfToken(request);
 
     if (!isValidCsrf) {
+      const csrfHeader = request.headers.get(CSRF_HEADER);
+      const csrfCookie = request.cookies.get('csrf_token')?.value;
+      console.log(`[Edge Middleware] CSRF Validation Failed for ${pathname}:`, {
+        headerPresent: !!csrfHeader,
+        cookiePresent: !!csrfCookie,
+        headerVal: csrfHeader ? csrfHeader.substring(0, 10) + '...' : 'null',
+        cookieVal: csrfCookie ? csrfCookie.substring(0, 10) + '...' : 'null',
+        match: csrfHeader === csrfCookie
+      });
+
       return new NextResponse(
         JSON.stringify({
           success: false,
@@ -136,11 +151,12 @@ export function middleware(request: NextRequest) {
 
   // Set CSRF token cookie if not present (for authenticated routes)
   if (!request.cookies.has('csrf_token') && !isPublicRoute(pathname)) {
+    console.log(`[Edge Middleware] Setting CSRF cookie for ${pathname}`);
     const csrfToken = generateCsrfToken();
     response.cookies.set('csrf_token', csrfToken, {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 60 * 60 * 24, // 24 hours
       path: '/',
     });

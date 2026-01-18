@@ -229,18 +229,18 @@ describe('Codebase Readiness Property Tests', () => {
 
     it('should set appropriate permissions for quick mode', () => {
       const content = readFileContent('components/quick-tasting/QuickTastingSession.tsx');
-      
+
       // Quick mode should give host permissions
-      expect(content).toContain("if (session.mode === 'quick')");
+      expect(content).toContain("session.mode === 'quick'");
       expect(content).toContain("role: 'host'");
       expect(content).toContain("canAddItems: true");
     });
 
     it('should load user roles for study mode', () => {
       const content = readFileContent('components/quick-tasting/QuickTastingSession.tsx');
-      
+
       // Study mode should load participant roles
-      expect(content).toContain("if (session.mode === 'study')");
+      expect(content).toContain("session.mode === 'study'");
       expect(content).toContain('loadUserRole');
     });
   });

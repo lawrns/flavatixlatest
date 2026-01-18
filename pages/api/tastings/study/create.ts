@@ -49,14 +49,18 @@ async function createStudySessionHandler(
   res: NextApiResponse,
   context: ApiContext
 ) {
-  // Get authenticated user ID from context (set by withAuth middleware)
-  const user_id = requireUser(context).id;
+  try {
+    console.log('[API] createStudySessionHandler started');
+    // Get authenticated user ID from context (set by withAuth middleware)
+    const user_id = requireUser(context).id;
+    console.log('[API] User ID:', user_id);
 
-  // Request body is already validated by withValidation middleware
-  const { name, baseCategory, categories } = req.body as CreateStudySessionRequest;
+    // Request body is already validated by withValidation middleware
+    const { name, baseCategory, categories } = req.body as CreateStudySessionRequest;
+    console.log('[API] Request body:', { name, baseCategory, categoriesCount: categories.length });
 
-  // Get Supabase client with user context (RLS will enforce permissions)
-  const supabase = getSupabaseClient(req, res);
+    // Get Supabase client with user context (RLS will enforce permissions)
+    const supabase = getSupabaseClient(req, res);
 
     // Normalize base category to lowercase for consistency
     const normalizedCategory = baseCategory.toLowerCase().replace(/\s+/g, '_');
@@ -76,43 +80,51 @@ async function createStudySessionHandler(
       studyMode: true
     };
 
-  const { data: session, error: sessionError } = await supabase
-    .from('quick_tastings')
-    .insert({
-      user_id,
-      session_name: name,
-      category: normalizedCategory === 'other' ? 'other' : normalizedCategory,
-      custom_category_name: normalizedCategory === 'other' ? baseCategory : null,
-      mode: 'study',
-      study_approach: 'predefined',
-      notes: JSON.stringify(studyMetadata),
-      total_items: 0,
-      completed_items: 0
-    })
-    .select()
-    .single();
+    console.log('[API] Inserting into quick_tastings...');
+    const { data: session, error: sessionError } = await supabase
+      .from('quick_tastings')
+      .insert({
+        user_id,
+        session_name: name,
+        category: normalizedCategory === 'other' ? 'other' : normalizedCategory,
+        custom_category_name: normalizedCategory === 'other' ? baseCategory : null,
+        mode: 'study',
+        study_approach: 'predefined',
+        notes: JSON.stringify(studyMetadata),
+        total_items: 0,
+        completed_items: 0
+      })
+      .select()
+      .single();
 
-  if (sessionError) {
-    // Check if it's a column not found error (migration not applied)
-    if (sessionError.message?.includes('column') && (sessionError.message?.includes('mode') || sessionError.message?.includes('study_approach'))) {
-      return sendError(
-        res,
-        'INTERNAL_ERROR',
-        'Database migration required. Please run flavorwheel_upgrade_migration.sql on your database.',
-        500,
-        { details: sessionError.message }
-      );
+    if (sessionError) {
+      console.error('[API] Session Error:', sessionError);
+      // Check if it's a column not found error (migration not applied)
+      if (sessionError.message?.includes('column') && (sessionError.message?.includes('mode') || sessionError.message?.includes('study_approach'))) {
+        return sendError(
+          res,
+          'INTERNAL_ERROR',
+          'Database migration required. Please run flavorwheel_upgrade_migration.sql on your database.',
+          500,
+          { details: sessionError.message }
+        );
+      }
+
+      return sendError(res, 'INTERNAL_ERROR', `Failed to create study session: ${sessionError.message}`, 500);
     }
 
-    return sendError(res, 'INTERNAL_ERROR', `Failed to create study session: ${sessionError.message}`, 500);
-  }
+    console.log('[API] Session created:', session.id);
 
-  return sendSuccess(
-    res,
-    { sessionId: session.id, session },
-    'Study session created successfully',
-    201
-  );
+    return sendSuccess(
+      res,
+      { sessionId: session.id, session },
+      'Study session created successfully',
+      201
+    );
+  } catch (error) {
+    console.error('[API] Unexpected error in createStudySessionHandler:', error);
+    return sendError(res, 'INTERNAL_ERROR', `Unexpected error: ${error instanceof Error ? error.message : String(error)}`, 500);
+  }
 }
 
 export default createApiHandler({

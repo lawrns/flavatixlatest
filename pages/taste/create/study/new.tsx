@@ -295,11 +295,20 @@ const NewStudyTastingPage: React.FC = () => {
       }
 
       console.log('[Study Mode] Sending create request to API...');
+
+      // Get CSRF token from cookie
+      const getCsrfToken = () => {
+        if (typeof document === 'undefined') return '';
+        const match = document.cookie.match(new RegExp('(^| )csrf_token=([^;]+)'));
+        return match ? match[2] : '';
+      };
+
       const response = await fetch('/api/tastings/study/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${session.access_token}`,
+          'x-csrf-token': getCsrfToken(),
         },
         body: JSON.stringify({
           name: form.name,

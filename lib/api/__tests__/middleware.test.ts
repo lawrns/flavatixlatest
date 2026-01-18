@@ -159,9 +159,12 @@ describe('CSRF Protection Middleware', () => {
     const handler = jest.fn();
     const csrfHandler = withCsrfProtection(handler);
 
+    // Generate a valid CSRF token using the actual generator
+    const validToken = generateCsrfToken('test-user');
+
     const req = createMockReq({
       method: 'POST',
-      headers: { 'x-csrf-token': 'valid-token' },
+      headers: { 'x-csrf-token': validToken },
     });
     const res = createMockRes();
     const context = createMockContext();
