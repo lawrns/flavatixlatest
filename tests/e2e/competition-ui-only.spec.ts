@@ -2,95 +2,117 @@ import { test, expect } from '@playwright/test';
 import { login } from './helpers/auth';
 
 /**
- * Focused UI tests for competition mode
- * Testing the UI elements after authentication
+ * Competition UI Tests
+ *
+ * The competition creation page has two steps:
+ * Step 1: Setup & Parameters - Competition name, category, blind tasting toggle, ranking settings
+ * Step 2: Items & Answers - Add competition items
+ *
+ * UI Elements on Step 1:
+ * - Competition Name textbox
+ * - Base Category combobox
+ * - Rank Participants checkbox (checked by default)
+ * - Blind Tasting checkbox (unchecked by default)
+ * - Ranking Method dropdown
+ * - Include Subjective Scoring checkbox (checked by default)
+ * - Add Parameter button
+ * - "Next: Add Items" button
  */
 
-test.describe('Competition UI - Blind Toggle', () => {
+test.describe('Competition UI - Step 1 Setup', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
   });
 
-  test('should display session-level blind toggle on competition creation page', async ({ page }) => {
-    // Navigate to competition creation page
+  test('should display competition creation page with correct elements', async ({ page }) => {
     await page.goto('/taste/create/competition/new');
     await page.waitForLoadState('networkidle');
 
-    // Check for the session-level blind toggle text
-    await expect(page.getByText('Blind Tasting')).toBeVisible();
-    await expect(page.getByText('Hide all item names from participants during the competition')).toBeVisible();
-    
-    // Find the blind toggle checkbox
-    const blindCheckbox = page.locator('label:has-text("Blind Tasting") input[type="checkbox"]');
+    // Check page heading
+    await expect(page.getByRole('heading', { name: 'Create Competition' })).toBeVisible();
+
+    // Check step indicator
+    await expect(page.getByText('Setup & Parameters')).toBeVisible();
+    await expect(page.getByText('Items & Answers')).toBeVisible();
+
+    // Check Basic Information section
+    await expect(page.getByRole('heading', { name: 'Basic Information' })).toBeVisible();
+    await expect(page.getByText('Competition Name')).toBeVisible();
+    await expect(page.getByText('Base Category')).toBeVisible();
+  });
+
+  test('should have blind tasting checkbox unchecked by default', async ({ page }) => {
+    await page.goto('/taste/create/competition/new');
+    await page.waitForLoadState('networkidle');
+
+    // Find the Blind Tasting checkbox
+    const blindCheckbox = page.getByRole('checkbox', { name: /blind tasting/i });
     await expect(blindCheckbox).toBeVisible();
     await expect(blindCheckbox).not.toBeChecked();
   });
 
-  test('should toggle blind setting and show/hide per-item controls', async ({ page }) => {
+  test('should toggle blind tasting setting', async ({ page }) => {
     await page.goto('/taste/create/competition/new');
     await page.waitForLoadState('networkidle');
 
-    // Add an item first
-    const addItemButton = page.getByRole('button', { name: /Add Item/i });
-    await addItemButton.click();
-    
-    // Expand the item
-    const itemToggle = page.locator('button:has-text("Item 1")');
-    await itemToggle.click();
-    
-    // Per-item blind should be visible initially
-    await expect(page.getByText('Blind for this item')).toBeVisible();
-    
-    // Enable session-level blind
-    const blindCheckbox = page.locator('label:has-text("Blind Tasting") input[type="checkbox"]');
+    // Find and click the Blind Tasting checkbox
+    const blindCheckbox = page.getByRole('checkbox', { name: /blind tasting/i });
+
+    // Click to enable
     await blindCheckbox.click();
     await expect(blindCheckbox).toBeChecked();
-    
-    // Per-item blind should be hidden
-    await expect(page.getByText('Blind for this item')).not.toBeVisible();
-    
-    // Session-level indicator should be shown
-    await expect(page.getByText('This item is blind (session-level setting)')).toBeVisible();
-    
-    // Disable session-level blind
+
+    // Click to disable
     await blindCheckbox.click();
     await expect(blindCheckbox).not.toBeChecked();
-    
-    // Per-item blind should be visible again
-    await expect(page.getByText('Blind for this item')).toBeVisible();
-    await expect(page.getByText('This item is blind (session-level setting)')).not.toBeVisible();
   });
 
-  test('should show blind icon when session or item blind is enabled', async ({ page }) => {
+  test('should have rank participants checkbox checked by default', async ({ page }) => {
     await page.goto('/taste/create/competition/new');
     await page.waitForLoadState('networkidle');
 
-    // Add an item
-    const addItemButton = page.getByRole('button', { name: /Add Item/i });
-    await addItemButton.click();
-    
-    // Initially should show package icon (not blind)
-    const packageIcon = page.locator('button:has-text("Item 1")').locator('svg').first();
-    await expect(packageIcon).toBeVisible();
-    
-    // Enable session-level blind
-    const blindCheckbox = page.locator('label:has-text("Blind Tasting") input[type="checkbox"]');
-    await blindCheckbox.click();
-    
-    // Should show eye-off icon (blind)
-    // Note: We can't easily test SVG icon changes without test IDs, but the functionality should work
-    await expect(page.locator('button:has-text("Item 1")')).toBeVisible();
+    const rankCheckbox = page.getByRole('checkbox', { name: /rank participants/i });
+    await expect(rankCheckbox).toBeVisible();
+    await expect(rankCheckbox).toBeChecked();
+  });
+
+  test('should navigate to step 2 when clicking Next button', async ({ page }) => {
+    await page.goto('/taste/create/competition/new');
+    await page.waitForLoadState('networkidle');
+
+    // Fill in competition name - find by placeholder text
+    const nameTextbox = page.getByRole('textbox', { name: /coffee cupping competition/i });
+    await nameTextbox.fill('Test Competition');
+
+    // Fill category in combobox
+    const categoryCombobox = page.getByRole('combobox', { name: /category/i });
+    await categoryCombobox.click();
+    await categoryCombobox.fill('Coffee');
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(500);
+
+    // Click Next button
+    const nextButton = page.getByRole('button', { name: /next.*add items/i });
+    await nextButton.click();
+    await page.waitForLoadState('networkidle');
+
+    // Wait for step 2 content to appear (multiple Add Item buttons may exist)
+    await expect(page.getByRole('button', { name: /add item/i }).first()).toBeVisible({ timeout: 10000 });
   });
 });
 
-test.describe('Competition UI - Category Dropdown', () => {
-  test('should have category input with placeholder', async ({ page }) => {
+test.describe('Competition UI - Category Selection', () => {
+  test.beforeEach(async ({ page }) => {
+    await login(page);
+  });
+
+  test('should have category combobox with placeholder', async ({ page }) => {
     await page.goto('/taste/create/competition/new');
     await page.waitForLoadState('networkidle');
 
-    // Look for category input
-    const categoryInput = page.locator('input[placeholder*="category"], input[placeholder*="Category"]');
-    await expect(categoryInput).toBeVisible();
+    // Look for category combobox
+    const categoryCombobox = page.getByRole('combobox', { name: /category/i });
+    await expect(categoryCombobox).toBeVisible();
   });
 
   test('should show base category label', async ({ page }) => {
@@ -102,16 +124,26 @@ test.describe('Competition UI - Category Dropdown', () => {
   });
 });
 
-test.describe('Study Mode - Category Standardization', () => {
-  test('should have category dropdown in study mode', async ({ page }) => {
+test.describe('Study Mode UI', () => {
+  test.beforeEach(async ({ page }) => {
+    await login(page);
+  });
+
+  test('should display study mode creation form', async ({ page }) => {
     await page.goto('/taste/create/study/new');
     await page.waitForLoadState('networkidle');
 
-    // Look for category input
-    const categoryInput = page.locator('input[placeholder*="category"], input[placeholder*="Select or type"]');
-    await expect(categoryInput).toBeVisible();
-    
-    // Check for base category label
-    await expect(page.getByText('Base Category')).toBeVisible();
+    // Check page heading
+    await expect(page.getByRole('heading', { name: /create study tasting/i })).toBeVisible();
+
+    // Check for tasting name input
+    await expect(page.getByText('Tasting Name')).toBeVisible();
+
+    // Check for "What's being tasted?" category selector
+    await expect(page.getByText("What's being tasted?")).toBeVisible();
+
+    // Combobox should be visible
+    const categoryCombobox = page.getByRole('combobox');
+    await expect(categoryCombobox).toBeVisible();
   });
 });

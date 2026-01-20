@@ -59,6 +59,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [score, setScore] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Submit confirmation dialog
   const { confirm: confirmSubmit, Dialog: SubmitDialog } = useDeleteConfirmation({
@@ -111,6 +112,8 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
     } catch (error) {
       console.error('Error loading competition:', error);
       toast.error('Failed to load competition');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -327,12 +330,44 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
     }
   };
 
-  if (!session || items.length === 0) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-background-light flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-sm mx-auto"></div>
           <p className="text-text-secondary">Loading competition...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-background-light flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-text-secondary">Competition not found</p>
+          <button
+            onClick={() => router.push('/my-tastings')}
+            className="mt-4 btn-secondary"
+          >
+            Back to My Tastings
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="min-h-screen bg-background-light flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-text-secondary">No items in this competition</p>
+          <button
+            onClick={() => router.push('/my-tastings')}
+            className="mt-4 btn-secondary"
+          >
+            Back to My Tastings
+          </button>
         </div>
       </div>
     );

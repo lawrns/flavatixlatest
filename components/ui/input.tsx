@@ -129,7 +129,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               'focus-visible:outline-none focus-visible:ring-4',
               'disabled:cursor-not-allowed disabled:opacity-50',
               'dark:bg-zinc-800/80',
-              'transition-all duration-200 ease-out',
+              'transition-[border-color,box-shadow] duration-200 ease-out',
               sizeClasses[inputSize],
               stateClasses,
               leftIcon && iconPadding[inputSize].left,

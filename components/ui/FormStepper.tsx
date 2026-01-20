@@ -198,7 +198,7 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
             aria-label={`Go to step ${index + 1}: ${step.title}`}
             aria-current={index === currentStep ? 'step' : undefined}
             className={cn(
-              'w-3 h-3 rounded-full transition-all duration-200',
+              'w-3 h-3 rounded-full transition-[background-color,transform] duration-200',
               index === currentStep
                 ? 'bg-primary scale-125'
                 : isStepComplete(index)
@@ -221,7 +221,7 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
               aria-label={`Go to step ${index + 1}: ${step.title}`}
               aria-current={index === currentStep ? 'step' : undefined}
               className={cn(
-                'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-200',
+                'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-[color,background-color] duration-200',
                 index === currentStep
                   ? 'bg-primary text-white'
                   : isStepComplete(index)
@@ -273,7 +273,7 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
               {/* Step indicator */}
               <span
                 className={cn(
-                  'w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-200 border-2',
+                  'w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-[color,background-color,border-color] duration-200 border-2',
                   index === currentStep
                     ? 'bg-primary text-white border-primary'
                     : isStepComplete(index)
@@ -439,7 +439,7 @@ export const StepperNavigation: React.FC<StepperNavigationProps> = ({
         onClick={handleNext}
         disabled={isNextDisabled || isLoading}
         className={cn(
-          'px-6 py-2 text-sm font-medium rounded-lg transition-all duration-200',
+          'px-6 py-2 text-sm font-medium rounded-lg transition-[color,background-color,opacity] duration-200',
           'bg-primary text-white hover:bg-primary-600 active:bg-primary-700',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           'min-h-[44px] min-w-[100px]'

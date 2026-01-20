@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import {
   TastingHistory,
   HistoryFilters,
@@ -27,6 +28,9 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
   const [offset, setOffset] = useState(0);
+
+  // Virtualization ref
+  const parentRef = useRef<HTMLDivElement>(null);
 
   const handleDeleteTasting = async (tastingId: string) => {
     if (!user?.id) {
@@ -98,11 +102,38 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
     loadTastings(true);
   }, [user?.id, filters]);
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     if (!loading && hasMore) {
       loadTastings(false);
     }
-  };
+  }, [loading, hasMore]);
+
+  // Virtualizer setup - estimated row height of 120px for tasting items
+  const virtualizer = useVirtualizer({
+    count: tastings.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 120,
+    overscan: 5,
+  });
+
+  // Check if user scrolled near the bottom to load more
+  const handleScroll = useCallback(() => {
+    if (!parentRef.current || loading || !hasMore) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = parentRef.current;
+    // Load more when within 200px of the bottom
+    if (scrollHeight - scrollTop - clientHeight < 200) {
+      loadMore();
+    }
+  }, [loading, hasMore, loadMore]);
+
+  useEffect(() => {
+    const scrollElement = parentRef.current;
+    if (scrollElement) {
+      scrollElement.addEventListener('scroll', handleScroll);
+      return () => scrollElement.removeEventListener('scroll', handleScroll);
+    }
+  }, [handleScroll]);
 
   if (loading && tastings.length === 0) {
     return (
@@ -191,18 +222,45 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
   }
 
   return (
-    <div className="space-y-4">
-      {tastings.map((tasting) => (
-        <TastingHistoryItem
-          key={tasting.id}
-          tasting={tasting}
-          onClick={onTastingClick}
-          onDelete={handleDeleteTasting}
-        />
-      ))}
+    <div
+      ref={parentRef}
+      className="overflow-auto"
+      style={{ height: '600px', maxHeight: 'calc(100vh - 200px)' }}
+    >
+      <div
+        style={{
+          height: `${virtualizer.getTotalSize()}px`,
+          width: '100%',
+          position: 'relative',
+        }}
+      >
+        {virtualizer.getVirtualItems().map((virtualRow) => {
+          const tasting = tastings[virtualRow.index];
+          return (
+            <div
+              key={virtualRow.key}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                transform: `translateY(${virtualRow.start}px)`,
+              }}
+            >
+              <div className="pb-4">
+                <TastingHistoryItem
+                  tasting={tasting}
+                  onClick={onTastingClick}
+                  onDelete={handleDeleteTasting}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
       {hasMore && (
-        <div className="text-center pt-4">
+        <div className="text-center pt-4 pb-4">
           <button
             onClick={loadMore}
             disabled={loading}

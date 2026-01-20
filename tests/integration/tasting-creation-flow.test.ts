@@ -392,7 +392,9 @@ describe('Integration: Tasting Creation Flow', () => {
     expect(generateRes.json).toHaveBeenCalledWith(
       expect.objectContaining({
         success: true,
-        error: expect.stringContaining('No flavor descriptors found'),
+        data: expect.objectContaining({
+          warning: expect.stringContaining('No flavor descriptors found'),
+        }),
       })
     );
   });

@@ -21,29 +21,29 @@ const AuthSection = () => {
   const supabase = getSupabaseClient();
   const { user } = useAuth();
 
-  // Onboarding cards with optimized WebP images
+  // Onboarding cards with optimized WebP images from onboarding subfolder
   const onboardingCards = [
     {
       id: 1,
-      image: '/generated-images/onboarding-discover.webp',
+      image: '/generated-images/onboarding/onboarding-discover.webp',
       headline: 'Discover Your Next Favorite',
       description: 'Explore flavors across coffee, wine, spirits, and more',
     },
     {
       id: 2,
-      image: '/generated-images/onboarding-taste.webp',
+      image: '/generated-images/onboarding/onboarding-taste.webp',
       headline: 'Master Your Palate',
       description: 'Capture nuanced flavor profiles and develop your taste',
     },
     {
       id: 3,
-      image: '/generated-images/onboarding-connect.webp',
+      image: '/generated-images/onboarding/onboarding-connect.webp',
       headline: 'Share & Compete',
       description: 'Connect with fellow tasters, join tastings, and compete',
     },
     {
       id: 4,
-      image: '/generated-images/onboarding-ready.webp',
+      image: '/generated-images/onboarding/onboarding-ready.webp',
       headline: 'Ready to Transform Your Palate?',
       description: 'The one place for all your tasting needs',
       ctaVariant: 'split' as const,
@@ -266,7 +266,7 @@ const AuthSection = () => {
             <img
               src="/logos/flavatix-logo.svg"
               alt="Flavatix Logo"
-              className="h-20 w-20 sm:h-24 sm:w-24 mx-auto"
+              className="h-14 w-14 sm:h-16 sm:w-16 mx-auto"
             />
           </div>
 

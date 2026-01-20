@@ -170,8 +170,9 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
         >
           <div className="flex flex-col items-center max-w-lg mx-auto">
             {/* Image: 4:5 aspect ratio, responsive sizing with entrance animation */}
+            {/* Light/dark mode compatible with subtle background and shadow adjustments */}
             <div
-              className={`w-full max-w-xs aspect-[4/5] rounded-2xl overflow-hidden shadow-xl mb-8 sm:mb-10 transition-all duration-500 ease-out ${
+              className={`w-full max-w-xs aspect-[4/5] rounded-2xl overflow-hidden shadow-xl mb-8 sm:mb-10 transition-all duration-500 ease-out bg-zinc-100 dark:bg-zinc-800 ring-1 ring-black/5 dark:ring-white/10 ${
                 isAnimating && !prefersReducedMotion
                   ? 'opacity-0 translate-y-6 scale-95'
                   : 'opacity-100 translate-y-0 scale-100'
@@ -181,7 +182,7 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
               <img
                 src={card.image}
                 alt={card.headline}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover dark:brightness-95 dark:contrast-105"
                 draggable={false}
               />
             </div>

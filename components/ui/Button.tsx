@@ -11,7 +11,7 @@ const buttonVariants = cva(
   // Base styles - shared across all variants
   cn(
     'relative inline-flex items-center justify-center font-semibold overflow-hidden',
-    'transition-all duration-200 ease-out',
+    'transition-[color,background-color,opacity,transform] duration-200 ease-out',
     'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
     'disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
     'active:scale-[0.98]',

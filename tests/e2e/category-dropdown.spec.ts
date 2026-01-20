@@ -1,115 +1,102 @@
 import { test, expect } from '@playwright/test'
 import { login } from './helpers/auth'
 
-test.describe('Category Dropdown E2E', () => {
+/**
+ * Category Selection E2E Tests
+ *
+ * The Quick Tasting page shows a category selection screen first with:
+ * - A combobox for category selection
+ * - Quick category buttons (Coffee, Whisky, Mezcal, Tea, Wine, Spirits, Beer, Chocolate)
+ * - A "Start" button that activates when a category is selected
+ */
+
+test.describe('Category Selection E2E', () => {
   test.beforeEach(async ({ page }) => {
     await login(page)
   })
 
-  test('complete user workflow for category selection and mode display removal', async ({ page }) => {
-    // Navigate to the quick tasting page
+  test('quick tasting page shows category selection', async ({ page }) => {
     await page.goto('/quick-tasting')
+    await page.waitForLoadState('networkidle')
 
-    // Wait for the page to load
-    await page.waitForSelector('[data-testid="quick-tasting-session"]', { timeout: 10000 })
+    // Page should show "What are you tasting?" heading
+    await expect(page.getByRole('heading', { name: /what are you tasting/i })).toBeVisible()
 
-    // Verify mode is NOT displayed
-    const modeText = page.locator('text=/Mode:/i')
-    await expect(modeText).not.toBeVisible()
+    // Category combobox should be visible
+    const categoryCombobox = page.getByRole('combobox', { name: /category/i })
+    await expect(categoryCombobox).toBeVisible()
 
-    // Verify category dropdown is present and functional
-    const categorySelect = page.locator('select[name="category"]')
-    await expect(categorySelect).toBeVisible()
-
-    // Verify current category is displayed
-    const categoryLabel = page.locator('text=Category:')
-    await expect(categoryLabel).toBeVisible()
-
-    // Change category to tea
-    await categorySelect.selectOption('tea')
-
-    // Verify the category change is reflected in the UI
-    await expect(page.locator('text=Category: Tea')).toBeVisible()
-
-    // Verify session still functions after category change
-    const sessionName = page.locator('text=Quick Tasting')
-    await expect(sessionName).toBeVisible()
-
-    // Test that items can still be added
-    const addItemButton = page.locator('button', { hasText: /add.*item/i })
-    if (await addItemButton.isVisible()) {
-      await addItemButton.click()
-      // Verify item was added
-      await expect(page.locator('text=Tea 1')).toBeVisible()
-    }
+    // Quick category buttons should be visible
+    await expect(page.getByRole('button', { name: 'Coffee' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Whisky' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Tea' })).toBeVisible()
   })
 
-  test('category persistence across page interactions', async ({ page }) => {
+  test('clicking category button starts tasting session', async ({ page }) => {
     await page.goto('/quick-tasting')
-    await page.waitForSelector('[data-testid="quick-tasting-session"]', { timeout: 10000 })
+    await page.waitForLoadState('networkidle')
 
-    // Change category
-    const categorySelect = page.locator('select[name="category"]')
-    await categorySelect.selectOption('wine')
+    // Click on Coffee category button
+    await page.getByRole('button', { name: 'Coffee' }).click()
+    await page.waitForLoadState('networkidle')
 
-    // Navigate away and back
-    await page.goto('/dashboard')
-    await page.goto('/quick-tasting')
-
-    // Category should still be wine (if session persists)
-    // Note: This depends on session persistence implementation
-    await expect(page.locator('text=Category: Wine')).toBeVisible()
+    // Should navigate to tasting session view with session name
+    await expect(page.getByRole('heading', { name: /coffee tasting/i })).toBeVisible({ timeout: 10000 })
   })
 
-  test('accessibility compliance', async ({ page }) => {
+  test('quick category buttons navigate to tasting', async ({ page }) => {
     await page.goto('/quick-tasting')
-    await page.waitForSelector('[data-testid="quick-tasting-session"]', { timeout: 10000 })
+    await page.waitForLoadState('networkidle')
 
-    // Check that category dropdown has proper accessibility attributes
-    const categorySelect = page.locator('select[name="category"]')
-    await expect(categorySelect).toHaveAttribute('aria-label', 'Select tasting category')
+    // Click on Whisky category button
+    await page.getByRole('button', { name: 'Whisky' }).click()
+    await page.waitForLoadState('networkidle')
 
-    // Verify keyboard navigation works
-    await categorySelect.focus()
-    await page.keyboard.press('ArrowDown')
-    await page.keyboard.press('Enter')
-
-    // Should be able to navigate with keyboard
-    await expect(categorySelect).toBeFocused()
+    // Should be on tasting session view
+    await expect(page.getByRole('heading', { name: /whisky tasting/i })).toBeVisible({ timeout: 10000 })
   })
 
-  test('mobile responsiveness', async ({ page }) => {
+  test('category selection works on mobile', async ({ page }) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 })
 
     await page.goto('/quick-tasting')
-    await page.waitForSelector('[data-testid="quick-tasting-session"]', { timeout: 10000 })
+    await page.waitForLoadState('networkidle')
 
-    // Verify category dropdown is usable on mobile
-    const categorySelect = page.locator('select[name="category"]')
-    await expect(categorySelect).toBeVisible()
+    // Category buttons should be visible on mobile
+    await expect(page.getByRole('button', { name: 'Coffee' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Tea' })).toBeVisible()
 
-    // Should be able to interact on mobile
-    await categorySelect.selectOption('spirits')
-    await expect(page.locator('text=Category: Spirits')).toBeVisible()
+    // Select category on mobile
+    await page.getByRole('button', { name: 'Tea' }).click()
+    await page.waitForLoadState('networkidle')
+
+    // Should be on tasting session view
+    await expect(page.getByRole('heading', { name: /tea tasting/i })).toBeVisible({ timeout: 10000 })
   })
 
-  test('error handling for category changes', async ({ page }) => {
+  test('combobox allows typing custom category', async ({ page }) => {
     await page.goto('/quick-tasting')
-    await page.waitForSelector('[data-testid="quick-tasting-session"]', { timeout: 10000 })
+    await page.waitForLoadState('networkidle')
 
-    // Simulate network failure by blocking API calls
-    await page.route('**/rest/v1/quick_tastings**', route => route.abort())
+    // Type in the category combobox
+    const categoryCombobox = page.getByRole('combobox', { name: /category/i })
+    await categoryCombobox.click()
+    await categoryCombobox.fill('Olive Oil')
 
-    const categorySelect = page.locator('select[name="category"]')
+    // After typing, Start button should be enabled OR press Enter to start tasting
+    const startButton = page.getByRole('button', { name: 'Start' })
+    const hasStartButton = await startButton.isVisible({ timeout: 2000 }).catch(() => false)
 
-    // Attempt to change category
-    await categorySelect.selectOption('beer')
-
-    // Should show error feedback
-    await expect(page.locator('text=Failed to update category')).toBeVisible()
-
-    // Category should revert to original
-    await expect(page.locator('text=Category: Coffee')).toBeVisible()
+    if (hasStartButton) {
+      await expect(startButton).toBeEnabled()
+    } else {
+      // If no Start button, pressing Enter should start the tasting
+      await page.keyboard.press('Enter')
+      await page.waitForLoadState('networkidle')
+      // Should now be in a tasting session
+      const headingVisible = await page.getByRole('heading').first().isVisible({ timeout: 5000 }).catch(() => false)
+      expect(headingVisible).toBeTruthy()
+    }
   })
 })

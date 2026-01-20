@@ -41,7 +41,7 @@ export default function Home() {
               <img
                 src="/logos/flavatix-logo.svg"
                 alt="Flavatix"
-                className="w-full max-w-md h-auto mx-auto mb-md"
+                className="w-full max-w-[180px] h-auto mx-auto mb-md"
               />
 
               {/* Tagline */}
@@ -49,46 +49,46 @@ export default function Home() {
                 The one place for all your tasting needs
               </p>
             </div>
-            
+
             {/* Key Features Preview */}
             <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-xl max-w-2xl mx-auto">
-              <div className="text-center p-4 sm:p-6 rounded-lg glass transition-spring hover:shadow-lg hover:-translate-y-1">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center border border-primary/20">
-                  <FileText className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+              <div className="text-center p-4 sm:p-6 rounded-xl bg-white/80 dark:bg-zinc-800/80 backdrop-blur-sm border border-zinc-200/50 dark:border-zinc-700/50 shadow-sm transition-spring hover:shadow-md hover:-translate-y-1 hover:bg-white dark:hover:bg-zinc-800">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-primary/10 dark:bg-primary/20 rounded-full mx-auto mb-3 flex items-center justify-center border border-primary/20 dark:border-primary/30">
+                  <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
-                <h3 className="font-semibold text-sm sm:text-base text-zinc-900 mb-1">
+                <h3 className="font-semibold text-sm sm:text-base text-zinc-900 dark:text-zinc-50 mb-1">
                   Tasting Notes
                 </h3>
-                <p className="text-xs sm:text-sm text-zinc-600 hidden sm:block">
+                <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
                   Capture and analyze flavors
                 </p>
               </div>
 
-              <div className="text-center p-4 sm:p-6 rounded-lg glass transition-spring hover:shadow-lg hover:-translate-y-1">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center border border-primary/20">
-                  <Users className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+              <div className="text-center p-4 sm:p-6 rounded-xl bg-white/80 dark:bg-zinc-800/80 backdrop-blur-sm border border-zinc-200/50 dark:border-zinc-700/50 shadow-sm transition-spring hover:shadow-md hover:-translate-y-1 hover:bg-white dark:hover:bg-zinc-800">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-primary/10 dark:bg-primary/20 rounded-full mx-auto mb-3 flex items-center justify-center border border-primary/20 dark:border-primary/30">
+                  <Users className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
-                <h3 className="font-semibold text-sm sm:text-base text-zinc-900 mb-1">
+                <h3 className="font-semibold text-sm sm:text-base text-zinc-900 dark:text-zinc-50 mb-1">
                   Group Tastings
                 </h3>
-                <p className="text-xs sm:text-sm text-zinc-600 hidden sm:block">
+                <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
                   Studies and competitions
                 </p>
               </div>
 
-              <div className="text-center p-4 sm:p-6 rounded-lg glass transition-spring hover:shadow-lg hover:-translate-y-1">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center border border-primary/20">
-                  <PieChart className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+              <div className="text-center p-4 sm:p-6 rounded-xl bg-white/80 dark:bg-zinc-800/80 backdrop-blur-sm border border-zinc-200/50 dark:border-zinc-700/50 shadow-sm transition-spring hover:shadow-md hover:-translate-y-1 hover:bg-white dark:hover:bg-zinc-800">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-primary/10 dark:bg-primary/20 rounded-full mx-auto mb-3 flex items-center justify-center border border-primary/20 dark:border-primary/30">
+                  <PieChart className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
-                <h3 className="font-semibold text-sm sm:text-base text-zinc-900 mb-1">
+                <h3 className="font-semibold text-sm sm:text-base text-zinc-900 dark:text-zinc-50 mb-1">
                   Flavor Wheels
                 </h3>
-                <p className="text-xs sm:text-sm text-zinc-600 hidden sm:block">
+                <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
                   AI-generated visualizations
                 </p>
               </div>
             </div>
-            
+
             {/* Call to Action */}
             <div className="space-y-sm">
               <Link href="/auth" className="btn-primary mx-auto block tablet:inline-block">
@@ -101,58 +101,58 @@ export default function Home() {
             </div>
           </Container>
         </div>
-        
+
         {/* Value Proposition Section */}
         <section className="py-2xl">
           <Container size="md" className="text-center">
             <h2 className="font-heading font-bold text-h2 text-text-primary mb-lg">
               Why Flavatix?
             </h2>
-            
+
             <div className="grid grid-cols-1 tablet:grid-cols-2 gap-lg max-w-3xl mx-auto">
               <div className="text-center">
                 <h3 className="font-heading font-semibold text-h3 text-primary mb-sm">
                   For Everyone
                 </h3>
                 <p className="text-body text-text-secondary leading-body">
-                  Whether you&apos;re a casual coffee lover or an industry professional, 
+                  Whether you&apos;re a casual coffee lover or an industry professional,
                   Flavatix adapts to your needs with intuitive design and powerful customization.
                 </p>
               </div>
-              
+
               <div className="text-center">
                 <h3 className="font-heading font-semibold text-h3 text-primary mb-sm">
                   Data-Driven Insights
                 </h3>
                 <p className="text-body text-text-secondary leading-body">
-                  Transform your subjective tasting notes into beautiful, shareable visualizations 
+                  Transform your subjective tasting notes into beautiful, shareable visualizations
                   that reveal patterns and preferences you never knew existed.
                 </p>
               </div>
-              
+
               <div className="text-center">
                 <h3 className="font-heading font-semibold text-h3 text-primary mb-sm">
                   Social & Collaborative
                 </h3>
                 <p className="text-body text-text-secondary leading-body">
-                  Connect with fellow tasters, share your discoveries, and learn from 
+                  Connect with fellow tasters, share your discoveries, and learn from
                   a community passionate about flavor exploration.
                 </p>
               </div>
-              
+
               <div className="text-center">
                 <h3 className="font-heading font-semibold text-h3 text-primary mb-sm">
                   Cross-Industry
                 </h3>
                 <p className="text-body text-text-secondary leading-body">
-                  From coffee and wine to spirits and olive oil, Flavatix supports 
+                  From coffee and wine to spirits and olive oil, Flavatix supports
                   tastings across all industries with customizable templates.
                 </p>
               </div>
             </div>
           </Container>
         </section>
-        
+
         {/* Footer */}
         <footer className="bg-primary text-white py-xl">
           <Container size="md" className="text-center">
@@ -165,7 +165,7 @@ export default function Home() {
             <Link href="/auth" className="btn-secondary">
               Start Tasting Today
             </Link>
-            
+
             <div className="mt-xl pt-lg border-t border-white/20">
               <p className="text-small opacity-70">
                 © 2025 Flavatix. The one place for all your tasting needs.

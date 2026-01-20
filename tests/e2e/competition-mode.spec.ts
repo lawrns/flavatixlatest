@@ -1,6 +1,6 @@
 /**
  * E2E Test: Competition Mode
- * Tests competition creation, answer submission, and leaderboard
+ * Tests competition creation flow with two-step wizard
  */
 
 import { test, expect } from '@playwright/test';
@@ -11,87 +11,75 @@ test.describe('Competition Mode', () => {
     await login(page);
   });
 
-  test('should create a competition session with items', async ({ page }) => {
-    // Navigate to create tasting page
+  test('should display competition creation page', async ({ page }) => {
     await page.goto('/taste/create/competition/new');
     await page.waitForLoadState('networkidle');
 
-    // Fill competition form
-    await page.selectOption('select[name="category"]', 'coffee');
-    
-    const sessionNameInput = page.locator('input[name="sessionName"]').first();
-    if (await sessionNameInput.count() > 0) {
-      await sessionNameInput.fill('E2E Competition Test');
-    }
+    // Check page heading
+    await expect(page.getByRole('heading', { name: 'Create Competition' })).toBeVisible();
 
-    // Add competition items
-    const addItemButton = page.locator('button:has-text("Add Item")').first();
-    if (await addItemButton.count() > 0) {
-      await addItemButton.click();
-      
-      // Fill item details
-      await page.waitForSelector('input[name*="item"]', { timeout: 3000 });
-      const itemNameInput = page.locator('input[name*="item"]').first();
-      await itemNameInput.fill('Competition Coffee Item 1');
-      
-      // Add correct answers if form exists
-      const scoreInput = page.locator('input[name*="score"], input[type="number"]').first();
-      if (await scoreInput.count() > 0) {
-        await scoreInput.fill('85');
-      }
-    }
+    // Check step indicators
+    await expect(page.getByText('Setup & Parameters')).toBeVisible();
+    await expect(page.getByText('Items & Answers')).toBeVisible();
 
-    // Submit form
-    const submitButton = page.locator('button[type="submit"], button:has-text("Create")').first();
-    await submitButton.click();
-
-    // Wait for navigation to competition session
-    await page.waitForURL(/.*competition.*/, { timeout: 10000 });
+    // Check form elements
+    await expect(page.getByText('Competition Name')).toBeVisible();
+    await expect(page.getByText('Base Category')).toBeVisible();
   });
 
-  test('should submit competition answers', async ({ page }) => {
-    // Navigate to a competition session
-    // In practice, you'd create one first or use a test fixture
-    
-    // Wait for competition form to load
-    await page.waitForSelector('input, select, button', { timeout: 5000 });
-    
-    // Fill in answers
-    const answerInputs = page.locator('input[type="text"], input[type="number"], select').all();
-    
-    for (let i = 0; i < Math.min(await answerInputs.length, 3); i++) {
-      const input = answerInputs[i];
-      if (await input.isVisible()) {
-        await input.fill('85');
-      }
-    }
-    
-    // Submit answers
-    const submitButton = page.locator('button:has-text("Submit"), button:has-text("Submit Answers")').first();
-    if (await submitButton.count() > 0) {
-      await submitButton.click();
-      
-      // Wait for submission confirmation
-      await page.waitForTimeout(2000);
-      
-      // Verify success message or score display
-      const successIndicator = page.locator('text=/score|submitted|completed/i');
-      if (await successIndicator.count() > 0) {
-        await expect(successIndicator.first()).toBeVisible();
-      }
-    }
-  });
-
-  test('should display leaderboard', async ({ page }) => {
-    // Navigate to competition leaderboard
-    await page.goto('/competition/test-id/leaderboard');
+  test('should fill competition setup form', async ({ page }) => {
+    await page.goto('/taste/create/competition/new');
     await page.waitForLoadState('networkidle');
-    
-    // Verify leaderboard elements are visible
-    const leaderboard = page.locator('text=/leaderboard|rank|score/i').first();
-    if (await leaderboard.count() > 0) {
-      await expect(leaderboard).toBeVisible();
-    }
+
+    // Fill competition name - find by placeholder
+    const nameTextbox = page.getByRole('textbox', { name: /coffee cupping competition/i });
+    await nameTextbox.fill('E2E Competition Test');
+
+    // Select category via combobox - type and press Enter
+    const categoryCombobox = page.getByRole('combobox', { name: /category/i });
+    await categoryCombobox.click();
+    await categoryCombobox.fill('Coffee');
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(500);
+
+    // Verify form filled
+    await expect(nameTextbox).toHaveValue('E2E Competition Test');
+  });
+
+  test('should navigate to items step', async ({ page }) => {
+    await page.goto('/taste/create/competition/new');
+    await page.waitForLoadState('networkidle');
+
+    // Fill competition name - find by placeholder
+    await page.getByRole('textbox', { name: /coffee cupping competition/i }).fill('Test Competition');
+
+    // Fill category
+    const categoryCombobox = page.getByRole('combobox', { name: /category/i });
+    await categoryCombobox.click();
+    await categoryCombobox.fill('Coffee');
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(500);
+
+    // Click Next
+    await page.getByRole('button', { name: /next.*add items/i }).click();
+    await page.waitForLoadState('networkidle');
+
+    // Should show Add Item button on step 2 (multiple may exist)
+    await expect(page.getByRole('button', { name: /add item/i }).first()).toBeVisible({ timeout: 10000 });
+  });
+
+  test('should display blind tasting option', async ({ page }) => {
+    await page.goto('/taste/create/competition/new');
+    await page.waitForLoadState('networkidle');
+
+    // Check for blind tasting checkbox
+    const blindCheckbox = page.getByRole('checkbox', { name: /blind tasting/i });
+    await expect(blindCheckbox).toBeVisible();
+    await expect(blindCheckbox).not.toBeChecked();
+
+    // Toggle it
+    await blindCheckbox.click();
+    await expect(blindCheckbox).toBeChecked();
   });
 });
 

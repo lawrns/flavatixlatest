@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { getSupabaseClient } from '../../lib/supabase';
 import { Heart, MessageCircle, Share2, User } from 'lucide-react';
 import { Card, CardContent } from '../ui/Card';
@@ -39,6 +40,9 @@ const SocialFeedWidget = React.memo(
     const [posts, setPosts] = useState<TastingPost[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+
+    // Virtualization ref
+    const parentRef = useRef<HTMLDivElement>(null);
 
     const loadRecentPosts = useCallback(async () => {
       try {
@@ -226,6 +230,14 @@ const SocialFeedWidget = React.memo(
       }
     };
 
+    // Virtualizer setup - estimated row height of 100px for feed items
+    const virtualizer = useVirtualizer({
+      count: posts.length,
+      getScrollElement: () => parentRef.current,
+      estimateSize: () => 100,
+      overscan: 3,
+    });
+
     if (loading) {
       return (
         <Card>
@@ -268,108 +280,135 @@ const SocialFeedWidget = React.memo(
             </Button>
           </div>
 
-          <div className="space-y-3">
-            {posts.map((post) => (
-              <div
-                key={post.id}
-                onClick={() => router.push('/social')}
-                className="bg-zinc-50 dark:bg-zinc-700 p-3 rounded-lg cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors"
-              >
-                <div className="flex items-start gap-2 mb-2">
-                  {/* Avatar */}
-                  <div className="flex-shrink-0">
-                    {post.user.avatar_url ? (
-                      <Image
-                        src={post.user.avatar_url}
-                        alt={post.user.full_name || 'User'}
-                        width={32}
-                        height={32}
-                        className="w-8 h-8 rounded-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-semibold">
-                        {(post.user.full_name || post.user.username || '?')[0].toUpperCase()}
+          <div
+            ref={parentRef}
+            className="overflow-auto"
+            style={{ height: '400px', maxHeight: 'calc(100vh - 300px)' }}
+          >
+            <div
+              style={{
+                height: `${virtualizer.getTotalSize()}px`,
+                width: '100%',
+                position: 'relative',
+              }}
+            >
+              {virtualizer.getVirtualItems().map((virtualRow) => {
+                const post = posts[virtualRow.index];
+                return (
+                  <div
+                    key={virtualRow.key}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      transform: `translateY(${virtualRow.start}px)`,
+                    }}
+                  >
+                    <div className="pb-3">
+                      <div
+                        onClick={() => router.push('/social')}
+                        className="bg-zinc-50 dark:bg-zinc-700 p-3 rounded-lg cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors"
+                      >
+                        <div className="flex items-start gap-2 mb-2">
+                          {/* Avatar */}
+                          <div className="flex-shrink-0">
+                            {post.user.avatar_url ? (
+                              <Image
+                                src={post.user.avatar_url}
+                                alt={post.user.full_name || 'User'}
+                                width={32}
+                                height={32}
+                                className="w-8 h-8 rounded-full object-cover"
+                                loading="lazy"
+                              />
+                            ) : (
+                              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-semibold">
+                                {(post.user.full_name || post.user.username || '?')[0].toUpperCase()}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Content */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-baseline gap-2">
+                              <span className="font-medium text-zinc-900 dark:text-zinc-50 text-sm truncate">
+                                {post.user.full_name || post.user.username || 'Anonymous'}
+                              </span>
+                              <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                                {new Date(post.created_at).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <p className="text-sm text-zinc-600 dark:text-zinc-200 truncate">
+                              {post.session_name || `${post.category} tasting`} • {post.total_items} items
+                              {post.average_score && (
+                                <>
+                                  {' '}
+                                  • {post.average_score.toFixed(1)}
+                                  <span className="material-symbols-outlined text-xs align-middle ml-0.5">
+                                    star
+                                  </span>
+                                </>
+                              )}
+                            </p>
+                          </div>
+
+                          {/* Photo thumbnail */}
+                          {post.photos && post.photos.length > 0 && (
+                            <Image
+                              src={post.photos[0]}
+                              alt="Tasting"
+                              width={48}
+                              height={48}
+                              className="w-12 h-12 rounded object-cover flex-shrink-0"
+                              loading="lazy"
+                            />
+                          )}
+                        </div>
+
+                        {/* Stats */}
+                        <div className="flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400 ml-10">
+                          <button
+                            onClick={(e) => handleLike(post.id, e)}
+                            className={`flex items-center gap-1 touch-manipulation min-h-[44px] min-w-[44px] justify-center ${post.isLiked ? 'text-red-500' : 'hover:text-red-500'} transition-colors`}
+                            aria-label={`${post.isLiked ? 'Unlike' : 'Like'} this tasting`}
+                          >
+                            <Heart size={16} fill={post.isLiked ? 'currentColor' : 'none'} />
+                            <span className="ml-1">{post.stats.likes}</span>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // TODO(social): Implement comments modal. Requires:
+                              // 1. CommentModal component with input, list, and submit
+                              // 2. API route POST /api/social/comments for CRUD
+                              // 3. Real-time subscription for new comments
+                              // 4. Notification to post owner via notificationService.notifyComment()
+                            }}
+                            className="flex items-center gap-1 hover:text-primary transition-colors touch-manipulation min-h-[44px] min-w-[44px] justify-center"
+                            aria-label="View comments"
+                          >
+                            <MessageCircle size={16} />
+                            <span className="ml-1">{post.stats.comments}</span>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // TODO(social): Implement sharing. Use useSocialFeed.handleShare() which already
+                              // supports Web Share API with clipboard fallback. Wire up postId parameter.
+                            }}
+                            className="flex items-center gap-1 hover:text-primary transition-colors touch-manipulation min-h-[44px] min-w-[44px] justify-center"
+                            aria-label="Share this tasting"
+                          >
+                            <Share2 size={16} />
+                          </button>
+                        </div>
                       </div>
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-baseline gap-2">
-                      <span className="font-medium text-zinc-900 dark:text-zinc-50 text-sm truncate">
-                        {post.user.full_name || post.user.username || 'Anonymous'}
-                      </span>
-                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                        {new Date(post.created_at).toLocaleDateString()}
-                      </span>
                     </div>
-                    <p className="text-sm text-zinc-600 dark:text-zinc-200 truncate">
-                      {post.session_name || `${post.category} tasting`} • {post.total_items} items
-                      {post.average_score && (
-                        <>
-                          {' '}
-                          • {post.average_score.toFixed(1)}
-                          <span className="material-symbols-outlined text-xs align-middle ml-0.5">
-                            star
-                          </span>
-                        </>
-                      )}
-                    </p>
                   </div>
-
-                  {/* Photo thumbnail */}
-                  {post.photos && post.photos.length > 0 && (
-                    <Image
-                      src={post.photos[0]}
-                      alt="Tasting"
-                      width={48}
-                      height={48}
-                      className="w-12 h-12 rounded object-cover flex-shrink-0"
-                      loading="lazy"
-                    />
-                  )}
-                </div>
-
-                {/* Stats */}
-                <div className="flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400 ml-10">
-                  <button
-                    onClick={(e) => handleLike(post.id, e)}
-                    className={`flex items-center gap-1 touch-manipulation min-h-[44px] min-w-[44px] justify-center ${post.isLiked ? 'text-red-500' : 'hover:text-red-500'} transition-colors`}
-                    aria-label={`${post.isLiked ? 'Unlike' : 'Like'} this tasting`}
-                  >
-                    <Heart size={16} fill={post.isLiked ? 'currentColor' : 'none'} />
-                    <span className="ml-1">{post.stats.likes}</span>
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // TODO(social): Implement comments modal. Requires:
-                      // 1. CommentModal component with input, list, and submit
-                      // 2. API route POST /api/social/comments for CRUD
-                      // 3. Real-time subscription for new comments
-                      // 4. Notification to post owner via notificationService.notifyComment()
-                    }}
-                    className="flex items-center gap-1 hover:text-primary transition-colors touch-manipulation min-h-[44px] min-w-[44px] justify-center"
-                    aria-label="View comments"
-                  >
-                    <MessageCircle size={16} />
-                    <span className="ml-1">{post.stats.comments}</span>
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // TODO(social): Implement sharing. Use useSocialFeed.handleShare() which already
-                      // supports Web Share API with clipboard fallback. Wire up postId parameter.
-                    }}
-                    className="flex items-center gap-1 hover:text-primary transition-colors touch-manipulation min-h-[44px] min-w-[44px] justify-center"
-                    aria-label="Share this tasting"
-                  >
-                    <Share2 size={16} />
-                  </button>
-                </div>
-              </div>
-            ))}
+                );
+              })}
+            </div>
           </div>
         </CardContent>
       </Card>

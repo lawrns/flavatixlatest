@@ -127,7 +127,7 @@ export const FlavorPill: React.FC<FlavorPillProps> = ({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-full border font-medium transition-all duration-200',
+        'inline-flex items-center gap-1 rounded-full border font-medium transition-[box-shadow,transform] duration-200',
         colors.bg,
         colors.text,
         colors.border,

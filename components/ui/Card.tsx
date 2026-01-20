@@ -29,7 +29,7 @@ const Card: React.FC<CardProps> = ({
   ...props
 }) => {
   const baseClasses = cn(
-    'rounded-[22px] transition-all duration-300 ease-out',
+    'rounded-[22px] transition-[transform,box-shadow,border-color] duration-300 ease-out',
     animate && 'animate-scale-in'
   );
   

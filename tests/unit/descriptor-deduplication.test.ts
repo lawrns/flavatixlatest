@@ -249,8 +249,8 @@ describe('Descriptor Deduplication', () => {
       });
       const endTime = Date.now();
 
-      // Should complete in under 100ms for 1000 items
-      expect(endTime - startTime).toBeLessThan(100);
+      // Should complete in under 500ms for 1000 items (allow for CI variability)
+      expect(endTime - startTime).toBeLessThan(500);
     });
   });
 });

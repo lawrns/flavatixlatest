@@ -29,7 +29,7 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
         acc[category] = [];
       }
       acc[category].push(field);
-      return {};
+      return acc;
     },
     {} as Record<string, TemplateField[]>
   );

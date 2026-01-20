@@ -138,7 +138,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
             <button
               onClick={action.onClick}
               className={cn(
-                'px-6 py-2.5 rounded-xl font-semibold transition-all duration-200',
+                'px-6 py-2.5 rounded-xl font-semibold transition-[transform,box-shadow] duration-200',
                 'hover:-translate-y-0.5 active:scale-[0.98]',
                 action.variant === 'secondary'
                   ? 'bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white hover:border-primary/50'

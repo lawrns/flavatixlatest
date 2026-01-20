@@ -257,32 +257,76 @@ export default function CommentsModal({
       return;
     }
 
+    const comment = findComment(comments, commentId);
+    if (!comment) {
+      return;
+    }
+
+    const wasLiked = comment.is_liked;
+    const previousLikesCount = comment.likes_count;
+
+    // Optimistic update - update UI immediately
+    const updateCommentLike = (commentList: Comment[]): Comment[] => {
+      return commentList.map((c) => {
+        if (c.id === commentId) {
+          return {
+            ...c,
+            is_liked: !wasLiked,
+            likes_count: wasLiked ? Math.max(0, c.likes_count - 1) : c.likes_count + 1,
+          };
+        }
+        if (c.replies && c.replies.length > 0) {
+          return { ...c, replies: updateCommentLike(c.replies) };
+        }
+        return c;
+      });
+    };
+
+    setComments(updateCommentLike(comments));
+
     try {
       const supabase = getSupabaseClient();
-      const comment = findComment(comments, commentId);
-      if (!comment) {
-        return;
-      }
 
-      if (comment.is_liked) {
+      if (wasLiked) {
         // Unlike
-        await supabase
+        const { error } = await supabase
           .from('comment_likes')
           .delete()
           .eq('comment_id', commentId)
           .eq('user_id', user.id);
+
+        if (error) throw error;
       } else {
         // Like
-        await supabase.from('comment_likes').insert({
+        const { error } = await supabase.from('comment_likes').insert({
           comment_id: commentId,
           user_id: user.id,
         } as any);
-      }
 
-      loadComments();
+        if (error) throw error;
+      }
     } catch (error) {
       console.error('Error liking comment:', error);
       toast.error('Failed to update like');
+
+      // Revert optimistic update on error
+      const revertCommentLike = (commentList: Comment[]): Comment[] => {
+        return commentList.map((c) => {
+          if (c.id === commentId) {
+            return {
+              ...c,
+              is_liked: wasLiked,
+              likes_count: previousLikesCount,
+            };
+          }
+          if (c.replies && c.replies.length > 0) {
+            return { ...c, replies: revertCommentLike(c.replies) };
+          }
+          return c;
+        });
+      };
+
+      setComments(revertCommentLike(comments));
     }
   };
 

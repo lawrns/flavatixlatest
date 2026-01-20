@@ -1,6 +1,6 @@
 /**
  * SocialFeedFilters Component
- * 
+ *
  * Tab and category filters for the social feed.
  */
 import React from 'react';
@@ -48,12 +48,12 @@ export const SocialFeedFilters: React.FC<SocialFeedFiltersProps> = ({
 
       {/* Category Filters */}
       <div className="overflow-x-auto bg-white dark:bg-zinc-900">
-        <div className="flex gap-2 p-3 min-w-max">
+        <div className="flex gap-2 px-4 py-3 min-w-max">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => onCategoryChange(cat)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors capitalize ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors capitalize min-h-[36px] ${
                 categoryFilter === cat
                   ? 'bg-primary text-white'
                   : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700'
