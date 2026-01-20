@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import Image from 'next/image'
 import { FileText, Users, PieChart } from 'lucide-react'
 import styles from './HeroSection.module.css'
 import Container from '@/components/layout/Container'
@@ -18,7 +19,20 @@ export default function Home() {
       <main className="min-h-screen">
         {/* Hero Section */}
         <div className={`${styles.hero} relative overflow-hidden`}>
-          
+          {/* Hero Background Illustration */}
+          <div className="absolute inset-0 opacity-15 dark:opacity-10">
+            <Image
+              src="/generated-images/hero/hero-background.webp"
+              alt=""
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+
+          {/* Animated Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-orange-400/5 to-amber-300/5" />
+
           {/* Content Container */}
           <Container size="md" className="relative z-10 py-2xl text-center">
             {/* Logo/Brand Area */}
