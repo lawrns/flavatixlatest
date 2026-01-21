@@ -69,7 +69,7 @@ export default function FlavorWheelsPage() {
 
   const [wheelType, setWheelType] = useState<WheelType>('aroma');
   const [scopeType, setScopeType] = useState<ScopeType>('personal');
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>('wheel');
   const [wheelData, setWheelData] = useState<FlavorWheelData | null>(null);
   const [predefinedCategories, setPredefinedCategories] = useState<PredefinedCategory[]>([]);
   const [loading, setLoading] = useState(false);
