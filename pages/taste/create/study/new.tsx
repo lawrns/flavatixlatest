@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
+import { logger } from '@/lib/logger';
 import { toast } from '@/lib/toast';
 import { ChevronLeft, Plus, Trash2, Eye, Save, X } from 'lucide-react';
 import { getStudyModeTemplateById } from '@/lib/templates/tastingTemplates';
@@ -265,16 +266,16 @@ const NewStudyTastingPage: React.FC = () => {
   };
 
   const handleSubmit = async (saveForLater: boolean = false) => {
-    console.log('[Study Mode] Starting submission', { form, saveForLater });
+    logger.debug('StudyMode', 'Starting submission', { form, saveForLater });
 
     if (!user) {
-      console.error('[Study Mode] No user found');
+      logger.error('StudyMode', 'No user found');
       toast.error('Please log in to continue');
       return;
     }
 
     if (!validateForm()) {
-      console.error('[Study Mode] Validation failed', errors);
+      logger.error('StudyMode', 'Validation failed', { errors });
       toast.error('Please fix the errors before submitting');
       return;
     }
@@ -282,12 +283,12 @@ const NewStudyTastingPage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      console.log('[Study Mode] Getting auth session...');
+      logger.debug('StudyMode', 'Getting auth session');
       const {
         data: { session },
       } = await supabase.auth.getSession();
       if (!session) {
-        console.error('[Study Mode] No auth session found');
+        logger.error('StudyMode', 'No auth session found');
         toast.error('Session expired. Please log in again.');
         router.push('/auth');
         return;
@@ -323,19 +324,19 @@ const NewStudyTastingPage: React.FC = () => {
         }),
       });
 
-      console.log('[Study Mode] API response status:', response.status);
+      logger.debug('StudyMode', 'API response status', { status: response.status });
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('[Study Mode] API error:', errorData);
+        logger.error('StudyMode', 'API error', errorData);
         throw new Error(errorData.error || 'Failed to create study session');
       }
 
       const result = await response.json();
-      console.log('[Study Mode] API response:', result);
+      logger.debug('StudyMode', 'API response', result);
 
       const sessionId = result.data?.sessionId;
-      console.log('[Study Mode] Session ID:', sessionId);
+      logger.debug('StudyMode', 'Session ID', { sessionId });
 
       if (!sessionId) {
         throw new Error('No session ID returned from API');
@@ -344,14 +345,14 @@ const NewStudyTastingPage: React.FC = () => {
       toast.success('Study session created successfully!');
 
       if (saveForLater) {
-        console.log('[Study Mode] Redirecting to my-tastings');
+        logger.debug('StudyMode', 'Redirecting to my-tastings');
         router.push('/my-tastings');
       } else {
-        console.log('[Study Mode] Navigating to study session:', `/taste/study/${sessionId}`);
+        logger.debug('StudyMode', 'Navigating to study session', { path: `/taste/study/${sessionId}` });
         router.push(`/taste/study/${sessionId}`);
       }
     } catch (error) {
-      console.error('[Study Mode] Submission error:', error);
+      logger.error('StudyMode', 'Submission error', error);
       toast.error(error instanceof Error ? error.message : 'Failed to create study session');
     } finally {
       setIsSubmitting(false);
