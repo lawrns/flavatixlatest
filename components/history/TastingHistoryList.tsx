@@ -18,8 +18,8 @@ interface TastingHistoryListProps {
 
 const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
   filters,
-  onTastingClick: _onTastingClick,
-  onTastingsLoaded: _onTastingsLoaded,
+  onTastingClick,
+  onTastingsLoaded,
   limit = 20,
 }) => {
   const { user } = useAuth();
