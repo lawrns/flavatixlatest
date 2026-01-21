@@ -63,7 +63,7 @@ export default function ShareButton({ disabled, onShare, className = '' }: Share
       setCopied(true);
       toast.success('Link copied to clipboard!');
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
+    } catch (_err) {
       toast.error('Failed to copy link');
     }
   };

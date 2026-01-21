@@ -21,7 +21,7 @@ export default function CommentsModal({
   tastingOwnerId,
   isOpen,
   onClose,
-  initialCommentCount,
+  initialCommentCount: _initialCommentCount,
 }: CommentsModalProps) {
   const { user } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
