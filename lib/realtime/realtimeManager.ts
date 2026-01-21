@@ -3,7 +3,7 @@
  * Handles Supabase Realtime for collaborative tastings
  */
 
-import { RealtimeChannel, RealtimePresenceState } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { getSupabaseClient } from '../supabase';
 import { logger } from '../logger';
 

@@ -3,10 +3,9 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { toast } from '@/lib/toast';
-import { ChevronLeft, Plus, Trash2, Eye, Save, ArrowRight, CheckCircle, X } from 'lucide-react';
-import { STUDY_MODE_TEMPLATES, getStudyModeTemplateById } from '@/lib/templates/tastingTemplates';
+import { ChevronLeft, Plus, Trash2, Eye, Save, X } from 'lucide-react';
+import { getStudyModeTemplateById } from '@/lib/templates/tastingTemplates';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Combobox from '@/components/ui/Combobox';
@@ -298,7 +297,7 @@ const NewStudyTastingPage: React.FC = () => {
 
       // Get CSRF token from cookie
       const getCsrfToken = () => {
-        if (typeof document === 'undefined') return '';
+        if (typeof document === 'undefined') {return '';}
         const match = document.cookie.match(new RegExp('(^| )csrf_token=([^;]+)'));
         return match ? match[2] : '';
       };

@@ -16,7 +16,7 @@ export function useReducedMotion(): boolean {
 
   useEffect(() => {
     // Check if window is available (SSR safety)
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {return;}
 
     // Create media query
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');

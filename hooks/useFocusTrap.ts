@@ -57,7 +57,7 @@ export function useFocusTrap(options: UseFocusTrapOptions = {}): UseFocusTrapRet
 
   // Get all focusable elements within the container
   const getFocusableElements = useCallback((): HTMLElement[] => {
-    if (!containerRef.current) return [];
+    if (!containerRef.current) {return [];}
     
     const elements = containerRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS);
     return Array.from(elements).filter(el => {
@@ -85,7 +85,7 @@ export function useFocusTrap(options: UseFocusTrapOptions = {}): UseFocusTrapRet
 
   // Handle keydown events for tab trapping and escape
   useEffect(() => {
-    if (!isActive) return;
+    if (!isActive) {return;}
 
     const handleKeyDown = (event: KeyboardEvent) => {
       // Handle Escape key
@@ -96,10 +96,10 @@ export function useFocusTrap(options: UseFocusTrapOptions = {}): UseFocusTrapRet
       }
 
       // Handle Tab key for focus trapping
-      if (event.key !== 'Tab') return;
+      if (event.key !== 'Tab') {return;}
 
       const focusableElements = getFocusableElements();
-      if (focusableElements.length === 0) return;
+      if (focusableElements.length === 0) {return;}
 
       const firstElement = focusableElements[0];
       const lastElement = focusableElements[focusableElements.length - 1];
@@ -127,7 +127,7 @@ export function useFocusTrap(options: UseFocusTrapOptions = {}): UseFocusTrapRet
 
   // Handle click outside (optional)
   useEffect(() => {
-    if (!isActive || allowOutsideClick) return;
+    if (!isActive || allowOutsideClick) {return;}
 
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -144,7 +144,7 @@ export function useFocusTrap(options: UseFocusTrapOptions = {}): UseFocusTrapRet
 
   // Store previous active element and set initial focus
   useEffect(() => {
-    if (!isActive) return;
+    if (!isActive) {return;}
 
     // Store the currently focused element
     previousActiveElement.current = document.activeElement as HTMLElement;

@@ -5,7 +5,7 @@
  * Handles infinite scrolling, optimistic updates, and real-time sync.
  */
 
-import { useInfiniteQuery, useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSupabaseClient } from '../../supabase';
 import { queryKeys, STALE_TIME } from '../queryClient';
 import { logger } from '../../logger';

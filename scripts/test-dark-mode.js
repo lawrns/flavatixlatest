@@ -39,7 +39,7 @@ const puppeteer = require('puppeteer');
     // Check if buttons are visible
     const lightButtonCheck = await page.evaluate(() => {
       const buttons = Array.from(document.querySelectorAll('button, .btn-primary, .btn-secondary'));
-      if (buttons.length === 0) return 'No buttons found';
+      if (buttons.length === 0) {return 'No buttons found';}
 
       const firstButton = buttons[0];
       const styles = window.getComputedStyle(firstButton);
@@ -75,7 +75,7 @@ const puppeteer = require('puppeteer');
     // Check if buttons are visible in dark mode
     const darkButtonCheck = await page.evaluate(() => {
       const buttons = Array.from(document.querySelectorAll('button, .btn-primary, .btn-secondary'));
-      if (buttons.length === 0) return 'No buttons found';
+      if (buttons.length === 0) {return 'No buttons found';}
 
       const firstButton = buttons[0];
       const styles = window.getComputedStyle(firstButton);

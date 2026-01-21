@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '../ui/Card';
 import Button from '../ui/Button';
-import { BarChart3, TrendingUp, Users, Star, Calendar, Filter } from 'lucide-react';
+import { BarChart3, TrendingUp, Users, Star } from 'lucide-react';
 
 interface AnalyticsData {
   totalTastings: number;

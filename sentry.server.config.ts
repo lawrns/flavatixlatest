@@ -21,7 +21,7 @@ Sentry.init({
   beforeSend(event, hint) {
     // Call base beforeSend
     const baseEvent = serverConfig.beforeSend?.(event, hint);
-    if (!baseEvent) return null;
+    if (!baseEvent) {return null;}
 
     // Add server context
     try {

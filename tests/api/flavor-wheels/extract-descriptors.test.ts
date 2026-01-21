@@ -5,7 +5,7 @@
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import extractDescriptorsHandler from '@/pages/api/flavor-wheels/extract-descriptors';
-import { createMockRequest, createMockResponse, expectSuccess, expectError } from '@/lib/test-utils/utils';
+import { createMockRequest, createMockResponse, expectError } from '@/lib/test-utils/utils';
 import { createMockAuthHeaders } from '@/lib/test-utils/mocks';
 import { testUser } from '@/lib/test-utils/fixtures';
 

@@ -116,7 +116,7 @@ async function testTastingCreationFlow() {
     
     const errorContent = await page.evaluate(() => {
       const errorElements = document.querySelectorAll('*');
-      for (let element of errorElements) {
+      for (const element of errorElements) {
         if (element.textContent && element.textContent.includes('Session Not Found')) {
           return element.textContent;
         }

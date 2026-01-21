@@ -3,7 +3,7 @@
  * Tests case-insensitive normalization and UPSERT behavior
  */
 
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect } from '@jest/globals';
 
 describe('Descriptor Deduplication', () => {
   describe('Normalization Logic', () => {

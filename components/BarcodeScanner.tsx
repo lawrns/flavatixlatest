@@ -3,7 +3,7 @@
  * Uses device camera to scan UPC/EAN barcodes for product identification
  */
 
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Camera, X, AlertCircle, Loader2, CheckCircle } from 'lucide-react';
 import { toast } from '@/lib/toast';
 

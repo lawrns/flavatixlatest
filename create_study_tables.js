@@ -122,7 +122,7 @@ async function createTables() {
     try {
       // Try using the RPC method first
       const { error } = await supabase.rpc('exec_sql', { sql: statements[i] });
-      if (error) throw error;
+      if (error) {throw error;}
       console.log(`   ✅ Table ${i + 1} created successfully`);
     } catch (err) {
       console.log(`   ⚠️  RPC failed, trying direct REST API...`);

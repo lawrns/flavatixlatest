@@ -6,7 +6,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import createTastingHandler from '@/pages/api/tastings/create';
 import { createMockRequest, createMockResponse, expectSuccess, expectError } from '@/lib/test-utils/utils';
-import { createMockAuthHeaders, createMockSession } from '@/lib/test-utils/mocks';
+import { createMockAuthHeaders } from '@/lib/test-utils/mocks';
 import { testUser } from '@/lib/test-utils/fixtures';
 
 // Mock dependencies

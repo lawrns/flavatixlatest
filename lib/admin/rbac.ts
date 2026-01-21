@@ -5,7 +5,6 @@
  * Implements comprehensive audit logging for all admin operations
  */
 
-import { User } from '@supabase/supabase-js';
 import { getSupabaseClient } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
 import * as Sentry from '@sentry/nextjs';

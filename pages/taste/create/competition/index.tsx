@@ -13,7 +13,6 @@ import {
   Smartphone,
 } from 'lucide-react';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import Button from '@/components/ui/Button';
 import BottomNavigation from '@/components/navigation/BottomNavigation';
 
 const CompetitionIndexPage: React.FC = () => {

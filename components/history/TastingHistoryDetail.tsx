@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TastingHistory, getTastingById } from '../../lib/historyService';
 import { useAuth } from '../../contexts/SimpleAuthContext';
-import { formatDistanceToNow, format } from 'date-fns';
+import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 interface TastingHistoryDetailProps {

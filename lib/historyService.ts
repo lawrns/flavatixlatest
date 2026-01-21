@@ -1,5 +1,4 @@
 import { supabase } from './supabase';
-import type { Database } from './supabase';
 
 // Types for the history service
 export type TastingHistory = {

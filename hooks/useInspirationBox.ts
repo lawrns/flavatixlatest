@@ -28,7 +28,7 @@ export const useInspirationBox = (options: UseInspirationBoxOptions = {}) => {
 
   useEffect(() => {
     const checkWhitespace = () => {
-      if (!containerRef.current) return;
+      if (!containerRef.current) {return;}
 
       const viewportHeight = window.innerHeight;
       const containerRect = containerRef.current.getBoundingClientRect();

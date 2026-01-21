@@ -65,7 +65,7 @@ export async function saveTastingWithPromise(tastingData: any) {
       method: 'POST',
       body: JSON.stringify(data),
     })
-    if (!response.ok) throw new Error('Failed to save')
+    if (!response.ok) {throw new Error('Failed to save')}
     return response.json()
   }
 
@@ -82,7 +82,7 @@ export async function saveTastingWithPromise(tastingData: any) {
 export async function loadTastingWithDynamicMessage(tastingId: string) {
   const fetchTasting = async (id: string) => {
     const response = await fetch(`/api/tastings/${id}`)
-    if (!response.ok) throw new Error('Failed to load')
+    if (!response.ok) {throw new Error('Failed to load')}
     return response.json()
   }
 
@@ -236,7 +236,7 @@ export async function fileUploadExample(file: File) {
       body: formData,
     })
 
-    if (!response.ok) throw new Error('Upload failed')
+    if (!response.ok) {throw new Error('Upload failed')}
     return response.json()
   }
 
@@ -265,7 +265,7 @@ export async function batchDeleteExample(ids: string[]) {
       method: 'POST',
       body: JSON.stringify({ ids }),
     })
-    if (!response.ok) throw new Error('Batch delete failed')
+    if (!response.ok) {throw new Error('Batch delete failed')}
     return response.json()
   }
 
@@ -325,7 +325,7 @@ export async function complexWorkflowExample(tastingData: any) {
           method: 'POST',
           body: JSON.stringify(tastingData),
         }).then((r) => {
-          if (!r.ok) throw new Error('Save failed')
+          if (!r.ok) {throw new Error('Save failed')}
           return r.json()
         }),
         {

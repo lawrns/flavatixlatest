@@ -15,7 +15,7 @@ import UserAvatarMenu from '@/components/navigation/UserAvatarMenu';
 import NotificationSystem from '@/components/notifications/NotificationSystem';
 import ProfileService, { UserProfile } from '@/lib/profileService';
 import { getUserPresets, saveUserPresets, ALL_CATEGORIES } from '@/lib/presetService';
-import { CategoryPackId, CATEGORY_PACKS } from '@/lib/categoryPacks';
+import { CategoryPackId } from '@/lib/categoryPacks';
 import { CategoryStamp } from '@/components/ui';
 
 export default function SettingsPage() {

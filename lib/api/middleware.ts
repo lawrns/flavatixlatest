@@ -24,8 +24,8 @@ import * as Sentry from '@sentry/nextjs';
 import { getSupabaseClient } from '@/lib/supabase';
 import { logger, generateRequestId, setRequestId, clearRequestId } from '@/lib/logger';
 import { apiLogger } from '@/lib/loggers';
-import { ERROR_CODES, API } from '@/lib/constants';
-import { formatZodErrors, getFirstError } from '@/lib/validations/index';
+import { ERROR_CODES } from '@/lib/constants';
+import { formatZodErrors } from '@/lib/validations/index';
 
 // ============================================================================
 // TYPES
@@ -591,7 +591,7 @@ class RedisRateLimitStore implements RateLimitStore {
     return {
       get: async (key: string) => {
         const entry = store.get(key);
-        if (!entry) return null;
+        if (!entry) {return null;}
         if (entry.expiresAt < Date.now()) {
           store.delete(key);
           return null;

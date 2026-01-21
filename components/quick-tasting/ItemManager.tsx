@@ -13,7 +13,6 @@ import { TastingRepositoryFactory } from '../../lib/repository/TastingRepository
 import { getSupabaseClient } from '../../lib/supabase';
 import { toast } from '../../lib/toast';
 import { logger } from '../../lib/logger';
-import { DatabaseError } from '../../lib/errors';
 
 export interface ItemManagerProps {
   session: QuickTasting;

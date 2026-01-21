@@ -6,7 +6,6 @@
 
 import { createMocks } from 'node-mocks-http';
 import createTastingHandler from '@/pages/api/tastings/create';
-import { getSupabaseClient } from '@/lib/supabase';
 
 // Mock Supabase
 const mockSupabaseClient = {

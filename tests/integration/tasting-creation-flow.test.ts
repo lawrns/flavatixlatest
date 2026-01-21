@@ -7,7 +7,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import createTastingHandler from '@/pages/api/tastings/create';
 import extractDescriptorsHandler from '@/pages/api/flavor-wheels/extract-descriptors';
 import generateWheelHandler from '@/pages/api/flavor-wheels/generate';
-import { createMockRequest, createMockResponse, expectSuccess } from '@/lib/test-utils/utils';
+import { createMockRequest, createMockResponse } from '@/lib/test-utils/utils';
 import { createMockAuthHeaders } from '@/lib/test-utils/mocks';
 import { testUser } from '@/lib/test-utils/fixtures';
 

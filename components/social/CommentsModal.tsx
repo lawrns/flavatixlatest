@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { getSupabaseClient } from '@/lib/supabase';
 import { useAuth } from '@/contexts/SimpleAuthContext';
@@ -290,7 +290,7 @@ export default function CommentsModal({
           .eq('comment_id', commentId)
           .eq('user_id', user.id);
 
-        if (error) throw error;
+        if (error) {throw error;}
       } else {
         // Like
         const { error } = await supabase.from('comment_likes').insert({
@@ -298,7 +298,7 @@ export default function CommentsModal({
           user_id: user.id,
         } as any);
 
-        if (error) throw error;
+        if (error) {throw error;}
       }
     } catch (error) {
       console.error('Error liking comment:', error);

@@ -5,7 +5,7 @@
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import taxonomyHandler from '@/pages/api/categories/get-or-create-taxonomy';
-import { createMockRequest, createMockResponse, expectSuccess, expectError } from '@/lib/test-utils/utils';
+import { createMockRequest, createMockResponse, expectError } from '@/lib/test-utils/utils';
 import { createMockAuthHeaders } from '@/lib/test-utils/mocks';
 import { testUser } from '@/lib/test-utils/fixtures';
 

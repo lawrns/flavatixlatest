@@ -40,13 +40,13 @@ export function useSessionEditor({
   const supabase = getSupabaseClient() as any;
 
   const startEditingSessionName = useCallback(() => {
-    if (!session) return;
+    if (!session) {return;}
     setIsEditingSessionName(true);
     setEditingSessionName(session.session_name || '');
   }, [session]);
 
   const saveSessionName = useCallback(async () => {
-    if (!session) return;
+    if (!session) {return;}
 
     if (editingSessionName.trim() && editingSessionName.trim() !== session.session_name) {
       try {
@@ -57,7 +57,7 @@ export function useSessionEditor({
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {throw error;}
 
         const updatedSession = { ...session, session_name: editingSessionName.trim() };
         if (onSessionUpdate) {
@@ -73,13 +73,13 @@ export function useSessionEditor({
   }, [session, editingSessionName, onSessionUpdate, supabase]);
 
   const cancelEditingSessionName = useCallback(() => {
-    if (!session) return;
+    if (!session) {return;}
     setEditingSessionName(session.session_name || '');
     setIsEditingSessionName(false);
   }, [session]);
 
   const handleCategoryChange = useCallback(async (newCategory: string) => {
-    if (!session || newCategory === session.category) return;
+    if (!session || newCategory === session.category) {return;}
 
     setIsChangingCategory(true);
     try {
@@ -90,7 +90,7 @@ export function useSessionEditor({
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       const updatedSession = { ...session, category: newCategory };
       if (onSessionUpdate) {

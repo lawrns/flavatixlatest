@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { getSupabaseClient, supabase } from '@/lib/supabase';
+import { getSupabaseClient } from '@/lib/supabase';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { useDeleteConfirmation } from '@/hooks/useDeleteConfirmation';
 import { toast } from '@/lib/toast';
-import { Trophy, Clock, Target, ChevronLeft, ChevronRight, Eye, EyeOff } from 'lucide-react';
+import { Trophy, Target, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface CompetitionItem {
   id: string;

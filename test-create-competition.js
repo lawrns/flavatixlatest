@@ -8,7 +8,7 @@ const envContent = fs.readFileSync(envPath, 'utf8');
 const envVars = {};
 envContent.split('\n').forEach(line => {
   const [key, value] = line.split('=');
-  if (key && value) envVars[key.trim()] = value.trim();
+  if (key && value) {envVars[key.trim()] = value.trim();}
 });
 
 const supabaseUrl = envVars.NEXT_PUBLIC_SUPABASE_URL;
@@ -53,7 +53,7 @@ async function testCompetitionCreation() {
       .select()
       .single();
 
-    if (tastingError) throw new Error(`Tasting Error: ${tastingError.message} (${tastingError.code})`);
+    if (tastingError) {throw new Error(`Tasting Error: ${tastingError.message} (${tastingError.code})`);}
     console.log('Tasting created:', tasting.id);
 
     // 2. Create item
@@ -70,7 +70,7 @@ async function testCompetitionCreation() {
       .select()
       .single();
 
-    if (itemError) throw new Error(`Item Error: ${itemError.message} (${itemError.code})`);
+    if (itemError) {throw new Error(`Item Error: ${itemError.message} (${itemError.code})`);}
     console.log('Item created:', item.id);
 
     // 3. Create metadata
@@ -84,7 +84,7 @@ async function testCompetitionCreation() {
         is_blind: true
       });
 
-    if (metaError) throw new Error(`Metadata Error: ${metaError.message} (${metaError.code})`);
+    if (metaError) {throw new Error(`Metadata Error: ${metaError.message} (${metaError.code})`);}
     console.log('Metadata created');
 
     // 4. Create answer key
@@ -101,7 +101,7 @@ async function testCompetitionCreation() {
         points: 5
       });
 
-    if (keyError) throw new Error(`Answer Key Error: ${keyError.message} (${keyError.code})`);
+    if (keyError) {throw new Error(`Answer Key Error: ${keyError.message} (${keyError.code})`);}
     console.log('Answer key created');
 
     console.log('✅ Competition creation flow verified successfully!');

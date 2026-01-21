@@ -7,7 +7,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import startSessionHandler from '@/pages/api/tastings/study/[id]/start';
 import { createMockRequest, createMockResponse, expectSuccess, expectError } from '@/lib/test-utils/utils';
 import { createMockAuthHeaders } from '@/lib/test-utils/mocks';
-import { testUser, testUser2 } from '@/lib/test-utils/fixtures';
+import { testUser } from '@/lib/test-utils/fixtures';
 
 // Mock dependencies
 jest.mock('@/lib/supabase');

@@ -89,7 +89,7 @@ function getNavigationItems(items, currentIndex) {
 }
 
 let currentItemIndex = 0;
-let navigationItems = getNavigationItems(mockItems, currentItemIndex);
+const navigationItems = getNavigationItems(mockItems, currentItemIndex);
 
 console.log('✅ Navigation items created:', navigationItems.length);
 console.log('✅ Current item (index 0):', navigationItems[0].name);

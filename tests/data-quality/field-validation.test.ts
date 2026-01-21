@@ -6,7 +6,6 @@
 import {
   generateTestTasting,
   generateTestTastingItem,
-  generateTestComment,
   generateLongStrings,
   generateBoundaryScores,
   generateUUID,

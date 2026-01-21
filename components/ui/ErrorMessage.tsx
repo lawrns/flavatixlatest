@@ -14,7 +14,7 @@
  */
 
 import React, { ReactNode } from 'react';
-import { X, AlertCircle, XCircle, AlertTriangle, Info } from 'lucide-react';
+import { X, XCircle, AlertTriangle, Info } from 'lucide-react';
 
 export interface ErrorMessageProps {
   title: string;

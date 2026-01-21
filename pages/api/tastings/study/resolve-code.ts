@@ -7,7 +7,6 @@ import {
   RATE_LIMITS,
   sendError,
   sendSuccess,
-  type ApiContext,
 } from '@/lib/api/middleware';
 import { z } from 'zod';
 

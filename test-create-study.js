@@ -8,7 +8,7 @@ const envContent = fs.readFileSync(envPath, 'utf8');
 const envVars = {};
 envContent.split('\n').forEach(line => {
   const [key, value] = line.split('=');
-  if (key && value) envVars[key.trim()] = value.trim();
+  if (key && value) {envVars[key.trim()] = value.trim();}
 });
 
 const supabaseUrl = envVars.NEXT_PUBLIC_SUPABASE_URL;
@@ -54,7 +54,7 @@ async function testStudyCreation() {
       .select()
       .single();
 
-    if (tastingError) throw new Error(`Tasting Error: ${tastingError.message} (${tastingError.code})`);
+    if (tastingError) {throw new Error(`Tasting Error: ${tastingError.message} (${tastingError.code})`);}
     console.log('Study Session created:', tasting.id);
 
     console.log('✅ Study creation flow verified successfully!');

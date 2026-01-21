@@ -9,7 +9,6 @@ import {
   generateTestComment,
   generateTestLike,
   generateTestFollow,
-  generateTestUser,
   generateOrphanedRecords,
   generateUUID,
 } from '@/lib/test-utils/generators/testDataGenerator';

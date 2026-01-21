@@ -24,7 +24,7 @@ Sentry.init({
   beforeSend(event, hint) {
     // Call base beforeSend
     const baseEvent = clientConfig.beforeSend?.(event, hint);
-    if (!baseEvent) return null;
+    if (!baseEvent) {return null;}
 
     // Add user context if available (from localStorage or state)
     if (typeof window !== 'undefined') {

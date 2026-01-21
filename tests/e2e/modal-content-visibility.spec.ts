@@ -21,7 +21,7 @@ const SMALL_MOBILE_VIEWPORT = { width: 320, height: 568 };
 async function isElementFullyVisible(page: Page, selector: string): Promise<boolean> {
   return await page.evaluate((sel) => {
     const element = document.querySelector(sel);
-    if (!element) return false;
+    if (!element) {return false;}
 
     const rect = element.getBoundingClientRect();
     const windowHeight = window.innerHeight;
@@ -44,7 +44,7 @@ async function isElementFullyVisible(page: Page, selector: string): Promise<bool
 async function getElementBottomPosition(page: Page, selector: string): Promise<number | null> {
   return await page.evaluate((sel) => {
     const element = document.querySelector(sel);
-    if (!element) return null;
+    if (!element) {return null;}
     const rect = element.getBoundingClientRect();
     return rect.bottom;
   }, selector);

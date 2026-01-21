@@ -36,7 +36,7 @@ async function checkNoHorizontalOverflow(page: Page): Promise<boolean> {
 async function getZIndex(page: Page, selector: string): Promise<number> {
   return await page.evaluate((sel) => {
     const el = document.querySelector(sel);
-    if (!el) return 0;
+    if (!el) {return 0;}
     const style = window.getComputedStyle(el);
     return parseInt(style.zIndex) || 0;
   }, selector);
@@ -46,7 +46,7 @@ async function getZIndex(page: Page, selector: string): Promise<number> {
 async function getElementDimensions(page: Page, selector: string): Promise<{ width: number; height: number } | null> {
   return await page.evaluate((sel) => {
     const el = document.querySelector(sel);
-    if (!el) return null;
+    if (!el) {return null;}
     const rect = el.getBoundingClientRect();
     return { width: rect.width, height: rect.height };
   }, selector);
@@ -180,7 +180,7 @@ test.describe('Requirement 2: Bottom Navigation Consistency', () => {
       // Content should still be visible above the nav
       const contentVisible = await page.evaluate(() => {
         const nav = document.querySelector('footer nav, nav[class*="fixed"]');
-        if (!nav) return true;
+        if (!nav) {return true;}
         const navRect = nav.getBoundingClientRect();
         // Check if there's content above the nav
         return navRect.top > 100;
@@ -449,7 +449,7 @@ test.describe('Requirement 9: Focus and Keyboard Navigation', () => {
     // Check if focused element has visible focus
     const hasFocusRing = await page.evaluate(() => {
       const focused = document.activeElement;
-      if (!focused) return false;
+      if (!focused) {return false;}
       const style = window.getComputedStyle(focused);
       return style.outline !== 'none' || 
              style.boxShadow !== 'none' ||

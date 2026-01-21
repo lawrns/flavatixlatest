@@ -12,7 +12,7 @@ import {
   expectError,
 } from '@/lib/test-utils/utils';
 import { createMockAuthHeaders } from '@/lib/test-utils/mocks';
-import { testUser, testUser2 } from '@/lib/test-utils/fixtures';
+import { testUser } from '@/lib/test-utils/fixtures';
 
 // Mock dependencies
 jest.mock('@/lib/supabase');

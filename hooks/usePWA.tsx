@@ -92,7 +92,7 @@ export function usePWA() {
       // Handle updates
       registration.addEventListener('updatefound', () => {
         const newWorker = registration.installing;
-        if (!newWorker) return;
+        if (!newWorker) {return;}
 
         newWorker.addEventListener('statechange', () => {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
@@ -222,7 +222,7 @@ export function usePWA() {
 export function PWAInstallBanner() {
   const { canInstall, installApp } = usePWA();
 
-  if (!canInstall) return null;
+  if (!canInstall) {return null;}
 
   return (
     <div className="fixed bottom-24 left-4 right-4 md:left-auto md:right-8 md:w-96 z-30">
@@ -267,7 +267,7 @@ export function PWAInstallBanner() {
 export function OfflineIndicator() {
   const { isOffline } = usePWA();
 
-  if (!isOffline) return null;
+  if (!isOffline) {return null;}
 
   return (
     <div className="fixed top-0 left-0 right-0 bg-yellow-500 text-white px-4 py-2 text-center text-sm font-medium z-50">

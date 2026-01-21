@@ -44,7 +44,7 @@ async function applyMigration() {
       const trimmed = line.trim();
 
       // Skip empty lines and comments
-      if (!trimmed || trimmed.startsWith('--')) continue;
+      if (!trimmed || trimmed.startsWith('--')) {continue;}
 
       // Handle multiline comments
       if (trimmed.startsWith('/*')) {
@@ -55,7 +55,7 @@ async function applyMigration() {
         inComment = false;
         continue;
       }
-      if (inComment) continue;
+      if (inComment) {continue;}
 
       currentStatement += line + '\n';
 

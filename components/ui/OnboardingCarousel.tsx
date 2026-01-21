@@ -41,7 +41,7 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
 
   // Trigger entrance animation on card change
   useEffect(() => {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion) {return;}
     setIsAnimating(true);
     const timer = setTimeout(() => setIsAnimating(false), 500);
     return () => clearTimeout(timer);

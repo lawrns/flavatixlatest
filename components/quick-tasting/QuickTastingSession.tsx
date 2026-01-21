@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { getSupabaseClient } from '../../lib/supabase';
 import { roleService } from '../../lib/roleService';
-import { studyModeService } from '../../lib/studyModeService';
 import TastingItem from './TastingItem';
 import CompetitionRanking from './CompetitionRanking';
 import { EditTastingDashboard } from './EditTastingDashboard';
 import { ItemSuggestions } from './ItemSuggestions';
-import { CATEGORIES } from './CategoryDropdown';
 import { SessionHeader } from './SessionHeader';
 import { SessionNavigation } from './SessionNavigation';
 import {
@@ -18,12 +16,9 @@ import { toast } from '../../lib/toast';
 import { Utensils } from 'lucide-react';
 import { logger } from '../../lib/logger';
 import {
-  QuickTasting,
   TastingItemData,
   QuickTastingSessionProps,
   UserPermissions,
-  NavigationItem,
-  getDisplayCategoryName,
 } from './types';
 
 // Types imported from ./types.ts

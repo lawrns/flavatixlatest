@@ -6,8 +6,6 @@ import { toast } from '../lib/toast';
 import CommentsModal from '../components/social/CommentsModal';
 import {
   SocialPostCard,
-  getCategoryColor,
-  formatTimeAgo,
 } from '../components/social/SocialPostCard';
 import { SocialFeedFilters } from '../components/social/SocialFeedFilters';
 import notificationService from '@/lib/notificationService';
@@ -18,7 +16,6 @@ import {
   useLikeTasting,
   useFollowUser,
   useShareTasting,
-  TastingPost,
 } from '../lib/query/hooks/useFeed';
 
 export default function SocialPage() {

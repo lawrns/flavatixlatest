@@ -8,7 +8,7 @@ import itemsHandler from '@/pages/api/tastings/[id]/items/index';
 import itemHandler from '@/pages/api/tastings/[id]/items/[itemId]';
 import { createMockRequest, createMockResponse, expectSuccess, expectError } from '@/lib/test-utils/utils';
 import { createMockAuthHeaders } from '@/lib/test-utils/mocks';
-import { testUser, testUser2 } from '@/lib/test-utils/fixtures';
+import { testUser } from '@/lib/test-utils/fixtures';
 
 // Mock dependencies
 jest.mock('@/lib/supabase');

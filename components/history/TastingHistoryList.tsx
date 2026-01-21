@@ -18,8 +18,8 @@ interface TastingHistoryListProps {
 
 const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
   filters,
-  onTastingClick,
-  onTastingsLoaded,
+  onTastingClick: _onTastingClick,
+  onTastingsLoaded: _onTastingsLoaded,
   limit = 20,
 }) => {
   const { user } = useAuth();
@@ -56,7 +56,7 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
     }
   };
 
-  const refreshTastings = () => {
+  const _refreshTastings = () => {
     loadTastings(true);
   };
 
@@ -118,7 +118,7 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
 
   // Check if user scrolled near the bottom to load more
   const handleScroll = useCallback(() => {
-    if (!parentRef.current || loading || !hasMore) return;
+    if (!parentRef.current || loading || !hasMore) {return;}
 
     const { scrollTop, scrollHeight, clientHeight } = parentRef.current;
     // Load more when within 200px of the bottom

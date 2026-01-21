@@ -54,7 +54,7 @@ export function useRealtimeCollaboration({
 
   // Initialize realtime connection
   useEffect(() => {
-    if (!user || !sessionId) return;
+    if (!user || !sessionId) {return;}
 
     const initRealtime = async () => {
       try {
@@ -234,7 +234,7 @@ export function useRealtimeCollaboration({
  * Component to display active collaborators
  */
 export function CollaboratorPresence({ users }: { users: PresenceState[] }) {
-  if (users.length === 0) return null;
+  if (users.length === 0) {return null;}
 
   return (
     <div className="flex items-center gap-2 px-3 py-2 bg-primary/5 rounded-lg">
@@ -274,7 +274,7 @@ export function RemoteCursor({ cursor }: { cursor: Cursor }) {
     return () => clearTimeout(timeout);
   }, [cursor.timestamp]);
 
-  if (!visible) return null;
+  if (!visible) {return null;}
 
   return (
     <div
@@ -307,7 +307,7 @@ export function TypingIndicator({ users, itemId, field }: {
 }) {
   const typingUsers = users.filter(u => u.userId && u.userName);
 
-  if (typingUsers.length === 0) return null;
+  if (typingUsers.length === 0) {return null;}
 
   const names = typingUsers.map(u => u.userName).join(', ');
   const verb = typingUsers.length === 1 ? 'is' : 'are';

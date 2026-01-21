@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { getSupabaseClient, Database } from './supabase';
+import { getSupabaseClient } from './supabase';
 
 export interface UserProfile {
   user_id: string;

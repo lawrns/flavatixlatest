@@ -17,7 +17,9 @@ export function formatDate(
   options?: Intl.DateTimeFormatOptions
 ): string {
   const d = typeof date === 'string' ? new Date(date) : date;
-  if (isNaN(d.getTime())) return '';
+  if (isNaN(d.getTime())) {
+    return '';
+  }
 
   return new Intl.DateTimeFormat(DEFAULT_LOCALE, {
     year: 'numeric',
@@ -34,7 +36,9 @@ export function formatDate(
  */
 export function formatDateTime(date: Date | string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
-  if (isNaN(d.getTime())) return '';
+  if (isNaN(d.getTime())) {
+    return '';
+  }
 
   return new Intl.DateTimeFormat(DEFAULT_LOCALE, {
     year: 'numeric',
@@ -52,7 +56,9 @@ export function formatDateTime(date: Date | string): string {
  */
 export function formatRelativeTime(date: Date | string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
-  if (isNaN(d.getTime())) return '';
+  if (isNaN(d.getTime())) {
+    return '';
+  }
 
   const now = new Date();
   const diffMs = now.getTime() - d.getTime();
@@ -66,12 +72,24 @@ export function formatRelativeTime(date: Date | string): string {
 
   const rtf = new Intl.RelativeTimeFormat(DEFAULT_LOCALE, { numeric: 'auto' });
 
-  if (diffSeconds < 60) return rtf.format(-diffSeconds, 'second');
-  if (diffMinutes < 60) return rtf.format(-diffMinutes, 'minute');
-  if (diffHours < 24) return rtf.format(-diffHours, 'hour');
-  if (diffDays < 7) return rtf.format(-diffDays, 'day');
-  if (diffWeeks < 4) return rtf.format(-diffWeeks, 'week');
-  if (diffMonths < 12) return rtf.format(-diffMonths, 'month');
+  if (diffSeconds < 60) {
+    return rtf.format(-diffSeconds, 'second');
+  }
+  if (diffMinutes < 60) {
+    return rtf.format(-diffMinutes, 'minute');
+  }
+  if (diffHours < 24) {
+    return rtf.format(-diffHours, 'hour');
+  }
+  if (diffDays < 7) {
+    return rtf.format(-diffDays, 'day');
+  }
+  if (diffWeeks < 4) {
+    return rtf.format(-diffWeeks, 'week');
+  }
+  if (diffMonths < 12) {
+    return rtf.format(-diffMonths, 'month');
+  }
   return rtf.format(-diffYears, 'year');
 }
 
@@ -136,8 +154,12 @@ export function formatList(
   type: 'conjunction' | 'disjunction' = 'conjunction'
 ): string {
   // Fallback implementation since Intl.ListFormat may not be in TS types
-  if (items.length === 0) return '';
-  if (items.length === 1) return items[0];
+  if (items.length === 0) {
+    return '';
+  }
+  if (items.length === 1) {
+    return items[0];
+  }
   if (items.length === 2) {
     return type === 'conjunction'
       ? `${items[0]} and ${items[1]}`

@@ -1,5 +1,5 @@
 import { UserProfile } from '../../lib/profileService';
-import { getUserTastingStats, TastingStats } from '../../lib/historyService';
+import { getUserTastingStats } from '../../lib/historyService';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/SimpleAuthContext';
 import { AvatarWithFallback } from '../ui/AvatarWithFallback';

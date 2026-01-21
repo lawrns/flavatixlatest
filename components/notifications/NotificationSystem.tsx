@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { Card, CardContent, CardHeader } from '../ui/Card';
+import { Card, CardContent } from '../ui/Card';
 import Button from '../ui/Button';
-import { Modal, ModalBody, ModalFooter } from '../ui/Modal';
+import { Modal, ModalBody } from '../ui/Modal';
 import {
   Bell,
   X,
   CheckCircle,
-  AlertCircle,
   Info,
   Star,
   UserPlus,

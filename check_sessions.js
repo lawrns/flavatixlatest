@@ -57,9 +57,9 @@ async function checkSessions() {
       console.log(`\n📋 Categories for latest session (${sessions[0].name}):`);
       categories.forEach(category => {
         const types = [];
-        if (category.has_text) types.push('Text');
-        if (category.has_scale) types.push(`Scale(1-${category.scale_max})`);
-        if (category.has_boolean) types.push('Yes/No');
+        if (category.has_text) {types.push('Text');}
+        if (category.has_scale) {types.push(`Scale(1-${category.scale_max})`);}
+        if (category.has_boolean) {types.push('Yes/No');}
         const ranked = category.rank_in_summary ? ' (Ranked)' : '';
         console.log(`   ✅ ${category.name}: ${types.join(', ')}${ranked}`);
       });

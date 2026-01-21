@@ -140,7 +140,7 @@ export function useTastingSession({
 
   // Load user role and permissions
   const loadUserRole = useCallback(async () => {
-    if (!session) return;
+    if (!session) {return;}
 
     // Quick tasting doesn't use roles - set default permissions
     if (session.mode === 'quick') {
@@ -192,7 +192,7 @@ export function useTastingSession({
 
   // Load tasting items
   const loadTastingItems = useCallback(async () => {
-    if (!session) return;
+    if (!session) {return;}
 
     try {
       logger.debug('TastingSession', 'Loading items for session', { 
@@ -207,7 +207,7 @@ export function useTastingSession({
         .eq('tasting_id', session.id)
         .order('created_at', { ascending: true });
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       logger.debug('TastingSession', `Loaded ${(data || []).length} items`);
       setItems(data || []);
@@ -219,7 +219,7 @@ export function useTastingSession({
 
   // Extract descriptors from item content
   const extractDescriptors = useCallback(async (itemId: string, itemData: TastingItemData) => {
-    if (!session) return;
+    if (!session) {return;}
 
     try {
       const hasContent = itemData.notes?.trim() || itemData.aroma?.trim() || itemData.flavor?.trim();
@@ -293,7 +293,7 @@ export function useTastingSession({
 
   // Add new item
   const addNewItem = useCallback(async () => {
-    if (!session) return;
+    if (!session) {return;}
 
     logger.debug('TastingSession', 'Adding new item', { sessionId: session.id });
 
@@ -332,7 +332,7 @@ export function useTastingSession({
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       logger.debug('TastingSession', 'Item created successfully', { itemId: data.id });
       setItems(prev => [...prev, data]);
@@ -354,7 +354,7 @@ export function useTastingSession({
 
   // Update item
   const updateItem = useCallback(async (itemId: string, updates: Partial<TastingItemData>) => {
-    if (!session) return;
+    if (!session) {return;}
 
     logger.debug('TastingSession', `Updating item: ${itemId}`, { updates });
 
@@ -366,7 +366,7 @@ export function useTastingSession({
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       const updatedItems = items.map(item =>
         item.id === itemId ? { ...item, ...data } : item
@@ -400,7 +400,7 @@ export function useTastingSession({
 
   // Complete session
   const completeSession = useCallback(async () => {
-    if (!session) return;
+    if (!session) {return;}
 
     logger.debug('TastingSession', 'Completing session', { sessionId: session.id });
 
@@ -423,7 +423,7 @@ export function useTastingSession({
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       logger.debug('TastingSession', 'Session completed successfully');
       toast.success('Tasting session completed!');
@@ -438,7 +438,7 @@ export function useTastingSession({
 
   // Load session data on mount
   useEffect(() => {
-    if (!session) return;
+    if (!session) {return;}
 
     logger.debug('TastingSession', 'Loading session', { 
       sessionId: session.id, 

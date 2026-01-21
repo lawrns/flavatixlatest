@@ -4,7 +4,7 @@
 
 import { createMocks } from 'node-mocks-http';
 import joinHandler from '@/pages/api/tastings/study/join';
-import { mockUser, mockStudyTasting } from '../fixtures';
+import { mockUser } from '../fixtures';
 
 // Mock Supabase
 jest.mock('@/lib/supabase', () => ({

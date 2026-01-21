@@ -9,7 +9,7 @@ import resolveCodeHandler from '@/pages/api/tastings/study/resolve-code';
 import startSessionHandler from '@/pages/api/tastings/study/[id]/start';
 import suggestionsHandler from '@/pages/api/tastings/[id]/suggestions';
 import moderateHandler from '@/pages/api/tastings/[id]/suggestions/[suggestionId]/moderate';
-import { createMockRequest, createMockResponse, expectSuccess } from '@/lib/test-utils/utils';
+import { createMockRequest, createMockResponse } from '@/lib/test-utils/utils';
 import { createMockAuthHeaders } from '@/lib/test-utils/mocks';
 import { testUser, testUser2 } from '@/lib/test-utils/fixtures';
 

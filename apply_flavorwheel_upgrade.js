@@ -38,7 +38,7 @@ async function applyFlavorWheelUpgrade() {
 
     for (let i = 0; i < statements.length; i++) {
       const statement = statements[i];
-      if (statement.length === 0) continue;
+      if (statement.length === 0) {continue;}
 
       console.log(`⚡ Executing statement ${i + 1}/${statements.length}...`);
 

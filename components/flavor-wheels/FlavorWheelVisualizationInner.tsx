@@ -89,7 +89,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
 
   // Share functionality
   const handleShare = async () => {
-    if (!wheelData) return;
+    if (!wheelData) {return;}
 
     if (navigator.share) {
       try {

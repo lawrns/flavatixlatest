@@ -3,7 +3,7 @@
  * Ensures the application is accessible to screen readers and keyboard-only users
  */
 
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
@@ -393,7 +393,7 @@ describe('Accessibility: Keyboard Navigation', () => {
         <div
           role="dialog"
           onKeyDown={(e) => {
-            if (e.key === 'Escape') handleClose();
+            if (e.key === 'Escape') {handleClose();}
           }}
           tabIndex={-1}
         >

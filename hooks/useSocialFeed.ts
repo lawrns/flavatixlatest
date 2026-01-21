@@ -134,7 +134,7 @@ export function useSocialFeed({
   }, [posts, activeTab, categoryFilter]);
 
   const loadSocialFeed = useCallback(async (pageNum: number = 0, append: boolean = false) => {
-    if (!userId) return;
+    if (!userId) {return;}
 
     try {
       if (!append) {
@@ -292,7 +292,7 @@ export function useSocialFeed({
   }, [userId, postsPerPage]);
 
   const loadMore = useCallback(async () => {
-    if (!hasMore || loadingMore) return;
+    if (!hasMore || loadingMore) {return;}
     await loadSocialFeed(page + 1, true);
   }, [hasMore, loadingMore, page, loadSocialFeed]);
 
@@ -483,10 +483,10 @@ export function useSocialFeed({
     const now = new Date();
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
 
-    if (diffInHours < 1) return 'Just now';
-    if (diffInHours < 24) return `${diffInHours}h`;
+    if (diffInHours < 1) {return 'Just now';}
+    if (diffInHours < 24) {return `${diffInHours}h`;}
     const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `${diffInDays}d`;
+    if (diffInDays < 7) {return `${diffInDays}d`;}
     const diffInWeeks = Math.floor(diffInDays / 7);
     return `${diffInWeeks}w`;
   }, []);
