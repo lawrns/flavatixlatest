@@ -199,6 +199,16 @@ export default function FlavorWheelsPage() {
         setWheelData(data.wheelData);
         setCached(data.cached || false);
 
+        console.log('🔍 FLAVOR WHEEL DEBUG:', {
+          hasWheelData: !!data.wheelData,
+          categoriesCount: data.wheelData?.categories?.length,
+          categories: data.wheelData?.categories?.map((c: { name: string }) => c.name),
+          viewMode,
+          loading,
+          error,
+          user: !!user
+        });
+
         if (data.wheelData?.categories?.length === 0) {
           setError(
             'No flavor descriptors found. Add some tasting notes or reviews to generate your flavor wheel!'
@@ -613,7 +623,17 @@ export default function FlavorWheelsPage() {
             />
           )}
 
-          {user && wheelData && !loading && !error && wheelData.categories.length > 0 && (
+          {user && wheelData && !loading && !error && wheelData.categories.length > 0 && (() => {
+            console.log('🎨 RENDERING WHEEL:', {
+              user: !!user,
+              wheelData: !!wheelData,
+              loading,
+              error,
+              categoriesLength: wheelData?.categories?.length,
+              viewMode
+            });
+            return true;
+          })() && (
             <div className="flex flex-col items-center overflow-hidden">
               {/* Top descriptors chips */}
               <div className="w-full mb-4">
