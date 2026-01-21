@@ -63,8 +63,8 @@ class SimpleBarcodeReader {
             return;
           }
         }
-      } catch (error) {
-        console.log('BarcodeDetector not available, using fallback');
+      } catch {
+        // BarcodeDetector not available, using fallback
       }
 
       // Continue scanning
@@ -162,7 +162,6 @@ export default function BarcodeScanner({
       return;
     } // Already detected
 
-    console.log('Barcode detected:', code);
     setDetectedCode(code);
 
     // Haptic feedback if available
@@ -437,7 +436,7 @@ export default function BarcodeScanner({
 }
 
 // Add to your global styles
-const scanAnimation = `
+const _scanAnimation = `
 @keyframes scan {
   0% { transform: translateY(-100%); }
   50% { transform: translateY(100%); }
