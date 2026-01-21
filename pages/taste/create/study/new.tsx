@@ -294,7 +294,7 @@ const NewStudyTastingPage: React.FC = () => {
         return;
       }
 
-      console.log('[Study Mode] Sending create request to API...');
+      logger.debug('StudyMode', 'Sending create request to API');
 
       // Get CSRF token from cookie
       const getCsrfToken = () => {
@@ -416,7 +416,7 @@ const NewStudyTastingPage: React.FC = () => {
 
                   <div>
                     <label className="block text-small font-body font-medium text-text-primary mb-xs">
-                      What's being tasted? *
+                      What&apos;s being tasted? *
                     </label>
                     <Combobox
                       options={BASE_CATEGORIES}
@@ -458,7 +458,7 @@ const NewStudyTastingPage: React.FC = () => {
               {form.categories.length === 0 ? (
                 <div className="text-center py-lg border-2 border-dashed border-border-default rounded-lg">
                   <p className="text-text-secondary">
-                    No categories yet. Click "Add Category" to get started.
+                    No categories yet. Click &quot;Add Category&quot; to get started.
                   </p>
                 </div>
               ) : (
@@ -713,7 +713,7 @@ const NewStudyTastingPage: React.FC = () => {
               </div>
 
               <div>
-                <h4 className="font-semibold text-text-primary mb-xs">What's being tasted?</h4>
+                <h4 className="font-semibold text-text-primary mb-xs">What&apos;s being tasted?</h4>
                 <p className="text-text-secondary">{form.baseCategory || 'Not selected'}</p>
               </div>
 
