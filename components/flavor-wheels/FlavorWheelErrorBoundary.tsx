@@ -59,13 +59,13 @@ class FlavorWheelErrorBoundary extends Component<Props, State> {
           <div className="w-20 h-20 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6">
             <AlertCircle className="w-10 h-10 text-orange-500" />
           </div>
-          
+
           <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 text-center">
-            We couldn't draw this flavor wheel
+            We couldn&apos;t draw this flavor wheel
           </h3>
-          
+
           <p className="text-gray-600 dark:text-gray-400 text-center max-w-md mb-6">
-            Something went wrong while rendering the visualization. 
+            Something went wrong while rendering the visualization.
             Try reloading or editing your tasting notes.
           </p>
 
@@ -77,7 +77,7 @@ class FlavorWheelErrorBoundary extends Component<Props, State> {
               <RefreshCw className="w-4 h-4" />
               Try Again
             </button>
-            
+
             <button
               onClick={() => window.location.reload()}
               className="px-5 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"

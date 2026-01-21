@@ -86,7 +86,7 @@ export const UnifiedFlavorWheelPage: React.FC<UnifiedFlavorWheelPageProps> = ({
   if (!wheelData || wheelData.categories.length === 0) {
     return (
       <div className="text-center p-8 text-text-secondary">
-        <p>No flavor data yet. Start tasting and we'll build your flavor wheel!</p>
+        <p>No flavor data yet. Start tasting and we&apos;ll build your flavor wheel!</p>
       </div>
     );
   }
