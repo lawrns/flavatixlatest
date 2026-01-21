@@ -139,8 +139,3 @@ const StudyModeLanding: React.FC = () => {
 };
 
 export default StudyModeLanding;
-
-// Disable static generation for this page
-export async function getServerSideProps() {
-  return { props: {} };
-}

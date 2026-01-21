@@ -231,7 +231,32 @@ export function useInfiniteFeed(
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
     enabled: !!userId,
-    staleTime: STALE_TIME.SHORT,
+    staleTime: 1000 * 60 * 5, // 5 minutes - reduce refetches
+    gcTime: 1000 * 60 * 10, // 10 minutes - keep cached data longer
+    select: (data) => ({
+      pages: data.pages.map(page => ({
+        ...page,
+        posts: page.posts.map(post => ({
+          id: post.id,
+          user_id: post.user_id,
+          category: post.category,
+          session_name: post.session_name,
+          notes: post.notes,
+          average_score: post.average_score,
+          created_at: post.created_at,
+          completed_at: post.completed_at,
+          total_items: post.total_items,
+          completed_items: post.completed_items,
+          user: post.user,
+          stats: post.stats,
+          isLiked: post.isLiked,
+          isFollowed: post.isFollowed,
+          items: post.items,
+          photos: post.photos,
+        })),
+      })),
+      pageParams: data.pageParams,
+    }),
   });
 }
 

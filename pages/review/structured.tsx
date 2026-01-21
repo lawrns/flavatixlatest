@@ -753,10 +753,3 @@ const StructuredReviewPage: React.FC = () => {
 };
 
 export default StructuredReviewPage;
-
-// Disable static generation for this page
-export async function getServerSideProps() {
-  return {
-    props: {},
-  };
-}

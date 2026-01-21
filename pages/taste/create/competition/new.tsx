@@ -1283,7 +1283,3 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
 };
 
 export default NewCompetitionPage;
-
-export async function getServerSideProps() {
-  return { props: {} };
-}

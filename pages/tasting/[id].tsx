@@ -269,8 +269,3 @@ const TastingSessionPage: React.FC = () => {
 };
 
 export default TastingSessionPage;
-
-// Disable static generation for this page
-export async function getServerSideProps() {
-  return { props: {} };
-}

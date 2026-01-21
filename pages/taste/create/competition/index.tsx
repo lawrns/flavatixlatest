@@ -228,7 +228,3 @@ const CompetitionIndexPage: React.FC = () => {
 };
 
 export default CompetitionIndexPage;
-
-export async function getServerSideProps() {
-  return { props: {} };
-}

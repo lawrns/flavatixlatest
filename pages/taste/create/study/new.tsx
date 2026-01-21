@@ -765,8 +765,3 @@ const NewStudyTastingPage: React.FC = () => {
 };
 
 export default NewStudyTastingPage;
-
-// Disable static generation for this page
-export async function getServerSideProps() {
-  return { props: {} };
-}

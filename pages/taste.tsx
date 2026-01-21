@@ -194,10 +194,3 @@ const TastePage: React.FC = () => {
 };
 
 export default TastePage;
-
-// Disable static generation for this page
-export async function getServerSideProps() {
-  return {
-    props: {}
-  };
-}

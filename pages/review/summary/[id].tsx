@@ -448,8 +448,3 @@ const ReviewSummaryPage: React.FC = () => {
 };
 
 export default ReviewSummaryPage;
-
-// Disable static generation for this page
-export async function getServerSideProps() {
-  return { props: {} };
-}

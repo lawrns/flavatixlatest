@@ -35,7 +35,7 @@ const ReviewModeCard: React.FC<ReviewModeCardProps> = ({
       <div className="flex items-center gap-4">
         {/* Icon Badge */}
         <div
-          className={`flex-shrink-0 w-12 h-12 rounded-full ${iconBgColor} 
+          className={`flex-shrink-0 w-12 h-12 rounded-full ${iconBgColor}
                       flex items-center justify-center`}
         >
           <Icon className={`w-6 h-6 ${iconColor}`} />
@@ -197,7 +197,7 @@ const ReviewPage: React.FC = () => {
   const helpButton = (
     <button
       onClick={() => setShowHelp(true)}
-      className="flex-shrink-0 p-2 rounded-full hover:bg-gemini-card dark:hover:bg-zinc-800 
+      className="flex-shrink-0 p-2 rounded-full hover:bg-gemini-card dark:hover:bg-zinc-800
                  transition-colors text-gemini-text-muted hover:text-gemini-text-gray"
       aria-label="Help"
     >
@@ -243,8 +243,3 @@ const ReviewPage: React.FC = () => {
 };
 
 export default ReviewPage;
-
-// Disable static generation for this page
-export async function getServerSideProps() {
-  return { props: {} };
-}

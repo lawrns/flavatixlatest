@@ -38,9 +38,3 @@ const CompetitionPage: React.FC = () => {
 };
 
 export default CompetitionPage;
-
-
-// Disable static generation for this page
-export async function getServerSideProps() {
-  return { props: {} };
-}

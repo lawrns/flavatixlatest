@@ -996,7 +996,3 @@ export default function FlavorWheelsPage() {
     </PageLayout>
   );
 }
-// Disable static generation for this page
-export async function getServerSideProps() {
-  return { props: {} };
-}

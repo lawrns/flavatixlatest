@@ -6,7 +6,3 @@ const AuthPage = () => {
 };
 
 export default AuthPage;
-// Disable static generation for this page
-export async function getServerSideProps() {
-  return { props: {} };
-}
