@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import { AvatarService, AvatarUploadResult } from '../lib/avatarService';
@@ -53,7 +54,7 @@ export default function AvatarUpload({
     setUploadProgress(0);
 
     try {
-      console.log('[AvatarUpload] Starting upload:', {
+      logger.debug('AvatarUpload', 'Starting upload', {
         fileName: file.name,
         fileSize: file.size,
         fileType: file.type,
@@ -81,11 +82,7 @@ export default function AvatarUpload({
       clearInterval(progressInterval);
       setUploadProgress(100);
 
-      console.log('[AvatarUpload] Upload result:', {
-        success: result.success,
-        hasUrl: !!result.url,
-        error: result.error,
-      });
+      logger.debug('AvatarUpload', 'Upload successful', { url: result.url });
 
       if (result.success && result.url) {
         setSuccess('Avatar uploaded successfully!');
