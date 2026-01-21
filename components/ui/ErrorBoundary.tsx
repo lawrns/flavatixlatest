@@ -50,7 +50,7 @@ class ErrorBoundary extends Component<Props, State> {
             timestamp: new Date().toISOString(),
           },
         });
-      } catch (_e) {
+      } catch {
         // Sentry not available, just log to console
       }
     }

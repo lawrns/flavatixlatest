@@ -11,7 +11,7 @@ import Container from '@/components/layout/Container';
 import { logger } from '@/lib/logger';
 import { normalizeCategoryId } from '@/lib/categoryPacks';
 
-type QuickTasting = Database['public']['Tables']['quick_tastings']['Row'];
+type _QuickTasting = Database['public']['Tables']['quick_tastings']['Row'];
 type QuickTastingWithNull = {
   id: string;
   user_id: string;
@@ -97,7 +97,7 @@ const QuickTastingPage: React.FC = () => {
       setCurrentSession(data);
       setCurrentStep('session');
       toast.success('Tasting session started!');
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to start tasting session');
     } finally {
       setIsLoading(false);
@@ -133,7 +133,7 @@ const QuickTastingPage: React.FC = () => {
     setCurrentStep('category');
   };
 
-  const handleGoToDashboard = () => {
+  const _handleGoToDashboard = () => {
     router.push('/dashboard');
   };
 

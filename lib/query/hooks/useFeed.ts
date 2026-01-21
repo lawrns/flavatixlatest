@@ -62,7 +62,7 @@ export interface FeedFilters {
 async function fetchSocialFeed(
   userId: string,
   pageParam: number = 0,
-  filters: FeedFilters = {},
+  _filters: FeedFilters = {},
   postsPerPage: number = 10
 ): Promise<{
   posts: TastingPost[];
@@ -118,7 +118,7 @@ async function fetchSocialFeed(
       .select('tasting_id, user_id')
       .in('tasting_id', tastingIds);
     likesData = likesResult.data || [];
-  } catch (_error) {
+  } catch {
     logger.debug('Feed', 'Likes table not available');
   }
 
@@ -128,7 +128,7 @@ async function fetchSocialFeed(
       .select('tasting_id')
       .in('tasting_id', tastingIds);
     commentsData = commentsResult.data || [];
-  } catch (_error) {
+  } catch {
     logger.debug('Feed', 'Comments table not available');
   }
 
@@ -138,7 +138,7 @@ async function fetchSocialFeed(
       .select('tasting_id')
       .in('tasting_id', tastingIds);
     sharesData = sharesResult.data || [];
-  } catch (_error) {
+  } catch {
     logger.debug('Feed', 'Shares table not available');
   }
 
@@ -150,7 +150,7 @@ async function fetchSocialFeed(
       .eq('user_id', userId)
       .in('tasting_id', tastingIds);
     userLikes = new Set((userLikesData || []).map((l: any) => l.tasting_id));
-  } catch (_error) {
+  } catch {
     logger.debug('Feed', 'User likes query failed');
   }
 
@@ -160,7 +160,7 @@ async function fetchSocialFeed(
       .select('following_id')
       .eq('follower_id', userId);
     userFollows = new Set((userFollowsData || []).map((f: any) => f.following_id));
-  } catch (_error) {
+  } catch {
     logger.debug('Feed', 'User follows query failed');
   }
 

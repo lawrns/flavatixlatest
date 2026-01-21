@@ -64,7 +64,7 @@ class ApiClient {
         const supabase = getSupabaseClient();
         const { data: { session } } = await supabase.auth.getSession();
         return session?.access_token || null;
-      } catch (_error) {
+      } catch {
         // Silently fail - auth token not available
         return null;
       }

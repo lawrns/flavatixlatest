@@ -128,7 +128,7 @@ async function handleDeleteAccount(
           avatar_url: null,
         })
         .eq('id', user.id);
-    } catch (err) {
+    } catch (_err) {
       logger.warn('AccountDeletion', 'Failed to anonymize profile');
     }
 
@@ -153,7 +153,7 @@ async function handleDeleteAccount(
           .from(table)
           .delete()
           .eq('user_id', user.id);
-      } catch (err) {
+      } catch (_err) {
         logger.warn('AccountDeletion', `Failed to delete from ${table}`);
       }
     }
@@ -164,7 +164,7 @@ async function handleDeleteAccount(
         .from('ai_extraction_logs')
         .delete()
         .eq('user_id', user.id);
-    } catch (err) {
+    } catch (_err) {
       logger.warn('AccountDeletion', 'Failed to delete AI logs');
     }
 

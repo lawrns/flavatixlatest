@@ -487,7 +487,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
 
         try {
           result = JSON.parse(responseText);
-        } catch (_parseError) {
+        } catch {
           console.error('[ERROR] Failed to parse extraction response:', responseText);
           return;
         }

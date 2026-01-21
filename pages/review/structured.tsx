@@ -48,7 +48,7 @@ const StructuredReviewPage: React.FC = () => {
 
   const [isUploading, setIsUploading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [_isLoading, setIsLoading] = useState(false);
   const [reviewId, setReviewId] = useState<string | null>(null);
 
   // Load existing review if id is provided in query params

@@ -97,7 +97,7 @@ export default function FlavorWheelsPage() {
     }>
   >([]);
   const [autoRegenerating, setAutoRegenerating] = useState(false);
-  const [exportingPDF, setExportingPDF] = useState(false);
+  const [_exportingPDF, setExportingPDF] = useState(false);
 
   // Load predefined categories
   useEffect(() => {

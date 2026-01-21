@@ -36,7 +36,7 @@ const CreateTastingPage: React.FC = () => {
   const router = useRouter();
   const { user, loading } = useAuth();
 
-  const [form, setForm] = useState<CreateTastingForm>({
+  const [form, _setForm] = useState<CreateTastingForm>({
     mode: 'study',
     study_approach: null,
     category: '',
@@ -52,7 +52,7 @@ const CreateTastingPage: React.FC = () => {
     template_id: null,
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [_isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -60,7 +60,7 @@ const CreateTastingPage: React.FC = () => {
     }
   }, [user, loading, router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const _handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!user) {

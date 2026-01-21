@@ -1,7 +1,7 @@
 /**
  * API Route: Social Follows
  * POST /api/social/follows - Toggle follow (create or delete)
- * 
+ *
  * Requires authentication
  */
 
@@ -26,7 +26,7 @@ import { z } from 'zod';
 const toggleFollowSchema = z.object({
   following_id: z.string().uuid('Invalid user ID'),
 }).refine(
-  (data) => {
+  (_data) => {
     // This will be checked in the handler with actual user context
     return true;
   },
@@ -144,4 +144,3 @@ async function toggleFollowHandler(
 export default createApiHandler({
   POST: withRateLimit(RATE_LIMITS.API)(withAuth(withValidation(toggleFollowSchema, toggleFollowHandler))),
 });
-

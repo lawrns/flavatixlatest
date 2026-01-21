@@ -100,7 +100,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
           url: window.location.href,
         });
       } catch (error) {
-        logger.debug('FlavorWheel', 'Error sharing', error);
+        logger.debug('FlavorWheel', 'Error sharing');
       }
     } else {
       // Fallback to clipboard
@@ -109,7 +109,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
         // TODO(ux): Show toast notification on successful clipboard copy.
         // Import toast from '@/lib/toast' and call toast.success('Link copied!')
       } catch (error) {
-        logger.debug('FlavorWheel', 'Error copying to clipboard', error);
+        logger.debug('FlavorWheel', 'Error copying to clipboard');
       }
     }
   };

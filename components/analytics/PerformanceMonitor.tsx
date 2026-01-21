@@ -46,7 +46,7 @@ export const PerformanceMonitor: React.FC = () => {
       observer.observe({
         entryTypes: ['paint', 'largest-contentful-paint', 'first-input', 'layout-shift'],
       });
-    } catch (_error) {
+    } catch {
       logger.debug('Performance', 'Performance Observer not supported');
     }
 

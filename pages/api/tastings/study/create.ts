@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSupabaseClient } from '@/lib/supabase';
+import { logger } from '@/lib/logger';
 import {
   createApiHandler,
   withAuth,
@@ -50,14 +51,14 @@ async function createStudySessionHandler(
   context: ApiContext
 ) {
   try {
-    console.log('[API] createStudySessionHandler started');
+    logger.debug('API', 'createStudySessionHandler started');
     // Get authenticated user ID from context (set by withAuth middleware)
     const user_id = requireUser(context).id;
-    console.log('[API] User ID:', user_id);
+    logger.debug('API', 'User ID', { userId: user_id });
 
     // Request body is already validated by withValidation middleware
     const { name, baseCategory, categories } = req.body as CreateStudySessionRequest;
-    console.log('[API] Request body:', { name, baseCategory, categoriesCount: categories.length });
+    logger.debug('API', 'Request body', { name, baseCategory, categoriesCount: categories.length });
 
     // Get Supabase client with user context (RLS will enforce permissions)
     const supabase = getSupabaseClient(req, res);
@@ -113,7 +114,7 @@ async function createStudySessionHandler(
       return sendError(res, 'INTERNAL_ERROR', `Failed to create study session: ${sessionError.message}`, 500);
     }
 
-    console.log('[API] Session created:', session.id);
+    logger.debug('API', 'Session created:', session.id);
 
     return sendSuccess(
       res,
@@ -122,7 +123,7 @@ async function createStudySessionHandler(
       201
     );
   } catch (error) {
-    console.error('[API] Unexpected error in createStudySessionHandler:', error);
+    logger.error('API', 'createStudySessionHandler error', error);
     return sendError(res, 'INTERNAL_ERROR', `Unexpected error: ${error instanceof Error ? error.message : String(error)}`, 500);
   }
 }

@@ -12,7 +12,7 @@ const CreateReviewPage: React.FC = () => {
   const router = useRouter();
   const { user, loading } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isResetting, setIsResetting] = useState(false);
+  const [_isResetting, setIsResetting] = useState(false);
   const supabase = getSupabaseClient() as any;
 
   React.useEffect(() => {
