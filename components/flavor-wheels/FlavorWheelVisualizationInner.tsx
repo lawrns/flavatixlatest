@@ -371,13 +371,18 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
       return;
     }
 
+    const centerX = width / 2;
+    const centerY = height / 2;
+
     // Create zoom behavior
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.3, 4]) // Min 0.3x (more zoom out to see all labels), max 4x zoom
       .on('zoom', (event) => {
-        g.attr('transform', event.transform.toString());
-        setCurrentZoom(event.transform.k);
+        // Compose zoom transform with centering - keep wheel centered
+        const transform = event.transform;
+        g.attr('transform', `translate(${centerX + transform.x},${centerY + transform.y}) scale(${transform.k})`);
+        setCurrentZoom(transform.k);
       });
 
     // Apply zoom to SVG
@@ -386,8 +391,8 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
     // Store zoom ref for external controls
     zoomRef.current = zoom;
 
-    // Reset to initial state
-    svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2));
+    // Initialize at identity (no additional translation needed, centering handled in zoom handler)
+    svg.call(zoom.transform, d3.zoomIdentity);
 
     return () => {
       svg.on('.zoom', null); // Clean up zoom listeners
@@ -419,8 +424,8 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
     svg
       .transition()
       .duration(300)
-      .call(zoomRef.current.transform, d3.zoomIdentity.translate(width / 2, height / 2));
-  }, [width, height]);
+      .call(zoomRef.current.transform, d3.zoomIdentity);
+  }, []);
 
   return (
     <div className="relative w-full">
