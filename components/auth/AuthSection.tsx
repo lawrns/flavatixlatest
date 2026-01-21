@@ -145,7 +145,7 @@ const AuthSection = () => {
       const validatedData = emailSchema.parse(formData);
 
       if (mode === 'register') {
-        const { data, error } = await supabase.auth.signUp({
+        const { data: _data, error } = await supabase.auth.signUp({
           email: validatedData.email,
           password: validatedData.password,
           options: {
@@ -165,7 +165,7 @@ const AuthSection = () => {
         toast.success('Check your email for the confirmation link!');
         setMode('login');
       } else {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data: _data2, error } = await supabase.auth.signInWithPassword({
           email: validatedData.email,
           password: validatedData.password,
         });
