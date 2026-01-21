@@ -74,7 +74,7 @@ const StudyTastingPage: React.FC = () => {
         }
 
         setSession(data);
-      } catch (error) {
+      } catch {
         toast.error('Failed to load study session');
         router.push('/my-tastings');
       } finally {

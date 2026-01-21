@@ -20,7 +20,7 @@ const TemplatesPage: React.FC = () => {
   React.useEffect(() => {
     if (user) {
       const fetchUserTemplates = async () => {
-        const { data, error } = await supabase
+        const { data } = await supabase
           .from('study_templates')
           .select('*')
           .eq('user_id', user.id)

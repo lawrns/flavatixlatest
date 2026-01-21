@@ -77,7 +77,7 @@ const NewStudyTastingPage: React.FC = () => {
   // Load template if templateId is provided
   const loadUserTemplate = useCallback(
     async (templateId: string) => {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('study_templates')
         .select('*')
         .eq('id', templateId)

@@ -76,7 +76,7 @@ export default function SocialPage() {
     }
   }, [user, authLoading, router]);
 
-  const formatTimeAgo = (dateString: string) => {
+  const _formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
@@ -95,7 +95,7 @@ export default function SocialPage() {
     return `${diffInWeeks}w`;
   };
 
-  const getCategoryColor = (category: string) => {
+  const _getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
       coffee: 'text-amber-600',
       wine: 'text-red-600',
@@ -387,7 +387,7 @@ export default function SocialPage() {
                     </div>
                   )}
                   {!hasNextPage && !isFetchingNextPage && (
-                    <p className="text-sm text-zinc-400">You've reached the end!</p>
+                    <p className="text-sm text-zinc-400">You&apos;ve reached the end!</p>
                   )}
                 </div>
               )}

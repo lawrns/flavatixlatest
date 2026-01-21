@@ -187,7 +187,7 @@ async function handleExport(
             data_size: JSON.stringify(exportData).length,
           },
         });
-    } catch (_err) {
+    } catch {
       // Don't fail export if audit log fails
       logger.warn('DataExport', 'Failed to create audit log');
     }

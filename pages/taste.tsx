@@ -1,12 +1,12 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
-import { 
-  Zap, 
-  Users, 
+import {
+  Zap,
+  Users,
   ChevronRight,
-  UserPlus, 
-  History 
+  UserPlus,
+  History
 } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import { CategoryStamp } from '@/components/ui';
@@ -19,7 +19,7 @@ interface TasteModeCardProps {
   iconBgColor: string;
   iconColor: string;
   onClick: () => void;
-  delay?: number;
+  _delay?: number;
 }
 
 const TasteModeCard: React.FC<TasteModeCardProps> = ({
@@ -29,7 +29,7 @@ const TasteModeCard: React.FC<TasteModeCardProps> = ({
   iconBgColor,
   iconColor,
   onClick,
-  delay = 0
+  _delay
 }) => {
   return (
     <button
@@ -42,8 +42,8 @@ const TasteModeCard: React.FC<TasteModeCardProps> = ({
     >
       <div className="flex items-center gap-4">
         {/* Icon Badge */}
-        <div 
-          className={`flex-shrink-0 w-12 h-12 rounded-full ${iconBgColor} 
+        <div
+          className={`flex-shrink-0 w-12 h-12 rounded-full ${iconBgColor}
                       flex items-center justify-center`}
         >
           <Icon className={`w-6 h-6 ${iconColor}`} />
@@ -61,8 +61,8 @@ const TasteModeCard: React.FC<TasteModeCardProps> = ({
 
         {/* Chevron */}
         <div className="flex-shrink-0">
-          <ChevronRight 
-            className="w-5 h-5 text-gemini-text-muted dark:text-zinc-500" 
+          <ChevronRight
+            className="w-5 h-5 text-gemini-text-muted dark:text-zinc-500"
           />
         </div>
       </div>
@@ -178,7 +178,7 @@ const TastePage: React.FC = () => {
               iconBgColor={option.iconBgColor}
               iconColor={option.iconColor}
               onClick={() => router.push(option.path)}
-              delay={index * 50}
+              _delay={index * 50}
             />
           ))}
         </div>

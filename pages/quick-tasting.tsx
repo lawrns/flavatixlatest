@@ -97,7 +97,7 @@ const QuickTastingPage: React.FC = () => {
       setCurrentSession(data);
       setCurrentStep('session');
       toast.success('Tasting session started!');
-    } catch (_error) {
+    } catch {
       toast.error('Failed to start tasting session');
     } finally {
       setIsLoading(false);
