@@ -9,7 +9,7 @@ type TastingItemSuggestionUpdate =
   Database['public']['Tables']['tasting_item_suggestions']['Update'];
 type TastingItemData = Database['public']['Tables']['quick_tasting_items']['Row'];
 
-type TastingParticipant = Database['public']['Tables']['tasting_participants']['Row'];
+type _TastingParticipant = Database['public']['Tables']['tasting_participants']['Row'];
 type QuickTasting = Database['public']['Tables']['quick_tastings']['Row'];
 
 export interface SuggestionUpdate {

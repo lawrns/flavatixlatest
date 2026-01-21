@@ -280,7 +280,7 @@ export class RealtimeManager {
     }
   }
 
-  private handleUserLeave(key: string, leftPresences: any) {
+  private handleUserLeave(key: string, _leftPresences: any) {
     const presence = this.presenceState.get(key);
     if (presence) {
       this.presenceState.delete(key);

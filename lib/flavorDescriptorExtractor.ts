@@ -553,7 +553,7 @@ const FLAVOR_TAXONOMY = {
 export function extractDescriptorsKeywordBased(text: string): ExtractedDescriptor[] {
   const descriptors: ExtractedDescriptor[] = [];
   const lowerText = text.toLowerCase();
-  const words = lowerText.split(/\s+|[,;.]+/).filter((w) => w.length > 2);
+  const _words = lowerText.split(/\s+|[,;.]+/).filter((w) => w.length > 2);
 
   // Check against taxonomy
   Object.entries(FLAVOR_TAXONOMY).forEach(([type, categories]) => {

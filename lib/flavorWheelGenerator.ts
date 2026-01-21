@@ -213,7 +213,7 @@ export async function generateFlavorWheel(
   categories.sort((a, b) => b.count - a.count);
 
   // Get source stats
-  const uniqueSources = new Set(
+  const _uniqueSources = new Set(
     descriptors.map(d => `${d.source_type}:${d.source_id}`)
   );
 

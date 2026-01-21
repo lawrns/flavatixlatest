@@ -124,7 +124,7 @@ export class AvatarService {
       await this.deleteExistingAvatar(userId);
 
       // Upload file to Supabase Storage
-      const { data, error } = await this.getSupabase().storage
+      const { data: _data, error } = await this.getSupabase().storage
         .from(this.BUCKET_NAME)
         .upload(fileName, processedFile, {
           cacheControl: '3600',

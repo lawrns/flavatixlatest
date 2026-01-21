@@ -10,7 +10,7 @@ import { getSupabaseClient } from '../supabase';
 // NEVER use NEXT_PUBLIC_OPENAI_API_KEY - API keys must never be exposed to the client
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 const OPENAI_EMBEDDING_MODEL = 'text-embedding-3-small';
-const OPENAI_COMPLETION_MODEL = 'gpt-3.5-turbo';
+const _OPENAI_COMPLETION_MODEL = 'gpt-3.5-turbo';
 
 // Warn if API key is missing (server-side only)
 if (!OPENAI_API_KEY && typeof window === 'undefined') {
@@ -127,18 +127,18 @@ export class EmbeddingService {
     const embedding = new Array(384).fill(0);
 
     // Simple feature extraction
-    const words = text.toLowerCase().split(/\s+/);
-    const features = {
+    const _words = text.toLowerCase().split(/\s+/);
+    const _features = {
       length: text.length,
-      wordCount: words.length,
-      uniqueWords: new Set(words).size
+      wordCount: _words.length,
+      uniqueWords: new Set(_words).size
     };
 
     // Hash each word to a position
-    words.forEach((word, i) => {
+    _words.forEach((word) => {
       const hash = word.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
       const position = hash % embedding.length;
-      embedding[position] = Math.min(1, embedding[position] + (1 / words.length));
+      embedding[position] = Math.min(1, embedding[position] + (1 / _words.length));
     });
 
     // Normalize

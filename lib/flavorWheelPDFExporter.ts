@@ -227,8 +227,8 @@ export class FlavorWheelPDFExporter {
   static async exportToPDF(wheelData: WheelData, options: PDFOptions = {}): Promise<void> {
     const {
       title = 'Flavor Wheel',
-      includeStats = true,
-      includeDescriptors = true,
+      includeStats: _includeStats = true,
+      includeDescriptors: _includeDescriptors = true,
       paperSize = 'letter',
     } = options;
 

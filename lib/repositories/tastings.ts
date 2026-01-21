@@ -8,7 +8,7 @@ import { getSupabaseClient } from '../supabase';
 import { databaseLogger } from '../loggers';
 
 // Type alias for supabase client with any to work around type inference issues
-type SupabaseAny = ReturnType<typeof getSupabaseClient> & { from: (table: string) => any };
+type _SupabaseAny = ReturnType<typeof getSupabaseClient> & { from: (table: string) => any };
 
 /**
  * Helper to log database query duration
@@ -53,9 +53,9 @@ export interface QuickTasting {
   study_approach: string | null;
 }
 
-export type QuickTastingInsert = Partial<QuickTasting> & { 
-  user_id: string; 
-  category: string; 
+export type QuickTastingInsert = Partial<QuickTasting> & {
+  user_id: string;
+  category: string;
 };
 
 export type QuickTastingUpdate = Partial<QuickTasting>;
@@ -75,9 +75,9 @@ export interface TastingItem {
   include_in_ranking: boolean;
 }
 
-export type TastingItemInsert = Partial<TastingItem> & { 
-  tasting_id: string; 
-  item_name: string; 
+export type TastingItemInsert = Partial<TastingItem> & {
+  tasting_id: string;
+  item_name: string;
 };
 
 export type TastingItemUpdate = Partial<TastingItem>;
@@ -111,7 +111,7 @@ export async function getTastingById(id: string): Promise<QuickTasting | null> {
  */
 export async function getTastingWithItems(id: string): Promise<TastingWithItems | null> {
   const supabase = getSupabaseClient() as any;
-  
+
   const [tastingResult, itemsResult] = await Promise.all([
     supabase.from('quick_tastings').select('*').eq('id', id).single(),
     supabase.from('quick_tasting_items').select('*').eq('tasting_id', id).order('created_at', { ascending: true })
@@ -132,9 +132,9 @@ export async function getTastingWithItems(id: string): Promise<TastingWithItems 
  * Get all tastings for a user
  */
 export async function getUserTastings(
-  userId: string, 
-  options?: { 
-    limit?: number; 
+  userId: string,
+  options?: {
+    limit?: number;
     completed?: boolean;
     category?: string;
   }
@@ -149,7 +149,7 @@ export async function getUserTastings(
   if (options?.limit) {
     query = query.limit(options.limit);
   }
-  
+
   if (options?.completed !== undefined) {
     if (options.completed) {
       query = query.not('completed_at', 'is', null);
@@ -157,7 +157,7 @@ export async function getUserTastings(
       query = query.is('completed_at', null);
     }
   }
-  
+
   if (options?.category) {
     query = query.eq('category', options.category);
   }
@@ -359,7 +359,7 @@ export async function deleteTastingItem(id: string): Promise<boolean> {
  */
 export async function getUserTastingStats(userId: string) {
   const supabase = getSupabaseClient() as any;
-  
+
   const { data, error } = await supabase
     .from('quick_tastings')
     .select('id, category, average_score, completed_at, total_items')
@@ -373,12 +373,12 @@ export async function getUserTastingStats(userId: string) {
 
   type StatRow = { id: string; category: string; average_score: number | null; total_items: number };
   const rows: StatRow[] = data || [];
-  
+
   const stats = {
     totalTastings: rows.length,
     totalItems: rows.reduce((sum: number, t: StatRow) => sum + (t.total_items || 0), 0),
-    averageScore: rows.length 
-      ? rows.reduce((sum: number, t: StatRow) => sum + (t.average_score || 0), 0) / rows.length 
+    averageScore: rows.length
+      ? rows.reduce((sum: number, t: StatRow) => sum + (t.average_score || 0), 0) / rows.length
       : 0,
     byCategory: {} as Record<string, number>,
   };

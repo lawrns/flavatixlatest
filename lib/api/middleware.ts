@@ -944,7 +944,7 @@ export function validateCsrfToken(token: string): boolean {
     }
 
     return true;
-  } catch (error) {
+  } catch (_error) {
     logger.warn('CSRF', 'Token validation error');
     return false;
   }

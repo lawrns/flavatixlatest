@@ -199,7 +199,7 @@ export class RoleService {
       can_add_items: permissions.canAddItems,
     };
 
-    const { data, error } = await this.supabase
+    const { data, error: _error } = await this.supabase
       .from('tasting_participants')
       // @ts-ignore - Supabase type inference issue with complex queries
       .update(updateData as any)

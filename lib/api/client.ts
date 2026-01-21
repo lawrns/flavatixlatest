@@ -1,11 +1,11 @@
 /**
  * API Client Utility
- * 
+ *
  * Typed fetch wrapper for API endpoints with:
  * - Automatic authentication token injection
  * - Consistent error handling
  * - Type-safe request/response handling
- * 
+ *
  * Usage:
  *   const client = createApiClient();
  *   const tasting = await client.get('/api/tastings/123');
@@ -64,7 +64,7 @@ class ApiClient {
         const supabase = getSupabaseClient();
         const { data: { session } } = await supabase.auth.getSession();
         return session?.access_token || null;
-      } catch (error) {
+      } catch (_error) {
         // Silently fail - auth token not available
         return null;
       }
@@ -139,7 +139,7 @@ class ApiClient {
 
         if (!response.ok || !data.success) {
           const error = !data.success ? data.error : await this.parseErrorResponse(response);
-          
+
           // Don't retry client errors (4xx)
           if (response.status >= 400 && response.status < 500) {
             throw new ApiClientError(
@@ -149,7 +149,7 @@ class ApiClient {
               error.details
             );
           }
-          
+
           // Retry server errors (5xx)
           throw new ApiClientError(
             error.code,
@@ -258,4 +258,3 @@ export function createApiClient(baseUrl?: string): ApiClient {
 
 // Export default instance
 export const apiClient = createApiClient();
-
