@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { logger } from '../../lib/logger';
 
 interface PerformanceMetrics {
@@ -46,7 +46,7 @@ export const PerformanceMonitor: React.FC = () => {
       observer.observe({
         entryTypes: ['paint', 'largest-contentful-paint', 'first-input', 'layout-shift'],
       });
-    } catch (error) {
+    } catch (_error) {
       logger.debug('Performance', 'Performance Observer not supported');
     }
 
@@ -74,8 +74,6 @@ export const PerformanceMonitor: React.FC = () => {
       logger.debug('Performance', `Largest Contentful Paint: ${formatMetric(metrics.largestContentfulPaint)}`);
       logger.debug('Performance', `First Input Delay: ${formatMetric(metrics.firstInputDelay)}`);
       logger.debug('Performance', `Cumulative Layout Shift: ${formatCLS(metrics.cumulativeLayoutShift)}`);
-      logger.debug('Performance', `Time to Interactive: ${formatMetric(metrics.timeToInteractive)}`);
-      logger.debug('Performance', `Total Blocking Time: ${formatMetric(metrics.totalBlockingTime)}`);
 
       // Send to analytics (if implemented)
       if (process.env.NODE_ENV === 'production') {

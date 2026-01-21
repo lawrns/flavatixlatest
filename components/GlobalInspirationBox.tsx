@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 // Dynamically import to avoid SSR issues with viewport calculations
-const InspirationBox = dynamic(() => import('./ui/inspiration-box'), {
+const _InspirationBox = dynamic(() => import('./ui/inspiration-box'), {
   ssr: false,
   loading: () => null,
 });
