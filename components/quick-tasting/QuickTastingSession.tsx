@@ -24,12 +24,12 @@ import {
 // Types imported from ./types.ts
 
 const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
-  ({ session, userId, onSessionComplete, onSessionUpdate, onSessionCreate }) => {
+  ({ session, userId, onSessionComplete, onSessionUpdate, onSessionCreate: _onSessionCreate }) => {
     // All hooks must be declared before any conditional returns
     const [items, setItems] = useState<TastingItemData[]>([]);
     const [currentItemIndex, setCurrentItemIndex] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-    const [sessionNotes, setSessionNotes] = useState(session?.notes || '');
+    const [sessionNotes, _setSessionNotes] = useState(session?.notes || '');
     const [userRole, setUserRole] = useState<'host' | 'participant' | 'both' | null>(null);
     const [userPermissions, setUserPermissions] = useState<any>({});
 
@@ -80,13 +80,13 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
 
     const {
       isConnected,
-      activeUsers,
+      activeUsers: _activeUsers,
       collaborators,
-      sendCursor,
-      sendTypingIndicator,
+      sendCursor: _sendCursor,
+      sendTypingIndicator: _sendTypingIndicator,
       broadcastItemUpdate,
       broadcastScoreUpdate,
-      updatePresence,
+      updatePresence: _updatePresence,
     } = useRealtimeCollaboration({
       sessionId: session?.id || '',
       onRemoteUpdate: handleRemoteUpdate,
@@ -432,7 +432,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
         return;
       }
 
-      let aiToastId: number | undefined;
+      let _aiToastId: number | undefined;
 
       try {
         // Only extract if there's meaningful content
@@ -487,7 +487,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
 
         try {
           result = JSON.parse(responseText);
-        } catch (parseError) {
+        } catch (_parseError) {
           console.error('[ERROR] Failed to parse extraction response:', responseText);
           return;
         }
@@ -527,7 +527,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
 
       setIsChangingCategory(true);
       try {
-        const { data, error } = await supabase
+        const { data: _data, error } = await supabase
           .from('quick_tastings')
           .update({ category: newCategory })
           .eq('id', session.id)
@@ -551,7 +551,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
       }
     };
 
-    const startTasting = () => {
+    const _startTasting = () => {
       setPhase('tasting');
       setCurrentItemIndex(0);
       setShowEditTastingDashboard(false);
@@ -564,7 +564,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
       }
 
       try {
-        const { data, error } = await supabase
+        const { data: _data, error } = await supabase
           .from('quick_tastings')
           .update({ session_name: newName })
           .eq('id', session.id)
@@ -586,7 +586,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
       }
     };
 
-    const handleNextItem = () => {
+    const _handleNextItem = () => {
       if (currentItemIndex < items.length - 1) {
         setCurrentItemIndex(currentItemIndex + 1);
         setShowEditTastingDashboard(false); // Close edit dashboard when moving to next item
@@ -649,7 +649,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
       completeSession();
     };
 
-    const handleBack = () => {
+    const _handleBack = () => {
       if (currentItemIndex > 0) {
         handlePreviousItem();
       } else {
@@ -812,7 +812,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
     const completedItems = items.filter((item) => item.overall_score !== null).length;
 
     // Generate dynamic display name for current item based on category and index
-    const getCurrentItemDisplayName = () => {
+    const _getCurrentItemDisplayName = () => {
       if (!currentItem || !session) {
         return '';
       }
