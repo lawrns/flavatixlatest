@@ -125,7 +125,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
   formFields = 4,
   loadingMessage = 'Loading...',
 }) => {
-  const prefersReducedMotion = useReducedMotion();
+  const _prefersReducedMotion = useReducedMotion();
 
   // Error state
   if (error) {

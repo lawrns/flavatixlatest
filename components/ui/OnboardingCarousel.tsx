@@ -49,7 +49,7 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
 
   const card = cards[currentIndex];
   const isLastCard = currentIndex === cards.length - 1;
-  const progress = ((currentIndex + 1) / cards.length) * 100;
+  const _progress = ((currentIndex + 1) / cards.length) * 100;
 
   // Handle swipe start
   const handleMouseDown = (e: React.MouseEvent) => {

@@ -54,7 +54,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
   const [items, setItems] = useState<CompetitionItem[]>([]);
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [answers, setAnswers] = useState<Map<string, ParticipantAnswer>>(new Map());
-  const [startTime, setStartTime] = useState<number>(Date.now());
+  const [startTime, _setStartTime] = useState<number>(Date.now());
   const [itemStartTime, setItemStartTime] = useState<number>(Date.now());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showResults, setShowResults] = useState(false);
@@ -251,7 +251,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
 
     try {
       const calculatedScore = calculateScore();
-      const totalTime = Math.floor((Date.now() - startTime) / 1000);
+      const _totalTime = Math.floor((Date.now() - startTime) / 1000);
 
       // Save participant record with score
       const { error: participantError } = await supabase.from('tasting_participants').upsert({

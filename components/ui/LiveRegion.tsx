@@ -13,7 +13,7 @@ import React, { createContext, useContext, useState, useCallback, useRef, useEff
 
 type Politeness = 'polite' | 'assertive' | 'off';
 
-interface Announcement {
+interface _Announcement {
   id: string;
   message: string;
   politeness: Politeness;
@@ -67,7 +67,7 @@ export const LiveRegionProvider: React.FC<LiveRegionProviderProps> = ({
   const clearTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Generate unique ID for announcements
-  const generateId = () => `announcement-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const _generateId = () => `announcement-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
   const announce = useCallback(
     (message: string, politeness: Politeness = 'polite') => {

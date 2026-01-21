@@ -50,7 +50,7 @@ class ErrorBoundary extends Component<Props, State> {
             timestamp: new Date().toISOString(),
           },
         });
-      } catch (e) {
+      } catch (_e) {
         // Sentry not available, just log to console
       }
     }
@@ -69,7 +69,7 @@ class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center p-4">
           <Card className="max-w-md w-full">
-            <CardHeader 
+            <CardHeader
               title="Something went wrong"
               action={
                 <AlertTriangle className="h-6 w-6 text-red-500" />
@@ -78,9 +78,9 @@ class ErrorBoundary extends Component<Props, State> {
             <CardContent>
               <div className="space-y-4">
                 <p className="text-gray-600 dark:text-gray-400">
-                  We're sorry, but something unexpected happened. This error has been logged and we'll look into it.
+                  We&apos;re sorry, but something unexpected happened. This error has been logged and we&apos;ll look into it.
                 </p>
-                
+
                 {process.env.NODE_ENV === 'development' && this.state.error && (
                   <details className="text-xs text-gray-500 dark:text-gray-400">
                     <summary className="cursor-pointer font-medium mb-2">
