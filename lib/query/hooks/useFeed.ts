@@ -172,7 +172,7 @@ async function fetchSocialFeed(
     const postItems = (itemsData || []).filter((item: any) => item.tasting_id === tasting.id);
     const photos = postItems
       .map((item: any) => item.photo_url)
-      .filter((url): url is string => url != null);
+      .filter((url): url is string => url !== null);
 
     return {
       id: tasting.id,
