@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../../contexts/SimpleAuthContext';
 import { getSupabaseClient } from '../../lib/supabase';
 import QuickTastingSummary from '../../components/quick-tasting/QuickTastingSummary';
+import { logger } from '@/lib/logger';
 import { toast } from '../../lib/toast';
 import BottomNavigation from '../../components/navigation/BottomNavigation';
 import { EmptyState } from '../../components/ui/EmptyState';
@@ -39,13 +40,13 @@ export default function TastingSummaryPage() {
 
   useEffect(() => {
     if (!id || !user) {
-      console.log('[TastingSummary] Waiting for id or user', { id, hasUser: !!user });
+      logger.debug('TastingSummary', 'Waiting for id or user', { id, hasUser: !!user });
       return;
     }
 
     const loadSession = async () => {
       try {
-        console.log('[TastingSummary] Loading session...', id);
+        logger.debug('TastingSummary', 'Loading session', { id });
         setLoading(true);
         const { data, error } = await supabase
           .from('quick_tastings')
@@ -54,12 +55,12 @@ export default function TastingSummaryPage() {
           .single<QuickTasting>();
 
         if (error) {
-          console.error('[TastingSummary] Supabase error:', error);
+          logger.error('TastingSummary', 'Supabase error', error);
           throw error;
         }
 
         if (!data) {
-          console.error('[TastingSummary] No data returned');
+          logger.error('TastingSummary', 'No data returned');
           toast.error('Tasting session not found');
           router.push('/my-tastings');
           return;
@@ -67,16 +68,16 @@ export default function TastingSummaryPage() {
 
         // Verify user has access
         if (data.user_id !== user.id) {
-          console.error('[TastingSummary] User ID mismatch', { expected: user.id, actual: data.user_id });
+          logger.error('TastingSummary', 'User ID mismatch', { expected: user.id, actual: data.user_id });
           toast.error('You do not have access to this tasting');
           router.push('/my-tastings');
           return;
         }
 
-        console.log('[TastingSummary] Session loaded successfully');
+        logger.debug('TastingSummary', 'Session loaded successfully');
         setSession(data);
       } catch (error) {
-        console.error('Error loading tasting session:', error);
+        logger.error('TastingSummary', 'Error loading tasting session', error);
         toast.error('Failed to load tasting session');
         router.push('/my-tastings');
       } finally {
