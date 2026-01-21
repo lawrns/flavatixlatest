@@ -575,7 +575,20 @@ export default function FlavorWheelsPage() {
 
         {/* Wheel Visualization */}
         <div className="bg-white dark:bg-zinc-800 rounded-[22px] shadow-sm border border-zinc-200 dark:border-zinc-700 p-4 sm:p-8 mb-6">
-          {loading && (
+          {!user && !authLoading && (
+            <EmptyStateCard
+              image="/generated-images/empty-flavor-wheel.webp"
+              headline="Sign in to view your flavor wheel"
+              description="Your personalized flavor wheel is waiting. Log in to see patterns in your tasting notes."
+              cta={{
+                label: 'Sign In',
+                onClick: () => router.push('/auth'),
+                variant: 'primary',
+              }}
+            />
+          )}
+
+          {user && loading && (
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mb-4"></div>
               <p className="text-zinc-600 dark:text-zinc-300 text-lg">
@@ -587,7 +600,7 @@ export default function FlavorWheelsPage() {
             </div>
           )}
 
-          {error && !loading && (
+          {user && error && !loading && (
             <EmptyStateCard
               image="/generated-images/empty-flavor-wheel.webp"
               headline="Your flavor wheel is waiting to be born"
@@ -600,7 +613,7 @@ export default function FlavorWheelsPage() {
             />
           )}
 
-          {wheelData && !loading && !error && wheelData.categories.length > 0 && (
+          {user && wheelData && !loading && !error && wheelData.categories.length > 0 && (
             <div className="flex flex-col items-center overflow-hidden">
               {/* Top descriptors chips */}
               <div className="w-full mb-4">
