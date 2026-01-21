@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as d3 from 'd3';
+import { logger } from '../../lib/logger';
 import { FlavorWheelData, WheelCategory } from '@/lib/flavorWheelGenerator';
 import { Card, CardContent, CardHeader } from '../ui/Card';
 import Button from '../ui/Button';
@@ -99,7 +100,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
           url: window.location.href,
         });
       } catch (error) {
-        console.log('Error sharing:', error);
+        logger.debug('FlavorWheel', 'Error sharing', error);
       }
     } else {
       // Fallback to clipboard
@@ -108,7 +109,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
         // TODO(ux): Show toast notification on successful clipboard copy.
         // Import toast from '@/lib/toast' and call toast.success('Link copied!')
       } catch (error) {
-        console.log('Error copying to clipboard:', error);
+        logger.debug('FlavorWheel', 'Error copying to clipboard', error);
       }
     }
   };

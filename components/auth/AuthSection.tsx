@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { getSupabaseClient } from '../../lib/supabase';
 import { useAuth } from '../../contexts/SimpleAuthContext';
 import { toast } from '../../lib/toast';
+import { logger } from '../../lib/logger';
 import { z } from 'zod';
 import Container from '../layout/Container';
 import OnboardingCarousel from '../ui/OnboardingCarousel';
@@ -58,7 +59,7 @@ const AuthSection = () => {
     setShowOnboarding(!hasSeenOnboarding);
 
     if (process.env.NODE_ENV !== 'production') {
-      console.log('AuthSection mounted, Supabase config:', {
+      logger.debug('Auth', 'AuthSection mounted, Supabase config', {
         url: process.env.NEXT_PUBLIC_SUPABASE_URL,
         key: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Not set',
       });
@@ -140,7 +141,7 @@ const AuthSection = () => {
 
     try {
       if (process.env.NODE_ENV !== 'production') {
-        console.log('Starting authentication...', { mode });
+        logger.debug('Auth', 'Starting authentication', { mode });
       }
       const validatedData = emailSchema.parse(formData);
 

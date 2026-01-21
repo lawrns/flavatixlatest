@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { logger } from '../../lib/logger';
 
 interface PerformanceMetrics {
   loadTime: number;
@@ -46,7 +47,7 @@ export const PerformanceMonitor: React.FC = () => {
         entryTypes: ['paint', 'largest-contentful-paint', 'first-input', 'layout-shift'],
       });
     } catch (error) {
-      console.log('Performance Observer not supported:', error);
+      logger.debug('Performance', 'Performance Observer not supported');
     }
 
     // Log metrics after page load
@@ -67,13 +68,14 @@ export const PerformanceMonitor: React.FC = () => {
         return value.toFixed(4);
       };
 
-      console.group('🚀 Performance Metrics');
-      console.log('Load Time:', formatMetric(metrics.loadTime));
-      console.log('First Contentful Paint:', formatMetric(metrics.firstContentfulPaint));
-      console.log('Largest Contentful Paint:', formatMetric(metrics.largestContentfulPaint));
-      console.log('First Input Delay:', formatMetric(metrics.firstInputDelay));
-      console.log('Cumulative Layout Shift:', formatCLS(metrics.cumulativeLayoutShift));
-      console.groupEnd();
+      logger.debug('Performance', '🚀 Performance Metrics');
+      logger.debug('Performance', `Load Time: ${formatMetric(metrics.loadTime)}`);
+      logger.debug('Performance', `First Contentful Paint: ${formatMetric(metrics.firstContentfulPaint)}`);
+      logger.debug('Performance', `Largest Contentful Paint: ${formatMetric(metrics.largestContentfulPaint)}`);
+      logger.debug('Performance', `First Input Delay: ${formatMetric(metrics.firstInputDelay)}`);
+      logger.debug('Performance', `Cumulative Layout Shift: ${formatCLS(metrics.cumulativeLayoutShift)}`);
+      logger.debug('Performance', `Time to Interactive: ${formatMetric(metrics.timeToInteractive)}`);
+      logger.debug('Performance', `Total Blocking Time: ${formatMetric(metrics.totalBlockingTime)}`);
 
       // Send to analytics (if implemented)
       if (process.env.NODE_ENV === 'production') {
