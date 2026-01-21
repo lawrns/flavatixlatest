@@ -27,7 +27,7 @@ export const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
   const router = useRouter();
 
   const loadNotifications = useCallback(async () => {

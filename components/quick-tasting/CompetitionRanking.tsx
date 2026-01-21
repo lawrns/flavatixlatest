@@ -121,7 +121,7 @@ const CompetitionRanking: React.FC<CompetitionRankingProps> = ({
         </p>
       ) : (
         <div className="space-y-sm">
-          {participants.map((participant, index) => {
+          {participants.map((participant, _index) => {
             const displayName =
               participant.profiles?.full_name || participant.profiles?.username || 'Anonymous User';
             const isCurrentUser = participant.user_id === currentUserId;

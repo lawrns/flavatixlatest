@@ -307,7 +307,7 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
             />
             {session.category === 'other' && !customCategoryName.trim() && (
               <p className="text-sm text-red-500 mt-1">
-                Custom category name is required when "Other" is selected
+                Custom category name is required when &quot;Other&quot; is selected
               </p>
             )}
           </div>

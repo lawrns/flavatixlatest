@@ -297,7 +297,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
 
     // Add labels outside the wheel (perpendicular to outer rim) with more space
     if (showLabels) {
-      const categorySegments = segments.filter(
+      const _categorySegments = segments.filter(
         (s) => s.subcategoryIndex === undefined && s.descriptorIndex === undefined
       );
 

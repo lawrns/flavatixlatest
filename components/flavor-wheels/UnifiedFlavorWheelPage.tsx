@@ -91,7 +91,7 @@ export const UnifiedFlavorWheelPage: React.FC<UnifiedFlavorWheelPageProps> = ({
     );
   }
 
-  const descriptorLimit = 30;
+  const _descriptorLimit = 30;
   const totalDescriptors = wheelData.totalDescriptors || 0;
   const uniqueDescriptors = wheelData.uniqueDescriptors || 0;
 
