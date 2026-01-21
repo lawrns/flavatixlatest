@@ -133,8 +133,20 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
 
   useEffect(() => {
     if (!svgRef.current || !wheelData || wheelData.categories.length === 0) {
+      logger.debug('FlavorWheelViz', 'Early exit - missing data', {
+        hasSvgRef: !!svgRef.current,
+        hasWheelData: !!wheelData,
+        categoriesLength: wheelData?.categories?.length
+      });
       return;
     }
+
+    logger.debug('FlavorWheelViz', 'Drawing wheel', {
+      width,
+      height,
+      categoriesCount: wheelData.categories.length,
+      totalDescriptors: wheelData.totalDescriptors
+    });
 
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();
