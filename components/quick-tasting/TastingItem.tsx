@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { getSupabaseClient } from '../../lib/supabase';
 import { toast } from '../../lib/toast';
 import {
@@ -101,7 +102,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
       setStudyCategoryData(item.study_category_data || {});
       setEditingName(item.item_name);
       setIsEditingName(false);
-    }, [item.id, item.study_category_data]);
+    }, [item.id, item.notes, item.aroma, item.flavor, item.overall_score, item.study_category_data, item.item_name]);
 
     // Cleanup debounce timeouts on unmount
     useEffect(() => {
@@ -405,10 +406,13 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
 
             {item.photo_url ? (
               <div className="relative overflow-hidden rounded-lg">
-                <img
+                <Image
                   src={item.photo_url}
                   alt={item.item_name}
-                  className="w-full h-40 tablet:h-48 object-cover"
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  className="w-full h-48 object-cover rounded-lg"
                 />
                 <button
                   onClick={removePhoto}

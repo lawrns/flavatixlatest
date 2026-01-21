@@ -4,6 +4,7 @@
  * Displays a single social feed post with user info, content, photos, and engagement buttons.
  */
 import React from 'react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { getCategoryColors } from '@/lib/colors';
 import type { TastingPost } from '@/lib/query/hooks/useFeed';
@@ -84,9 +85,11 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
           )}
         >
           {post.user.avatar_url ? (
-            <img
+            <Image
               src={post.user.avatar_url}
               alt={`${post.user.full_name || 'User'}'s avatar`}
+              width={44}
+              height={44}
               className="w-full h-full rounded-full object-cover"
             />
           ) : (
@@ -160,9 +163,12 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
         >
           {post.photos.slice(0, 4).map((photo, idx) => (
             <div key={idx} className="relative aspect-square bg-zinc-100 dark:bg-zinc-800">
-              <img
+              <Image
                 src={photo}
                 alt={`Tasting photo ${idx + 1}`}
+                width={0}
+                height={0}
+                sizes="100vw"
                 className="w-full h-full object-cover"
               />
               {idx === 3 && post.photos && post.photos.length > 4 && (

@@ -1,9 +1,10 @@
 /**
  * AvatarWithFallback Component
- * 
+ *
  * Displays user avatar with graceful fallback to initials when image fails to load
  */
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 interface AvatarWithFallbackProps {
@@ -66,9 +67,11 @@ export const AvatarWithFallback: React.FC<AvatarWithFallbackProps> = ({
           style={sizeStyle}
         />
       )}
-      <img
+      <Image
         src={src}
         alt={alt}
+        width={size}
+        height={size}
         className={cn(
           'rounded-full object-cover',
           isLoading && 'opacity-0',
@@ -77,8 +80,8 @@ export const AvatarWithFallback: React.FC<AvatarWithFallbackProps> = ({
         style={sizeStyle}
         onLoad={() => setIsLoading(false)}
         onError={() => {
-          setHasError(true);
           setIsLoading(false);
+          setHasError(true);
         }}
       />
     </div>

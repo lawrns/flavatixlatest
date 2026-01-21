@@ -8,6 +8,7 @@
  */
 
 import React, { useRef } from 'react';
+import Image from 'next/image';
 import { Camera, X } from 'lucide-react';
 import { ReviewFormData } from '@/lib/types/review';
 import {
@@ -91,9 +92,12 @@ export const ReviewFormItemInfo: React.FC<ReviewFormItemInfoProps> = ({
           </label>
           {formData.picture_url ? (
             <div className="relative">
-              <img
+              <Image
                 src={formData.picture_url}
                 alt={formData.item_name}
+                width={0}
+                height={0}
+                sizes="100vw"
                 className="w-full h-48 object-cover rounded-lg"
               />
               <button

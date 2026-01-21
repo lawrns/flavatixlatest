@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import { supabase } from '../../lib/supabase';
 import { toast } from '../../lib/toast';
 import { Coffee, Wine, Beer, Utensils, Star, PieChart } from 'lucide-react';
@@ -47,10 +48,6 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    loadTastingItems();
-  }, [session.id]);
-
   const loadTastingItems = async () => {
     try {
       const { data, error } = await supabase
@@ -70,6 +67,10 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadTastingItems();
+  }, [session.id]);
 
   const getCategoryLabel = (category: string): string =>
     category
@@ -317,9 +318,12 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
                           <h5 className="text-small font-body font-medium text-text-secondary mb-xs">
                             Photo
                           </h5>
-                          <img
+                          <Image
                             src={item.photo_url}
                             alt={item.item_name}
+                            width={0}
+                            height={0}
+                            sizes="100vw"
                             className="w-full h-48 object-cover rounded-lg"
                           />
                         </div>

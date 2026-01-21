@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 
 interface OnboardingCard {
   id: number;
@@ -179,9 +180,12 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
               }`}
               style={{ transitionDelay: '0ms' }}
             >
-              <img
+              <Image
                 src={card.image}
                 alt={card.headline}
+                width={0}
+                height={0}
+                sizes="100vw"
                 className="w-full h-full object-cover dark:brightness-95 dark:contrast-105"
                 draggable={false}
               />

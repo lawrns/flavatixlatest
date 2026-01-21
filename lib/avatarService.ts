@@ -1,4 +1,5 @@
 import { getSupabaseClient } from './supabase';
+import { logger } from './logger';
 
 export interface AvatarUploadResult {
   success: boolean;
@@ -54,7 +55,7 @@ export class AvatarService {
 
       img.onload = () => {
         URL.revokeObjectURL(url);
-        
+
         if (img.width > this.MAX_DIMENSION || img.height > this.MAX_DIMENSION) {
           resolve({
             isValid: false,
@@ -91,7 +92,7 @@ export class AvatarService {
    */
   static async uploadAvatar(file: File, userId: string): Promise<AvatarUploadResult> {
     try {
-      console.log('[AvatarService] Starting upload process:', {
+      logger.debug('AvatarService', 'Starting upload process', {
         fileName: file.name,
         fileSize: file.size,
         fileType: file.type,
@@ -101,7 +102,7 @@ export class AvatarService {
       // Validate file
       const fileValidation = this.validateFile(file);
       if (!fileValidation.isValid) {
-        console.warn('[AvatarService] File validation failed:', fileValidation.error);
+        logger.warn('AvatarService', `File validation failed: ${fileValidation.error}`);
         return {
           success: false,
           error: fileValidation.error
@@ -109,22 +110,20 @@ export class AvatarService {
       }
 
       // Auto-resize image to 400x400 for optimal performance
-      console.log('[AvatarService] Compressing image to 400x400...');
       const processedFile = await this.compressImage(file, 400, 0.85);
-      console.log('[AvatarService] Image compressed:', {
+      logger.debug('AvatarService', 'Image compressed', {
         originalSize: file.size,
         compressedSize: processedFile.size
       });
 
       // Generate unique filename
       const fileName = this.generateFileName(userId, file.name);
-      console.log('[AvatarService] Generated filename:', fileName);
+      logger.debug('AvatarService', 'Generated filename', { fileName });
 
       // Delete existing avatar if it exists
       await this.deleteExistingAvatar(userId);
 
       // Upload file to Supabase Storage
-      console.log('[AvatarService] Uploading to storage...');
       const { data, error } = await this.getSupabase().storage
         .from(this.BUCKET_NAME)
         .upload(fileName, processedFile, {
@@ -133,13 +132,12 @@ export class AvatarService {
         });
 
       if (error) {
-        console.error('[AvatarService] Storage upload error:', {
-          error,
+        logger.error('AvatarService', 'Storage upload error', error, {
           message: error.message,
           statusCode: (error as any).statusCode || 'unknown',
           fileName
         });
-        
+
         // Provide more specific error messages
         if (error.message?.includes('permissions')) {
           return {
@@ -153,7 +151,7 @@ export class AvatarService {
             error: 'Network error. Please check your internet connection.'
           };
         }
-        
+
         return {
           success: false,
           error: 'Failed to upload avatar. Please try again.'
@@ -165,9 +163,7 @@ export class AvatarService {
         .from(this.BUCKET_NAME)
         .getPublicUrl(fileName);
 
-      console.log('[AvatarService] Upload successful:', {
-        publicUrl: urlData.publicUrl
-      });
+      logger.debug('AvatarService', 'Upload successful', { publicUrl: urlData.publicUrl });
 
       return {
         success: true,
@@ -175,13 +171,12 @@ export class AvatarService {
       };
 
     } catch (error) {
-      console.error('[AvatarService] Unexpected error during upload:', {
-        error,
+      logger.error('AvatarService', 'Unexpected error during upload', error, {
         message: error instanceof Error ? error.message : 'Unknown error',
         stack: error instanceof Error ? error.stack : undefined,
         userId
       });
-      
+
       return {
         success: false,
         error: 'An unexpected error occurred during upload. Please try again.'
@@ -249,7 +244,7 @@ export class AvatarService {
     const { data } = this.getSupabase().storage
       .from(this.BUCKET_NAME)
       .getPublicUrl(fileName);
-    
+
     return data.publicUrl;
   }
 
@@ -270,7 +265,7 @@ export class AvatarService {
 
         // Draw and compress
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        
+
         canvas.toBlob(
           (blob: Blob | null) => {
             if (blob) {

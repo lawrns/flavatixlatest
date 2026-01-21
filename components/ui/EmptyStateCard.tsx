@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 interface EmptyStateCardProps {
   image: string;
@@ -26,9 +27,11 @@ export const EmptyStateCard: React.FC<EmptyStateCardProps> = ({
     <div className="flex flex-col items-center justify-center py-12 px-4">
       {/* Empty State Image */}
       <div className="w-full max-w-xs h-48 sm:h-64 mb-8 rounded-2xl overflow-hidden">
-        <img
+        <Image
           src={image}
           alt={headline}
+          width={400}
+          height={300}
           className="w-full h-full object-cover"
         />
       </div>

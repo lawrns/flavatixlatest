@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Share2, Copy, Check, X } from 'lucide-react';
 import { toast } from 'react-toastify';
 
@@ -108,7 +109,14 @@ export default function ShareButton({ disabled, onShare, className = '' }: Share
             {/* Preview Image */}
             {shareData.imageUrl && (
               <div className="mb-4 rounded-lg overflow-hidden border border-gray-200">
-                <img src={shareData.imageUrl} alt="Flavor Wheel Preview" className="w-full" />
+                <Image
+                  src={shareData.imageUrl}
+                  alt="Flavor Wheel Preview"
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  className="w-full"
+                />
               </div>
             )}
 

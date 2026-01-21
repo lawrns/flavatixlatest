@@ -112,7 +112,7 @@ const InspirationBox: React.FC<InspirationBoxProps> = ({ className = '' }) => {
         clearInterval(intervalRef.current);
       }
     };
-  }, []);
+  }, [startRotation]);
 
   if (!currentContent) {
     return null;

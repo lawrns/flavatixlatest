@@ -29,13 +29,13 @@ const Combobox: React.FC<ComboboxProps> = ({
   const generatedId = useId();
   const id = providedId || `combobox-${generatedId}`;
   const listboxId = `${id}-listbox`;
-  
+
   const [isOpen, setIsOpen] = useState(false);
   const [filteredOptions, setFilteredOptions] = useState<string[]>(options);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
-  
+
   // Generate option IDs for aria-activedescendant
   const getOptionId = (index: number) => `${id}-option-${index}`;
 
@@ -70,7 +70,7 @@ const Combobox: React.FC<ComboboxProps> = ({
         if (!isOpen) {
           setIsOpen(true);
         } else {
-          setHighlightedIndex(prev => 
+          setHighlightedIndex(prev =>
             prev < filteredOptions.length - 1 ? prev + 1 : prev
           );
         }
@@ -114,7 +114,7 @@ const Combobox: React.FC<ComboboxProps> = ({
       const highlightedElement = listRef.current.querySelector(`#${getOptionId(highlightedIndex)}`);
       highlightedElement?.scrollIntoView({ block: 'nearest' });
     }
-  }, [highlightedIndex]);
+  }, [highlightedIndex, getOptionId]);
 
   return (
     <div className={`relative ${className}`}>
@@ -124,7 +124,7 @@ const Combobox: React.FC<ComboboxProps> = ({
           {label}
         </label>
       )}
-      
+
       <div className="relative">
         <input
           ref={inputRef}
@@ -145,14 +145,14 @@ const Combobox: React.FC<ComboboxProps> = ({
           disabled={disabled}
           autoComplete="off"
           className={`
-            w-full px-3 py-2 pr-16 border border-gray-300 dark:border-zinc-600 
+            w-full px-3 py-2 pr-16 border border-gray-300 dark:border-zinc-600
             rounded-lg bg-white dark:bg-zinc-800 text-gray-900 dark:text-zinc-50
             focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
             disabled:opacity-50 disabled:cursor-not-allowed
             min-h-[44px]
           `}
         />
-        
+
         {value && (
           <button
             type="button"
@@ -163,7 +163,7 @@ const Combobox: React.FC<ComboboxProps> = ({
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
         )}
-        
+
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -171,8 +171,8 @@ const Combobox: React.FC<ComboboxProps> = ({
           tabIndex={-1}
           className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-zinc-400 dark:hover:text-zinc-200 p-1 min-w-[24px] min-h-[24px]"
         >
-          <ChevronDown 
-            className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
+          <ChevronDown
+            className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
             aria-hidden="true"
           />
         </button>
@@ -199,8 +199,8 @@ const Combobox: React.FC<ComboboxProps> = ({
               onClick={() => handleOptionClick(option)}
               className={`
                 px-3 py-2 cursor-pointer text-sm min-h-[40px] flex items-center
-                ${index === highlightedIndex 
-                  ? 'bg-primary/10 text-primary dark:bg-primary/20' 
+                ${index === highlightedIndex
+                  ? 'bg-primary/10 text-primary dark:bg-primary/20'
                   : 'text-gray-900 dark:text-zinc-50 hover:bg-gray-100 dark:hover:bg-zinc-700'
                 }
                 ${option === value ? 'font-semibold' : ''}
@@ -208,10 +208,10 @@ const Combobox: React.FC<ComboboxProps> = ({
             >
               {option}
               {option === value && (
-                <svg 
-                  className="ml-auto h-4 w-4 text-primary" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="ml-auto h-4 w-4 text-primary"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
                 >
@@ -224,11 +224,11 @@ const Combobox: React.FC<ComboboxProps> = ({
       )}
 
       {isOpen && filteredOptions.length === 0 && value && allowCustom && (
-        <div 
+        <div
           role="status"
           aria-live="polite"
           className="
-            absolute z-50 w-full mt-1 px-3 py-2 bg-white dark:bg-zinc-800 
+            absolute z-50 w-full mt-1 px-3 py-2 bg-white dark:bg-zinc-800
             border border-gray-300 dark:border-zinc-600 rounded-lg shadow-lg
             text-sm text-gray-500 dark:text-zinc-400
           "
@@ -236,11 +236,11 @@ const Combobox: React.FC<ComboboxProps> = ({
           Press Enter to use &quot;{value}&quot;
         </div>
       )}
-      
+
       {/* Live region for screen reader announcements */}
-      <div 
-        role="status" 
-        aria-live="polite" 
+      <div
+        role="status"
+        aria-live="polite"
         aria-atomic="true"
         className="sr-only"
       >

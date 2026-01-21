@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { getSupabaseClient } from '@/lib/supabase';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { toast } from '@/lib/toast';
@@ -97,12 +98,6 @@ export default function CommentsModal({
     document.addEventListener('keydown', handleTabKey);
     return () => document.removeEventListener('keydown', handleTabKey);
   }, [isOpen, comments, loading]);
-
-  useEffect(() => {
-    if (isOpen) {
-      loadComments();
-    }
-  }, [isOpen, tastingId]);
 
   const loadComments = async () => {
     try {
@@ -371,9 +366,11 @@ export default function CommentsModal({
         {/* Avatar */}
         <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold flex-shrink-0">
           {comment.user.avatar_url ? (
-            <img
+            <Image
               src={comment.user.avatar_url}
               alt={comment.user.full_name || 'User'}
+              width={40}
+              height={40}
               className="w-full h-full rounded-full object-cover"
             />
           ) : (
