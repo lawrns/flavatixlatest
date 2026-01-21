@@ -37,7 +37,7 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
   const [activeView, setActiveView] = useState<DashboardView>('suggestions');
   const [suggestions, setSuggestions] = useState<SuggestionWithParticipant[]>([]);
   const [participants, setParticipants] = useState<ParticipantWithRole[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [_loading, setLoading] = useState(false);
   const [currentUserRole, setCurrentUserRole] = useState<'moderating' | 'participating'>('moderating');
 
   useEffect(() => {

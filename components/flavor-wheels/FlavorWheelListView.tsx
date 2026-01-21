@@ -150,7 +150,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
     return colors[type as keyof typeof colors] || '#6B7280';
   };
 
-  const getDescriptorTypeLabel = (type: string): string => {
+  const _getDescriptorTypeLabel = (type: string): string => {
     const labels = {
       aroma: 'Aroma',
       flavor: 'Flavor',

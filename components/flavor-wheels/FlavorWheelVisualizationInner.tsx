@@ -42,7 +42,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
-  const [hoveredSegment, setHoveredSegment] = useState<string | null>(null);
+  const [_hoveredSegment, setHoveredSegment] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ text: string; x: number; y: number } | null>(null);
   const [currentZoom, setCurrentZoom] = useState(1);
 
