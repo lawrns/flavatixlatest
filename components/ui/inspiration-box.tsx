@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 interface InspirationBoxProps {
   className?: string;
@@ -85,7 +85,7 @@ const InspirationBox: React.FC<InspirationBoxProps> = ({ className = '' }) => {
     };
   };
 
-  const startRotation = () => {
+  const startRotation = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
@@ -102,7 +102,7 @@ const InspirationBox: React.FC<InspirationBoxProps> = ({ className = '' }) => {
         setIsVisible(true);
       }, 300); // Brief pause for transition
     }, 25000);
-  };
+  }, []);
 
   useEffect(() => {
     startRotation();
