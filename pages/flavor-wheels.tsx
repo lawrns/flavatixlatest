@@ -16,6 +16,7 @@ import { FlavorWheelPDFExporter } from '../lib/flavorWheelPDFExporter';
 import FlavorWheelErrorBoundary from '../components/flavor-wheels/FlavorWheelErrorBoundary';
 import { BottomSheet, FlavorPill } from '@/components/ui';
 import { FLAVOR_COLORS, STATUS_COLORS } from '@/lib/colors';
+import { logger } from '@/lib/logger';
 
 // Color palette for categories (matches D3 visualization)
 // Uses hex values from centralized color system
@@ -177,6 +178,15 @@ export default function FlavorWheelsPage() {
         });
 
         const data = await response.json();
+
+        logger.debug('FlavorWheel', 'API Response', {
+          success: data.success,
+          haswheelData: !!data.wheelData,
+          categoriesLength: data.wheelData?.categories?.length,
+          cached: data.cached,
+          wheelType,
+          scopeType
+        });
 
         if (!response.ok) {
           throw new Error(data.error || 'Failed to generate wheel');
