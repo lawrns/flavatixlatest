@@ -177,39 +177,42 @@ export default function FlavorWheelsPage() {
           }),
         });
 
-        const data = await response.json();
+        const response_data = await response.json();
+
+        // API middleware wraps response in 'data' property
+        const apiData = response_data.data;
 
         logger.debug('FlavorWheel', 'API Response', {
-          success: data.success,
-          haswheelData: !!data.wheelData,
-          categoriesLength: data.wheelData?.categories?.length,
-          cached: data.cached,
+          success: response_data.success,
+          haswheelData: !!apiData?.wheelData,
+          categoriesLength: apiData?.wheelData?.categories?.length,
+          cached: apiData?.cached,
           wheelType,
           scopeType
         });
 
         if (!response.ok) {
-          throw new Error(data.error || 'Failed to generate wheel');
+          throw new Error(response_data.error?.message || 'Failed to generate wheel');
         }
 
-        if (!data.success) {
-          throw new Error(data.error || 'Failed to generate wheel');
+        if (!response_data.success) {
+          throw new Error(response_data.error?.message || 'Failed to generate wheel');
         }
 
-        setWheelData(data.wheelData);
-        setCached(data.cached || false);
+        setWheelData(apiData.wheelData);
+        setCached(apiData.cached || false);
 
         console.log('🔍 FLAVOR WHEEL DEBUG:', {
-          hasWheelData: !!data.wheelData,
-          categoriesCount: data.wheelData?.categories?.length,
-          categories: data.wheelData?.categories?.map((c: { name: string }) => c.name),
+          hasWheelData: !!apiData?.wheelData,
+          categoriesCount: apiData?.wheelData?.categories?.length,
+          categories: apiData?.wheelData?.categories?.map((c: { name: string }) => c.name),
           viewMode,
           loading,
           error,
           user: !!user
         });
 
-        if (data.wheelData?.categories?.length === 0) {
+        if (apiData?.wheelData?.categories?.length === 0) {
           setError(
             'No flavor descriptors found. Add some tasting notes or reviews to generate your flavor wheel!'
           );
