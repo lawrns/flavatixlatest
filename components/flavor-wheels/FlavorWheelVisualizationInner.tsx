@@ -99,7 +99,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
           text: `Check out my flavor wheel with ${wheelData.totalDescriptors || 0} descriptors!`,
           url: window.location.href,
         });
-      } catch (error) {
+      } catch {
         logger.debug('FlavorWheel', 'Error sharing');
       }
     } else {
@@ -108,7 +108,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
         await navigator.clipboard.writeText(window.location.href);
         // TODO(ux): Show toast notification on successful clipboard copy.
         // Import toast from '@/lib/toast' and call toast.success('Link copied!')
-      } catch (error) {
+      } catch {
         logger.debug('FlavorWheel', 'Error copying to clipboard');
       }
     }

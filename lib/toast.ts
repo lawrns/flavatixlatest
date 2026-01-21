@@ -137,7 +137,7 @@ function withUndo(
         try {
           await onUndo()
           sonnerToast.success('Action undone')
-        } catch (_err) {
+        } catch {
           sonnerToast.error('Failed to undo action')
         }
       },
