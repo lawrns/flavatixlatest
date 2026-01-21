@@ -1,6 +1,6 @@
 /**
  * AppShell Component
- * 
+ *
  * Provides consistent layout structure for app pages including:
  * - Header with navigation
  * - Main content area with responsive padding
@@ -9,6 +9,7 @@
  */
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import BottomNavigation from '../navigation/BottomNavigation';
@@ -104,13 +105,19 @@ export const AppShell: React.FC<AppShellProps> = ({
                   </button>
                 ) : (
                   <Link href="/dashboard" className="flex items-center gap-2">
-                    <img src="/logos/flavatix-logo.svg" alt="Flavatix" className="w-6 h-6" />
+                    <Image
+                      src="/logos/flavatix-logo.svg"
+                      alt="Flavatix"
+                      width={24}
+                      height={24}
+                      className="w-6 h-6"
+                    />
                     <span className="font-heading font-semibold text-text-primary hidden sm:inline">
                       Flavatix
                     </span>
                   </Link>
                 )}
-                
+
                 {title && (
                   <h1 className="text-lg font-heading font-semibold text-text-primary truncate">
                     {title}

@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import { getSupabaseClient } from '../../lib/supabase';
 import { useAuth } from '../../contexts/SimpleAuthContext';
 import { toast } from '../../lib/toast';
@@ -264,9 +265,11 @@ const AuthSection = () => {
         <Container size="md" className="rounded-2xl bg-white/95 dark:bg-zinc-900/95 shadow-lg dark:shadow-2xl backdrop-blur-sm border border-white/20 dark:border-zinc-700/30 p-8 sm:p-12">
           {/* Logo */}
           <div className="mb-8 text-center">
-            <img
+            <Image
               src="/logos/flavatix-logo.svg"
               alt="Flavatix Logo"
+              width={64}
+              height={64}
               className="h-14 w-14 sm:h-16 sm:w-16 mx-auto"
             />
           </div>

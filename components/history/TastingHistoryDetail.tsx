@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { TastingHistory, getTastingById } from '../../lib/historyService';
 import { useAuth } from '../../contexts/SimpleAuthContext';
 import { format } from 'date-fns';
@@ -326,9 +327,11 @@ const TastingHistoryDetail: React.FC<TastingHistoryDetailProps> = ({
                 {item.photo_url && (
                   <div>
                     <h5 className="text-sm font-medium text-gray-700 mb-2">Foto</h5>
-                    <img
+                    <Image
                       src={item.photo_url}
                       alt={item.item_name}
+                      width={400}
+                      height={192}
                       className="w-full max-w-md h-48 object-cover rounded-lg"
                     />
                   </div>
