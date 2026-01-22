@@ -39,7 +39,7 @@ const PrivacyPolicy = () => {
               Privacy Policy
             </h1>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-8">
-              Last Updated: January 15, 2026
+              Last Updated: January 22, 2026
             </p>
 
             <div className="prose dark:prose-invert max-w-none space-y-8">
@@ -135,12 +135,35 @@ const PrivacyPolicy = () => {
                 </ul>
 
                 <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 mt-6">
-                  3.3 Information from Third Parties
+                  3.3 Camera and Barcode Scanning
                 </h3>
                 <ul className="list-disc pl-6 space-y-2 text-zinc-700 dark:text-zinc-300">
                   <li>
-                    <strong>Social Login:</strong> Profile information from Google or Apple OAuth
-                    (if you choose social login)
+                    <strong>Camera Access:</strong> We request camera access solely for barcode
+                    scanning functionality. You must explicitly grant permission.
+                  </li>
+                  <li>
+                    <strong>Image Processing:</strong> Camera images are processed locally on your
+                    device for barcode detection. We do not store or transmit camera images to our
+                    servers.
+                  </li>
+                  <li>
+                    <strong>Barcode Data:</strong> Only the extracted barcode/UPC data is stored with
+                    your tasting notes for product identification purposes.
+                  </li>
+                  <li>
+                    <strong>No Biometric Data:</strong> We do not collect facial recognition data,
+                    fingerprints, or other biometric information.
+                  </li>
+                </ul>
+
+                <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 mt-6">
+                  3.4 Information from Third Parties
+                </h3>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700 dark:text-zinc-300">
+                  <li>
+                    <strong>Social Login:</strong> Profile information from Google OAuth (if you
+                    choose social login)
                   </li>
                   <li>
                     <strong>Authentication Services:</strong> Authentication status and user ID from
@@ -148,7 +171,7 @@ const PrivacyPolicy = () => {
                   </li>
                   <li>
                     <strong>Analytics Providers:</strong> Aggregated usage statistics from analytics
-                    services
+                    services (if enabled)
                   </li>
                 </ul>
               </section>
