@@ -17,15 +17,14 @@ export const GoogleAnalytics = ({ measurementId }: GoogleAnalyticsProps) => {
     if (typeof window !== 'undefined' && !(window as any).gtag) {
       (window as any).dataLayer = (window as any).dataLayer || [];
 
-      function gtag(...args: any[]) {
+      // Use function expression instead of arrow to support 'arguments' in ES5
+      (window as any).gtag = function gtag() {
         (window as any).dataLayer.push(arguments);
-      }
-
-      (window as any).gtag = gtag;
+      };
 
       // Initialize GA4
-      gtag('js', new Date());
-      gtag('config', measurementId, {
+      (window as any).gtag('js', new Date());
+      (window as any).gtag('config', measurementId, {
         send_page_view: false, // We'll handle page views manually
       });
     }

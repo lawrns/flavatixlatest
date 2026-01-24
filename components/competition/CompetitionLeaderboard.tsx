@@ -30,6 +30,7 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
 
   useEffect(() => {
     loadLeaderboard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionId]);
 
   const loadLeaderboard = async () => {

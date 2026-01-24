@@ -11,7 +11,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '../ui/Card';
-import { BarChart3, TrendingUp, Users, Download, DollarSign, Smartphone, Monitor } from 'lucide-react';
+import { TrendingUp, Users, Download, DollarSign, Smartphone, Monitor } from 'lucide-react';
 
 interface MetricsData {
   dau: number;
@@ -75,6 +75,7 @@ export const PWAMetricsDashboard: React.FC<PWAMetricsDashboardProps> = ({
       const interval = setInterval(loadMetrics, refreshInterval * 1000);
       return () => clearInterval(interval);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeRange, refreshInterval]);
 
   if (loading && !data) {

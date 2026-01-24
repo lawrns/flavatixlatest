@@ -123,6 +123,7 @@ export default function AvatarUpload({
       const file = acceptedFiles[0];
       await handleFileUpload(file);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [userId, currentAvatarUrl, onUploadSuccess, onUploadError]
   );
 

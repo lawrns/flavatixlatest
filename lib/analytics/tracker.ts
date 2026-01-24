@@ -86,7 +86,9 @@ class AnalyticsTracker {
    * Get platform information (mobile/desktop)
    */
   private getPlatform(): string {
-    if (typeof window === 'undefined') return 'unknown';
+    if (typeof window === 'undefined') {
+      return 'unknown';
+    }
 
     const userAgent = navigator.userAgent;
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -213,7 +215,7 @@ class AnalyticsTracker {
       logger.error('Analytics', 'Failed to track PWA install', error);
     }
 
-    logger.info('Analytics', 'PWA installation tracked', installData);
+    logger.info('Analytics', 'PWA installation tracked', installData as any);
   }
 
   /**
@@ -341,16 +343,22 @@ class AnalyticsTracker {
    * Get current user ID from localStorage or auth
    */
   private getUserId(): string | undefined {
-    if (typeof window === 'undefined') return undefined;
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
 
     try {
       // Try to get user ID from localStorage (set by auth)
       const userId = localStorage.getItem('userId');
-      if (userId) return userId;
+      if (userId) {
+        return userId;
+      }
 
       // Try to get from session storage
       const sessionUserId = sessionStorage.getItem('userId');
-      if (sessionUserId) return sessionUserId;
+      if (sessionUserId) {
+        return sessionUserId;
+      }
 
       return undefined;
     } catch {
@@ -362,7 +370,9 @@ class AnalyticsTracker {
    * Check if PWA is installed
    */
   isPWAInstalled(): boolean {
-    if (typeof window === 'undefined') return false;
+    if (typeof window === 'undefined') {
+      return false;
+    }
 
     // Check if running as standalone PWA
     const isStandalone =
@@ -379,7 +389,9 @@ class AnalyticsTracker {
    * Get PWA install prompt (if available)
    */
   async getInstallPrompt(): Promise<any> {
-    if (typeof window === 'undefined') return null;
+    if (typeof window === 'undefined') {
+      return null;
+    }
 
     const prompt = (window as any).deferredPrompt;
 

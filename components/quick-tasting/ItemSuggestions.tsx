@@ -23,6 +23,7 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
 
   useEffect(() => {
     loadSuggestions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tastingId]);
 
   const loadSuggestions = async () => {

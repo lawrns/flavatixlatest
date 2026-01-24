@@ -752,6 +752,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
 
       // Load user roles for all modes to ensure permissions are set
       loadUserRole();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session?.id, session?.mode, session?.notes]);
 
     // Auto-add first item for Quick Tasting and predefined Study Mode
@@ -796,6 +797,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
           }
         }, 100);
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
       session?.id,
       session?.mode,

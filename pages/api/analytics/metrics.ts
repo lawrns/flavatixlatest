@@ -54,33 +54,33 @@ export default async function handler(
     startDate.setDate(startDate.getDate() - days);
 
     // Get DAU (last 30 days)
-    const { data: dauData, error: dauError } = await supabase
+    const { data: dauData } = await supabase
       .rpc('calculate_dau', {
         start_date: startDate.toISOString(),
       })
-      .single();
+      .single() as { data: { dau: number } | null };
 
     // Get MAU (last 30 days)
-    const { data: mauData, error: mauError } = await supabase
+    const { data: mauData } = await supabase
       .rpc('calculate_mau', {
         start_date: startDate.toISOString(),
       })
-      .single();
+      .single() as { data: { mau: number } | null };
 
     // Get platform split
-    const { data: platformData, error: platformError } = await supabase
+    const { data: platformData } = await supabase
       .from('analytics_sessions')
       .select('platform')
       .gte('created_at', startDate.toISOString());
 
     // Get PWA installs
-    const { data: installsData, error: installsError } = await supabase
+    const { data: installsData } = await supabase
       .from('analytics_pwa_installs')
       .select('*')
       .gte('created_at', startDate.toISOString());
 
     // Get user acquisition cost
-    const { data: cacData, error: cacError } = await supabase
+    const { data: cacData } = await supabase
       .from('analytics_user_acquisition')
       .select('cost')
       .gte('created_at', startDate.toISOString());
@@ -121,7 +121,7 @@ export default async function handler(
     const cac = totalAcquired > 0 ? totalCost / totalAcquired : 0;
 
     // Get daily trend
-    const { data: dailyData, error: dailyError } = await supabase
+    const { data: dailyData } = await supabase
       .from('analytics_sessions')
       .select('created_at, user_id')
       .gte('created_at', startDate.toISOString())

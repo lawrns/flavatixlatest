@@ -100,12 +100,14 @@ const TastingHistoryList: React.FC<TastingHistoryListProps> = ({
 
   useEffect(() => {
     loadTastings(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, filters]);
 
   const loadMore = useCallback(() => {
     if (!loading && hasMore) {
       loadTastings(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, hasMore]);
 
   // Virtualizer setup - estimated row height of 120px for tasting items

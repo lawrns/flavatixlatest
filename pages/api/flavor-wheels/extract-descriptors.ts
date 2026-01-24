@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSupabaseClient } from '@/lib/supabase';
+import { logger } from '@/lib/logger';
 import {
   extractDescriptorsWithIntensity,
   extractFromStructuredReview,
@@ -93,7 +94,7 @@ async function extractDescriptorsHandler(
         .join('. ');
     }
 
-    console.log('[API] Extract descriptors:', {
+    logger.debug('ExtractDescriptors', 'API request', {
       sourceId,
       sourceType,
       textLength: combinedText.length,
@@ -152,7 +153,7 @@ async function extractDescriptorsHandler(
           raw_ai_response: { descriptors },
         });
       } catch (aiError) {
-        console.error('AI extraction failed, falling back to keyword:', aiError);
+        logger.warn('ExtractDescriptors', 'AI extraction failed, falling back to keyword', aiError as any);
         // Fall back to keyword-based extraction
         if (structuredData) {
           descriptors = extractFromStructuredReview(structuredData);
@@ -212,7 +213,7 @@ async function extractDescriptorsHandler(
       .select('id');
 
     if (saveError) {
-      console.error('[API] Error saving descriptors:', JSON.stringify(saveError, null, 2));
+      logger.error('ExtractDescriptors', 'Error saving descriptors', saveError);
       return sendServerError(res, saveError, 'Failed to save descriptors');
     }
 

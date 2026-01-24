@@ -79,6 +79,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
 
   useEffect(() => {
     loadSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionId]);
 
   useEffect(() => {

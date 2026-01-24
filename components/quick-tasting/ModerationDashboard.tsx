@@ -43,6 +43,7 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
   useEffect(() => {
     loadData();
     setupRealtimeUpdates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tastingId]);
 
   const loadData = async () => {
