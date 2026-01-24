@@ -65,15 +65,14 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
         'fixed bottom-0 left-0 right-0 z-50',
         'bg-white dark:bg-zinc-900',
         'border-t border-zinc-200 dark:border-zinc-700/50',
-        'shadow-[0_-4px_20px_rgba(0,0,0,0.03)]',
-        'pb-[env(safe-area-inset-bottom)]'
+        'shadow-[0_-4px_20px_rgba(0,0,0,0.03)]'
       )}
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <nav
-        className="flex justify-around items-center px-2 max-w-md mx-auto h-[64px] safe-area-bottom"
+        className="flex justify-around items-center px-4 max-w-md mx-auto h-[64px]"
         role="navigation"
         aria-label="Main navigation"
-        style={{ paddingBottom: 'env(safe-area-inset-bottom)', minHeight: 'calc(64px + env(safe-area-inset-bottom))' }}
       >
         {navigationItems.map((item) => {
           const active = isActive(item.path);
@@ -83,10 +82,9 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
               href={item.path}
               onClick={(e) => handleClick(e, item.path)}
               className={cn(
-                'flex flex-col items-center justify-center h-full min-w-[64px] gap-0.5 group',
+                'flex flex-col items-center justify-center h-full min-w-[60px] gap-0.5 group',
                 'transition-colors duration-200',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
-                'cursor-pointer',
                 active
                   ? 'text-primary'
                   : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300'
