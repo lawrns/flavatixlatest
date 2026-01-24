@@ -78,7 +78,7 @@ const SocialFeedWidget = React.memo(
 
         // Extract all tasting IDs and user IDs for batch queries
         const tastingIds = tastings.map((t: any) => t.id);
-        const userIds = [...new Set(tastings.map((t: any) => t.user_id))];
+        const userIds = Array.from(new Set(tastings.map((t: any) => t.user_id)));
 
         // Fetch all stats AND profiles in parallel with aggregated queries (no N+1)
         const [likesData, commentsData, userLikesData, photosData, profilesData] = await Promise.all([

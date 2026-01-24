@@ -54,7 +54,7 @@ export const formatTimeAgo = (dateString: string): string => {
   return date.toLocaleDateString();
 };
 
-export const SocialPostCard: React.FC<SocialPostCardProps> = ({
+export const SocialPostCard: React.FC<SocialPostCardProps> = React.memo(({
   post,
   currentUserId,
   isExpanded,
@@ -269,6 +269,20 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
       </div>
     </article>
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison to prevent unnecessary re-renders
+  return (
+    prevProps.post.id === nextProps.post.id &&
+    prevProps.post.isLiked === nextProps.post.isLiked &&
+    prevProps.post.isFollowed === nextProps.post.isFollowed &&
+    prevProps.post.stats.likes === nextProps.post.stats.likes &&
+    prevProps.post.stats.comments === nextProps.post.stats.comments &&
+    prevProps.post.stats.shares === nextProps.post.stats.shares &&
+    prevProps.isExpanded === nextProps.isExpanded &&
+    prevProps.currentUserId === nextProps.currentUserId
+  );
+});
+
+SocialPostCard.displayName = 'SocialPostCard';
 
 export default SocialPostCard;
