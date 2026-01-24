@@ -240,10 +240,10 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
       </div>
 
       {/* Engagement Buttons */}
-      <div className="flex justify-around border-t border-zinc-100 dark:border-zinc-700 pt-2">
+      <div className="flex justify-between gap-2 border-t border-zinc-100 dark:border-zinc-700 pt-3 px-2">
         <button
           onClick={onLike}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors ${
+          className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors ${
             post.isLiked ? 'text-red-500' : 'text-zinc-600 dark:text-zinc-300'
           }`}
         >
@@ -254,14 +254,14 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = ({
         </button>
         <button
           onClick={onComment}
-          className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors text-zinc-600 dark:text-zinc-300"
+          className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors text-zinc-600 dark:text-zinc-300"
         >
           <span className="material-symbols-outlined text-xl">mode_comment</span>
           <span className="text-sm font-medium">Comment</span>
         </button>
         <button
           onClick={onShare}
-          className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors text-zinc-600 dark:text-zinc-300"
+          className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors text-zinc-600 dark:text-zinc-300"
         >
           <span className="material-symbols-outlined text-xl">share</span>
           <span className="text-sm font-medium">Share</span>

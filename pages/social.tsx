@@ -280,7 +280,7 @@ export default function SocialPage() {
 
   if (authLoading || loadingPosts) {
     return (
-      <div className="bg-white dark:bg-zinc-900 font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
+      <div className="bg-white dark:bg-zinc-900 font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
         <div className="flex min-h-screen flex-col">
           <header className="border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4">
             <div className="flex items-center justify-between mb-4">
@@ -289,11 +289,12 @@ export default function SocialPage() {
               <div className="w-10 h-10 bg-zinc-200 dark:bg-zinc-700 rounded-full animate-pulse" />
             </div>
           </header>
-          <main className="flex-1 overflow-y-auto divide-y divide-zinc-200 dark:divide-zinc-700">
+          <main className="flex-1 overflow-y-auto divide-y divide-zinc-200 dark:divide-zinc-700 pb-[calc(64px+env(safe-area-inset-bottom))]">
             <SkeletonPost />
             <SkeletonPost />
             <SkeletonPost />
           </main>
+          <BottomNavigation />
         </div>
       </div>
     );
@@ -303,7 +304,7 @@ export default function SocialPage() {
 
   return (
     <ErrorBoundary>
-      <div className="bg-white dark:bg-zinc-900 font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
+      <div className="bg-white dark:bg-zinc-900 font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
         <div className="flex min-h-screen flex-col">
           {/* Header */}
           <header className="border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 sticky top-0 z-40">
@@ -334,7 +335,7 @@ export default function SocialPage() {
           </header>
 
           {/* Main Content */}
-          <main className="flex-1 overflow-y-auto bg-white dark:bg-zinc-900">
+          <main className="flex-1 overflow-y-auto bg-white dark:bg-zinc-900 pb-[calc(64px+env(safe-area-inset-bottom))]">
             <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
               {filteredPosts.length === 0 ? (
                 <div className="p-8 text-center">
