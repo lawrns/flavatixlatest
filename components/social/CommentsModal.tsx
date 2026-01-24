@@ -193,6 +193,14 @@ export default function CommentsModal({
     }
   };
 
+  // Load comments when modal opens
+  useEffect(() => {
+    if (isOpen && tastingId) {
+      loadComments();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, tastingId]);
+
   const handleSubmitComment = async () => {
     if (!commentText.trim() || !user?.id) {
       return;
