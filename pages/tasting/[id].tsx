@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { getSupabaseClient } from '@/lib/supabase';
 import { useAuth } from '@/contexts/SimpleAuthContext';
@@ -7,6 +6,7 @@ import QuickTastingSession from '@/components/quick-tasting/QuickTastingSession'
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import { toast } from '@/lib/toast';
 import { ChevronLeft } from 'lucide-react';
+import BottomNavigation from '@/components/navigation/BottomNavigation';
 
 interface QuickTasting {
   id: string;
@@ -232,38 +232,7 @@ const TastingSessionPage: React.FC = () => {
       </main>
 
       {/* Bottom Navigation */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
-        <nav className="flex justify-around p-2">
-          <Link
-            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
-            href="/dashboard"
-          >
-            <span className="material-symbols-outlined">home</span>
-            <span className="text-xs font-medium">Home</span>
-          </Link>
-          <Link
-            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
-            href="/taste"
-          >
-            <span className="material-symbols-outlined">restaurant</span>
-            <span className="text-xs font-medium">Taste</span>
-          </Link>
-          <Link
-            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
-            href="/review"
-          >
-            <span className="material-symbols-outlined">reviews</span>
-            <span className="text-xs font-medium">Review</span>
-          </Link>
-          <Link
-            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
-            href="/flavor-wheels"
-          >
-            <span className="material-symbols-outlined">donut_small</span>
-            <span className="text-xs font-medium">Wheels</span>
-          </Link>
-        </nav>
-      </footer>
+      <BottomNavigation />
     </div>
   );
 };

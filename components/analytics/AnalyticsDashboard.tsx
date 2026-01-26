@@ -29,6 +29,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   useEffect(() => {
     loadAnalytics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, timeRange]);
 
   const loadAnalytics = async () => {

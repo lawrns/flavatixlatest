@@ -166,6 +166,20 @@ export default function SettingsPage() {
       items: [
         {
           icon: Shield,
+          label: 'Privacy Policy',
+          description: 'View our privacy policy and data practices',
+          action: <ChevronRight size={20} className="text-zinc-400" />,
+          onClick: () => router.push('/privacy'),
+        },
+        {
+          icon: Shield,
+          label: 'Terms of Service',
+          description: 'View our terms of service and user agreement',
+          action: <ChevronRight size={20} className="text-zinc-400" />,
+          onClick: () => router.push('/terms'),
+        },
+        {
+          icon: Shield,
           label: 'Privacy Settings',
           description: 'Manage your data and privacy preferences',
           action: <ChevronRight size={20} className="text-zinc-400" />,

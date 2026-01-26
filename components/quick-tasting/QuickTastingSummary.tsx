@@ -70,6 +70,7 @@ const QuickTastingSummary: React.FC<QuickTastingSummaryProps> = ({
 
   useEffect(() => {
     loadTastingItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session.id]);
 
   const getCategoryLabel = (category: string): string =>

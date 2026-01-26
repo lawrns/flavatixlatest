@@ -5,9 +5,10 @@ import { cn } from '@/lib/utils';
 
 interface BottomNavigationProps {
   currentPath?: string;
+  onNavigate?: (path: string) => void;
 }
 
-const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath }) => {
+const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavigate }) => {
   const router = useRouter();
   const activePath = currentPath || router.pathname;
 
@@ -49,20 +50,28 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath }) => {
     return activePath.startsWith(path);
   };
 
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+    e.preventDefault();
+    if (onNavigate) {
+      onNavigate(path);
+    } else {
+      router.push(path);
+    }
+  };
+
   return (
-    <footer 
+    <footer
       className={cn(
         'fixed bottom-0 left-0 right-0 z-50',
         'bg-white dark:bg-zinc-900',
         'border-t border-zinc-200 dark:border-zinc-700/50',
-        'shadow-[0_-4px_20px_rgba(0,0,0,0.03)]',
-        'safe-area-bottom'
+        'shadow-[0_-4px_20px_rgba(0,0,0,0.03)]'
       )}
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      <nav 
-        className="flex justify-around items-center px-4 max-w-md mx-auto h-[64px]" 
-        role="navigation" 
+      <nav
+        className="flex justify-around items-center px-4 max-w-md mx-auto h-[64px]"
+        role="navigation"
         aria-label="Main navigation"
       >
         {navigationItems.map((item) => {
@@ -71,26 +80,27 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath }) => {
             <Link
               key={item.path}
               href={item.path}
+              onClick={(e) => handleClick(e, item.path)}
               className={cn(
                 'flex flex-col items-center justify-center h-full min-w-[60px] gap-0.5 group',
                 'transition-colors duration-200',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
-                active 
-                  ? 'text-primary' 
+                active
+                  ? 'text-primary'
                   : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300'
               )}
               aria-current={active ? 'page' : undefined}
               data-testid={item.testId}
             >
               {/* Icon container */}
-              <span 
+              <span
                 className={cn(
                   'flex items-center justify-center h-6',
                   'transition-transform duration-200',
                   active && 'scale-110'
                 )}
               >
-                <span 
+                <span
                   className={cn(
                     'material-symbols-outlined text-[24px] leading-none',
                     active && 'font-variation-settings: "FILL" 1'
@@ -103,9 +113,9 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath }) => {
                   {active ? item.activeIcon : item.icon}
                 </span>
               </span>
-              
+
               {/* Label */}
-              <span 
+              <span
                 className={cn(
                   'text-[10px] font-medium leading-tight',
                   'transition-colors duration-200',

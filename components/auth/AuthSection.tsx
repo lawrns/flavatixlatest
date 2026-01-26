@@ -214,7 +214,7 @@ const AuthSection = () => {
 
   if (showOnboarding === null) {
     return (
-      <div className="font-display text-zinc-900 dark:text-zinc-50 min-h-screen flex items-center justify-center">
+      <div className="font-display text-zinc-900 dark:text-zinc-50 fixed inset-0 flex items-center justify-center overflow-hidden bg-white dark:bg-zinc-900">
         <LoadingSpinner text="Preparing your experience..." />
       </div>
     );
@@ -223,7 +223,7 @@ const AuthSection = () => {
   // Show onboarding carousel first, then form
   if (showOnboarding) {
     return (
-      <div className="font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
+      <div className="font-display text-zinc-900 dark:text-zinc-50 fixed inset-0 overflow-hidden">
         <Head>
           <meta
             name="viewport"

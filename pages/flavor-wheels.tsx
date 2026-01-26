@@ -202,13 +202,13 @@ export default function FlavorWheelsPage() {
         setWheelData(apiData.wheelData);
         setCached(apiData.cached || false);
 
-        console.log('🔍 FLAVOR WHEEL DEBUG:', {
+        logger.debug('FlavorWheel', 'Wheel data loaded', {
           hasWheelData: !!apiData?.wheelData,
           categoriesCount: apiData?.wheelData?.categories?.length,
           categories: apiData?.wheelData?.categories?.map((c: { name: string }) => c.name),
           viewMode,
           loading,
-          error,
+          errorMessage: error,
           user: !!user
         });
 
@@ -224,6 +224,7 @@ export default function FlavorWheelsPage() {
         setLoading(false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [user, wheelType, scopeType]
   );
 
@@ -626,17 +627,7 @@ export default function FlavorWheelsPage() {
             />
           )}
 
-          {user && wheelData && !loading && !error && wheelData.categories.length > 0 && (() => {
-            console.log('🎨 RENDERING WHEEL:', {
-              user: !!user,
-              wheelData: !!wheelData,
-              loading,
-              error,
-              categoriesLength: wheelData?.categories?.length,
-              viewMode
-            });
-            return true;
-          })() && (
+          {user && wheelData && !loading && !error && wheelData.categories.length > 0 && (
             <div className="flex flex-col items-center overflow-hidden">
               {/* Top descriptors chips */}
               <div className="w-full mb-4">

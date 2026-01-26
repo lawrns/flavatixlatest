@@ -17,6 +17,7 @@ export const UnifiedFlavorWheelPage: React.FC<UnifiedFlavorWheelPageProps> = ({
 
   useEffect(() => {
     loadFlavorWheel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const loadFlavorWheel = async () => {

@@ -32,6 +32,7 @@ const TemplatesPage: React.FC = () => {
       };
       fetchUserTemplates();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const handleSelectTemplate = async (templateId: string) => {

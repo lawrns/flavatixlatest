@@ -1,0 +1,22 @@
+# robots.txt for Flavatix
+# This file guides search engine crawlers on what to index
+
+# Allow all search engines
+User-agent: *
+
+# Disallow API routes - these are for application use, not public indexing
+Disallow: /api/
+
+# Disallow any user-specific or private areas
+Disallow: /account/
+Disallow: /profile/
+Disallow: /dashboard/
+
+# Allow all other pages
+Allow: /
+
+# Sitemap reference
+Sitemap: https://flavatix.com/sitemap.xml
+
+# Crawl-delay (optional - helps prevent server overload)
+# Crawl-delay: 1

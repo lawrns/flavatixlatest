@@ -35,6 +35,7 @@ const CompetitionRanking: React.FC<CompetitionRankingProps> = ({
     if (isRankingEnabled) {
       loadParticipants();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tastingId, isRankingEnabled]);
 
   const loadParticipants = async () => {

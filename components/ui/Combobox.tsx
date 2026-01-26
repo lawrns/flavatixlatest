@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useId } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { ChevronDown, X } from 'lucide-react';
 
 interface ComboboxProps {
@@ -37,7 +37,7 @@ const Combobox: React.FC<ComboboxProps> = ({
   const listRef = useRef<HTMLUListElement>(null);
 
   // Generate option IDs for aria-activedescendant
-  const getOptionId = (index: number) => `${id}-option-${index}`;
+  const getOptionId = useCallback((index: number) => `${id}-option-${index}`, [id]);
 
   useEffect(() => {
     const filtered = options.filter(option =>

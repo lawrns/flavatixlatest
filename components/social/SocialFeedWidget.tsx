@@ -48,7 +48,7 @@ const SocialFeedWidget = React.memo(
       try {
         const supabase = getSupabaseClient();
 
-        // Get recent completed tastings with user info
+        // Get recent completed tastings WITHOUT profile join to avoid Supabase PostgREST issues
         const { data: tastings, error } = await supabase
           .from('quick_tastings')
           .select(
@@ -61,12 +61,7 @@ const SocialFeedWidget = React.memo(
           created_at,
           completed_at,
           total_items,
-          completed_items,
-          profiles!inner (
-            full_name,
-            username,
-            avatar_url
-          )
+          completed_items
         `
           )
           .not('completed_at', 'is', null)
@@ -81,11 +76,12 @@ const SocialFeedWidget = React.memo(
           return;
         }
 
-        // Extract all tasting IDs for batch queries
+        // Extract all tasting IDs and user IDs for batch queries
         const tastingIds = tastings.map((t: any) => t.id);
+        const userIds = Array.from(new Set(tastings.map((t: any) => t.user_id)));
 
-        // Fetch all stats in parallel with aggregated queries (no N+1)
-        const [likesData, commentsData, userLikesData, photosData] = await Promise.all([
+        // Fetch all stats AND profiles in parallel with aggregated queries (no N+1)
+        const [likesData, commentsData, userLikesData, photosData, profilesData] = await Promise.all([
           // Get all likes counts in one query
           supabase
             .from('tasting_likes')
@@ -111,6 +107,12 @@ const SocialFeedWidget = React.memo(
             .select('tasting_id, photo_url')
             .in('tasting_id', tastingIds)
             .not('photo_url', 'is', null),
+
+          // Get all user profiles in one query
+          supabase
+            .from('profiles')
+            .select('user_id, full_name, username, avatar_url')
+            .in('user_id', userIds),
         ]);
 
         // Create lookup maps for O(1) access
@@ -118,6 +120,7 @@ const SocialFeedWidget = React.memo(
         const commentsMap = new Map<string, number>();
         const userLikesSet = new Set(userLikesData.data?.map((l) => l.tasting_id) || []);
         const photosMap = new Map<string, string>();
+        const profilesMap = new Map<string, any>();
 
         // Aggregate likes by tasting_id
         likesData.data?.forEach((like: any) => {
@@ -136,9 +139,15 @@ const SocialFeedWidget = React.memo(
           }
         });
 
+        // Build profiles map
+        profilesData.data?.forEach((profile: any) => {
+          profilesMap.set(profile.user_id, profile);
+        });
+
         // Map tastings to posts with O(1) lookups
         const postsWithStats = tastings.map((tasting: any) => {
           const photoUrl = photosMap.get(tasting.id);
+          const profile = profilesMap.get(tasting.user_id);
           return {
             id: tasting.id,
             user_id: tasting.user_id,
@@ -147,7 +156,11 @@ const SocialFeedWidget = React.memo(
             average_score: tasting.average_score,
             created_at: tasting.created_at,
             total_items: tasting.total_items,
-            user: Array.isArray(tasting.profiles) ? tasting.profiles[0] : tasting.profiles,
+            user: profile || {
+              full_name: null,
+              username: null,
+              avatar_url: null,
+            },
             stats: {
               likes: likesMap.get(tasting.id) || 0,
               comments: commentsMap.get(tasting.id) || 0,

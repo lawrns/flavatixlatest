@@ -164,12 +164,44 @@ async function fetchSocialFeed(
     logger.debug('Feed', 'User follows query failed');
   }
 
-  // Transform data
+  // Build lookup maps for O(1) access instead of O(n) filtering
+  const likesCountMap = new Map<string, number>();
+  const commentsCountMap = new Map<string, number>();
+  const sharesCountMap = new Map<string, number>();
+  const itemsMap = new Map<string, any[]>();
+  const profilesMap = new Map<string, any>();
+
+  // Aggregate likes by tasting_id
+  likesData.forEach((l: any) => {
+    likesCountMap.set(l.tasting_id, (likesCountMap.get(l.tasting_id) || 0) + 1);
+  });
+
+  // Aggregate comments by tasting_id
+  commentsData.forEach((c: any) => {
+    commentsCountMap.set(c.tasting_id, (commentsCountMap.get(c.tasting_id) || 0) + 1);
+  });
+
+  // Aggregate shares by tasting_id
+  sharesData.forEach((s: any) => {
+    sharesCountMap.set(s.tasting_id, (sharesCountMap.get(s.tasting_id) || 0) + 1);
+  });
+
+  // Group items by tasting_id
+  (itemsData || []).forEach((item: any) => {
+    if (!itemsMap.has(item.tasting_id)) {
+      itemsMap.set(item.tasting_id, []);
+    }
+    itemsMap.get(item.tasting_id)!.push(item);
+  });
+
+  // Map profiles by user_id
+  (profilesData || []).forEach((p: any) => {
+    profilesMap.set(p.user_id, p);
+  });
+
+  // Transform data with O(1) lookups
   const posts: TastingPost[] = tastingsData.map((tasting: any) => {
-    const likes = likesData.filter((l) => l.tasting_id === tasting.id);
-    const comments = commentsData.filter((c) => c.tasting_id === tasting.id);
-    const shares = sharesData.filter((s) => s.tasting_id === tasting.id);
-    const postItems = (itemsData || []).filter((item: any) => item.tasting_id === tasting.id);
+    const postItems = itemsMap.get(tasting.id) || [];
     const photos = postItems
       .map((item: any) => item.photo_url)
       .filter((url): url is string => url !== null);
@@ -185,11 +217,11 @@ async function fetchSocialFeed(
       completed_at: tasting.completed_at,
       total_items: tasting.total_items,
       completed_items: tasting.completed_items,
-      user: (profilesData || []).find((p: any) => p.user_id === tasting.user_id) || {},
+      user: profilesMap.get(tasting.user_id) || {},
       stats: {
-        likes: likes.length,
-        comments: comments.length,
-        shares: shares.length,
+        likes: likesCountMap.get(tasting.id) || 0,
+        comments: commentsCountMap.get(tasting.id) || 0,
+        shares: sharesCountMap.get(tasting.id) || 0,
       },
       isLiked: userLikes.has(tasting.id),
       isFollowed: userFollows.has(tasting.user_id),

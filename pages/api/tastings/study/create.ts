@@ -81,7 +81,6 @@ async function createStudySessionHandler(
       studyMode: true
     };
 
-    console.log('[API] Inserting into quick_tastings...');
     const { data: session, error: sessionError } = await supabase
       .from('quick_tastings')
       .insert({
@@ -99,7 +98,7 @@ async function createStudySessionHandler(
       .single();
 
     if (sessionError) {
-      console.error('[API] Session Error:', sessionError);
+      logger.error('API', 'Session Error', sessionError);
       // Check if it's a column not found error (migration not applied)
       if (sessionError.message?.includes('column') && (sessionError.message?.includes('mode') || sessionError.message?.includes('study_approach'))) {
         return sendError(
