@@ -104,7 +104,7 @@ export default function ShareButton({ disabled, onShare, className = '' }: Share
               <X className="w-5 h-5" />
             </button>
 
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Share Your Taste Profile</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-zinc-50 mb-4">Share Your Taste Profile</h2>
 
             {/* Preview Image */}
             {shareData.imageUrl && (
@@ -121,7 +121,7 @@ export default function ShareButton({ disabled, onShare, className = '' }: Share
             )}
 
             {/* Share Text */}
-            <p className="text-gray-700 mb-4 text-sm bg-gray-50 p-3 rounded-md">{shareData.text}</p>
+            <p className="text-gray-700 dark:text-zinc-200 mb-4 text-sm bg-gray-50 dark:bg-zinc-700/50 p-3 rounded-md">{shareData.text}</p>
 
             {/* Social Share Buttons */}
             <div className="grid grid-cols-3 gap-2 mb-4">
@@ -162,11 +162,11 @@ export default function ShareButton({ disabled, onShare, className = '' }: Share
                 type="text"
                 value={shareData.url}
                 readOnly
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-sm"
+                className="flex-1 px-3 py-2 border border-gray-300 dark:border-zinc-600 rounded-md bg-gray-50 dark:bg-zinc-700 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
               />
               <button
                 onClick={copyToClipboard}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors flex items-center gap-2"
+                className="px-4 py-2 bg-gray-100 dark:bg-zinc-700 text-gray-700 dark:text-zinc-200 rounded-md hover:bg-gray-200 dark:hover:bg-zinc-600 transition-colors flex items-center gap-2"
               >
                 {copied ? (
                   <Check className="w-4 h-4 text-green-600" />

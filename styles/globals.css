@@ -207,6 +207,36 @@ a {
     touch-manipulation;
 }
 
+/* ============================================================================
+   SURFACE SYSTEM — three canonical surfaces for authenticated app pages
+   Use these instead of one-off rounded/bg/shadow combinations.
+   ============================================================================ */
+
+/* Primary page surface — white cards with subtle shadow */
+.surface-page {
+  @apply rounded-[22px]
+    bg-white dark:bg-zinc-800
+    shadow-[0_1px_2px_rgba(0,0,0,0.06)] dark:shadow-none;
+}
+
+/* Secondary inset surface — muted fill for nested areas */
+.surface-inset {
+  @apply rounded-2xl
+    bg-gemini-card dark:bg-zinc-800/80;
+}
+
+/* Action card surface — tappable hub/mode cards */
+.surface-action-card {
+  @apply rounded-[22px]
+    bg-gemini-card dark:bg-zinc-800/90
+    shadow-[0_1px_2px_rgba(0,0,0,0.06)]
+    transition-all duration-200 ease-out
+    hover:shadow-md
+    active:scale-[0.98]
+    focus:outline-none
+    focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+}
+
 .text-small {
   font-size: var(--font-size-sm);
   line-height: var(--line-height-normal);

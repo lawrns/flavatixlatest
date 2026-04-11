@@ -13,10 +13,18 @@ import { toast } from '@/lib/toast';
 
 interface ReviewFormProps {
   initialData?: Partial<ReviewFormData>;
-  onSubmit: (data: ReviewFormData, action: 'done' | 'save' | 'new') => void;
+  onSubmit: (
+    data: ReviewFormData,
+    action: 'done' | 'save' | 'new'
+  ) => void | Promise<boolean>;
   onPhotoUpload?: (file: File) => Promise<string>;
   isSubmitting?: boolean;
   onReset?: () => void;
+}
+
+interface ReviewFormValidationErrors {
+  item_name?: string;
+  category?: string;
 }
 
 const ReviewForm: React.FC<ReviewFormProps> = ({
@@ -43,7 +51,10 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   });
 
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<ReviewFormValidationErrors>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const itemNameInputRef = useRef<HTMLInputElement>(null);
+  const categorySelectRef = useRef<HTMLSelectElement>(null);
 
   // Update form data when initialData changes
   useEffect(() => {
@@ -54,6 +65,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
   const updateField = <K extends keyof ReviewFormData>(field: K, value: ReviewFormData[K]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    if (field === 'item_name' || field === 'category') {
+      setValidationErrors((current) => ({ ...current, [field]: undefined }));
+    }
   };
 
   const resetForm = () => {
@@ -126,35 +140,70 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     }
   };
 
-  const handleSubmit = (action: 'done' | 'save' | 'new') => {
+  const validateRequiredFields = (): ReviewFormValidationErrors => {
+    const nextErrors: ReviewFormValidationErrors = {};
+
     if (!formData.item_name.trim()) {
-      toast.error('Item name is required');
-      return;
+      nextErrors.item_name = 'Enter an item name before submitting the review.';
     }
+
     if (!formData.category) {
-      toast.error('Category is required');
+      nextErrors.category = 'Select a category before submitting the review.';
+    }
+
+    return nextErrors;
+  };
+
+  const handleSubmit = async (action: 'done' | 'save' | 'new') => {
+    const nextErrors = validateRequiredFields();
+
+    if (Object.keys(nextErrors).length > 0) {
+      setValidationErrors(nextErrors);
+      toast.error('Complete the required fields before continuing.');
+
+      if (nextErrors.item_name) {
+        itemNameInputRef.current?.focus();
+      } else if (nextErrors.category) {
+        categorySelectRef.current?.focus();
+      }
+
       return;
     }
 
-    if (action === 'new') {
-      // First submit the current review, then reset the form
-      onSubmit(formData, action);
+    setValidationErrors({});
+    const didSubmit = await onSubmit(formData, action);
+
+    if (action === 'new' && didSubmit !== false) {
       resetForm();
       onReset?.();
-    } else {
-      onSubmit(formData, action);
     }
   };
 
   const availableStates = formData.country ? getStatesForCountry(formData.country) : [];
 
   return (
-    <div className="space-y-lg">
+    <form
+      className="space-y-lg"
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        void handleSubmit('done');
+      }}
+    >
       {/* ITEM ID Section */}
       <div className="card p-md">
         <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">
           Item Information
         </h2>
+
+        {Object.keys(validationErrors).length > 0 && (
+          <div
+            className="mb-md rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            role="alert"
+          >
+            Complete the required fields before continuing.
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
           {/* 1. Item Name/Variety (REQUIRED) */}
@@ -163,13 +212,22 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               Item Name/Variety *
             </label>
             <input
+              ref={itemNameInputRef}
               type="text"
               value={formData.item_name}
               onChange={(e) => updateField('item_name', e.target.value)}
-              className="form-input w-full"
+              className={`form-input w-full ${validationErrors.item_name ? 'border-red-500 ring-1 ring-red-200' : ''}`}
               placeholder="e.g., Ethiopian Yirgacheffe"
               required
+              aria-required="true"
+              aria-invalid={!!validationErrors.item_name}
+              aria-describedby={validationErrors.item_name ? 'review-item-name-error' : undefined}
             />
+            {validationErrors.item_name && (
+              <p id="review-item-name-error" className="mt-2 text-sm text-red-600">
+                {validationErrors.item_name}
+              </p>
+            )}
           </div>
 
           {/* 2. Picture (optional upload) */}
@@ -188,6 +246,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                   className="w-full h-48 object-cover rounded-lg"
                 />
                 <button
+                  type="button"
                   onClick={() => updateField('picture_url', undefined)}
                   className="absolute top-2 right-2 w-8 h-8 bg-error text-white rounded-full hover:bg-error/90 transition-colors flex items-center justify-center"
                 >
@@ -196,6 +255,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               </div>
             ) : (
               <button
+                type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploadingPhoto}
                 className="btn-secondary w-full disabled:opacity-50"
@@ -233,10 +293,14 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               Category *
             </label>
             <select
+              ref={categorySelectRef}
               value={formData.category}
               onChange={(e) => updateField('category', e.target.value)}
-              className="form-input w-full"
+              className={`form-input w-full ${validationErrors.category ? 'border-red-500 ring-1 ring-red-200' : ''}`}
               required
+              aria-required="true"
+              aria-invalid={!!validationErrors.category}
+              aria-describedby={validationErrors.category ? 'review-category-error' : undefined}
             >
               <option value="">Select a category</option>
               {REVIEW_CATEGORIES.map((category) => (
@@ -245,6 +309,11 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                 </option>
               ))}
             </select>
+            {validationErrors.category && (
+              <p id="review-category-error" className="mt-2 text-sm text-red-600">
+                {validationErrors.category}
+              </p>
+            )}
           </div>
 
           {/* 4. Country (dropdown) */}
@@ -526,31 +595,35 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
         </div>
       </div>
 
-      {/* Bottom Buttons */}
-      <div className="flex flex-col sm:flex-row gap-md justify-center">
-        <button
-          onClick={() => handleSubmit('done')}
-          disabled={isSubmitting}
-          className="btn-primary disabled:opacity-50"
-        >
-          Done
-        </button>
-        <button
-          onClick={() => handleSubmit('save')}
-          disabled={isSubmitting}
-          className="btn-secondary disabled:opacity-50"
-        >
-          Save for Later
-        </button>
-        <button
-          onClick={() => handleSubmit('new')}
-          disabled={isSubmitting}
-          className="btn-ghost disabled:opacity-50"
-        >
-          New Review
-        </button>
+      {/* Action footer — sticky on mobile so actions are always reachable */}
+      <div className="sticky bottom-0 z-10 -mx-4 px-4 pb-4 pt-3 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm border-t border-zinc-100 dark:border-zinc-800 sm:static sm:mx-0 sm:px-0 sm:pb-0 sm:pt-0 sm:bg-transparent sm:dark:bg-transparent sm:backdrop-blur-none sm:border-0">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="btn-primary disabled:opacity-50 flex-1 sm:flex-none"
+          >
+            {isSubmitting ? 'Saving…' : 'Save Review'}
+          </button>
+          <button
+            type="button"
+            onClick={() => void handleSubmit('save')}
+            disabled={isSubmitting}
+            className="btn-secondary disabled:opacity-50 flex-1 sm:flex-none"
+          >
+            Save as Draft
+          </button>
+          <button
+            type="button"
+            onClick={() => void handleSubmit('new')}
+            disabled={isSubmitting}
+            className="btn-ghost disabled:opacity-50"
+          >
+            New Review
+          </button>
+        </div>
       </div>
-    </div>
+    </form>
   );
 };
 

@@ -59,6 +59,11 @@ const AuthSection = () => {
 
     setShowOnboarding(!hasSeenOnboarding);
 
+    // Returning users go straight to the email sign-in form
+    if (hasSeenOnboarding) {
+      setShowEmailForm(true);
+    }
+
     if (process.env.NODE_ENV !== 'production') {
       logger.debug('Auth', 'AuthSection mounted, Supabase config', {
         url: process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -276,18 +281,20 @@ const AuthSection = () => {
 
           {/* Heading */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">
               {showEmailForm
                 ? mode === 'login'
                   ? 'Welcome Back'
                   : 'Create Account'
                 : 'Get Started'}
             </h1>
-            {!showEmailForm && (
-              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                The one place for all your tasting needs
-              </p>
-            )}
+            <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+              {showEmailForm && mode === 'login'
+                ? 'Sign in to continue your tasting journey.'
+                : showEmailForm && mode === 'register'
+                  ? 'Join to track your palate and build flavor wheels.'
+                  : 'The one place for all your tasting needs.'}
+            </p>
           </div>
 
           {/* Form Content */}

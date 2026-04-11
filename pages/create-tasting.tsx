@@ -4,6 +4,8 @@ import { useAuth } from '@/contexts/SimpleAuthContext';
 import { toast } from '@/lib/toast';
 import { Trophy, BookOpen } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
+import ModeCard from '@/components/ui/ModeCard';
+import { LoadingState } from '@/components/ui/LoadingState';
 import { StudyApproach } from '@/components/quick-tasting/StudyModeSelector';
 
 type TastingMode = 'study' | 'competition' | 'quick';
@@ -139,13 +141,7 @@ const CreateTastingPage: React.FC = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background-app p-sm">
-        <main className="flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-        </main>
-      </div>
-    );
+    return <LoadingState variant="skeleton-page" />;
   }
 
   if (!user) {
@@ -160,33 +156,23 @@ const CreateTastingPage: React.FC = () => {
       containerSize="2xl"
     >
       {/* Mode Selection */}
-      <div className="bg-gemini-card dark:bg-zinc-800 rounded-[22px] p-6 mt-2">
-        <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">Choose Mode</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
-          <button
-            type="button"
-            onClick={() => router.push('/taste/create/study')}
-            className="p-md rounded-lg border-2 border-border-default hover:border-primary-400 transition-all"
-          >
-            <BookOpen size={32} className="mx-auto mb-sm text-text-secondary" />
-            <h3 className="font-heading font-semibold mb-xs">Study Mode</h3>
-            <p className="text-small text-text-secondary">
-              Structured tasting sessions with custom categories and templates.
-            </p>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => router.push('/taste/create/competition')}
-            className="p-md rounded-lg border-2 border-border-default hover:border-primary-400 transition-all"
-          >
-            <Trophy size={32} className="mx-auto mb-sm text-text-secondary" />
-            <h3 className="font-heading font-semibold mb-xs">Competition Mode</h3>
-            <p className="text-small text-text-secondary">
-              Preload items with correct answers. Enable participant ranking.
-            </p>
-          </button>
-        </div>
+      <div className="flex flex-col gap-3 mt-2">
+        <ModeCard
+          icon={BookOpen}
+          iconBgColor="bg-blue-500/10 dark:bg-blue-500/20"
+          iconColor="text-blue-600 dark:text-blue-500"
+          title="Study Mode"
+          description="Structured tasting sessions with custom categories and templates."
+          href="/taste/create/study"
+        />
+        <ModeCard
+          icon={Trophy}
+          iconBgColor="bg-amber-500/10 dark:bg-amber-500/20"
+          iconColor="text-amber-600 dark:text-amber-500"
+          title="Competition Mode"
+          description="Preload items with correct answers. Enable participant ranking."
+          href="/taste/create/competition"
+        />
       </div>
     </PageLayout>
   );

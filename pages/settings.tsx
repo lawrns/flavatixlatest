@@ -6,13 +6,11 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
-import { Moon, Sun, Bell, Shield, Trash2, ChevronRight, Zap } from 'lucide-react';
+import { Moon, Sun, Bell, Shield, Trash2, ChevronRight, Zap, FileText } from 'lucide-react';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import PageLayout from '@/components/layout/PageLayout';
 import { Card, CardContent } from '@/components/ui/Card';
 import { cn } from '@/lib/utils';
-import UserAvatarMenu from '@/components/navigation/UserAvatarMenu';
-import NotificationSystem from '@/components/notifications/NotificationSystem';
 import ProfileService, { UserProfile } from '@/lib/profileService';
 import { getUserPresets, saveUserPresets, ALL_CATEGORIES } from '@/lib/presetService';
 import { CategoryPackId } from '@/lib/categoryPacks';
@@ -110,7 +108,7 @@ export default function SettingsPage() {
 
   const settingsSections: SettingsSection[] = [
     {
-      title: 'Appearance',
+      title: 'Preferences',
       items: [
         {
           icon: isDarkMode ? Moon : Sun,
@@ -118,11 +116,15 @@ export default function SettingsPage() {
           description: isDarkMode ? 'Currently using dark theme' : 'Currently using light theme',
           action: (
             <button
+              type="button"
               onClick={toggleDarkMode}
               className={cn(
                 'relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full p-0.5 transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
                 isDarkMode ? 'bg-primary' : 'bg-zinc-300 dark:bg-zinc-600'
               )}
+              role="switch"
+              aria-checked={isDarkMode}
+              aria-label={`Dark mode ${isDarkMode ? 'enabled' : 'disabled'}`}
             >
               <span
                 className={cn(
@@ -133,22 +135,21 @@ export default function SettingsPage() {
             </button>
           ),
         },
-      ],
-    },
-    {
-      title: 'Notifications',
-      items: [
         {
           icon: Bell,
           label: 'Push Notifications',
           description: 'Receive updates about tastings and reviews',
           action: (
             <button
+              type="button"
               onClick={toggleNotifications}
               className={cn(
                 'relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full p-0.5 transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
                 notificationsEnabled ? 'bg-primary' : 'bg-zinc-300 dark:bg-zinc-600'
               )}
+              role="switch"
+              aria-checked={notificationsEnabled}
+              aria-label={`Push notifications ${notificationsEnabled ? 'enabled' : 'disabled'}`}
             >
               <span
                 className={cn(
@@ -162,17 +163,17 @@ export default function SettingsPage() {
       ],
     },
     {
-      title: 'Privacy & Security',
+      title: 'Legal',
       items: [
         {
-          icon: Shield,
+          icon: FileText,
           label: 'Privacy Policy',
           description: 'View our privacy policy and data practices',
           action: <ChevronRight size={20} className="text-zinc-400" />,
           onClick: () => router.push('/privacy'),
         },
         {
-          icon: Shield,
+          icon: FileText,
           label: 'Terms of Service',
           description: 'View our terms of service and user agreement',
           action: <ChevronRight size={20} className="text-zinc-400" />,
@@ -188,7 +189,7 @@ export default function SettingsPage() {
       ],
     },
     {
-      title: 'Delete Account',
+      title: 'Account',
       items: [
         {
           icon: Trash2,
@@ -208,17 +209,8 @@ export default function SettingsPage() {
       showBack
       backUrl="/dashboard"
       containerSize="md"
-      headerRight={
-        <div className="flex items-center gap-3">
-          <NotificationSystem userId={user.id} />
-          <UserAvatarMenu
-            avatarUrl={profile?.avatar_url}
-            displayName={profile?.full_name}
-            email={user.email}
-            size={36}
-          />
-        </div>
-      }
+      userAvatarUrl={profile?.avatar_url}
+      userDisplayName={profile?.full_name || undefined}
     >
       <div className="space-y-6">
         {settingsSections.map((section) => (

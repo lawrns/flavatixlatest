@@ -87,7 +87,7 @@ export const HelpTooltip: React.FC<HelpTooltipProps> = ({
         onClick={handleClick}
         className={`
           inline-flex items-center justify-center
-          p-1 rounded-full hover:bg-gray-100
+          p-1 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-700
           transition-colors duration-200
           ${iconClassName || ''}
         `}
@@ -95,7 +95,7 @@ export const HelpTooltip: React.FC<HelpTooltipProps> = ({
         title={short}
         type="button"
       >
-        {icon || <HelpCircle className="w-4 h-4 text-gray-500 hover:text-gray-700" />}
+        {icon || <HelpCircle className="w-4 h-4 text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200" />}
       </button>
 
       {/* Tooltip content */}

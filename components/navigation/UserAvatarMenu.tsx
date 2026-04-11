@@ -85,7 +85,7 @@ export const UserAvatarMenu: React.FC<UserAvatarMenuProps> = ({
     {
       label: 'Profile',
       icon: User,
-      href: '/dashboard',
+      href: '/profile',
       onClick: () => setIsOpen(false),
     },
     {

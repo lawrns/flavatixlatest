@@ -83,16 +83,16 @@ const TastingHistoryDetail: React.FC<TastingHistoryDetailProps> = ({
     return (
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {Object.entries(flavorScores).map(([flavor, score]) => (
-          <div key={flavor} className="bg-gray-50 rounded-lg p-3">
+          <div key={flavor} className="bg-gray-50 dark:bg-zinc-700/50 rounded-lg p-3">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-700 capitalize">
+              <span className="text-sm font-medium text-gray-700 dark:text-zinc-200 capitalize">
                 {flavor.replace('_', ' ')}
               </span>
               <span className={`text-sm font-bold ${getScoreColor(Number(score))}`}>
                 {Number(score)}/100
               </span>
             </div>
-            <div className="mt-1 bg-gray-200 rounded-full h-2">
+            <div className="mt-1 bg-gray-200 dark:bg-zinc-700 rounded-full h-2">
               <div
                 className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${(Number(score) / 5) * 100}%` }}

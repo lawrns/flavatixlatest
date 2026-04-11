@@ -388,8 +388,8 @@ export default function CommentsModal({
 
         {/* Comment Content */}
         <div className="flex-1 min-w-0">
-          <div className="bg-zinc-50 rounded-2xl px-4 py-2">
-            <p className="font-semibold text-sm text-zinc-900 dark:text-zinc-50 dark:text-zinc-50">
+          <div className="bg-zinc-50 dark:bg-zinc-700 rounded-2xl px-4 py-2">
+            <p className="font-semibold text-sm text-zinc-900 dark:text-zinc-50">
               {comment.user.full_name || 'Anonymous'}
             </p>
             <p className="text-zinc-800 dark:text-zinc-100 text-sm mt-1 break-words">

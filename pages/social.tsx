@@ -308,7 +308,7 @@ export default function SocialPage() {
         <div className="flex min-h-screen flex-col">
           {/* Header */}
           <header className="border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 sticky top-0 z-40">
-            <div className="flex items-center justify-between p-4">
+            <div className="max-w-md mx-auto w-full flex items-center justify-between p-4">
               <button
                 onClick={() => router.back()}
                 className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
@@ -325,18 +325,20 @@ export default function SocialPage() {
             </div>
 
             {/* Filters */}
-            <SocialFeedFilters
-              activeTab={activeTab}
-              categoryFilter={categoryFilter}
-              categories={categories}
-              onTabChange={setActiveTab}
-              onCategoryChange={setCategoryFilter}
-            />
+            <div className="max-w-md mx-auto">
+              <SocialFeedFilters
+                activeTab={activeTab}
+                categoryFilter={categoryFilter}
+                categories={categories}
+                onTabChange={setActiveTab}
+                onCategoryChange={setCategoryFilter}
+              />
+            </div>
           </header>
 
           {/* Main Content */}
           <main className="flex-1 overflow-y-auto bg-white dark:bg-zinc-900 pb-[calc(64px+env(safe-area-inset-bottom))]">
-            <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
+            <div className="max-w-md mx-auto divide-y divide-zinc-200 dark:divide-zinc-800">
               {filteredPosts.length === 0 ? (
                 <div className="p-8 text-center">
                   <div className="mb-4">

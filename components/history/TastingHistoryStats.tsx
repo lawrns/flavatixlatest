@@ -44,8 +44,8 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
             key={i}
             className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4 animate-pulse"
           >
-            <div className="h-8 bg-gray-200 rounded w-12 mb-2"></div>
-            <div className="h-4 bg-gray-200 rounded w-20"></div>
+            <div className="h-8 bg-gray-200 dark:bg-zinc-700 rounded w-12 mb-2"></div>
+            <div className="h-4 bg-gray-200 dark:bg-zinc-700 rounded w-20"></div>
           </div>
         ))}
       </div>
@@ -120,8 +120,8 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
       <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-2xl font-bold text-gray-900">{stats.totalTastings}</p>
-            <p className="text-sm text-gray-600">Catas totales</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-zinc-50">{stats.totalTastings}</p>
+            <p className="text-sm text-gray-600 dark:text-zinc-400">Catas totales</p>
           </div>
           <span className="material-symbols-outlined text-gray-400">analytics</span>
         </div>
@@ -134,7 +134,7 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
             <p className={`text-2xl font-bold ${getRatingColor(stats.averageScore)}`}>
               {stats.averageScore.toFixed(1)}
             </p>
-            <p className="text-sm text-gray-600">Puntuación media</p>
+            <p className="text-sm text-gray-600 dark:text-zinc-400">Puntuación media</p>
           </div>
           <span className="material-symbols-outlined text-gray-400">star</span>
         </div>
@@ -147,7 +147,7 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
             <p className={`text-2xl font-bold ${getStreakColor(stats.currentStreak)}`}>
               {stats.currentStreak}
             </p>
-            <p className="text-sm text-gray-600">Racha actual</p>
+            <p className="text-sm text-gray-600 dark:text-zinc-400">Racha actual</p>
           </div>
           <span className="material-symbols-outlined text-gray-400">local_fire_department</span>
         </div>
@@ -157,10 +157,10 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
       <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-lg font-bold text-gray-900 capitalize">
+            <p className="text-lg font-bold text-gray-900 dark:text-zinc-50 capitalize">
               {stats.mostTastedCategory || 'N/A'}
             </p>
-            <p className="text-sm text-gray-600">Categoría favorita</p>
+            <p className="text-sm text-gray-600 dark:text-zinc-400">Categoría favorita</p>
           </div>
           <span className="material-symbols-outlined text-gray-400">
             {stats.mostTastedCategory ? getCategoryIcon(stats.mostTastedCategory) : 'help'}
@@ -171,22 +171,22 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
       {/* Categories Breakdown */}
       {Object.keys(stats.categoriesCount).length > 0 && (
         <div className="col-span-2 md:col-span-4 bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-200 p-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">Distribución por categorías</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-zinc-50 mb-3">Distribución por categorías</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {Object.entries(stats.categoriesCount)
               .sort(([, a], [, b]) => b - a)
               .map(([category, count]) => (
                 <div
                   key={category}
-                  className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                  className="flex items-center justify-between p-2 bg-gray-50 dark:bg-zinc-700/50 rounded"
                 >
                   <div className="flex items-center">
-                    <span className="material-symbols-outlined text-gray-600 mr-2">
+                    <span className="material-symbols-outlined text-gray-600 dark:text-zinc-300 mr-2">
                       {getCategoryIcon(category)}
                     </span>
                     <span className="text-sm font-medium capitalize">{category}</span>
                   </div>
-                  <span className="text-sm font-bold text-gray-700">{count}</span>
+                  <span className="text-sm font-bold text-gray-700 dark:text-zinc-200">{count}</span>
                 </div>
               ))}
           </div>
