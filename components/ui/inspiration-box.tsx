@@ -119,7 +119,7 @@ const InspirationBox: React.FC<InspirationBoxProps> = ({ className = '' }) => {
   }
 
   return (
-    <div className={`mx-auto max-w-2xl px-4 ${className}`}>
+    <div className={`relative ${className}`}>
       <div
         className={`
           mx-auto max-w-lg rounded-xl p-5 text-center

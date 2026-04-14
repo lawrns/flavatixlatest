@@ -7,7 +7,6 @@ import CategorySelector from '@/components/quick-tasting/CategorySelector';
 import QuickTastingSummary from '@/components/quick-tasting/QuickTastingSummary';
 import { toast } from '@/lib/toast';
 import PageLayout from '@/components/layout/PageLayout';
-import Container from '@/components/layout/Container';
 import { logger } from '@/lib/logger';
 import { normalizeCategoryId } from '@/lib/categoryPacks';
 
@@ -156,7 +155,7 @@ const QuickTastingPage: React.FC = () => {
       title="Quick Tasting"
       subtitle="Start a quick tasting session to explore flavors and record your impressions"
       showBack
-      containerSize="md"
+      containerSize="2xl"
     >
       {/* Step indicator */}
       <div className="mb-6 mt-2">
@@ -211,7 +210,7 @@ const QuickTastingPage: React.FC = () => {
         </div>
           </div>
 
-      <Container size="2xl">
+      <div>
         {currentStep === 'category' && (
           <CategorySelector
             onCategorySelect={handleCategorySelect}
@@ -235,7 +234,7 @@ const QuickTastingPage: React.FC = () => {
             onStartNewSession={handleStartNewSession}
           />
         )}
-      </Container>
+      </div>
     </PageLayout>
   );
 };

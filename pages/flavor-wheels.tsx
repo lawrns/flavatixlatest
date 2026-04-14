@@ -10,7 +10,6 @@ import { FlavorWheelData } from '@/lib/flavorWheelGenerator';
 import { Download, RefreshCw, List, CircleDot } from 'lucide-react';
 import ShareButton from '../components/sharing/ShareButton';
 import PageLayout from '../components/layout/PageLayout';
-import Container from '../components/layout/Container';
 import FlavorWheelListView from '../components/flavor-wheels/FlavorWheelListView';
 import { FlavorWheelPDFExporter } from '../lib/flavorWheelPDFExporter';
 import FlavorWheelErrorBoundary from '../components/flavor-wheels/FlavorWheelErrorBoundary';
@@ -612,10 +611,9 @@ export default function FlavorWheelsPage() {
       subtitle="AI-generated visualizations of your tasting notes."
       showBack
       backUrl="/dashboard"
-      containerSize="md"
+      containerSize="4xl"
     >
-      {/* Wide content area */}
-      <Container size="4xl" className="mt-2 space-y-6">
+      <div className="mt-2 space-y-6">
 
         {/* 1. Controls — collapsible on mobile, always open on sm+ */}
         <div className="surface-page p-4 sm:p-6">
@@ -805,7 +803,7 @@ export default function FlavorWheelsPage() {
         <div>
           <InspirationBox />
         </div>
-      </Container>
+      </div>
 
       {/* Segment detail bottom sheet — global, outside Container */}
       <BottomSheet

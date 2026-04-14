@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { ChevronDown, ChevronRight, Download, Filter, Search, X } from 'lucide-react';
+import { resolveDescriptorCanonicalText } from '@/lib/flavorDescriptorNormalization';
 
 interface Descriptor {
   text: string;
@@ -56,6 +57,16 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'name' | 'count' | 'percentage'>('count');
+  const descriptorCandidates = useMemo(
+    () =>
+      wheelData.categories.flatMap((category) => [
+        ...(category.descriptors?.map((descriptor) => descriptor.text) || []),
+        ...(category.subcategories?.flatMap((subcategory) =>
+          subcategory.descriptors.map((descriptor) => descriptor.text)
+        ) || []),
+      ]),
+    [wheelData.categories]
+  );
 
   // Filter and sort categories
   const filteredCategories = useMemo(() => {
@@ -239,7 +250,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
       </div>
 
       {/* Categories List */}
-      <div className="max-h-96 overflow-y-auto">
+      <div>
         {filteredCategories.length === 0 ? (
           <div className="p-8 text-center text-gray-500 dark:text-zinc-400">
             <Filter className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -300,7 +311,9 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                                   borderLeft: `3px solid ${getDescriptorTypeColor(descriptor.type || 'aroma')}`,
                                 }}
                               >
-                                <span className="font-medium">{descriptor.text}</span>
+                                <span className="font-medium">
+                                  {resolveDescriptorCanonicalText(descriptor.text, descriptorCandidates)}
+                                </span>
                                 <span className="text-gray-500">
                                   ({descriptor.count || descriptor.intensity || 1})
                                 </span>
@@ -353,7 +366,12 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                                             borderLeft: `2px solid ${getDescriptorTypeColor(descriptor.type || 'aroma')}`,
                                           }}
                                         >
-                                          <span>{descriptor.text}</span>
+                                          <span>
+                                            {resolveDescriptorCanonicalText(
+                                              descriptor.text,
+                                              descriptorCandidates
+                                            )}
+                                          </span>
                                           <span className="text-gray-400">
                                             ({descriptor.count || descriptor.intensity || 1})
                                           </span>
