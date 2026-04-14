@@ -16,7 +16,7 @@ interface ReviewFormProps {
   onSubmit: (
     data: ReviewFormData,
     action: 'done' | 'save' | 'new'
-  ) => void | Promise<boolean>;
+  ) => void | boolean | Promise<void | boolean>;
   onPhotoUpload?: (file: File) => Promise<string>;
   isSubmitting?: boolean;
   onReset?: () => void;
