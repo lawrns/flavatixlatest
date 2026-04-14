@@ -5,7 +5,6 @@ import { toast } from '@/lib/toast';
 import { Trophy, BookOpen } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import ModeCard from '@/components/ui/ModeCard';
-import { LoadingState } from '@/components/ui/LoadingState';
 import { StudyApproach } from '@/components/quick-tasting/StudyModeSelector';
 
 type TastingMode = 'study' | 'competition' | 'quick';
@@ -140,11 +139,7 @@ const CreateTastingPage: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return <LoadingState variant="skeleton-page" />;
-  }
-
-  if (!user) {
+  if (loading || !user) {
     return null;
   }
 
