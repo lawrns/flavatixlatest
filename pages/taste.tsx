@@ -5,7 +5,6 @@ import { Zap, Users, UserPlus, History } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import { CategoryStamp } from '@/components/ui';
 import ModeCard from '@/components/ui/ModeCard';
-import { LoadingState } from '@/components/ui/LoadingState';
 
 const primaryOptions = [
   {
@@ -55,11 +54,7 @@ const TastePage: React.FC = () => {
     }
   }, [user, loading, router]);
 
-  if (loading) {
-    return <LoadingState variant="skeleton-page" />;
-  }
-
-  if (!user) {
+  if (loading || !user) {
     return null;
   }
 

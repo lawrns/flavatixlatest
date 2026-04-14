@@ -4,7 +4,6 @@ import { useAuth } from '@/contexts/SimpleAuthContext';
 import { ClipboardList, Edit3, Clock, Share2, HelpCircle, X } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import ModeCard from '@/components/ui/ModeCard';
-import { LoadingState } from '@/components/ui/LoadingState';
 
 const primaryOptions = [
   {
@@ -119,11 +118,7 @@ const ReviewPage: React.FC = () => {
     }
   }, [user, loading, router]);
 
-  if (loading) {
-    return <LoadingState variant="skeleton-page" />;
-  }
-
-  if (!user) {
+  if (loading || !user) {
     return null;
   }
 

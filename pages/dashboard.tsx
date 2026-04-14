@@ -10,7 +10,6 @@ import { CategoryPackId } from '@/lib/categoryPacks';
 import { useCurrentProfile } from '../lib/query/hooks/useProfile';
 import { useRecentTastings, useTastingStats } from '../lib/query/hooks/useTastings';
 import PageLayout from '@/components/layout/PageLayout';
-import { LoadingState } from '@/components/ui/LoadingState';
 
 const jumpToLinks = [
   { label: 'Social Feed', sub: 'See what others are tasting', href: '/social', icon: 'people' },
@@ -45,7 +44,7 @@ export default function Dashboard() {
   }
 
   if (loading) {
-    return <LoadingState variant="skeleton-page" />;
+    return null;
   }
 
   return (
