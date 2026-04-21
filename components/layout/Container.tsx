@@ -6,9 +6,9 @@
  * 
  * Sizes:
  * - 'sm': max-w-sm (384px) - Modals, narrow forms
- * - 'md': max-w-md (448px) - Mobile-first content (default for app pages)
+ * - 'md': max-w-md (448px) - Compact content
  * - 'lg': max-w-lg (512px) - Slightly wider content
- * - 'xl': max-w-xl (576px) - Standard content width
+ * - 'xl': max-w-xl (576px) - Standard app width
  * - '2xl': max-w-2xl (672px) - Wide content
  * - '4xl': max-w-4xl (896px) - Very wide content
  * - '7xl': max-w-7xl (1280px) - Full-width layouts
@@ -22,7 +22,7 @@ export type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl' | '7xl' | 
 
 interface ContainerProps {
   children: React.ReactNode;
-  /** Container max-width. Default: 'md' (448px, mobile-first) */
+  /** Container max-width. Default: 'xl' (576px, mobile-first) */
   size?: ContainerSize;
   /** Horizontal padding. Default: true */
   padding?: boolean;
@@ -32,7 +32,7 @@ interface ContainerProps {
   as?: 'div' | 'section' | 'article' | 'main' | 'header' | 'footer';
 }
 
-const sizeClasses: Record<ContainerSize, string> = {
+export const CONTAINER_SIZE_CLASSES: Record<ContainerSize, string> = {
   sm: 'max-w-sm',      // 384px
   md: 'max-w-md',      // 448px
   lg: 'max-w-lg',      // 512px
@@ -48,7 +48,7 @@ const PADDING_CLASSES = 'px-4 sm:px-6';
 
 export const Container: React.FC<ContainerProps> = ({
   children,
-  size = 'md',
+  size = 'xl',
   padding = true,
   className,
   as: Component = 'div',
@@ -57,7 +57,7 @@ export const Container: React.FC<ContainerProps> = ({
     <Component
       className={cn(
         'mx-auto w-full',
-        sizeClasses[size],
+        CONTAINER_SIZE_CLASSES[size],
         padding && PADDING_CLASSES,
         className
       )}

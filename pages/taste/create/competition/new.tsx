@@ -476,7 +476,7 @@ const NewCompetitionPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background-light pb-40">
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-6">
           <button

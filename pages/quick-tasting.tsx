@@ -161,7 +161,7 @@ const QuickTastingPage: React.FC = () => {
       title="New tasting"
       subtitle="Start a quick tasting session to explore flavors and record your impressions"
       showBack
-      containerSize="2xl"
+      containerSize="xl"
     >
       {/* Minimal header progress */}
       <div className="mb-6 mt-2">

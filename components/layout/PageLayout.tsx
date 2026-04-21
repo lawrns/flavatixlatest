@@ -17,7 +17,6 @@ import { cn } from '@/lib/utils';
 import BottomNavigation from '../navigation/BottomNavigation';
 import Container, { ContainerSize } from './Container';
 import UserAvatarMenu from '../navigation/UserAvatarMenu';
-import NotificationSystem from '../notifications/NotificationSystem';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 
 interface PageLayoutProps {
@@ -34,7 +33,7 @@ interface PageLayoutProps {
   headerRight?: React.ReactNode;
   /** Show bottom navigation. Default: true */
   showBottomNav?: boolean;
-  /** Container size for content. Default: 'md' */
+  /** Container size for content. Default: 'xl' */
   containerSize?: ContainerSize;
   /** Additional className for main content area */
   className?: string;
@@ -56,7 +55,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
   backUrl,
   headerRight,
   showBottomNav = true,
-  containerSize = 'md',
+  containerSize = 'xl',
   className,
   wrapperClassName,
   showUserMenu = true,
@@ -124,7 +123,6 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
                   headerRight
                 ) : showUserMenu && user ? (
                   <>
-                    <NotificationSystem userId={user.id} />
                     <UserAvatarMenu
                       avatarUrl={userAvatarUrl}
                       displayName={userDisplayName}

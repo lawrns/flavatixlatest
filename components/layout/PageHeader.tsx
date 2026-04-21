@@ -8,6 +8,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
+import { CONTAINER_SIZE_CLASSES, ContainerSize } from './Container';
 
 // ============================================================================
 // TYPES
@@ -250,7 +251,7 @@ export const BackButton: React.FC<BackButtonProps> = ({
 interface PageContainerProps {
   children: React.ReactNode;
   className?: string;
-  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+  maxWidth?: ContainerSize;
   padding?: boolean;
 }
 
@@ -260,20 +261,11 @@ export const PageContainer: React.FC<PageContainerProps> = ({
   maxWidth = 'xl',
   padding = true,
 }) => {
-  const maxWidthClasses = {
-    sm: 'max-w-sm',
-    md: 'max-w-md',
-    lg: 'max-w-lg',
-    xl: 'max-w-xl',
-    '2xl': 'max-w-2xl',
-    full: 'max-w-full',
-  };
-
   return (
     <div
       className={cn(
         'mx-auto w-full',
-        maxWidthClasses[maxWidth],
+        CONTAINER_SIZE_CLASSES[maxWidth],
         padding && 'px-4 sm:px-6 lg:px-8',
         className
       )}

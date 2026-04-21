@@ -3,8 +3,9 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { toast } from '@/lib/toast';
-import { FileText, PenTool, Clock } from 'lucide-react';
+import { FileText, PenTool, Clock, ArrowRight } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
+import { cn } from '@/lib/utils';
 
 interface Review {
   id: string;
@@ -15,6 +16,97 @@ interface Review {
   created_at: string;
   updated_at: string;
 }
+
+const statusConfig = {
+  completed: {
+    label: 'Completed',
+    color: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20',
+  },
+  in_progress: {
+    label: 'In Progress',
+    color: 'bg-amber-500/10 text-amber-700 border-amber-500/20',
+  },
+  published: {
+    label: 'Published',
+    color: 'bg-blue-500/10 text-blue-700 border-blue-500/20',
+  },
+} as const;
+
+const ReviewSection: React.FC<{
+  title: string;
+  icon: React.ElementType;
+  count: number;
+  emptyLabel: string;
+  items: Review[];
+  onOpen: (review: Review) => void;
+}> = ({ title, icon: Icon, count, emptyLabel, items, onOpen }) => (
+  <section className="rounded-[2rem] border border-line bg-white/90 p-5 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)] sm:p-6">
+    <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-bg-inset text-fg-muted">
+          <Icon className="h-5 w-5" />
+        </div>
+        <div>
+          <h2 className="text-h3 font-semibold text-fg">{title}</h2>
+          <p className="text-caption uppercase tracking-[0.22em] text-fg-muted">
+            {count} total
+          </p>
+        </div>
+      </div>
+    </div>
+
+    {items.length === 0 ? (
+      <div className="mt-5 rounded-[1.5rem] border border-dashed border-line bg-[#fbfaf7] p-5 text-center">
+        <p className="text-body-sm text-fg-muted">{emptyLabel}</p>
+      </div>
+    ) : (
+      <div className="mt-5 space-y-3">
+        {items.map((review) => (
+          <button
+            key={review.id}
+            onClick={() => onOpen(review)}
+            className={cn(
+              'group w-full rounded-[1.25rem] border border-line bg-bg-surface p-4 text-left',
+              'transition-all hover:-translate-y-0.5 hover:border-fg-muted/30 hover:shadow-[0_16px_40px_-28px_rgba(0,0,0,0.25)]'
+            )}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="truncate text-body font-semibold text-fg">
+                  {review.review_id || review.item_name}
+                </p>
+                <p className="mt-1 truncate text-body-sm text-fg-muted">
+                  {review.item_name} • {review.category}
+                </p>
+                <p className="mt-2 text-caption text-fg-muted">
+                  {new Date(review.created_at).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </p>
+              </div>
+
+              <div className="flex shrink-0 items-center gap-2">
+                <span
+                  className={cn(
+                    'rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]',
+                    statusConfig[review.status as keyof typeof statusConfig]?.color ||
+                      'bg-zinc-100 text-zinc-700 border-zinc-200'
+                  )}
+                >
+                  {statusConfig[review.status as keyof typeof statusConfig]?.label ||
+                    review.status}
+                </span>
+                <ArrowRight className="h-4 w-4 text-fg-muted transition-transform group-hover:translate-x-0.5" />
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
+    )}
+  </section>
+);
 
 const MyReviewsPage: React.FC = () => {
   const router = useRouter();
@@ -31,7 +123,6 @@ const MyReviewsPage: React.FC = () => {
 
     setIsLoading(true);
     try {
-      // Load quick reviews
       const { data: quickReviewsData, error: quickReviewsError } = await supabase
         .from('quick_reviews')
         .select('id, review_id, item_name, category, status, created_at, updated_at')
@@ -42,7 +133,6 @@ const MyReviewsPage: React.FC = () => {
         throw quickReviewsError;
       }
 
-      // Load prose reviews
       const { data: proseReviewsData, error: proseReviewsError } = await supabase
         .from('prose_reviews')
         .select('id, review_id, item_name, category, status, created_at, updated_at')
@@ -71,57 +161,35 @@ const MyReviewsPage: React.FC = () => {
     }
   }, [user, loading, router, loadReviews]);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
-
-  const getStatusBadge = (status: string) => {
-    const statusConfig = {
-      completed: {
-        label: 'Completed',
-        color: 'bg-signal-good/10 text-signal-good dark:bg-signal-good/20 dark:text-signal-good',
-      },
-      in_progress: {
-        label: 'In Progress',
-        color: 'bg-signal-warn/10 text-signal-warn dark:bg-signal-warn/20 dark:text-signal-warn',
-      },
-      published: {
-        label: 'Published',
-        color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-      },
-    };
-
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.in_progress;
-
-    return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
-        {config.label}
-      </span>
-    );
-  };
-
-  const completedReviews = reviews.filter(
-    (r) => r.status === 'completed' || r.status === 'published'
-  );
+  const completedReviews = reviews.filter((r) => r.status === 'completed' || r.status === 'published');
   const inProgressReviews = reviews.filter((r) => r.status === 'in_progress');
-  const completedProseReviews = proseReviews.filter(
-    (r) => r.status === 'completed' || r.status === 'published'
-  );
+  const completedProseReviews = proseReviews.filter((r) => r.status === 'completed' || r.status === 'published');
   const inProgressProseReviews = proseReviews.filter((r) => r.status === 'in_progress');
+  const inProgressItems = [
+    ...inProgressReviews.map((review) => ({ review, type: 'structured' as const })),
+    ...inProgressProseReviews.map((review) => ({ review, type: 'prose' as const })),
+  ];
+
+  const handleOpenReview = (review: Review, type: 'structured' | 'prose' = 'structured') => {
+    if (type === 'prose') {
+      router.push(`/review/summary/${review.id}?type=prose`);
+      return;
+    }
+
+    if (review.status === 'in_progress') {
+      router.push(`/review/structured?id=${review.id}`);
+      return;
+    }
+
+    router.push(`/review/summary/${review.id}`);
+  };
 
   if (loading || isLoading) {
     return (
-      <PageLayout title="My Reviews" showBack backUrl="/review">
-        <div className="flex items-center justify-center py-12">
-          <div className="flex flex-col items-center">
-            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-            <div className="text-fg-muted dark:text-fg-subtle font-medium">Loading reviews...</div>
-          </div>
+      <PageLayout title="My Reviews" showBack backUrl="/review" containerSize="2xl">
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div className="h-72 rounded-[2rem] border border-line bg-white/70 animate-pulse" />
+          <div className="h-72 rounded-[2rem] border border-line bg-white/70 animate-pulse" />
         </div>
       </PageLayout>
     );
@@ -132,161 +200,87 @@ const MyReviewsPage: React.FC = () => {
   }
 
   return (
-    <PageLayout title="My Reviews" subtitle="All review history" showBack backUrl="/review">
-      {/* Reviews Section */}
-      <div className="space-y-6">
-        {/* Completed Reviews */}
-        <div className="bg-white dark:bg-zinc-800 rounded-pane border border-line dark:border-zinc-700 p-4 sm:p-6">
-          <div className="flex items-center mb-4">
-            <FileText size={24} className="text-primary mr-2" />
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Reviews</h2>
-            <span className="ml-auto text-sm text-fg-subtle dark:text-fg-subtle">
-              {completedReviews.length} {completedReviews.length === 1 ? 'review' : 'reviews'}
-            </span>
+    <PageLayout
+      title="My Reviews"
+      subtitle="All review history, grouped by format and state."
+      showBack
+      backUrl="/review"
+      containerSize="2xl"
+    >
+      <div className="grid gap-6">
+        <section className="rounded-[2rem] border border-line bg-white/90 p-6 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)]">
+          <div className="grid gap-4 sm:grid-cols-3">
+            {[
+              { label: 'Completed', value: completedReviews.length + completedProseReviews.length },
+              { label: 'In progress', value: inProgressReviews.length + inProgressProseReviews.length },
+              { label: 'Total', value: reviews.length + proseReviews.length },
+            ].map((metric) => (
+              <div key={metric.label} className="rounded-[1.5rem] border border-line bg-bg-surface p-4">
+                <p className="text-caption uppercase tracking-[0.22em] text-fg-muted">{metric.label}</p>
+                <p className="mt-2 text-3xl font-semibold tracking-tight text-fg">{metric.value}</p>
+              </div>
+            ))}
           </div>
+        </section>
 
-          {completedReviews.length === 0 ? (
-            <p className="text-fg-subtle dark:text-fg-subtle text-center py-8">
-              No completed reviews yet
-            </p>
-          ) : (
-            <div className="space-y-3">
-              {completedReviews.map((review) => (
-                <button
-                  key={review.id}
-                  onClick={() => router.push(`/review/summary/${review.id}`)}
-                  className="w-full text-left p-4 bg-bg-inset dark:bg-zinc-800 hover:bg-bg-inset dark:hover:bg-zinc-700 rounded-soft transition-colors border border-line dark:border-zinc-700"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-zinc-900 dark:text-white mb-1 truncate">
+        <div className="grid gap-6 xl:grid-cols-2">
+          <ReviewSection
+            title="Structured Reviews"
+            icon={FileText}
+            count={reviews.length}
+            emptyLabel="No structured reviews yet. Start one from the Reviews hub."
+            items={reviews}
+            onOpen={(review) => handleOpenReview(review, 'structured')}
+          />
+
+          <ReviewSection
+            title="Prose Reviews"
+            icon={PenTool}
+            count={proseReviews.length}
+            emptyLabel="No prose reviews yet. Add a short note when you want speed over scoring."
+            items={proseReviews}
+            onOpen={(review) => handleOpenReview(review, 'prose')}
+          />
+
+          <section className="rounded-[2rem] border border-line bg-bg-surface p-6 shadow-sm xl:col-span-2">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-bg-inset text-fg-muted">
+                <Clock className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-h3 font-semibold text-fg">Reviews in progress</h2>
+                <p className="text-caption uppercase tracking-[0.22em] text-fg-muted">
+                  Resume where you left off
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 grid gap-3">
+              {inProgressItems.length === 0 ? (
+                <div className="rounded-[1.5rem] border border-dashed border-line bg-white p-5 text-center">
+                  <p className="text-body-sm text-fg-muted">No reviews in progress.</p>
+                </div>
+              ) : (
+                inProgressItems.map(({ review, type }) => (
+                  <button
+                    key={review.id}
+                    onClick={() => handleOpenReview(review, type)}
+                    className="flex items-center justify-between rounded-[1.25rem] border border-line bg-white p-4 text-left transition-all hover:-translate-y-0.5 hover:border-fg-muted/30"
+                  >
+                    <div className="min-w-0">
+                      <p className="truncate text-body font-semibold text-fg">
                         {review.review_id || review.item_name}
-                      </div>
-                      <div className="text-sm text-fg-subtle dark:text-fg-subtle truncate">
+                      </p>
+                      <p className="mt-1 truncate text-body-sm text-fg-muted">
                         {review.item_name} • {review.category}
-                      </div>
-                      <div className="text-xs text-fg-subtle dark:text-fg-subtle mt-1">
-                        {formatDate(review.created_at)}
-                      </div>
+                      </p>
                     </div>
-                    <div className="ml-3 flex-shrink-0">{getStatusBadge(review.status)}</div>
-                  </div>
-                </button>
-              ))}
+                    <ArrowRight className="h-4 w-4 text-fg-muted" />
+                  </button>
+                ))
+              )}
             </div>
-          )}
-        </div>
-
-        {/* Prose Reviews */}
-        <div className="bg-white dark:bg-zinc-800 rounded-pane border border-line dark:border-zinc-700 p-4 sm:p-6">
-          <div className="flex items-center mb-4">
-            <PenTool size={24} className="text-primary mr-2" />
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Prose Reviews</h2>
-            <span className="ml-auto text-sm text-fg-subtle dark:text-fg-subtle">
-              {completedProseReviews.length}{' '}
-              {completedProseReviews.length === 1 ? 'review' : 'reviews'}
-            </span>
-          </div>
-
-          {completedProseReviews.length === 0 ? (
-            <p className="text-fg-subtle dark:text-fg-subtle text-center py-8">
-              No completed prose reviews yet
-            </p>
-          ) : (
-            <div className="space-y-3">
-              {completedProseReviews.map((review) => (
-                <button
-                  key={review.id}
-                  onClick={() => router.push(`/review/summary/${review.id}?type=prose`)}
-                  className="w-full text-left p-4 bg-bg-inset dark:bg-zinc-800 hover:bg-bg-inset dark:hover:bg-zinc-700 rounded-soft transition-colors border border-line dark:border-zinc-700"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-zinc-900 dark:text-white mb-1 truncate">
-                        {review.review_id || review.item_name}
-                      </div>
-                      <div className="text-sm text-fg-subtle dark:text-fg-subtle truncate">
-                        {review.item_name} • {review.category}
-                      </div>
-                      <div className="text-xs text-fg-subtle dark:text-fg-subtle mt-1">
-                        {formatDate(review.created_at)}
-                      </div>
-                    </div>
-                    <div className="ml-3 flex-shrink-0">{getStatusBadge(review.status)}</div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Reviews in Progress */}
-        <div className="bg-white dark:bg-zinc-800 rounded-pane border border-line dark:border-zinc-700 p-4 sm:p-6">
-          <div className="flex items-center mb-4">
-            <Clock size={24} className="text-primary mr-2" />
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-              Reviews in Progress
-            </h2>
-            <span className="ml-auto text-sm text-fg-subtle dark:text-fg-subtle">
-              {inProgressReviews.length + inProgressProseReviews.length}{' '}
-              {inProgressReviews.length + inProgressProseReviews.length === 1
-                ? 'review'
-                : 'reviews'}
-            </span>
-          </div>
-
-          {inProgressReviews.length === 0 && inProgressProseReviews.length === 0 ? (
-            <p className="text-fg-subtle dark:text-fg-subtle text-center py-8">
-              No reviews in progress
-            </p>
-          ) : (
-            <div className="space-y-3">
-              {inProgressReviews.map((review) => (
-                <button
-                  key={review.id}
-                  onClick={() => router.push(`/review/structured?id=${review.id}`)}
-                  className="w-full text-left p-4 bg-bg-inset dark:bg-zinc-800 hover:bg-bg-inset dark:hover:bg-zinc-700 rounded-soft transition-colors border border-line dark:border-zinc-700"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-zinc-900 dark:text-white mb-1 truncate">
-                        {review.review_id || review.item_name}
-                      </div>
-                      <div className="text-sm text-fg-subtle dark:text-fg-subtle truncate">
-                        {review.item_name} • {review.category} • Review
-                      </div>
-                      <div className="text-xs text-fg-subtle dark:text-fg-subtle mt-1">
-                        Last updated: {formatDate(review.updated_at)}
-                      </div>
-                    </div>
-                    <div className="ml-3 flex-shrink-0">{getStatusBadge(review.status)}</div>
-                  </div>
-                </button>
-              ))}
-              {inProgressProseReviews.map((review) => (
-                <button
-                  key={review.id}
-                  onClick={() => router.push(`/review/prose?id=${review.id}`)}
-                  className="w-full text-left p-4 bg-bg-inset dark:bg-zinc-800 hover:bg-bg-inset dark:hover:bg-zinc-700 rounded-soft transition-colors border border-line dark:border-zinc-700"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-zinc-900 dark:text-white mb-1 truncate">
-                        {review.review_id || review.item_name}
-                      </div>
-                      <div className="text-sm text-fg-subtle dark:text-fg-subtle truncate">
-                        {review.item_name} • {review.category} • Prose Review
-                      </div>
-                      <div className="text-xs text-fg-subtle dark:text-fg-subtle mt-1">
-                        Last updated: {formatDate(review.updated_at)}
-                      </div>
-                    </div>
-                    <div className="ml-3 flex-shrink-0">{getStatusBadge(review.status)}</div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+          </section>
         </div>
       </div>
     </PageLayout>
@@ -295,7 +289,6 @@ const MyReviewsPage: React.FC = () => {
 
 export default MyReviewsPage;
 
-// Disable static generation for this page
 export async function getServerSideProps() {
   return { props: {} };
 }

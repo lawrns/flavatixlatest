@@ -1,66 +1,96 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
+import { BarChart3, Trophy, Users, PlayCircle } from 'lucide-react';
 import { useRequireAuth } from '@/hooks';
+import PageLayout from '@/components/layout/PageLayout';
+import ModeCard from '@/components/ui/ModeCard';
 
 const CompetitionPage: React.FC = () => {
   const { user, loading } = useRequireAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    if (!user) {
-      return;
-    }
-  }, [user]);
 
   if (loading || !user) {
     return null;
   }
 
   return (
-    <div className="min-h-screen bg-background-light dark:bg-background-dark">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-text-primary mb-8">Competitions</h1>
-          
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-sm border border-line dark:border-zinc-700">
-              <h2 className="text-xl font-semibold text-text-primary mb-4">Join Competition</h2>
-              <p className="text-text-secondary mb-4">
-                Enter a competition code to join an existing tasting competition.
+    <PageLayout
+      title="Competition"
+      subtitle="Join a session, create a new bracket, or review how your tasting runs are stacking up."
+      containerSize="2xl"
+    >
+      <div className="space-y-6">
+        <section className="rounded-[2rem] border border-line bg-white/90 p-5 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.2)]">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-2xl space-y-2">
+              <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
+                Competition hub
               </p>
-              <button
-                onClick={() => router.push('/join-tasting')}
-                className="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
-              >
-                Join Competition
-              </button>
+              <h2 className="text-h2 font-semibold tracking-tight text-fg">
+                Keep competition flows separate from everyday tasting.
+              </h2>
+              <p className="text-body-sm leading-relaxed text-fg-muted">
+                This page groups the actions that matter when you are running or joining
+                a scored tasting session.
+              </p>
             </div>
 
-            <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-sm border border-line dark:border-zinc-700">
-              <h2 className="text-xl font-semibold text-text-primary mb-4">Create Competition</h2>
-              <p className="text-text-secondary mb-4">
-                Start a new tasting competition and invite others to participate.
-              </p>
-              <button
-                onClick={() => router.push('/create-tasting')}
-                className="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
-              >
-                Create Competition
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => router.push('/taste')}
+              className="inline-flex items-center gap-2 text-body-sm font-semibold text-fg-muted transition-colors hover:text-fg"
+            >
+              Back to Taste
+              <PlayCircle className="h-4 w-4" />
+            </button>
+          </div>
+        </section>
+
+        <section className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="grid gap-4">
+            <ModeCard
+              icon={Users}
+              iconBgColor="bg-emerald-500/10"
+              iconColor="text-emerald-700"
+              title="Join Competition"
+              description="Enter a competition code and jump into an existing scored tasting session."
+              href="/join-tasting"
+              delay={0.02}
+            />
+            <ModeCard
+              icon={Trophy}
+              iconBgColor="bg-amber-500/10"
+              iconColor="text-amber-700"
+              title="Create Competition"
+              description="Set up a new competition session, define the rules, and invite participants."
+              href="/create-tasting"
+              delay={0.08}
+            />
           </div>
 
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold text-text-primary mb-4">My Competitions</h2>
-            <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-sm border border-line dark:border-zinc-700">
-              <p className="text-text-secondary text-center py-8">
-                No competitions yet. Join or create one to get started!
+          <div className="rounded-[2rem] border border-line bg-bg-surface p-5 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-bg-inset text-fg-muted">
+                <BarChart3 className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
+                  Status
+                </p>
+                <h3 className="text-h3 font-semibold text-fg">My competitions</h3>
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-[1.5rem] border border-dashed border-line bg-white p-5">
+              <p className="text-body-sm leading-relaxed text-fg-muted">
+                No competitions yet. Start one from the cards on the left or join a code
+                shared by another host.
               </p>
             </div>
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

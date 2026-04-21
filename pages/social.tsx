@@ -9,8 +9,8 @@ import {
 } from '../components/social/SocialPostCard';
 import { SocialFeedFilters } from '../components/social/SocialFeedFilters';
 import notificationService from '@/lib/notificationService';
-import BottomNavigation from '@/components/navigation/BottomNavigation';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
+import PageLayout from '@/components/layout/PageLayout';
 import {
   useInfiniteFeed,
   useLikeTasting,
@@ -280,23 +280,32 @@ export default function SocialPage() {
 
   if (authLoading || loadingPosts) {
     return (
-      <div className="bg-white dark:bg-zinc-900 font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
-        <div className="flex min-h-screen flex-col">
-          <header className="border-b border-line dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-10 h-10 bg-zinc-200 dark:bg-zinc-700 rounded-full animate-pulse" />
-              <div className="h-6 bg-zinc-200 dark:bg-zinc-700 rounded w-32 animate-pulse" />
-              <div className="w-10 h-10 bg-zinc-200 dark:bg-zinc-700 rounded-full animate-pulse" />
+      <PageLayout
+        title="Social"
+        subtitle="A feed of recent tastings, reactions, and conversations."
+        showBack
+        backUrl="/dashboard"
+        containerSize="2xl"
+      >
+        <div className="grid gap-6">
+          <section className="rounded-[2rem] border border-line bg-white/90 p-6 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)]">
+            <div className="grid gap-4 sm:grid-cols-3">
+              {['Feed', 'Following', 'Categories'].map((label) => (
+                <div
+                  key={label}
+                  className="h-16 rounded-[1.25rem] border border-line bg-bg-surface animate-pulse"
+                />
+              ))}
             </div>
-          </header>
-          <main className="flex-1 overflow-y-auto divide-y divide-zinc-200 dark:divide-zinc-700 pb-[calc(64px+env(safe-area-inset-bottom))]">
+          </section>
+
+          <div className="grid gap-3">
             <SkeletonPost />
             <SkeletonPost />
             <SkeletonPost />
-          </main>
-          <BottomNavigation />
+          </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
@@ -304,104 +313,96 @@ export default function SocialPage() {
 
   return (
     <ErrorBoundary>
-      <div className="bg-white dark:bg-zinc-900 font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
-        <div className="flex min-h-screen flex-col">
-          {/* Header */}
-          <header className="border-b border-line dark:border-zinc-700 bg-white dark:bg-zinc-900 sticky top-0 z-40">
-            <div className="max-w-md mx-auto w-full flex items-center justify-between p-4">
-              <button
-                onClick={() => router.back()}
-                className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-bg-inset dark:hover:bg-zinc-800"
-              >
-                <span className="material-symbols-outlined">arrow_back</span>
-              </button>
-              <h1 className="text-xl font-bold">Social Feed</h1>
-              <button
-                onClick={() => router.push('/quick-tasting')}
-                className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-bg-inset dark:hover:bg-zinc-800"
-              >
-                <span className="material-symbols-outlined">add_circle</span>
-              </button>
+      <PageLayout
+        title="Social"
+        subtitle="See what the community is tasting and jump into a conversation."
+        showBack
+        backUrl="/dashboard"
+        containerSize="2xl"
+        headerRight={
+          <button
+            onClick={() => router.push('/quick-tasting')}
+            className="inline-flex h-11 items-center gap-2 rounded-full border border-line bg-white px-4 text-sm font-semibold text-fg transition-colors hover:border-fg-muted/30 hover:text-fg-muted"
+          >
+            <span className="material-symbols-outlined text-[20px]">add_circle</span>
+            Start tasting
+          </button>
+        }
+      >
+        <div className="grid gap-6">
+          <section className="rounded-[2rem] border border-line bg-white/90 p-5 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)] sm:p-6">
+            <div className="max-w-4xl">
+              <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
+                Feed controls
+              </p>
+              <div className="mt-4">
+                <SocialFeedFilters
+                  activeTab={activeTab}
+                  categoryFilter={categoryFilter}
+                  categories={categories}
+                  onTabChange={setActiveTab}
+                  onCategoryChange={setCategoryFilter}
+                />
+              </div>
             </div>
+          </section>
 
-            {/* Filters */}
-            <div className="max-w-md mx-auto">
-              <SocialFeedFilters
-                activeTab={activeTab}
-                categoryFilter={categoryFilter}
-                categories={categories}
-                onTabChange={setActiveTab}
-                onCategoryChange={setCategoryFilter}
-              />
-            </div>
-          </header>
+          <section className="grid gap-3">
+            {filteredPosts.length === 0 ? (
+              <div className="rounded-[2rem] border border-dashed border-line bg-[#fbfaf7] p-10 text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <span className="material-symbols-outlined text-[28px]">local_bar</span>
+                </div>
+                <h3 className="text-h3 font-semibold text-fg">No tastings yet</h3>
+                <p className="mx-auto mt-3 max-w-lg text-body-sm leading-relaxed text-fg-muted">
+                  Be the first to share a tasting and start the feed moving.
+                </p>
+                <button
+                  onClick={() => router.push('/quick-tasting')}
+                  className="mt-6 inline-flex items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.99]"
+                >
+                  Start Tasting
+                </button>
+              </div>
+            ) : (
+              filteredPosts.map((post) => (
+                <SocialPostCard
+                  key={post.id}
+                  post={post}
+                  currentUserId={user?.id}
+                  isExpanded={expandedPosts.has(post.id)}
+                  onToggleExpand={() => {
+                    const newExpanded = new Set(expandedPosts);
+                    if (newExpanded.has(post.id)) {
+                      newExpanded.delete(post.id);
+                    } else {
+                      newExpanded.add(post.id);
+                    }
+                    setExpandedPosts(newExpanded);
+                  }}
+                  onLike={() => handleLike(post.id)}
+                  onComment={() => handleComment(post.id)}
+                  onShare={() => handleShare(post.id)}
+                  onFollow={() => handleFollow(post.user_id, post.user.full_name || 'User')}
+                />
+              ))
+            )}
 
-          {/* Main Content */}
-          <main className="flex-1 overflow-y-auto bg-white dark:bg-zinc-900 pb-[calc(64px+env(safe-area-inset-bottom))]">
-            <div className="max-w-md mx-auto divide-y divide-zinc-200 dark:divide-zinc-800">
-              {filteredPosts.length === 0 ? (
-                <div className="p-8 text-center">
-                  <div className="mb-4">
-                    <span className="material-symbols-outlined text-6xl text-primary">
-                      local_bar
-                    </span>
+            {!loadingPosts && filteredPosts.length > 0 && (
+              <div id="scroll-sentinel" className="flex h-20 items-center justify-center">
+                {isFetchingNextPage ? (
+                  <div className="flex items-center gap-2 text-fg-muted">
+                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                    <span className="text-sm">Loading more...</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
-                    No tastings yet
-                  </h3>
-                  <p className="text-fg-muted dark:text-zinc-300 mb-4">
-                    Be the first to share your tasting experience!
-                  </p>
-                  <button onClick={() => router.push('/quick-tasting')} className="btn-primary">
-                    Start Tasting
-                  </button>
-                </div>
-              ) : (
-                filteredPosts.map((post) => (
-                  <SocialPostCard
-                    key={post.id}
-                    post={post}
-                    currentUserId={user?.id}
-                    isExpanded={expandedPosts.has(post.id)}
-                    onToggleExpand={() => {
-                      const newExpanded = new Set(expandedPosts);
-                      if (newExpanded.has(post.id)) {
-                        newExpanded.delete(post.id);
-                      } else {
-                        newExpanded.add(post.id);
-                      }
-                      setExpandedPosts(newExpanded);
-                    }}
-                    onLike={() => handleLike(post.id)}
-                    onComment={() => handleComment(post.id)}
-                    onShare={() => handleShare(post.id)}
-                    onFollow={() => handleFollow(post.user_id, post.user.full_name || 'User')}
-                  />
-                ))
-              )}
-
-              {/* Infinite Scroll Sentinel */}
-              {!loadingPosts && filteredPosts.length > 0 && (
-                <div id="scroll-sentinel" className="h-20 flex items-center justify-center">
-                  {isFetchingNextPage && (
-                    <div className="flex items-center gap-2 text-fg-subtle dark:text-zinc-300">
-                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-                      <span className="text-sm">Loading more...</span>
-                    </div>
-                  )}
-                  {!hasNextPage && !isFetchingNextPage && (
-                    <p className="text-sm text-fg-subtle">You&apos;ve reached the end!</p>
-                  )}
-                </div>
-              )}
-            </div>
-          </main>
-
-          {/* Bottom Navigation */}
-          <BottomNavigation />
+                ) : !hasNextPage ? (
+                  <p className="text-sm text-fg-muted">You&apos;ve reached the end.</p>
+                ) : null}
+              </div>
+            )}
+          </section>
         </div>
 
-        {/* Comments Modal */}
         {activePostId && (
           <CommentsModal
             tastingId={activePostId}
@@ -411,7 +412,7 @@ export default function SocialPage() {
             initialCommentCount={posts.find((p) => p.id === activePostId)?.stats.comments || 0}
           />
         )}
-      </div>
+      </PageLayout>
     </ErrorBoundary>
   );
 }

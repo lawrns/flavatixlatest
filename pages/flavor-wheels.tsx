@@ -605,7 +605,7 @@ export default function FlavorWheelsPage() {
       subtitle="AI-generated visualizations of your tasting notes."
       showBack
       backUrl="/dashboard"
-      containerSize="4xl"
+      containerSize="xl"
     >
       <div className="mt-2 space-y-6">
 

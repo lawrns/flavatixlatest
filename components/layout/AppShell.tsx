@@ -13,6 +13,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import BottomNavigation from '../navigation/BottomNavigation';
+import Container, { CONTAINER_SIZE_CLASSES, ContainerSize } from './Container';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -29,21 +30,12 @@ interface AppShellProps {
   /** Show header */
   showHeader?: boolean;
   /** Maximum content width */
-  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+  maxWidth?: ContainerSize;
   /** Additional class for main content */
   className?: string;
   /** Padding variant */
   padding?: 'none' | 'sm' | 'md' | 'lg';
 }
-
-const maxWidthClasses = {
-  sm: 'max-w-screen-sm',
-  md: 'max-w-screen-md',
-  lg: 'max-w-screen-lg',
-  xl: 'max-w-screen-xl',
-  '2xl': 'max-w-screen-2xl',
-  full: 'max-w-full',
-};
 
 const paddingClasses = {
   none: '',
@@ -79,7 +71,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       {/* Header */}
       {showHeader && (
         <header className="sticky top-0 z-40 bg-background-surface border-b border-border-subtle">
-          <div className={cn('mx-auto', maxWidthClasses[maxWidth])}>
+          <Container size={maxWidth} padding={false}>
             <div className="flex items-center justify-between h-14 px-4">
               {/* Left: Back button or Logo */}
               <div className="flex items-center gap-3">
@@ -132,7 +124,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                 </div>
               )}
             </div>
-          </div>
+          </Container>
         </header>
       )}
 
@@ -140,7 +132,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       <main
         className={cn(
           'flex-1',
-          maxWidthClasses[maxWidth],
+          CONTAINER_SIZE_CLASSES[maxWidth],
           'mx-auto w-full',
           paddingClasses[padding],
           showBottomNav && 'pb-20', // Account for bottom nav

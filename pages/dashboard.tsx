@@ -1,30 +1,34 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
 import { useAuth } from '../contexts/SimpleAuthContext';
-import SocialFeedWidget from '../components/social/SocialFeedWidget';
 import { AvatarWithFallback } from '@/components/ui/AvatarWithFallback';
 import EmptyStateCard from '@/components/ui/EmptyStateCard';
 import { Button } from '@/components/ui/Button';
-import { getUserPresets, DEFAULT_PRESETS } from '@/lib/presetService';
-import { CategoryPackId } from '@/lib/categoryPacks';
 import { useCurrentProfile } from '../lib/query/hooks/useProfile';
 import { useRecentTastings, useTastingStats } from '../lib/query/hooks/useTastings';
 import PageLayout from '@/components/layout/PageLayout';
-import { Zap, Users, UserPlus } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
-const tasteActions = [
-  { label: 'Quick Tasting', href: '/quick-tasting', icon: Zap },
-  { label: 'Create Session', href: '/create-tasting', icon: Users },
-  { label: 'Join Session', href: '/join-tasting', icon: UserPlus },
-];
-
-function formatCategoryName(category: string): string {
-  return category.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
-}
+const SocialFeedWidget = dynamic(
+  () => import('../components/social/SocialFeedWidget'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="surface-page p-4">
+        <div className="h-6 w-40 rounded-full bg-bg-inset animate-pulse mb-4" />
+        <div className="space-y-3">
+          <div className="h-20 rounded-soft bg-bg-inset animate-pulse" />
+          <div className="h-20 rounded-soft bg-bg-inset animate-pulse" />
+          <div className="h-20 rounded-soft bg-bg-inset animate-pulse" />
+        </div>
+      </div>
+    ),
+  }
+);
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
-  const [quickPresets, setQuickPresets] = useState<CategoryPackId[]>(DEFAULT_PRESETS);
   const router = useRouter();
 
   const { data: profile, isLoading: profileLoading } = useCurrentProfile();
@@ -36,10 +40,6 @@ export default function Dashboard() {
   useEffect(() => {
     if (!authLoading && !user) {
       router.push('/auth');
-      return;
-    }
-    if (user) {
-      setQuickPresets(getUserPresets());
     }
   }, [user, authLoading, router]);
 
@@ -78,37 +78,14 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Taste actions */}
-          <div className="flex flex-wrap items-center gap-4 mb-4">
-            {tasteActions.map((action) => (
-              <button
-                key={action.href}
-                onClick={() => router.push(action.href)}
-                className="flex items-center gap-2 text-body-sm text-fg hover:text-fg-muted transition-colors"
-              >
-                <action.icon className="w-4 h-4 text-fg-muted" />
-                <span>{action.label}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Quick presets */}
-          <div>
-            <p className="text-caption text-fg-muted mb-2">
-              Quick presets
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-body-sm text-fg-muted max-w-xl">
+              Home shows your latest activity. Taste is the dedicated entry point for starting or joining a session.
             </p>
-            <div className="flex flex-wrap gap-2">
-              {quickPresets.map((category) => (
-                <button
-                  key={category}
-                  type="button"
-                  onClick={() => router.push(`/quick-tasting?category=${category}`)}
-                  className="bg-bg-inset rounded-soft px-3 py-1 text-caption text-fg hover:bg-bg-hover transition-colors"
-                >
-                  {formatCategoryName(category)}
-                </button>
-              ))}
-            </div>
+            <Button onClick={() => router.push('/taste')} className="sm:self-start">
+              Open Taste Hub
+              <ArrowRight className="w-4 h-4" />
+            </Button>
           </div>
         </div>
 

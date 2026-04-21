@@ -94,20 +94,29 @@ export default function JoinTastingPage() {
       title="Join a Tasting"
       subtitle="Enter the tasting code to join a collaborative session"
       showBack
-      containerSize="md"
+      containerSize="2xl"
     >
-      <div className="bg-white dark:bg-zinc-800 rounded-pane shadow-sm border border-line dark:border-zinc-700 p-8 mt-2">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-          </div>
-        </div>
-
-          <form onSubmit={handleJoinTasting} className="space-y-6">
+      <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
+        <section className="rounded-[2rem] border border-line bg-white/90 p-6 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)] sm:p-8">
+          <div className="flex items-center gap-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-primary/10 text-primary">
+              <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+            </div>
             <div>
-              <label htmlFor="tastingCode" className="block text-sm font-medium text-fg-muted dark:text-zinc-200 mb-2">
+              <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
+                Session code
+              </p>
+              <h2 className="text-h2 font-semibold tracking-tight text-fg">
+                Join the room with a single code.
+              </h2>
+            </div>
+          </div>
+
+          <form onSubmit={handleJoinTasting} className="mt-8 space-y-6">
+            <div className="space-y-2">
+              <label htmlFor="tastingCode" className="block text-sm font-semibold text-fg">
                 Tasting Code
               </label>
               <input
@@ -116,50 +125,59 @@ export default function JoinTastingPage() {
                 autoComplete="off"
                 value={tastingCode}
                 onChange={(e) => setTastingCode(e.target.value)}
-                placeholder="Enter the code shared by the host"
-                className="w-full px-4 py-3 border border-line dark:border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Paste the code shared by the host"
+                className="w-full rounded-[1rem] border border-line bg-bg-surface px-4 py-3 text-body text-fg transition-colors placeholder:text-fg-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
                 disabled={isJoining}
               />
-              <p className="mt-2 text-sm text-fg-subtle dark:text-zinc-300">
-                The tasting code is a unique ID shared by the session host
+              <p className="text-sm text-fg-muted">
+                The tasting code is a unique session ID shared by the host.
               </p>
             </div>
 
             <button
               type="submit"
               disabled={isJoining || !tastingCode.trim()}
-              className="w-full py-3 px-4 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 disabled:bg-zinc-300 disabled:cursor-not-allowed transition-colors"
+              className="inline-flex w-full items-center justify-center rounded-full bg-primary px-4 py-3.5 text-sm font-semibold text-white transition-transform duration-150 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:bg-zinc-300 disabled:text-zinc-500 disabled:transform-none active:scale-[0.99]"
             >
               {isJoining ? 'Joining...' : 'Join Tasting'}
             </button>
           </form>
+        </section>
 
-          <div className="mt-8 pt-6 border-t border-line dark:border-zinc-700 dark:border-zinc-700">
-            <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-50 mb-3">How it works:</h3>
-            <ol className="space-y-2 text-sm text-fg-muted dark:text-zinc-300">
-              <li className="flex">
-                <span className="font-semibold text-primary mr-2">1.</span>
-                <span>Get the tasting code from the session host</span>
+        <section className="space-y-4">
+          <div className="rounded-[2rem] border border-line bg-bg-surface p-6 shadow-sm">
+            <h3 className="text-h3 font-semibold text-fg">How it works</h3>
+            <ol className="mt-4 space-y-3 text-body-sm text-fg-muted">
+              <li className="flex gap-3">
+                <span className="mt-0.5 font-semibold text-primary">1.</span>
+                <span>Get the tasting code from the session host.</span>
               </li>
-              <li className="flex">
-                <span className="font-semibold text-primary mr-2">2.</span>
-                <span>Enter the code above and click &quot;Join Tasting&quot;</span>
+              <li className="flex gap-3">
+                <span className="mt-0.5 font-semibold text-primary">2.</span>
+                <span>Paste the code and join the session.</span>
               </li>
-              <li className="flex">
-                <span className="font-semibold text-primary mr-2">3.</span>
-                <span>Start tasting and sharing your notes with the group!</span>
+              <li className="flex gap-3">
+                <span className="mt-0.5 font-semibold text-primary">3.</span>
+                <span>Start tasting, scoring, and sharing notes with the group.</span>
               </li>
             </ol>
           </div>
-        </div>
 
-      <div className="mt-6 text-center">
-        <button
-          onClick={() => router.push('/create-tasting')}
-          className="text-primary hover:underline text-sm font-medium"
-        >
-          Or create your own tasting session
-        </button>
+          <div className="rounded-[2rem] border border-dashed border-line bg-[#fbfaf7] p-6">
+            <h3 className="text-h3 font-semibold text-fg">Prefer to host?</h3>
+            <p className="mt-3 text-body-sm leading-relaxed text-fg-muted">
+              Create your own session if you want to control the category, pacing, and
+              participant rules.
+            </p>
+            <button
+              type="button"
+              onClick={() => router.push('/create-tasting')}
+              className="mt-5 inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-900 transition-transform duration-150 hover:-translate-y-0.5 hover:border-zinc-400 active:scale-[0.99]"
+            >
+              Create a tasting session
+            </button>
+          </div>
+        </section>
       </div>
     </PageLayout>
   );

@@ -127,7 +127,7 @@ export default function MyTastingsPage() {
       title="My Tastings"
       subtitle="View and manage all your tasting sessions"
       showBack
-      containerSize="2xl"
+      containerSize="xl"
     >
       <ConfirmDialog
         open={confirmOpen}

@@ -18,7 +18,7 @@ const TermsOfService = () => {
       </Head>
 
       <Container>
-        <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
           <button
             onClick={() => router.back()}
             className="mb-8 flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"

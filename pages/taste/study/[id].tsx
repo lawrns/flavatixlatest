@@ -117,7 +117,7 @@ const StudyTastingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background-light pb-20">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-xl mx-auto px-4 py-8">
         <QuickTastingSession
           session={session}
           userId={user!.id}

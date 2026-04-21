@@ -171,7 +171,7 @@ const TastingSessionPage: React.FC = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-background-light dark:bg-background-dark">
-        <div className="container mx-auto px-md py-lg max-w-2xl">
+        <div className="container mx-auto px-md py-lg max-w-xl">
           <div className="text-center">
             <div className="w-16 h-16 bg-error/10 rounded-full flex items-center justify-center mx-auto mb-md">
               <svg
@@ -208,7 +208,7 @@ const TastingSessionPage: React.FC = () => {
   return (
     <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
       <main id="main-content">
-        <div className="container mx-auto px-md py-lg">
+        <div className="container mx-auto px-md py-lg max-w-xl">
           {/* Header */}
           <div className="mb-lg">
             <button

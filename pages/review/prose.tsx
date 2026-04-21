@@ -239,7 +239,7 @@ const ProseReviewPage: React.FC = () => {
       subtitle="Write your review in your own words"
       showBack
       backUrl="/review"
-      containerSize="lg"
+      containerSize="2xl"
     >
       <ProseReviewForm
         initialData={existingReview || undefined}

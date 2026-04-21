@@ -62,15 +62,16 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
   return (
     <footer
       className={cn(
-        'fixed bottom-0 left-0 right-0 z-50',
-        'bg-white dark:bg-zinc-900',
-        'border-t border-line dark:border-zinc-700/50',
-        'shadow-[0_-4px_20px_rgba(0,0,0,0.03)]'
+        'fixed inset-x-0 bottom-0 z-50 pointer-events-none'
       )}
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <nav
-        className="flex justify-around items-center px-4 max-w-md mx-auto h-[64px]"
+        className={cn(
+          'pointer-events-auto mx-auto mb-3 grid h-[72px] w-full max-w-xl grid-cols-4 items-center',
+          'rounded-full border border-line/70 bg-white/92 px-2 shadow-[0_18px_40px_-24px_rgba(0,0,0,0.28)]',
+          'backdrop-blur-xl dark:border-zinc-700/70 dark:bg-zinc-900/92'
+        )}
         role="navigation"
         aria-label="Main navigation"
       >
@@ -82,12 +83,11 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
               href={item.path}
               onClick={(e) => handleClick(e, item.path)}
               className={cn(
-                'flex flex-col items-center justify-center h-full min-w-[60px] gap-0.5 group',
-                'transition-colors duration-200',
+                'flex h-full flex-col items-center justify-center gap-1 rounded-full group transition-all duration-200',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
                 active
-                  ? 'text-primary'
-                  : 'text-fg-subtle dark:text-fg-subtle hover:text-fg-muted dark:hover:text-zinc-300'
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-fg-subtle dark:text-fg-subtle hover:bg-bg-inset hover:text-fg-muted dark:hover:bg-zinc-800 dark:hover:text-zinc-200'
               )}
               aria-current={active ? 'page' : undefined}
               data-testid={item.testId}
@@ -95,9 +95,8 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
               {/* Icon container */}
               <span
                 className={cn(
-                  'flex items-center justify-center h-6',
-                  'transition-transform duration-200',
-                  active && 'scale-110'
+                  'flex items-center justify-center rounded-full px-2.5 py-1 transition-transform duration-200',
+                  active && 'translate-y-[-1px] scale-105'
                 )}
               >
                 <span

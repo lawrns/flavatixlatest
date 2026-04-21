@@ -374,7 +374,7 @@ const NewStudyTastingPage: React.FC = () => {
   return (
     <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
       <main id="main-content" className="pb-20">
-        <div className="container mx-auto px-md py-lg max-w-4xl">
+        <div className="container mx-auto px-md py-lg max-w-xl">
           {/* Header */}
           <div className="mb-lg">
             <button

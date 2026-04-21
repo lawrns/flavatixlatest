@@ -208,123 +208,143 @@ export default function SettingsPage() {
       title="Settings"
       showBack
       backUrl="/dashboard"
-      containerSize="md"
+      containerSize="2xl"
       userAvatarUrl={profile?.avatar_url}
       userDisplayName={profile?.full_name || undefined}
     >
-      <div className="space-y-6">
-        {settingsSections.map((section) => (
-          <div key={section.title}>
-            <h2 className="text-sm font-semibold text-fg-subtle dark:text-fg-subtle uppercase tracking-wider mb-3 px-1">
-              {section.title}
-            </h2>
-            <Card>
-              <CardContent className="p-0 divide-y divide-zinc-100 dark:divide-zinc-700">
-                {section.items.map((item, index) => (
-                  <div
-                    key={item.label}
-                    className={cn(
-                      'flex items-center justify-between p-4',
-                      item.onClick && 'cursor-pointer hover:bg-bg-inset dark:hover:bg-zinc-800/50 transition-colors',
-                      index === 0 && 'rounded-t-lg',
-                      index === section.items.length - 1 && 'rounded-b-lg'
-                    )}
-                    onClick={item.onClick}
-                    role={item.onClick ? 'button' : undefined}
-                    tabIndex={item.onClick ? 0 : undefined}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={cn(
-                          'w-10 h-10 rounded-full flex items-center justify-center',
-                          item.danger
-                            ? 'bg-red-100 dark:bg-red-900/30'
-                            : 'bg-bg-inset dark:bg-zinc-700'
-                        )}
-                      >
-                        <item.icon
-                          size={20}
+      <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+        <section className="rounded-[2rem] border border-line bg-white/90 p-6 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)] sm:p-8">
+          <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
+            Account controls
+          </p>
+          <h2 className="mt-2 text-h2 font-semibold tracking-tight text-fg">
+            Keep preferences close to the work they affect.
+          </h2>
+          <p className="mt-3 text-body-sm leading-relaxed text-fg-muted">
+            Dark mode, notifications, privacy, and dashboard presets all live here so the
+            settings page stays practical rather than decorative.
+          </p>
+
+          <div className="mt-6 rounded-[1.5rem] border border-dashed border-line bg-[#fbfaf7] p-4">
+            <p className="text-body-sm font-medium text-fg">Dashboard presets</p>
+            <p className="mt-2 text-caption leading-relaxed text-fg-muted">
+              These chips decide which categories appear first on Home.
+            </p>
+          </div>
+
+          <div className="mt-6 text-sm text-fg-muted">
+            Flavatix v1.0.0
+          </div>
+        </section>
+
+        <section className="space-y-6">
+          {settingsSections.map((section) => (
+            <div key={section.title} className="space-y-3">
+              <h2 className="text-xs font-semibold uppercase tracking-[0.24em] text-fg-muted">
+                {section.title}
+              </h2>
+              <Card className="rounded-[2rem] border border-line bg-white/90 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)]">
+                <CardContent className="p-0 divide-y divide-zinc-100 dark:divide-zinc-700">
+                  {section.items.map((item, index) => (
+                    <div
+                      key={item.label}
+                      className={cn(
+                        'flex items-center justify-between p-4 sm:p-5',
+                        item.onClick &&
+                          'cursor-pointer transition-colors hover:bg-bg-inset dark:hover:bg-zinc-800/50',
+                        index === 0 && 'rounded-t-[2rem]',
+                        index === section.items.length - 1 && 'rounded-b-[2rem]'
+                      )}
+                      onClick={item.onClick}
+                      role={item.onClick ? 'button' : undefined}
+                      tabIndex={item.onClick ? 0 : undefined}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div
                           className={cn(
+                            'flex h-11 w-11 items-center justify-center rounded-2xl',
                             item.danger
-                              ? 'text-red-600 dark:text-red-400'
-                              : 'text-fg-muted dark:text-zinc-300'
-                          )}
-                        />
-                      </div>
-                      <div>
-                        <p
-                          className={cn(
-                            'font-medium',
-                            item.danger
-                              ? 'text-red-600 dark:text-red-400'
-                              : 'text-zinc-900 dark:text-white'
+                              ? 'bg-red-100 dark:bg-red-900/30'
+                              : 'bg-bg-inset dark:bg-zinc-700'
                           )}
                         >
-                          {item.label}
-                        </p>
-                        <p className="text-sm text-fg-subtle dark:text-fg-subtle">
-                          {item.description}
-                        </p>
+                          <item.icon
+                            size={20}
+                            className={cn(
+                              item.danger
+                                ? 'text-red-600 dark:text-red-400'
+                                : 'text-fg-muted dark:text-zinc-300'
+                            )}
+                          />
+                        </div>
+                        <div>
+                          <p
+                            className={cn(
+                              'font-medium tracking-tight',
+                              item.danger
+                                ? 'text-red-600 dark:text-red-400'
+                                : 'text-zinc-950 dark:text-white'
+                            )}
+                          >
+                            {item.label}
+                          </p>
+                          <p className="text-sm leading-relaxed text-fg-muted">
+                            {item.description}
+                          </p>
+                        </div>
                       </div>
+                      {item.action}
                     </div>
-                    {item.action}
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
+          ))}
+
+          <div className="space-y-3">
+            <h2 className="text-xs font-semibold uppercase tracking-[0.24em] text-fg-muted">
+              Quick Presets
+            </h2>
+            <Card className="rounded-[2rem] border border-line bg-white/90 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)]">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-bg-inset dark:bg-zinc-700">
+                    <Zap size={20} className="text-fg-muted dark:text-zinc-300" />
                   </div>
-                ))}
+                  <div>
+                    <p className="font-semibold text-zinc-950 dark:text-white">
+                      Dashboard Presets
+                    </p>
+                    <p className="text-sm leading-relaxed text-fg-muted">
+                      Choose which categories appear on your dashboard.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {ALL_CATEGORIES.map((category) => {
+                    const isSelected = quickPresets.includes(category);
+                    return (
+                      <button
+                        key={category}
+                        type="button"
+                        onClick={() => togglePreset(category)}
+                        className={cn(
+                          'transition-transform duration-150 active:scale-[0.99]',
+                          isSelected
+                            ? 'opacity-100 ring-2 ring-primary ring-offset-2 rounded-full'
+                            : 'opacity-60 hover:opacity-90'
+                        )}
+                      >
+                        <CategoryStamp category={category} />
+                      </button>
+                    );
+                  })}
+                </div>
               </CardContent>
             </Card>
           </div>
-        ))}
-
-        {/* Quick Presets Configuration */}
-        <div>
-          <h2 className="text-sm font-semibold text-fg-subtle dark:text-fg-subtle uppercase tracking-wider mb-3 px-1">
-            Quick Presets
-          </h2>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-bg-inset dark:bg-zinc-700">
-                  <Zap size={20} className="text-fg-muted dark:text-zinc-300" />
-                </div>
-                <div>
-                  <p className="font-medium text-zinc-900 dark:text-white">
-                    Dashboard Presets
-                  </p>
-                  <p className="text-sm text-fg-subtle dark:text-fg-subtle">
-                    Choose which categories appear on your dashboard
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {ALL_CATEGORIES.map((category) => {
-                  const isSelected = quickPresets.includes(category);
-                  return (
-                    <button
-                      key={category}
-                      type="button"
-                      onClick={() => togglePreset(category)}
-                      className={cn(
-                        'transition-all',
-                        isSelected
-                          ? 'opacity-100 ring-2 ring-primary ring-offset-2 rounded-full'
-                          : 'opacity-50 hover:opacity-75'
-                      )}
-                    >
-                      <CategoryStamp category={category} />
-                    </button>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* App Version */}
-        <div className="text-center py-4">
-          <p className="text-sm text-fg-subtle dark:text-fg-subtle">
-            Flavatix v1.0.0
-          </p>
-        </div>
+        </section>
       </div>
     </PageLayout>
   );

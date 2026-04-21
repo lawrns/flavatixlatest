@@ -150,24 +150,48 @@ const CreateTastingPage: React.FC = () => {
       showBack
       containerSize="2xl"
     >
-      {/* Mode Selection */}
-      <div className="flex flex-col gap-3 mt-2">
-        <ModeCard
-          icon={BookOpen}
-          iconBgColor="bg-blue-500/10 dark:bg-blue-500/20"
-          iconColor="text-blue-600 dark:text-blue-500"
-          title="Study Mode"
-          description="Structured tasting sessions with custom categories and templates."
-          href="/taste/create/study"
-        />
-        <ModeCard
-          icon={Trophy}
-          iconBgColor="bg-amber-500/10 dark:bg-amber-500/20"
-          iconColor="text-amber-600 dark:text-amber-500"
-          title="Competition Mode"
-          description="Preload items with correct answers. Enable participant ranking."
-          href="/taste/create/competition"
-        />
+      <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+        <section className="rounded-[2rem] border border-line bg-white/90 p-5 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)]">
+          <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
+            Session setup
+          </p>
+          <h2 className="mt-2 text-h2 font-semibold tracking-tight text-fg">
+            Choose the structure before you collect the notes.
+          </h2>
+          <p className="mt-3 text-body-sm leading-relaxed text-fg-muted">
+            Study mode favors guided exploration. Competition mode is built for scored
+            sessions and preloaded answers.
+          </p>
+
+          <div className="mt-6 rounded-[1.5rem] border border-dashed border-line bg-bg-inset p-4">
+            <p className="text-body-sm font-medium text-fg">Use the right mode for the room.</p>
+            <p className="mt-2 text-caption leading-relaxed text-fg-muted">
+              Study sessions are better for discovery. Competition sessions are better
+              when everyone needs the same rubric.
+            </p>
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-3">
+          <ModeCard
+            icon={BookOpen}
+            iconBgColor="bg-blue-500/10 dark:bg-blue-500/20"
+            iconColor="text-blue-600 dark:text-blue-500"
+            title="Study Mode"
+            description="Structured tasting sessions with custom categories and templates."
+            href="/taste/create/study"
+            delay={0.03}
+          />
+          <ModeCard
+            icon={Trophy}
+            iconBgColor="bg-amber-500/10 dark:bg-amber-500/20"
+            iconColor="text-amber-600 dark:text-amber-500"
+            title="Competition Mode"
+            description="Preload items with correct answers. Enable participant ranking."
+            href="/taste/create/competition"
+            delay={0.09}
+          />
+        </section>
       </div>
     </PageLayout>
   );

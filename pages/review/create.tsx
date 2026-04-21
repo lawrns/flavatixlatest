@@ -160,7 +160,7 @@ const CreateReviewPage: React.FC = () => {
       subtitle="In-depth analysis of flavor characteristics"
       showBack
       backUrl="/review"
-      containerSize="lg"
+      containerSize="2xl"
     >
       <ReviewForm
         onSubmit={handleSubmit}
