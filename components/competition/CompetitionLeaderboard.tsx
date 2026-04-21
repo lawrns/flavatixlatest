@@ -121,11 +121,11 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
   const getRankBadgeColor = (rank: number) => {
     switch (rank) {
       case 1:
-        return 'bg-yellow-100 border-yellow-500';
+        return 'bg-signal-good/10 border-signal-good dark:bg-signal-good/20';
       case 2:
-        return 'bg-gray-100 border-gray-400';
+        return 'bg-fg-subtle/10 border-fg-subtle dark:bg-fg-subtle/20';
       case 3:
-        return 'bg-orange-100 border-orange-600';
+        return 'bg-signal-warn/10 border-signal-warn dark:bg-signal-warn/20';
       default:
         return 'bg-background-light border-border-default';
     }

@@ -729,22 +729,22 @@ const NewStudyTastingPage: React.FC = () => {
                       </div>
                       <div className="text-small text-text-secondary">
                         {cat.hasText && (
-                          <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded mr-xs">
+                          <span className="inline-block px-2 py-1 bg-fg-subtle/10 text-fg-subtle dark:bg-fg-subtle/20 dark:text-fg-subtle rounded mr-xs">
                             Text
                           </span>
                         )}
                         {cat.hasScale && (
-                          <span className="inline-block px-2 py-1 bg-green-100 text-green-800 rounded mr-xs">
+                          <span className="inline-block px-2 py-1 bg-fg-subtle/10 text-fg-subtle dark:bg-fg-subtle/20 dark:text-fg-subtle rounded mr-xs">
                             Scale (1-{cat.scaleMax})
                           </span>
                         )}
                         {cat.hasBoolean && (
-                          <span className="inline-block px-2 py-1 bg-purple-100 text-purple-800 rounded mr-xs">
+                          <span className="inline-block px-2 py-1 bg-fg-subtle/10 text-fg-subtle dark:bg-fg-subtle/20 dark:text-fg-subtle rounded mr-xs">
                             Yes/No
                           </span>
                         )}
                         {cat.hasScale && cat.rankInSummary && (
-                          <span className="inline-block px-2 py-1 bg-amber-100 text-amber-800 rounded">
+                          <span className="inline-block px-2 py-1 bg-fg-subtle/10 text-fg-subtle dark:bg-fg-subtle/20 dark:text-fg-subtle rounded">
                             Ranked
                           </span>
                         )}

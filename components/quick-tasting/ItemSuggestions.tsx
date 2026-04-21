@@ -97,13 +97,13 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-signal-warn/10 text-signal-warn dark:bg-signal-warn/20 dark:text-signal-warn';
       case 'approved':
-        return 'bg-green-100 text-green-800';
+        return 'bg-signal-good/10 text-signal-good dark:bg-signal-good/20 dark:text-signal-good';
       case 'rejected':
-        return 'bg-red-100 text-red-800';
+        return 'bg-signal-danger/10 text-signal-danger dark:bg-signal-danger/20 dark:text-signal-danger';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-fg-subtle/10 text-fg-subtle';
     }
   };
 

@@ -322,7 +322,7 @@ export default function AvatarUpload({
 
       {/* Error Message */}
       {error && (
-        <div className="flex items-center space-x-xs p-sm bg-red-50 border border-red-200 rounded-lg text-red-800">
+        <div className="flex items-center space-x-xs p-sm bg-signal-danger/10 border border-signal-danger/20 rounded-lg text-signal-danger dark:bg-signal-danger/20">
           <AlertCircle className="h-4 w-4 flex-shrink-0" />
           <span className="text-small font-body">{error}</span>
         </div>
@@ -330,7 +330,7 @@ export default function AvatarUpload({
 
       {/* Success Message */}
       {success && (
-        <div className="flex items-center space-x-xs p-sm bg-green-50 border border-green-200 rounded-lg text-green-800">
+        <div className="flex items-center space-x-xs p-sm bg-signal-good/10 border border-signal-good/20 rounded-lg text-signal-good dark:bg-signal-good/20">
           <CheckCircle className="h-4 w-4 flex-shrink-0" />
           <span className="text-small font-body">{success}</span>
         </div>

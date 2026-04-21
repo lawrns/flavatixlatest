@@ -70,7 +70,7 @@ export const StudyModeSelector: React.FC<StudyModeSelectorProps> = ({
                 You add all items and categories upfront. Participants evaluate only the items you provide.
               </p>
               <div className="flex flex-wrap gap-1">
-                <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                <span className="px-2 py-1 bg-fg-subtle/10 text-fg-subtle text-xs rounded-full">
                   Structured
                 </span>
                 <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">

@@ -1258,7 +1258,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
                         {item.number}. {item.name}
                       </span>
                       {(form.isBlindTasting || item.isBlind) && (
-                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+                        <span className="text-xs bg-fg-subtle/10 text-fg-subtle dark:bg-fg-subtle/20 dark:text-fg-subtle px-2 py-1 rounded">
                           Blind
                         </span>
                       )}

@@ -77,13 +77,13 @@ const CompetitionIndexPage: React.FC = () => {
                   Participants will be ranked based on their accuracy.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+                  <span className="text-xs bg-fg-subtle/10 text-fg-subtle dark:bg-fg-subtle/20 dark:text-fg-subtle px-3 py-1 rounded-full">
                     Answer Keys
                   </span>
-                  <span className="text-xs bg-green-100 text-green-800 px-3 py-1 rounded-full">
+                  <span className="text-xs bg-fg-subtle/10 text-fg-subtle dark:bg-fg-subtle/20 dark:text-fg-subtle px-3 py-1 rounded-full">
                     Participant Ranking
                   </span>
-                  <span className="text-xs bg-purple-100 text-purple-800 px-3 py-1 rounded-full">
+                  <span className="text-xs bg-fg-subtle/10 text-fg-subtle dark:bg-fg-subtle/20 dark:text-fg-subtle px-3 py-1 rounded-full">
                     Multiple Choice & More
                   </span>
                 </div>

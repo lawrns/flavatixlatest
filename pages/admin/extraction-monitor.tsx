@@ -211,14 +211,14 @@ export default function ExtractionMonitor() {
 
             {/* Status Alert */}
             {stats.extractionRate < 95 && (
-              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8">
+              <div className="bg-signal-warn/10 border-l-4 border-signal-warn p-4 mb-8 dark:bg-signal-warn/20">
                 <div className="flex">
-                  <AlertTriangle className="w-5 h-5 text-yellow-400 mr-3 flex-shrink-0" />
+                  <AlertTriangle className="w-5 h-5 text-signal-warn mr-3 flex-shrink-0" />
                   <div>
-                    <h3 className="text-sm font-medium text-yellow-800">
+                    <h3 className="text-sm font-medium text-signal-warn">
                       Extraction Rate Below Target
                     </h3>
-                    <p className="text-sm text-yellow-700 mt-1">
+                    <p className="text-sm text-signal-warn mt-1">
                       Current rate is {stats.extractionRate.toFixed(1)}%. Target is 95% or higher.
                       Check logs for extraction errors.
                     </p>
@@ -305,15 +305,15 @@ export default function ExtractionMonitor() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {cat.rate >= 95 ? (
-                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-signal-good/10 text-signal-good dark:bg-signal-good/20 dark:text-signal-good">
                               Healthy
                             </span>
                           ) : cat.rate >= 80 ? (
-                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-signal-warn/10 text-signal-warn dark:bg-signal-warn/20 dark:text-signal-warn">
                               Warning
                             </span>
                           ) : (
-                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-signal-danger/10 text-signal-danger dark:bg-signal-danger/20 dark:text-signal-danger">
                               Critical
                             </span>
                           )}

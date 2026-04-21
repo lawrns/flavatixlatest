@@ -84,11 +84,11 @@ const MyReviewsPage: React.FC = () => {
     const statusConfig = {
       completed: {
         label: 'Completed',
-        color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+        color: 'bg-signal-good/10 text-signal-good dark:bg-signal-good/20 dark:text-signal-good',
       },
       in_progress: {
         label: 'In Progress',
-        color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+        color: 'bg-signal-warn/10 text-signal-warn dark:bg-signal-warn/20 dark:text-signal-warn',
       },
       published: {
         label: 'Published',
