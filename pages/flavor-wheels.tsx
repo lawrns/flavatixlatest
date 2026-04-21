@@ -3,9 +3,10 @@
 
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
 import { useAuth } from '../contexts/SimpleAuthContext';
 import { supabase } from '../lib/supabase';
-import dynamic from 'next/dynamic';
+
 import { FlavorWheelData } from '@/lib/flavorWheelGenerator';
 import { Download, RefreshCw, List, CircleDot } from 'lucide-react';
 import ShareButton from '../components/sharing/ShareButton';
@@ -14,7 +15,7 @@ import FlavorWheelListView from '../components/flavor-wheels/FlavorWheelListView
 import { FlavorWheelPDFExporter } from '../lib/flavorWheelPDFExporter';
 import FlavorWheelErrorBoundary from '../components/flavor-wheels/FlavorWheelErrorBoundary';
 import { BottomSheet, FlavorPill } from '@/components/ui';
-import { FLAVOR_COLORS, STATUS_COLORS } from '@/lib/colors';
+import { FLAVOR_COLORS } from '@/lib/colors';
 import { logger } from '@/lib/logger';
 import {
   normalizeDescriptorText,
@@ -41,13 +42,6 @@ const getCategoryColor = (index: number): string => {
   return WHEEL_CATEGORY_COLORS[index % WHEEL_CATEGORY_COLORS.length];
 };
 
-// Dynamically import to avoid SSR issues
-const InspirationBox = dynamic(() => import('../components/ui/inspiration-box'), {
-  ssr: false,
-  loading: () => null,
-});
-
-// Import empty state component
 import EmptyStateCard from '../components/ui/EmptyStateCard';
 
 const FlavorWheelVisualization = dynamic(
@@ -550,10 +544,10 @@ export default function FlavorWheelsPage() {
         <div className="inline-flex rounded-soft border border-gemini-border dark:border-zinc-700 bg-gemini-card dark:bg-zinc-800 p-1">
           <button
             onClick={() => setViewMode('wheel')}
-            className={`flex items-center gap-2 px-4 py-1.5 rounded-[10px] text-sm font-medium transition-colors ${
+            className={`flex items-center gap-2 px-4 py-1.5 rounded-soft text-sm font-medium transition-colors ${
               viewMode === 'wheel'
                 ? 'bg-primary text-white'
-                : 'text-gemini-text-gray dark:text-zinc-400 hover:text-gemini-text-dark dark:hover:text-zinc-200'
+                : 'text-fg-muted dark:text-zinc-400 hover:text-fg dark:hover:text-zinc-200'
             }`}
           >
             <CircleDot className="w-4 h-4" />
@@ -561,12 +555,12 @@ export default function FlavorWheelsPage() {
           </button>
           <button
             onClick={() => setViewMode('list')}
-            className={`flex items-center gap-2 px-4 py-1.5 rounded-[10px] text-sm font-medium transition-colors ${
+            className={`flex items-center gap-2 px-4 py-1.5 rounded-soft text-sm font-medium transition-colors ${
               viewMode === 'list'
                 ? 'bg-primary text-white'
-                : 'text-gemini-text-gray dark:text-zinc-400 hover:text-gemini-text-dark dark:hover:text-zinc-200'
+                : 'text-fg-muted dark:text-zinc-400 hover:text-fg dark:hover:text-zinc-200'
             }`}
-          >
+  >
             <List className="w-4 h-4" />
             List
           </button>
@@ -597,7 +591,7 @@ export default function FlavorWheelsPage() {
           Export
         </button>
         {cached && !loading && !autoRegenerating && (
-          <span className={`text-xs px-2 py-1 rounded-soft ${STATUS_COLORS.success.bg} ${STATUS_COLORS.success.text}`}>
+          <span className="text-xs px-2 py-1 rounded-sharp bg-signal-good/10 text-signal-good dark:bg-signal-good/20 dark:text-signal-good">
             Up to date
           </span>
         )}
@@ -652,7 +646,7 @@ export default function FlavorWheelsPage() {
               description={error}
               cta={{
                 label: 'Start Tasting to Generate',
-                onClick: () => router.push('/taste'),
+                onClick: () => router.push('/quick-tasting'),
                 variant: 'primary',
               }}
             />
@@ -665,7 +659,7 @@ export default function FlavorWheelsPage() {
               description="Add tasting notes or reviews to generate your first flavor wheel."
               cta={{
                 label: 'Start a Tasting',
-                onClick: () => router.push('/taste'),
+                onClick: () => router.push('/quick-tasting'),
                 variant: 'primary',
               }}
             />
@@ -743,16 +737,16 @@ export default function FlavorWheelsPage() {
           <div className="space-y-4">
             {/* AI badge */}
             {wheelData.aiMetadata?.hasAIDescriptors && (
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 border border-purple-200 dark:border-purple-700 rounded-full">
-                <span className="material-symbols-outlined text-xl text-purple-600 dark:text-purple-400">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent-weak dark:bg-accent/10 border border-line dark:border-zinc-700 rounded-sharp">
+                <span className="material-symbols-outlined text-lg text-accent dark:text-accent">
                   auto_awesome
                 </span>
                 <div>
-                  <div className="text-sm font-semibold text-purple-900 dark:text-purple-200">
+                  <div className="text-caption font-medium text-fg dark:text-zinc-100">
                     AI-Enhanced
                   </div>
-                  <div className="text-xs text-purple-700 dark:text-purple-300">
-                    {wheelData.aiMetadata.aiExtractedCount} AI-extracted descriptors ({Math.round(wheelData.aiMetadata.percentageAI)}%)
+                  <div className="text-caption text-fg-muted dark:text-zinc-400">
+                    {wheelData.aiMetadata.aiExtractedCount} AI descriptors ({Math.round(wheelData.aiMetadata.percentageAI)}%)
                   </div>
                 </div>
               </div>
@@ -799,10 +793,7 @@ export default function FlavorWheelsPage() {
           </div>
         )}
 
-        {/* Inspiration Box */}
-        <div>
-          <InspirationBox />
-        </div>
+
       </div>
 
       {/* Segment detail bottom sheet — global, outside Container */}

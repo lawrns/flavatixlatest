@@ -2,9 +2,7 @@ import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import * as d3 from 'd3';
 import { logger } from '../../lib/logger';
 import { FlavorWheelData, WheelCategory } from '@/lib/flavorWheelGenerator';
-import { Card, CardContent, CardHeader } from '../ui/Card';
-import Button from '../ui/Button';
-import { Download, Share2, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import { resolveDescriptorCanonicalText } from '@/lib/flavorDescriptorNormalization';
 
 export interface FlavorWheelVisualizationProps {
@@ -465,38 +463,38 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
         />
 
         {/* Zoom Controls */}
-        <div className="absolute bottom-3 right-3 flex flex-col gap-1 bg-white/90 dark:bg-zinc-800/90 rounded-lg shadow-md p-1">
+        <div className="absolute bottom-3 right-3 flex flex-col gap-1 bg-bg-surface/90 dark:bg-zinc-800/90 rounded-soft shadow-md p-1">
           <button
             onClick={handleZoomIn}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded transition-colors"
+            className="p-2 hover:bg-bg-hover dark:hover:bg-zinc-700 rounded-sharp transition-colors"
             aria-label="Zoom in"
           >
-            <ZoomIn size={18} className="text-gray-600 dark:text-gray-300" />
+            <ZoomIn size={18} className="text-fg-muted dark:text-zinc-300" />
           </button>
           <button
             onClick={handleZoomOut}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded transition-colors"
+            className="p-2 hover:bg-bg-hover dark:hover:bg-zinc-700 rounded-sharp transition-colors"
             aria-label="Zoom out"
           >
-            <ZoomOut size={18} className="text-gray-600 dark:text-gray-300" />
+            <ZoomOut size={18} className="text-fg-muted dark:text-zinc-300" />
           </button>
           <button
             onClick={handleResetZoom}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded transition-colors"
+            className="p-2 hover:bg-bg-hover dark:hover:bg-zinc-700 rounded-sharp transition-colors"
             aria-label="Reset zoom"
           >
-            <RotateCcw size={18} className="text-gray-600 dark:text-gray-300" />
+            <RotateCcw size={18} className="text-fg-muted dark:text-zinc-300" />
           </button>
         </div>
 
         {/* Zoom indicator */}
-        <div className="absolute top-3 left-3 bg-white/90 dark:bg-zinc-800/90 px-2 py-1 rounded text-xs text-gray-600 dark:text-gray-300 font-medium">
+        <div className="absolute top-3 left-3 bg-bg-surface/90 dark:bg-zinc-800/90 px-2 py-1 rounded-sharp text-xs text-fg-muted dark:text-zinc-300 font-medium">
           {Math.round(currentZoom * 100)}%
         </div>
 
         {tooltip && (
           <div
-            className="absolute bg-gray-900 text-white px-3 py-2 rounded-md text-sm pointer-events-none shadow-lg z-10"
+            className="absolute bg-fg text-fg-inverse px-3 py-2 rounded-sharp text-sm pointer-events-none shadow-lg z-10"
             style={{
               left: tooltip.x + 10,
               top: tooltip.y + 10,
@@ -506,91 +504,6 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
           </div>
         )}
       </div>
-
-      {/* Enhanced Descriptor List with Actions */}
-      {wheelData.categories.length > 0 && (
-        <Card className="mt-6">
-          <CardHeader
-            title={`Extracted Descriptors (${wheelData.totalDescriptors})`}
-            action={
-              <div className="flex flex-wrap gap-2 justify-end">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleExport('png')}
-                  icon={<Download size={16} />}
-                >
-                  PNG
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleExport('svg')}
-                  icon={<Download size={16} />}
-                >
-                  SVG
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleShare()}
-                  icon={<Share2 size={16} />}
-                >
-                  Share
-                </Button>
-              </div>
-            }
-          />
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {wheelData.categories.map((category) => (
-                <div key={category.name} className="space-y-2">
-                  <div className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: colorScale(category.name) }}
-                    />
-                    {category.name} ({category.count})
-                  </div>
-                  <div className="space-y-2">
-                    {category.subcategories.map((subcategory) => (
-                      <div key={subcategory.name} className="ml-2">
-                        <div className="text-xs text-gray-600 dark:text-gray-400 font-medium">
-                          {subcategory.name} ({subcategory.count})
-                        </div>
-                        <div className="ml-2 space-y-1">
-                          {subcategory.descriptors.slice(0, 3).map((descriptor) => (
-                            <button
-                              key={descriptor.text}
-                              type="button"
-                              className="block w-full text-left text-xs text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-400 active:text-primary-600 cursor-pointer transition-colors py-1 min-h-[32px] touch-manipulation"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onSegmentClick?.(
-                                  category.name,
-                                  subcategory.name,
-                                  resolveDescriptorCanonicalText(descriptor.text, descriptorCandidates)
-                                );
-                              }}
-                            >
-                              • {resolveDescriptorCanonicalText(descriptor.text, descriptorCandidates)} ({descriptor.count})
-                            </button>
-                          ))}
-                          {subcategory.descriptors.length > 3 && (
-                            <div className="text-xs text-gray-400 dark:text-gray-600 py-1">
-                              +{subcategory.descriptors.length - 3} more...
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 };

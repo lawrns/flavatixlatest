@@ -43,8 +43,8 @@ const buttonVariants = cva(
         ),
       },
       size: {
-        sm: 'px-3 py-1.5 text-sm min-h-[36px] gap-1.5 rounded-sharp',
-        lg: 'px-5 py-2.5 text-base min-h-[44px] gap-2 rounded-soft',
+        sm: 'px-3 py-1.5 text-sm min-h-[32px] gap-1.5 rounded-sharp',
+        lg: 'px-5 py-2.5 text-base min-h-[40px] gap-2 rounded-soft',
       },
       fullWidth: {
         true: 'w-full',

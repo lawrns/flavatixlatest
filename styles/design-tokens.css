@@ -97,7 +97,7 @@
   --space-8:  64px;
 
   /* === RADIUS — three roles === */
-  --r-sharp: 2px;   /* Chips · badges */
+  --r-sharp: 4px;   /* Chips · badges · tabs */
   --r-soft:  10px;  /* Buttons · inputs */
   --r-pane:  18px;  /* Cards · sheets */
 

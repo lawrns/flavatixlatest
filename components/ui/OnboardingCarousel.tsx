@@ -142,9 +142,9 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full h-1 bg-zinc-200 dark:bg-zinc-700 mt-4">
+      <div className="w-full h-1 bg-line dark:bg-zinc-700 mt-4">
         <div
-          className="h-full bg-gradient-to-r from-primary to-orange-500 transition-[width] duration-300 ease-spring"
+          className="h-full bg-primary transition-[width] duration-300 ease-out"
           style={{ width: `${((currentIndex + 1) / cards.length) * 100}%` }}
         />
       </div>
@@ -219,7 +219,7 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
               <div className="w-full space-y-3">
                 <button
                   onClick={onComplete}
-                  className="w-full h-12 bg-gradient-to-r from-primary to-orange-500 text-white rounded-lg font-semibold transition-spring hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+                  className="w-full h-12 bg-primary text-white rounded-soft font-semibold transition-all hover:opacity-90 active:scale-[0.98]"
                 >
                   Sign Up
                 </button>
