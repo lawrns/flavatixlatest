@@ -47,13 +47,18 @@ next-env.d.ts
 .idea/
 .cursor/
 .kiro/
+.codex/
+.turbo/
 .playwright-mcp/
 .specify/
 .swc/
+.vscode-test/
 *.swp
 *.swo
 *~
 .claude/
+*.orig
+*.rej
 
 # OS
 .DS_Store

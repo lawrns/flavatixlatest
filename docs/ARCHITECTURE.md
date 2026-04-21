@@ -26,7 +26,14 @@ Flavatix is a comprehensive tasting application built for professionals and enth
 - **Authentication:** Supabase Auth (JWT-based)
 - **Real-time:** Supabase Realtime (WebSocket)
 - **Deployment:** Netlify (auto-deploy from main branch)
-- **Primary Use Cases:** Individual tastings, group studies, competitions, flavor analysis
+- **Primary Use Cases:** Individual tastings, group studies, competitions, flavor analysis, reviews, and social sharing
+
+## Current Shell Model
+
+- `/dashboard` is the overview surface.
+- `/taste` is the action hub for sessions and flavor tools.
+- `PageLayout` and `Container` are the shell primitives used across authenticated pages.
+- The default shell width is `xl`; `2xl` is used for denser work surfaces and `7xl` for landing sections.
 
 ---
 
@@ -265,7 +272,7 @@ export function useTastingSession(sessionId: string) {
 │ - Sets user      │
 │ - Fetches profile│
 └──────┬───────────┘
-       │ 4. Redirect to dashboard
+       │ 4. Redirect to the authenticated overview
        ▼
 ┌─────────────┐
 │  Dashboard  │
@@ -430,13 +437,18 @@ export function useTastingSession(sessionId: string) {
 /pages/
   ├── index.tsx              # Landing page
   ├── auth.tsx               # Login/signup
-  ├── dashboard.tsx          # User dashboard
-  ├── taste.tsx              # Tasting mode selector
+  ├── dashboard.tsx          # Overview surface
+  ├── taste.tsx              # Taste hub
+  ├── competition.tsx        # Competition hub
   ├── create-tasting.tsx     # Create tasting form
   ├── tasting/[id].tsx       # Tasting session page
   ├── my-tastings.tsx        # User's tasting history
+  ├── review.tsx             # Review hub
+  ├── review/my-reviews.tsx  # Review archive
   ├── flavor-wheels.tsx      # Flavor wheel gallery
+  ├── social.tsx             # Social feed
   ├── profile.tsx            # User profile
+  ├── profile/edit.tsx       # Profile edit surface
   ├── settings.tsx           # User settings
   └── api/                   # API routes
       ├── tastings/
@@ -450,8 +462,10 @@ export function useTastingSession(sessionId: string) {
   │   ├── Modal.tsx
   │   └── LoadingSpinner.tsx
   ├── layout/                # Layout components
-  │   ├── Navigation.tsx
-  │   └── Container.tsx
+  │   ├── AppShell.tsx
+  │   ├── BottomNavigation.tsx
+  │   ├── Container.tsx
+  │   └── PageLayout.tsx
   ├── quick-tasting/         # Tasting session components
   │   ├── QuickTastingSession.tsx
   │   ├── TastingItem.tsx

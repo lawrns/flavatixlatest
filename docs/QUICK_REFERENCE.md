@@ -53,6 +53,25 @@ __tests__/           → Migration-only legacy tests
 docs/                → Documentation
 ```
 
+## Primary Routes
+
+```text
+/dashboard        → overview / home
+/taste            → action hub for sessions, review, flavor tools
+/review           → review hub
+/review/my-reviews → review archive
+/social           → social feed
+/settings         → preferences
+```
+
+## Layout Rules
+
+- Use `PageLayout` for authenticated pages.
+- Default shell width is `xl`.
+- Use `2xl` for dense work surfaces like review, settings, profile, and create/join flows.
+- Use `7xl` for landing page sections.
+- Use `4xl` for wide visualizations and data-heavy surfaces.
+
 ## Creating Things
 
 ### New API Endpoint

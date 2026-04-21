@@ -1,6 +1,8 @@
 # Flavatix
 
-**Sensory tasting sessions, interactive flavor wheels, and a social feed — for coffee, wine, spirits, beer, tea, chocolate, and beyond.**
+**Sensory tasting sessions, interactive flavor wheels, and a social feed for coffee, wine, spirits, beer, tea, chocolate, and beyond.**
+
+The current shell centers on a shared `PageLayout` and `Container` system. `/dashboard` is the overview surface, while `/taste` is the main action hub for starting or joining work.
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org)
@@ -17,11 +19,12 @@
 | **Quick Tasting** | Rapid multi-item evaluation sessions with photo capture, aroma/flavor/finish scoring, and auto-save |
 | **Study Mode** | Structured deep-dive sessions with predefined or exploratory category grids and real-time collaboration |
 | **Competition Mode** | Blind tasting workflows built for judging panels |
-| **Review Hub** | Structured review form and quick prose notes, with draft saving and a full review history |
+| **Review Hub** | Structured review form, prose notes, and a full review archive |
 | **Flavor Wheels** | D3-powered interactive wheels with list-view alternative, scope filtering, and descriptor normalization |
 | **Social Feed** | Follow users, like and comment on shared tasting sessions, filter by category |
-| **Taste Hub** | Central launch surface for all tasting modes |
-| **Profile & Settings** | Avatar, display name, dark mode toggle, notification preferences, dashboard presets |
+| **Taste Hub** | Central launch surface for Quick Tasting, Study Mode, Competition, Review, and Flavor Wheels |
+| **Profile & Settings** | Avatar, display name, dark mode toggle, notification preferences, and dashboard presets |
+| **Shell System** | Shared width tokens, page headers, and bottom navigation across authenticated pages |
 
 ---
 
@@ -87,7 +90,7 @@ npm run check            # lint + type-check + unit + api (fast CI gate)
 
 ```
 components/       UI components, organized by feature
-  layout/         PageLayout, Container, BottomNavigation, NavBar
+  layout/         PageLayout, Container, BottomNavigation, AppShell
   ui/             Shared primitives (Card, Button, ModeCard, FlavorPill, …)
   social/         SocialPostCard, CommentsModal, SocialFeedFilters
   quick-tasting/  QuickTastingSession, TastingItem, SessionHeader
@@ -123,17 +126,21 @@ tests/
 |-------|-------------|
 | `/` | Landing / marketing |
 | `/auth` | Sign in / sign up with onboarding carousel |
-| `/dashboard` | Authenticated home — stats, recent activity, jump-to links |
-| `/taste` | Taste Hub — launch Quick Tasting, Study Mode, Competition |
+| `/dashboard` | Authenticated home — overview, recent activity, and the entry point into Taste |
+| `/taste` | Taste Hub — launch Quick Tasting, Study Mode, Competition, Review, and Flavor Wheels |
 | `/quick-tasting` | Active Quick Tasting session |
 | `/create-tasting` | Create Study or Competition session |
-| `/review` | Review Hub — structured review or quick prose note |
+| `/competition` | Competition hub — join or create scored sessions |
+| `/review` | Review Hub — structured review, quick prose note, and history |
 | `/review/create` | Structured review form |
+| `/review/prose` | Prose review editor |
+| `/review/my-reviews` | Review archive and in-progress items |
 | `/flavor-wheels` | Interactive D3 flavor wheel + list view |
 | `/social` | Social feed — for you / following, filtered by category |
 | `/my-tastings` | Personal tasting history |
 | `/profile` | Public profile |
-| `/settings` | Preferences, dark mode, notification toggles |
+| `/profile/edit` | Profile edit surface |
+| `/settings` | Preferences, dark mode, notification toggles, and dashboard presets |
 
 ---
 
@@ -147,7 +154,9 @@ Surface classes defined in `styles/globals.css`:
 | `surface-inset` | Inset / nested card sections |
 | `surface-action-card` | Tappable mode/action cards (used by `ModeCard`) |
 
-Shared component: `components/ui/ModeCard.tsx` — the canonical hub card used across Taste, Review, and Create Tasting pages.
+Shared component: `components/ui/ModeCard.tsx` is the canonical hub card used across Taste, Review, Create Tasting, and competition pages.
+
+Shared shell: `components/layout/PageLayout.tsx` and `components/layout/Container.tsx` define the current width defaults. The shell default is `xl`, denser authenticated pages commonly use `2xl`, and marketing sections use `7xl`.
 
 ---
 
@@ -160,7 +169,7 @@ Shared component: `components/ui/ModeCard.tsx` — the canonical hub card used a
 | [Architecture](./docs/ARCHITECTURE.md) | System overview, data flow, state management |
 | [API Reference](./docs/API_REFERENCE.md) | API routes and request/response shapes |
 | [Database](./docs/DATABASE.md) | Schema, RLS policies, migration workflow |
-| [Layout System](./docs/LAYOUT_SYSTEM.md) | PageLayout, Container, surface tokens |
+| [Layout System](./docs/LAYOUT_SYSTEM.md) | PageLayout, Container, shell width rules |
 | [Component Catalog](./docs/COMPONENT_CATALOG.md) | UI primitive reference |
 | [Test Suite](./docs/TEST_SUITE_STATUS.md) | Coverage matrix and test strategy |
 | [Security](./docs/SECURITY.md) | Auth, RLS, environment variable guidance |

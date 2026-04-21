@@ -5,7 +5,7 @@ This document describes the unified layout system for consistent page structure 
 ## Core Components
 
 ### `PageLayout`
-The primary wrapper for all authenticated app pages. Provides:
+The primary wrapper for authenticated app pages. Provides:
 - Consistent background color
 - Optional sticky header with title/subtitle
 - Back navigation
@@ -21,7 +21,7 @@ export default function MyPage() {
       subtitle="Optional description"
       showBack
       backUrl="/dashboard"
-      containerSize="md"
+      containerSize="xl"
       headerRight={<button>Action</button>}
     >
       {/* Page content */}
@@ -37,7 +37,7 @@ export default function MyPage() {
 - `backUrl`: Custom back URL (defaults to router.back())
 - `headerRight`: Right side header content
 - `showBottomNav`: Show bottom navigation (default: true)
-- `containerSize`: Container max-width (default: 'md')
+- `containerSize`: Container max-width (default: `xl`)
 
 ### `Container`
 The single source of truth for content width and horizontal padding.
@@ -45,7 +45,7 @@ The single source of truth for content width and horizontal padding.
 ```tsx
 import { Container } from '@/components/layout';
 
-<Container size="md" padding>
+<Container size="xl" padding>
   {/* Content */}
 </Container>
 ```
@@ -54,12 +54,12 @@ import { Container } from '@/components/layout';
 | Size | Max Width | Use Case |
 |------|-----------|----------|
 | `sm` | 384px | Modals, narrow forms |
-| `md` | 448px | Mobile-first content (default) |
+| `md` | 448px | Compact content |
 | `lg` | 512px | Slightly wider content |
-| `xl` | 576px | Standard content width |
-| `2xl` | 672px | Wide content, forms |
-| `4xl` | 896px | Very wide content, data tables |
-| `7xl` | 1280px | Full-width layouts |
+| `xl` | 576px | Standard app shell width (default) |
+| `2xl` | 672px | Dense authenticated pages, forms, review/settings/profile surfaces |
+| `4xl` | 896px | Very wide content, data tables, visualizations |
+| `7xl` | 1280px | Marketing / landing sections |
 | `full` | No limit | Edge-to-edge content |
 
 **Padding:**
@@ -100,6 +100,13 @@ import { Section } from '@/components/layout';
 </Section>
 ```
 
+## Current Usage Notes
+
+- Use `PageLayout` for authenticated pages that should inherit the shared shell and bottom navigation.
+- Use `Container size="7xl"` for landing and marketing sections.
+- Use `Container size="2xl"` for review, settings, profile, create/join, and other denser work surfaces.
+- Use `Container size="4xl"` for wheel visualizations and other wide content blocks.
+
 ## Migration Guide
 
 ### Before (inconsistent)
@@ -113,7 +120,7 @@ import { Section } from '@/components/layout';
 ### After (unified)
 ```tsx
 // ✅ Use PageLayout for full page structure
-<PageLayout title="My Page" containerSize="md">
+<PageLayout title="My Page" containerSize="xl">
   <Stack gap="lg">
     <Section title="Section 1">...</Section>
     <Section title="Section 2">...</Section>
@@ -126,16 +133,6 @@ import { Section } from '@/components/layout';
 </Container>
 ```
 
-## Width Guidelines
-
-| Page Type | Recommended Size |
-|-----------|------------------|
-| Dashboard, Taste, Review | `md` (448px) |
-| Forms, Settings | `md` or `lg` |
-| My Tastings, History | `2xl` (672px) |
-| Flavor Wheels, Data viz | `4xl` (896px) |
-| Landing page sections | `7xl` (1280px) |
-
 ## Best Practices
 
 1. **Always use PageLayout** for authenticated app pages
@@ -143,4 +140,5 @@ import { Section } from '@/components/layout';
 3. **Use Stack** instead of ad-hoc `space-y-*` classes
 4. **Use Section** for titled content groups
 5. **Never hardcode max-width** - use the size prop
-6. **Consistent gutters** - Container handles padding automatically
+6. **Keep landing pages wider than app pages** - use `7xl` for marketing sections
+7. **Keep dense work surfaces intentional** - `2xl` is the common choice for review/settings/profile flows

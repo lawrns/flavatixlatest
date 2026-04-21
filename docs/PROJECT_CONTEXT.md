@@ -2,29 +2,58 @@
 
 ## Overview
 
-Flavatix es una aplicación web para catar y evaluar sabores (café, té, vino, cerveza, whisky, mezcal, spirits, chocolate, etc.). Permite a usuarios hacer sesiones de cata rápidas (Quick Tasting) o estudios más estructurados (Study Mode).
+Flavatix es una aplicación web para catar y evaluar sabores (café, té, vino, cerveza, whisky, mezcal, spirits, chocolate, etc.). El producto actual separa claramente:
+
+- `Home` (`/dashboard`) como superficie de resumen
+- `Taste` (`/taste`) como hub de acciones
+- `Review`, `Social`, `Profile` y `Settings` como superficies de trabajo dedicadas
 
 ## Tech Stack
 
-- **Frontend**: Next.js (React), TypeScript, Tailwind CSS
+- **Frontend**: Next.js (Pages Router), React, TypeScript, Tailwind CSS
 - **Backend**: Supabase (PostgreSQL + Auth + Storage + Realtime)
-- **Hosting**: Netlify (auto-deploy desde `main` branch)
+- **Hosting**: Netlify (auto-deploy desde `main`)
 - **Repo**: https://github.com/lawrns/flavatixlatest
+
+## Shell and Layout
+
+- `components/layout/Container.tsx` es la fuente de verdad para ancho y padding horizontal.
+- `components/layout/PageLayout.tsx` es el wrapper estándar para páginas autenticadas.
+- El ancho por defecto del shell es `xl`.
+- Muchas superficies densas usan `2xl`.
+- El landing page y secciones de marketing usan `7xl`.
+
+## Current Route Map
+
+- `/dashboard` - overview surface
+- `/taste` - launch hub for Quick Tasting, Study Mode, Competition, Review, and Flavor Wheels
+- `/competition` - competition entry hub
+- `/review` - review hub
+- `/review/my-reviews` - review archive
+- `/social` - feed social
+- `/profile` y `/profile/edit`
+- `/settings`
 
 ## Key Directories
 
 ```
 /pages                    # Next.js pages (routing)
-  /quick-tasting.tsx      # Quick Tasting page
+  /dashboard.tsx          # Home / overview
+  /taste.tsx              # Taste hub
+  /review.tsx             # Review hub
+  /social.tsx             # Social feed
+  /profile.tsx            # Profile view
+  /profile/edit.tsx       # Profile editor
+  /settings.tsx           # Settings surface
   /api/                   # API routes
 /components
   /quick-tasting/         # Quick Tasting components (CRITICAL)
-    QuickTastingSession.tsx   # Main session logic (~1000 lines)
+    QuickTastingSession.tsx   # Main session logic
     TastingItem.tsx           # Individual item form
     SessionHeader.tsx         # Header with stats
     SessionNavigation.tsx     # Navigation controls
     types.ts                  # TypeScript types
-  /review/                # Review components (CharacteristicSlider)
+  /review/                # Review components
   /layout/                # Layout components
   /ui/                    # Reusable UI components
 /lib
@@ -39,8 +68,8 @@ Flavatix es una aplicación web para catar y evaluar sabores (café, té, vino, 
 
 ### `quick_tastings`
 - `id`, `user_id`, `category`, `custom_category_name`
-- `session_name`, `mode` ('quick' | 'study')
-- `study_approach` ('predefined' | 'exploratory')
+- `session_name`, `mode` (`quick` | `study` | `competition`)
+- `study_approach` (`predefined` | `exploratory`)
 - `total_items`, `completed_items`, `average_score`
 - `created_at`, `updated_at`, `completed_at`
 
@@ -67,16 +96,15 @@ const dbUpdates = Object.fromEntries(
 Los sliders usan debounce de 300ms para evitar llamadas excesivas a la DB:
 
 ```tsx
-// En TastingItem.tsx
 const scoreDebounceRef = useRef<NodeJS.Timeout | null>(null);
 
 const handleScoreChange = (score: number) => {
-  setLocalScore(score);  // Actualiza UI inmediatamente
+  setLocalScore(score);
   setScoreTouched(true);
 
   if (scoreDebounceRef.current) clearTimeout(scoreDebounceRef.current);
   scoreDebounceRef.current = setTimeout(() => {
-    onUpdate({ overall_score: score });  // Guarda a DB después de 300ms
+    onUpdate({ overall_score: score });
   }, 300);
 };
 ```
@@ -85,7 +113,6 @@ const handleScoreChange = (score: number) => {
 Quick Tasting y Study Mode (predefined) auto-crean el primer item:
 
 ```tsx
-// En QuickTastingSession.tsx, useEffect
 const isQuickTasting = session.mode === 'quick' && phase === 'tasting';
 const isPredefinedStudy = session.mode === 'study' && session.study_approach === 'predefined';
 
@@ -106,31 +133,27 @@ if ((isQuickTasting || isPredefinedStudy) && items.length === 0 && !isLoading) {
 ### Study Mode (`mode: 'study'`)
 - Dos enfoques: `predefined` (categorías predefinidas) o `exploratory`
 - Soporta colaboración en tiempo real
-- Categorías personalizables con diferentes tipos de input (Scale, Text, etc.)
+- Categorías personalizables con diferentes tipos de input
 - URL: `/taste/create/study/new`
 
-## Common Issues & Solutions
+### Competition Mode (`mode: 'competition'`)
+- Flujo de cata con ranking o reglas de evaluación compartidas
+- URL: `/taste/create/competition`
 
-### 1. Página vacía después de "Start Tasting"
-**Causa**: `phase === 'tasting'` pero `items.length === 0`
-**Solución**: useEffect que auto-crea primer item
+## Recent Product Updates
 
-### 2. Sliders parpadean
-**Causa**: Llamadas a DB en cada movimiento → re-render
-**Solución**: Debounce de 300ms + estado local
-
-### 3. Botón X de foto no funciona
-**Causa**: `onUpdate({ photo_url: undefined })` - Supabase ignora undefined
-**Solución**: Convertir undefined → null en `updateItem()`
-
-### 4. TypeScript error con null
-**Causa**: Tipo `photo_url?: string` no acepta `null`
-**Solución**: Convertir en `updateItem()`, no en el componente
+1. Home quedó como superficie de overview.
+2. Taste pasó a ser el hub principal de acciones.
+3. Se normalizaron los anchos con `PageLayout` y `Container`.
+4. Se simplificó la navegación inferior para que el shell sea consistente.
+5. Review, Social, Profile y Settings ahora usan superficies de trabajo más intencionales.
 
 ## URLs Importantes
 
 - Quick Tasting: `/quick-tasting`
 - Study Mode: `/taste/create/study/new`
+- Competition: `/taste/create/competition`
+- Taste Hub: `/taste`
 - Dashboard: `/dashboard`
 - My Tastings: `/my-tastings`
 - Auth: `/auth`
@@ -142,22 +165,6 @@ if ((isQuickTasting || isPredefinedStudy) && items.length === 0 && !isLoading) {
 - **Build command**: `npm run build`
 - **Cache**: Usar `Ctrl+Shift+R` para hard refresh después de deploy
 
-## Recent Changes (January 2026)
-
-1. Fix empty state en Quick Tasting (auto-add first item)
-2. Fix botón X para eliminar fotos (undefined → null)
-3. Fix slider flickering (debounce 300ms)
-4. Habilitar photo upload en Quick Tasting
-5. Cambiar labels "Done/Total" → "Total items/Completed"
-6. Agregar botón para eliminar último item
-7. Label "Unacceptable" cuando score es 0
-8. Category selector: "What are you tasting?"
-9. Base category: "What's being tasted?"
-10. Scroll en dropdown de categorías
-11. Sliders responden sin tap previo
-12. Category lock después de iniciar tasting
-13. Redirect `/history` → `/my-tastings`
-
 ## Key Files to Know
 
 | File | Purpose |
@@ -165,7 +172,10 @@ if ((isQuickTasting || isPredefinedStudy) && items.length === 0 && !isLoading) {
 | `components/quick-tasting/QuickTastingSession.tsx` | Lógica principal de sesiones |
 | `components/quick-tasting/TastingItem.tsx` | Formulario de cada item |
 | `components/quick-tasting/types.ts` | TypeScript types |
-| `pages/quick-tasting.tsx` | Page component |
+| `components/layout/PageLayout.tsx` | Shell estándar de páginas autenticadas |
+| `components/layout/Container.tsx` | Fuente de verdad de ancho y padding |
+| `pages/taste.tsx` | Taste hub |
+| `pages/dashboard.tsx` | Overview surface |
 | `lib/supabase.ts` | Cliente Supabase + tipos DB |
 
 ## Contact / Repo

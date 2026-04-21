@@ -10,9 +10,17 @@ This directory contains the maintained project documentation. Historical reports
 - [API Reference](./API_REFERENCE.md)
 - [Database](./DATABASE.md)
 - [Component Catalog](./COMPONENT_CATALOG.md)
+- [Layout System](./LAYOUT_SYSTEM.md)
+- [Project Context](./PROJECT_CONTEXT.md)
+- [Quick Reference](./QUICK_REFERENCE.md)
 - [Troubleshooting](./TROUBLESHOOTING.md)
 - [Testing Status](./TEST_SUITE_STATUS.md)
-- [Quick Reference](./QUICK_REFERENCE.md)
+
+## Current Product Shape
+
+- `/dashboard` is the overview surface.
+- `/taste` is the action hub for sessions, review, and flavor tools.
+- `PageLayout` and `Container` are the canonical width and shell primitives.
 
 ## Topic Areas
 
