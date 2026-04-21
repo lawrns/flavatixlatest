@@ -37,16 +37,14 @@ const ModeCard: React.FC<ModeCardProps> = ({
       whileHover={{ y: -3 }}
       whileTap={{ scale: 0.99 }}
       className={cn(
-        'group w-full text-left rounded-[1.5rem] border border-line/80 bg-white/90 p-5',
-        'shadow-[0_12px_30px_-18px_rgba(0,0,0,0.18)] backdrop-blur-sm',
-        'transition-colors hover:border-fg-muted/30 hover:bg-white'
+        'group w-full text-left rounded-pane border border-line bg-bg-surface p-5',
+        'shadow-sm transition-colors hover:border-line-strong hover:bg-bg-hover'
       )}
     >
       <div className="flex items-start gap-4">
         <div
           className={cn(
-            'flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/70',
-            'shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]',
+            'flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-line/50',
             iconBgColor
           )}
         >

@@ -54,20 +54,28 @@ module.exports = {
           900: 'var(--color-accent-900)',
           hover: 'var(--color-accent-hover)',
         },
-        'background-light': '#FFFFFF',
-        'background-dark': '#18181b',
-        // Gemini Design System Colors
-        'gemini': {
-          primary: 'var(--color-primary-500)',
-          'primary-hover': 'var(--color-primary-600)',
-          bg: 'var(--bg)',
-          card: 'var(--bg-inset)',
-          'text-dark': 'var(--fg)',
-          'text-gray': 'var(--fg-muted)',
-          'text-muted': 'var(--fg-subtle)',
-          border: 'var(--line)',
-          success: 'var(--signal-good)',
-          warning: 'var(--signal-warn)',
+        // Semantic tokens — auto-flip in dark mode via CSS variables
+        fg: {
+          DEFAULT: 'var(--fg)',
+          muted: 'var(--fg-muted)',
+          subtle: 'var(--fg-subtle)',
+          inverse: 'var(--fg-inverse)',
+        },
+        bg: {
+          DEFAULT: 'var(--bg)',
+          surface: 'var(--bg-surface)',
+          inset: 'var(--bg-inset)',
+          hover: 'var(--bg-hover)',
+        },
+        line: {
+          DEFAULT: 'var(--line)',
+          strong: 'var(--line-strong)',
+        },
+        signal: {
+          good: 'var(--signal-good)',
+          warn: 'var(--signal-warn)',
+          danger: 'var(--signal-danger)',
+          'danger-weak': 'var(--signal-danger-weak)',
         },
         zinc: {
           50: '#fafafa',
@@ -106,26 +114,6 @@ module.exports = {
           mineral: '#7A8A8C',
           earthy: '#6D7F4B',
         },
-        // Text Colors
-        'text-primary': 'var(--color-text-primary)',
-        'text-secondary': 'var(--color-text-secondary)',
-        'text-muted': 'var(--color-text-muted)',
-        'text-inverse': 'var(--color-text-inverse)',
-        // Border Colors
-        'border-subtle': 'var(--color-border-subtle)',
-        'border-default': 'var(--color-border-default)',
-        'border-strong': 'var(--color-border-strong)',
-        'border-focus': 'var(--color-border-focus)',
-        // Background Colors
-        'background-app': 'var(--color-background-app)',
-        'background-surface': 'var(--color-background-surface)',
-        'background-surface-secondary': 'var(--color-background-surface-secondary)',
-        'background-muted': 'var(--color-background-muted)',
-        // Semantic Colors
-        success: 'var(--color-success)',
-        warning: 'var(--color-warning)',
-        error: 'var(--color-error)',
-        info: 'var(--color-info)',
       },
       fontFamily: {
         display: ['Inter', 'sans-serif'],

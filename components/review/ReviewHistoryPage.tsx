@@ -20,15 +20,15 @@ interface Review {
 const statusConfig = {
   completed: {
     label: 'Completed',
-    color: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20',
+    color: 'bg-signal-good/10 text-signal-good border-signal-good/20',
   },
   in_progress: {
     label: 'In Progress',
-    color: 'bg-amber-500/10 text-amber-700 border-amber-500/20',
+    color: 'bg-signal-warn/10 text-signal-warn border-signal-warn/20',
   },
   published: {
     label: 'Published',
-    color: 'bg-blue-500/10 text-blue-700 border-blue-500/20',
+    color: 'bg-signal-good/10 text-signal-good border-signal-good/20',
   },
 } as const;
 
@@ -40,7 +40,7 @@ const ReviewSection: React.FC<{
   items: Review[];
   onOpen: (review: Review) => void;
 }> = ({ title, icon: Icon, count, emptyLabel, items, onOpen }) => (
-  <section className="rounded-[2rem] border border-line bg-white/90 p-5 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)] sm:p-6">
+  <section className="rounded-pane border border-line bg-bg-surface p-5 shadow-sm sm:p-6">
     <div className="flex items-center justify-between gap-4">
       <div className="flex items-center gap-3">
         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-bg-inset text-fg-muted">
@@ -54,7 +54,7 @@ const ReviewSection: React.FC<{
     </div>
 
     {items.length === 0 ? (
-      <div className="mt-5 rounded-[1.5rem] border border-dashed border-line bg-[#fbfaf7] p-5 text-center">
+      <div className="mt-5 rounded-soft border border-dashed border-line bg-bg-inset p-5 text-center">
         <p className="text-body-sm text-fg-muted">{emptyLabel}</p>
       </div>
     ) : (
@@ -64,8 +64,8 @@ const ReviewSection: React.FC<{
             key={review.id}
             onClick={() => onOpen(review)}
             className={cn(
-              'group w-full rounded-[1.25rem] border border-line bg-bg-surface p-4 text-left',
-              'transition-all hover:-translate-y-0.5 hover:border-fg-muted/30 hover:shadow-[0_16px_40px_-28px_rgba(0,0,0,0.25)]'
+              'group w-full rounded-soft border border-line bg-bg-surface p-4 text-left',
+              'transition-colors hover:border-line-strong hover:bg-bg-hover'
             )}
           >
             <div className="flex items-start justify-between gap-4">
@@ -90,7 +90,7 @@ const ReviewSection: React.FC<{
                   className={cn(
                     'rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]',
                     statusConfig[review.status as keyof typeof statusConfig]?.color ||
-                      'bg-zinc-100 text-zinc-700 border-zinc-200'
+                      'bg-bg-inset text-fg-muted border-line'
                   )}
                 >
                   {statusConfig[review.status as keyof typeof statusConfig]?.label ||
@@ -188,8 +188,8 @@ export default function ReviewHistoryPage() {
     return (
       <PageLayout title="My Reviews" showBack backUrl="/review" containerSize="2xl">
         <div className="grid gap-4 lg:grid-cols-2">
-          <div className="h-72 animate-pulse rounded-[2rem] border border-line bg-white/70" />
-          <div className="h-72 animate-pulse rounded-[2rem] border border-line bg-white/70" />
+          <div className="h-72 animate-pulse rounded-pane border border-line bg-bg-inset" />
+          <div className="h-72 animate-pulse rounded-pane border border-line bg-bg-inset" />
         </div>
       </PageLayout>
     );
@@ -208,14 +208,14 @@ export default function ReviewHistoryPage() {
       containerSize="2xl"
     >
       <div className="grid gap-6">
-        <section className="rounded-[2rem] border border-line bg-white/90 p-6 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)]">
+        <section className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm">
           <div className="grid gap-4 sm:grid-cols-3">
             {[
               { label: 'Completed', value: completedReviews.length + completedProseReviews.length },
               { label: 'In progress', value: inProgressReviews.length + inProgressProseReviews.length },
               { label: 'Total', value: reviews.length + proseReviews.length },
             ].map((metric) => (
-              <div key={metric.label} className="rounded-[1.5rem] border border-line bg-bg-surface p-4">
+              <div key={metric.label} className="rounded-soft border border-line bg-bg-surface p-4">
                 <p className="text-caption uppercase tracking-[0.22em] text-fg-muted">
                   {metric.label}
                 </p>
@@ -246,7 +246,7 @@ export default function ReviewHistoryPage() {
             onOpen={(review) => handleOpenReview(review, 'prose')}
           />
 
-          <section className="rounded-[2rem] border border-line bg-bg-surface p-6 shadow-sm xl:col-span-2">
+          <section className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm xl:col-span-2">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-bg-inset text-fg-muted">
                 <Clock className="h-5 w-5" />
@@ -261,7 +261,7 @@ export default function ReviewHistoryPage() {
 
             <div className="mt-5 grid gap-3">
               {inProgressItems.length === 0 ? (
-                <div className="rounded-[1.5rem] border border-dashed border-line bg-white p-5 text-center">
+                <div className="rounded-soft border border-dashed border-line bg-bg-inset p-5 text-center">
                   <p className="text-body-sm text-fg-muted">No reviews in progress.</p>
                 </div>
               ) : (
@@ -269,7 +269,7 @@ export default function ReviewHistoryPage() {
                   <button
                     key={review.id}
                     onClick={() => handleOpenReview(review, type)}
-                    className="flex items-center justify-between rounded-[1.25rem] border border-line bg-white p-4 text-left transition-all hover:-translate-y-0.5 hover:border-fg-muted/30"
+                    className="flex items-center justify-between rounded-soft border border-line bg-bg-surface p-4 text-left transition-colors hover:border-line-strong hover:bg-bg-hover"
                   >
                     <div className="min-w-0">
                       <p className="truncate text-body font-semibold text-fg">

@@ -27,7 +27,7 @@ export default function ProfilePage() {
   return (
     <PageLayout title="Profile" showBack backUrl="/dashboard" containerSize="2xl">
       <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
-        <section className="rounded-[2rem] border border-line bg-white/90 p-6 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)]">
+        <section className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm">
           <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
             Profile summary
           </p>
@@ -40,7 +40,7 @@ export default function ProfilePage() {
           </p>
         </section>
 
-        <section className="rounded-[2rem] border border-line bg-white/90 p-5 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)] sm:p-6">
+        <section className="rounded-pane border border-line bg-bg-surface p-5 shadow-sm sm:p-6">
           <ProfileEditForm profile={profile} onProfileUpdate={handleProfileUpdate} />
         </section>
       </div>

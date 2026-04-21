@@ -17,23 +17,23 @@ import {
 } from '../../lib/query/hooks/useFeed';
 
 const SkeletonPost = () => (
-  <div className="rounded-[1.5rem] border border-line bg-white p-4 animate-pulse">
+  <div className="rounded-pane border border-line bg-bg-surface p-4 animate-pulse">
     <div className="mb-3 flex items-start space-x-3">
-      <div className="h-12 w-12 flex-shrink-0 rounded-full bg-zinc-200 dark:bg-zinc-700" />
+      <div className="h-12 w-12 flex-shrink-0 rounded-full bg-bg-inset" />
       <div className="flex-1">
-        <div className="mb-2 h-4 w-1/3 rounded bg-zinc-200 dark:bg-zinc-700" />
-        <div className="h-3 w-1/4 rounded bg-zinc-200 dark:bg-zinc-700" />
+        <div className="mb-2 h-4 w-1/3 rounded bg-bg-inset" />
+        <div className="h-3 w-1/4 rounded bg-bg-inset" />
       </div>
     </div>
-    <div className="mb-3 h-3 w-1/6 rounded bg-zinc-200 dark:bg-zinc-700" />
-    <div className="mb-2 h-4 w-2/3 rounded bg-zinc-200 dark:bg-zinc-700" />
-    <div className="mb-2 h-3 w-full rounded bg-zinc-200 dark:bg-zinc-700" />
-    <div className="mb-3 h-3 w-4/5 rounded bg-zinc-200 dark:bg-zinc-700" />
-    <div className="mb-3 h-48 rounded-[1.25rem] bg-zinc-200 dark:bg-zinc-700" />
-    <div className="flex gap-4 border-t border-zinc-100 pt-2 dark:border-zinc-700">
-      <div className="h-8 flex-1 rounded bg-zinc-200 dark:bg-zinc-700" />
-      <div className="h-8 flex-1 rounded bg-zinc-200 dark:bg-zinc-700" />
-      <div className="h-8 flex-1 rounded bg-zinc-200 dark:bg-zinc-700" />
+    <div className="mb-3 h-3 w-1/6 rounded bg-bg-inset" />
+    <div className="mb-2 h-4 w-2/3 rounded bg-bg-inset" />
+    <div className="mb-2 h-3 w-full rounded bg-bg-inset" />
+    <div className="mb-3 h-3 w-4/5 rounded bg-bg-inset" />
+    <div className="mb-3 h-48 rounded-[1.25rem] bg-bg-inset" />
+    <div className="flex gap-4 border-t border-line pt-2">
+      <div className="h-8 flex-1 rounded bg-bg-inset" />
+      <div className="h-8 flex-1 rounded bg-bg-inset" />
+      <div className="h-8 flex-1 rounded bg-bg-inset" />
     </div>
   </div>
 );
@@ -247,7 +247,7 @@ const SocialFeedPage: React.FC = () => {
         containerSize="2xl"
       >
         <div className="grid gap-6">
-          <section className="rounded-[2rem] border border-line bg-white/90 p-6 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)]">
+          <section className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm">
             <div className="grid gap-4 sm:grid-cols-3">
               {['Feed', 'Following', 'Categories'].map((label) => (
                 <div
@@ -279,7 +279,7 @@ const SocialFeedPage: React.FC = () => {
         headerRight={
           <button
             onClick={() => router.push('/quick-tasting')}
-            className="inline-flex h-11 items-center gap-2 rounded-full border border-line bg-white px-4 text-sm font-semibold text-fg transition-colors hover:border-fg-muted/30 hover:text-fg-muted"
+            className="inline-flex h-11 items-center gap-2 rounded-full border border-line bg-bg-surface px-4 text-sm font-semibold text-fg transition-colors hover:border-line-strong hover:text-fg-muted"
           >
             <span className="material-symbols-outlined text-[20px]">add_circle</span>
             Start tasting
@@ -287,7 +287,7 @@ const SocialFeedPage: React.FC = () => {
         }
       >
         <div className="grid gap-6">
-          <section className="rounded-[2rem] border border-line bg-white/90 p-5 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)] sm:p-6">
+          <section className="rounded-pane border border-line bg-bg-surface p-5 shadow-sm sm:p-6">
             <div className="max-w-4xl">
               <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
                 Feed controls
@@ -306,7 +306,7 @@ const SocialFeedPage: React.FC = () => {
 
           <section className="grid gap-3">
             {filteredPosts.length === 0 ? (
-              <div className="rounded-[2rem] border border-dashed border-line bg-[#fbfaf7] p-10 text-center">
+              <div className="rounded-pane border border-dashed border-line bg-bg-inset p-10 text-center">
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <span className="material-symbols-outlined text-[28px]">local_bar</span>
                 </div>
@@ -316,7 +316,7 @@ const SocialFeedPage: React.FC = () => {
                 </p>
                 <button
                   onClick={() => router.push('/quick-tasting')}
-                  className="mt-6 inline-flex items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.99]"
+                  className="mt-6 inline-flex items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-semibold text-fg-inverse transition-colors active:scale-[0.99]"
                 >
                   Start Tasting
                 </button>

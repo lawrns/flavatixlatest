@@ -69,8 +69,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
       <nav
         className={cn(
           'pointer-events-auto mx-auto mb-3 grid h-[72px] w-full max-w-xl grid-cols-4 items-center',
-          'rounded-full border border-line/70 bg-white/92 px-2 shadow-[0_18px_40px_-24px_rgba(0,0,0,0.28)]',
-          'backdrop-blur-xl dark:border-zinc-700/70 dark:bg-zinc-900/92'
+          'rounded-full border border-line bg-bg-surface px-2 shadow-md'
         )}
         role="navigation"
         aria-label="Main navigation"
@@ -87,23 +86,17 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
                 active
                   ? 'bg-primary/10 text-primary'
-                  : 'text-fg-subtle dark:text-fg-subtle hover:bg-bg-inset hover:text-fg-muted dark:hover:bg-zinc-800 dark:hover:text-zinc-200'
+                  : 'text-fg-subtle hover:bg-bg-inset hover:text-fg-muted'
               )}
               aria-current={active ? 'page' : undefined}
               data-testid={item.testId}
             >
               {/* Icon container */}
               <span
-                className={cn(
-                  'flex items-center justify-center rounded-full px-2.5 py-1 transition-transform duration-200',
-                  active && 'translate-y-[-1px] scale-105'
-                )}
+                className="flex items-center justify-center rounded-full px-2.5 py-1"
               >
                 <span
-                  className={cn(
-                    'material-symbols-outlined text-[24px] leading-none',
-                    active && 'font-variation-settings: "FILL" 1'
-                  )}
+                  className="material-symbols-outlined text-[24px] leading-none"
                   style={{
                     fontVariationSettings: active ? '"FILL" 1, "wght" 500' : '"FILL" 0, "wght" 400'
                   }}

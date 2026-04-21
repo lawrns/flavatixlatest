@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
+import { toast } from '@/lib/toast';
 import { Moon, Sun, Bell, Shield, Trash2, ChevronRight, Zap, FileText } from 'lucide-react';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import PageLayout from '@/components/layout/PageLayout';
@@ -110,7 +110,7 @@ export default function SettingsPage() {
               onClick={toggleDarkMode}
               className={cn(
                 'relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full p-0.5 transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
-                isDarkMode ? 'bg-primary' : 'bg-zinc-300 dark:bg-zinc-600'
+                isDarkMode ? 'bg-primary' : 'bg-line-strong'
               )}
               role="switch"
               aria-checked={isDarkMode}
@@ -118,7 +118,7 @@ export default function SettingsPage() {
             >
               <span
                 className={cn(
-                  'pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out',
+                  'pointer-events-none inline-block h-6 w-6 transform rounded-full bg-fg-inverse shadow-md transition duration-200 ease-in-out',
                   isDarkMode ? 'translate-x-5' : 'translate-x-0'
                 )}
               />
@@ -135,7 +135,7 @@ export default function SettingsPage() {
               onClick={toggleNotifications}
               className={cn(
                 'relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full p-0.5 transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
-                notificationsEnabled ? 'bg-primary' : 'bg-zinc-300 dark:bg-zinc-600'
+                notificationsEnabled ? 'bg-primary' : 'bg-line-strong'
               )}
               role="switch"
               aria-checked={notificationsEnabled}
@@ -143,7 +143,7 @@ export default function SettingsPage() {
             >
               <span
                 className={cn(
-                  'pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out',
+                  'pointer-events-none inline-block h-6 w-6 transform rounded-full bg-fg-inverse shadow-md transition duration-200 ease-in-out',
                   notificationsEnabled ? 'translate-x-5' : 'translate-x-0'
                 )}
               />
@@ -186,7 +186,7 @@ export default function SettingsPage() {
           label: 'Delete Account',
           description: 'Permanently delete your account and all data',
           danger: true,
-          action: <ChevronRight size={20} className="text-red-400" />,
+          action: <ChevronRight size={20} className="text-signal-danger" />,
           onClick: handleDeleteAccount,
         },
       ],
@@ -203,7 +203,7 @@ export default function SettingsPage() {
       userDisplayName={profile?.full_name || undefined}
     >
       <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-        <section className="rounded-[2rem] border border-line bg-white/90 p-6 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)] sm:p-8">
+        <section className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm sm:p-8">
           <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
             Account controls
           </p>
@@ -215,7 +215,7 @@ export default function SettingsPage() {
             settings page stays practical rather than decorative.
           </p>
 
-          <div className="mt-6 rounded-[1.5rem] border border-dashed border-line bg-[#fbfaf7] p-4">
+          <div className="mt-6 rounded-soft border border-dashed border-line bg-bg-inset p-4">
             <p className="text-body-sm font-medium text-fg">Dashboard presets</p>
             <p className="mt-2 text-caption leading-relaxed text-fg-muted">
               These chips decide which categories appear first on Home.
@@ -231,17 +231,17 @@ export default function SettingsPage() {
               <h2 className="text-xs font-semibold uppercase tracking-[0.24em] text-fg-muted">
                 {section.title}
               </h2>
-              <Card className="rounded-[2rem] border border-line bg-white/90 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)]">
-                <CardContent className="p-0 divide-y divide-zinc-100 dark:divide-zinc-700">
+              <Card className="rounded-pane border border-line bg-bg-surface shadow-sm">
+                <CardContent className="p-0 divide-y divide-line">
                   {section.items.map((item, index) => (
                     <div
                       key={item.label}
                       className={cn(
                         'flex items-center justify-between p-4 sm:p-5',
                         item.onClick &&
-                          'cursor-pointer transition-colors hover:bg-bg-inset dark:hover:bg-zinc-800/50',
-                        index === 0 && 'rounded-t-[2rem]',
-                        index === section.items.length - 1 && 'rounded-b-[2rem]'
+                          'cursor-pointer transition-colors hover:bg-bg-inset',
+                        index === 0 && 'rounded-t-pane',
+                        index === section.items.length - 1 && 'rounded-b-pane'
                       )}
                       onClick={item.onClick}
                       role={item.onClick ? 'button' : undefined}
@@ -252,16 +252,16 @@ export default function SettingsPage() {
                           className={cn(
                             'flex h-11 w-11 items-center justify-center rounded-2xl',
                             item.danger
-                              ? 'bg-red-100 dark:bg-red-900/30'
-                              : 'bg-bg-inset dark:bg-zinc-700'
+                              ? 'bg-signal-danger-weak'
+                              : 'bg-bg-inset'
                           )}
                         >
                           <item.icon
                             size={20}
                             className={cn(
                               item.danger
-                                ? 'text-red-600 dark:text-red-400'
-                                : 'text-fg-muted dark:text-zinc-300'
+                                ? 'text-signal-danger'
+                                : 'text-fg-muted'
                             )}
                           />
                         </div>
@@ -270,8 +270,8 @@ export default function SettingsPage() {
                             className={cn(
                               'font-medium tracking-tight',
                               item.danger
-                                ? 'text-red-600 dark:text-red-400'
-                                : 'text-zinc-950 dark:text-white'
+                                ? 'text-signal-danger'
+                                : 'text-fg'
                             )}
                           >
                             {item.label}
@@ -293,14 +293,14 @@ export default function SettingsPage() {
             <h2 className="text-xs font-semibold uppercase tracking-[0.24em] text-fg-muted">
               Quick Presets
             </h2>
-            <Card className="rounded-[2rem] border border-line bg-white/90 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)]">
+            <Card className="rounded-pane border border-line bg-bg-surface shadow-sm">
               <CardContent className="p-5">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-bg-inset dark:bg-zinc-700">
-                    <Zap size={20} className="text-fg-muted dark:text-zinc-300" />
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-bg-inset">
+                    <Zap size={20} className="text-fg-muted" />
                   </div>
                   <div>
-                    <p className="font-semibold text-zinc-950 dark:text-white">
+                    <p className="font-semibold text-fg">
                       Dashboard Presets
                     </p>
                     <p className="text-sm leading-relaxed text-fg-muted">

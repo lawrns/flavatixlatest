@@ -36,8 +36,8 @@ const secondaryOptions = [
     title: 'Export & Share',
     description: 'Create PDFs or share tasting links.',
     icon: Share2,
-    iconBgColor: 'bg-zinc-900/10 dark:bg-zinc-100/10',
-    iconColor: 'text-zinc-800 dark:text-zinc-200',
+    iconBgColor: 'bg-bg-inset',
+    iconColor: 'text-fg-muted',
     href: '/review/my-reviews?action=export',
   },
 ];
@@ -49,20 +49,20 @@ const HelpModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen,
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-zinc-950/55 backdrop-blur-[2px]" onClick={onClose} />
-      <div className="relative w-full max-w-lg rounded-[2rem] border border-white/10 bg-white p-6 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.45)]">
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="relative w-full max-w-lg rounded-pane border border-line bg-bg-surface p-6 shadow-lg">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-full p-2 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900"
+          className="absolute right-4 top-4 rounded-full p-2 text-fg-subtle transition-colors hover:bg-bg-inset hover:text-fg"
           aria-label="Close help"
         >
           <X className="h-5 w-5" />
         </button>
 
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-500">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-fg-subtle">
           Review modes
         </p>
-        <h2 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-950">
+        <h2 className="mt-2 text-2xl font-semibold tracking-tight text-fg">
           Pick the level of structure you need.
         </h2>
 
@@ -90,13 +90,13 @@ const HelpModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen,
               body: 'Return to completed and in-progress work from one archive surface.',
             },
           ].map(({ icon: Icon, bg, fg, title, body }) => (
-            <div key={title} className="flex gap-3 rounded-[1.25rem] border border-zinc-200 bg-zinc-50 p-4">
+            <div key={title} className="flex gap-3 rounded-soft border border-line bg-bg-inset p-4">
               <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${bg}`}>
                 <Icon className={`h-4 w-4 ${fg}`} />
               </div>
               <div>
-                <p className="text-sm font-semibold text-zinc-950">{title}</p>
-                <p className="mt-1 text-sm leading-relaxed text-zinc-600">{body}</p>
+                <p className="text-sm font-semibold text-fg">{title}</p>
+                <p className="mt-1 text-sm leading-relaxed text-fg-muted">{body}</p>
               </div>
             </div>
           ))}
@@ -104,7 +104,7 @@ const HelpModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen,
 
         <button
           onClick={onClose}
-          className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-zinc-950 px-4 py-3 text-sm font-semibold text-white transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.99]"
+          className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-primary px-4 py-3 text-sm font-semibold text-fg-inverse transition-colors active:scale-[0.99]"
         >
           Got it
         </button>
@@ -124,7 +124,7 @@ export default function ReviewHubPage() {
   const helpButton = (
     <button
       onClick={() => setShowHelp(true)}
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line bg-white text-fg-muted transition-colors hover:border-fg-muted/40 hover:text-fg"
+      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line bg-bg-surface text-fg-muted transition-colors hover:border-line-strong hover:text-fg"
       aria-label="Help"
     >
       <HelpCircle className="h-5 w-5" />
@@ -141,7 +141,7 @@ export default function ReviewHubPage() {
       containerSize="2xl"
     >
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <section className="rounded-[2rem] border border-line bg-white/90 p-6 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)] sm:p-8">
+        <section className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm sm:p-8">
           <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">Main actions</p>
           <h2 className="mt-2 text-h2 font-semibold tracking-tight text-fg">
             Start with structure, or just write what landed.
@@ -159,7 +159,7 @@ export default function ReviewHubPage() {
         </section>
 
         <aside className="space-y-4">
-          <div className="rounded-[2rem] border border-line bg-bg-surface p-6 shadow-sm">
+          <div className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm">
             <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
               More options
             </p>
@@ -170,7 +170,7 @@ export default function ReviewHubPage() {
             </div>
           </div>
 
-          <div className="rounded-[2rem] border border-dashed border-line bg-[#fbfaf7] p-6">
+          <div className="rounded-pane border border-dashed border-line bg-bg-inset p-6">
             <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
               Review archive
             </p>

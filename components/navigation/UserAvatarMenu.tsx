@@ -103,7 +103,7 @@ export const UserAvatarMenu: React.FC<UserAvatarMenuProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           'rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
-          'transition-transform hover:scale-105 active:scale-95'
+          'transition-colors'
         )}
         aria-expanded={isOpen}
         aria-haspopup="true"
@@ -122,15 +122,15 @@ export const UserAvatarMenu: React.FC<UserAvatarMenuProps> = ({
         <div
           className={cn(
             'absolute right-0 mt-2 w-64 z-50',
-            'bg-white dark:bg-zinc-800 rounded-pane shadow-xl',
-            'border border-line dark:border-zinc-700',
+            'bg-bg-surface rounded-pane shadow-md',
+            'border border-line',
             'overflow-hidden animate-fade-in'
           )}
           role="menu"
           aria-orientation="vertical"
         >
           {/* User Info Header with Avatar */}
-          <div className="px-4 py-4 bg-bg-inset dark:bg-zinc-800">
+          <div className="px-4 py-4 bg-bg-inset">
             <div className="flex items-center gap-3">
               <AvatarWithFallback
                 src={avatarUrl}
@@ -139,7 +139,7 @@ export const UserAvatarMenu: React.FC<UserAvatarMenuProps> = ({
                 size={48}
               />
               <div className="min-w-0 flex-1">
-                <p className="text-base font-semibold text-zinc-900 dark:text-white truncate">
+                <p className="text-base font-semibold text-fg truncate">
                   {displayName || 'User'}
                 </p>
                 {email && (
@@ -160,14 +160,14 @@ export const UserAvatarMenu: React.FC<UserAvatarMenuProps> = ({
                 onClick={item.onClick}
                 className={cn(
                   'flex items-center gap-3 px-3 py-2.5 rounded-soft',
-                  'text-sm font-medium text-fg-muted dark:text-zinc-200',
-                  'hover:bg-bg-inset dark:hover:bg-zinc-700',
+                  'text-sm font-medium text-fg-muted',
+                  'hover:bg-bg-inset',
                   'transition-colors'
                 )}
                 role="menuitem"
               >
-                <div className="w-8 h-8 rounded-full bg-bg-inset dark:bg-zinc-700 flex items-center justify-center">
-                  <item.icon size={16} className="text-fg-muted dark:text-zinc-300" />
+                <div className="w-8 h-8 rounded-full bg-bg-inset flex items-center justify-center">
+                  <item.icon size={16} className="text-fg-muted" />
                 </div>
                 {item.label}
               </Link>
@@ -178,14 +178,14 @@ export const UserAvatarMenu: React.FC<UserAvatarMenuProps> = ({
               onClick={handleLogout}
               className={cn(
                 'flex items-center gap-3 px-3 py-2.5 w-full rounded-soft',
-                'text-sm font-medium text-red-600 dark:text-red-400',
-                'hover:bg-red-50 dark:hover:bg-red-900/20',
+                'text-sm font-medium text-signal-danger',
+                'hover:bg-signal-danger-weak',
                 'transition-colors'
               )}
               role="menuitem"
             >
-              <div className="w-8 h-8 rounded-full bg-red-50 dark:bg-red-900/30 flex items-center justify-center">
-                <LogOut size={16} className="text-red-500 dark:text-red-400" />
+              <div className="w-8 h-8 rounded-full bg-signal-danger-weak flex items-center justify-center">
+                <LogOut size={16} className="text-signal-danger" />
               </div>
               Sign out
             </button>
