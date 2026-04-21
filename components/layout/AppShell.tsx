@@ -86,7 +86,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                 {showBack ? (
                   <button
                     onClick={handleBack}
-                    className="p-2 -ml-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                    className="p-2 -ml-2 rounded-lg hover:bg-bg-inset dark:hover:bg-zinc-800 transition-colors"
                     aria-label="Go back"
                   >
                     <svg

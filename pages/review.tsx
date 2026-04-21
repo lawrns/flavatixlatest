@@ -48,19 +48,19 @@ const HelpModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen,
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white dark:bg-zinc-800 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-scale-in">
+      <div className="absolute inset-0 bg-black/50 " onClick={onClose} />
+      <div className="relative bg-bg-surface dark:bg-zinc-800 rounded-pane shadow-lg max-w-md w-full p-6 animate-fade-in">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+          className="absolute top-4 right-4 p-2 rounded-full hover:bg-bg-inset dark:hover:bg-zinc-700 transition-colors"
           aria-label="Close help"
         >
-          <X className="w-5 h-5 text-zinc-500" />
+          <X className="w-5 h-5 text-fg-subtle" />
         </button>
 
         <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">About Reviews</h2>
 
-        <div className="space-y-4 text-sm text-zinc-600 dark:text-zinc-400">
+        <div className="space-y-4 text-sm text-fg-muted dark:text-fg-subtle">
           {[
             {
               icon: ClipboardList,
@@ -150,7 +150,7 @@ const ReviewPage: React.FC = () => {
 
       {/* Secondary actions */}
       <div className="mt-4">
-        <p className="text-xs font-medium text-gemini-text-gray dark:text-zinc-400 mb-2 px-1">
+        <p className="text-xs font-medium text-gemini-text-gray dark:text-fg-subtle mb-2 px-1">
           More options
         </p>
         <div className="flex flex-col gap-3">
@@ -162,7 +162,7 @@ const ReviewPage: React.FC = () => {
 
       {/* Value proposition */}
       <div className="mt-8 p-4 surface-inset">
-        <p className="text-sm text-center text-gemini-text-gray dark:text-zinc-400">
+        <p className="text-sm text-center text-gemini-text-gray dark:text-fg-subtle">
           Turn your tastings into structured reviews, quick impressions, or a personal archive.
         </p>
       </div>

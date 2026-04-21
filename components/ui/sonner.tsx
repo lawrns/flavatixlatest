@@ -18,14 +18,14 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast:
-            'group toast group-[.toaster]:bg-white group-[.toaster]:text-zinc-900 group-[.toaster]:border-zinc-200 group-[.toaster]:shadow-lg group-[.toaster]:rounded-xl dark:group-[.toaster]:bg-zinc-800 dark:group-[.toaster]:text-zinc-50 dark:group-[.toaster]:border-zinc-700',
-          description: 'group-[.toast]:text-zinc-600 dark:group-[.toast]:text-zinc-400',
+            'group toast group-[.toaster]:bg-white group-[.toaster]:text-zinc-900 group-[.toaster]:border-line group-[.toaster]:shadow-lg group-[.toaster]:rounded-xl dark:group-[.toaster]:bg-zinc-800 dark:group-[.toaster]:text-zinc-50 dark:group-[.toaster]:border-zinc-700',
+          description: 'group-[.toast]:text-fg-muted dark:group-[.toast]:text-fg-subtle',
           actionButton:
             'group-[.toast]:bg-primary group-[.toast]:text-white group-[.toast]:rounded-lg group-[.toast]:px-3 group-[.toast]:py-2 group-[.toast]:text-sm group-[.toast]:font-medium hover:group-[.toast]:bg-primary-600 group-[.toast]:transition-colors',
           cancelButton:
-            'group-[.toast]:bg-zinc-100 group-[.toast]:text-zinc-900 group-[.toast]:rounded-lg group-[.toast]:px-3 group-[.toast]:py-2 group-[.toast]:text-sm group-[.toast]:font-medium hover:group-[.toast]:bg-zinc-200 group-[.toast]:transition-colors dark:group-[.toast]:bg-zinc-700 dark:group-[.toast]:text-zinc-100 dark:hover:group-[.toast]:bg-zinc-600',
+            'group-[.toast]:bg-bg-inset group-[.toast]:text-zinc-900 group-[.toast]:rounded-lg group-[.toast]:px-3 group-[.toast]:py-2 group-[.toast]:text-sm group-[.toast]:font-medium hover:group-[.toast]:bg-zinc-200 group-[.toast]:transition-colors dark:group-[.toast]:bg-zinc-700 dark:group-[.toast]:text-zinc-100 dark:hover:group-[.toast]:bg-zinc-600',
           closeButton:
-            'group-[.toast]:bg-transparent group-[.toast]:border-0 group-[.toast]:text-zinc-400 hover:group-[.toast]:text-zinc-900 dark:hover:group-[.toast]:text-zinc-100',
+            'group-[.toast]:bg-transparent group-[.toast]:border-0 group-[.toast]:text-fg-subtle hover:group-[.toast]:text-zinc-900 dark:hover:group-[.toast]:text-zinc-100',
           error:
             'group-[.toaster]:bg-red-50 group-[.toaster]:text-red-900 group-[.toaster]:border-red-200 dark:group-[.toaster]:bg-red-950 dark:group-[.toaster]:text-red-50 dark:group-[.toaster]:border-red-800',
           success:

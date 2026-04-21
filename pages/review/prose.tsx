@@ -222,7 +222,7 @@ const ProseReviewPage: React.FC = () => {
         <div className="flex items-center justify-center py-12">
           <div className="flex flex-col items-center">
             <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-            <div className="text-zinc-600 dark:text-zinc-400 font-medium">Loading...</div>
+            <div className="text-fg-muted dark:text-fg-subtle font-medium">Loading...</div>
           </div>
         </div>
       </PageLayout>

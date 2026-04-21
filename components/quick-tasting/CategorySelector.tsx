@@ -178,8 +178,8 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
             onClick={() => onCategorySelect(category.id)}
             disabled={isLoading}
             className={`
-              relative p-4 rounded-pane border border-zinc-200 dark:border-zinc-700
-              bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700
+              relative p-4 rounded-pane border border-line dark:border-zinc-700
+              bg-white dark:bg-zinc-800 hover:bg-bg-inset dark:hover:bg-zinc-700
               transition-all duration-200
               focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
               disabled:opacity-50 disabled:cursor-not-allowed

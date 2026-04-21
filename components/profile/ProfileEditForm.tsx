@@ -262,7 +262,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
             rows={3}
             maxLength={200}
           />
-          <div className="text-right text-small font-body text-text-muted dark:text-zinc-400 mt-1">
+          <div className="text-right text-small font-body text-text-muted dark:text-fg-subtle mt-1">
             {formData.bio?.length || 0}/200
           </div>
         </div>

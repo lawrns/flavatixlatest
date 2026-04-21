@@ -96,7 +96,7 @@ export default function JoinTastingPage() {
       showBack
       containerSize="md"
     >
-      <div className="bg-white dark:bg-zinc-800 rounded-pane shadow-sm border border-zinc-200 dark:border-zinc-700 p-8 mt-2">
+      <div className="bg-white dark:bg-zinc-800 rounded-pane shadow-sm border border-line dark:border-zinc-700 p-8 mt-2">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +107,7 @@ export default function JoinTastingPage() {
 
           <form onSubmit={handleJoinTasting} className="space-y-6">
             <div>
-              <label htmlFor="tastingCode" className="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-2">
+              <label htmlFor="tastingCode" className="block text-sm font-medium text-fg-muted dark:text-zinc-200 mb-2">
                 Tasting Code
               </label>
               <input
@@ -117,10 +117,10 @@ export default function JoinTastingPage() {
                 value={tastingCode}
                 onChange={(e) => setTastingCode(e.target.value)}
                 placeholder="Enter the code shared by the host"
-                className="w-full px-4 py-3 border border-zinc-300 dark:border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-3 border border-line dark:border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 disabled={isJoining}
               />
-              <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-300">
+              <p className="mt-2 text-sm text-fg-subtle dark:text-zinc-300">
                 The tasting code is a unique ID shared by the session host
               </p>
             </div>
@@ -134,9 +134,9 @@ export default function JoinTastingPage() {
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-zinc-200 dark:border-zinc-700 dark:border-zinc-700">
+          <div className="mt-8 pt-6 border-t border-line dark:border-zinc-700 dark:border-zinc-700">
             <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-50 mb-3">How it works:</h3>
-            <ol className="space-y-2 text-sm text-zinc-600 dark:text-zinc-300">
+            <ol className="space-y-2 text-sm text-fg-muted dark:text-zinc-300">
               <li className="flex">
                 <span className="font-semibold text-primary mr-2">1.</span>
                 <span>Get the tasting code from the session host</span>

@@ -195,7 +195,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
         </div>
 
         {/* Stats */}
-        <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-zinc-400">
+        <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-fg-subtle">
           <span>Total Descriptors: {wheelData.totalDescriptors}</span>
           <span>Categories: {filteredCategories.length}</span>
         </div>
@@ -252,7 +252,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
       {/* Categories List */}
       <div>
         {filteredCategories.length === 0 ? (
-          <div className="p-8 text-center text-gray-500 dark:text-zinc-400">
+          <div className="p-8 text-center text-gray-500 dark:text-fg-subtle">
             <Filter className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>No categories found matching your filters</p>
           </div>
@@ -285,7 +285,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                         <h3 className="font-medium text-gray-900 dark:text-zinc-50">
                           {category.name}
                         </h3>
-                        <p className="text-sm text-gray-500 dark:text-zinc-400">
+                        <p className="text-sm text-gray-500 dark:text-fg-subtle">
                           {category.count} {category.count === 1 ? 'descriptor' : 'descriptors'} (
                           {category.percentage.toFixed(1)}%)
                         </p>
@@ -348,7 +348,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                                     <p className="text-sm font-medium text-gray-800 dark:text-zinc-200">
                                       {subcategory.name}
                                     </p>
-                                    <p className="text-xs text-gray-500 dark:text-zinc-400">
+                                    <p className="text-xs text-gray-500 dark:text-fg-subtle">
                                       {subcategory.count}{' '}
                                       {subcategory.count === 1 ? 'descriptor' : 'descriptors'}
                                     </p>
@@ -361,7 +361,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                                       {subcategory.descriptors.map((descriptor, index) => (
                                         <span
                                           key={index}
-                                          className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-gray-50 dark:bg-zinc-800 text-gray-600 dark:text-zinc-400"
+                                          className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-gray-50 dark:bg-zinc-800 text-gray-600 dark:text-fg-subtle"
                                           style={{
                                             borderLeft: `2px solid ${getDescriptorTypeColor(descriptor.type || 'aroma')}`,
                                           }}

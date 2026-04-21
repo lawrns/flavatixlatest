@@ -66,7 +66,7 @@ export const TastingActivePhase: React.FC<TastingActivePhaseProps> = ({
     <div className="max-w-4xl mx-auto">
       {/* All Items Grid View */}
       {showItemNavigation && items.length > 1 && (
-        <div className="mb-6 p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl">
+        <div className="mb-6 p-4 bg-bg-inset dark:bg-zinc-800 rounded-xl">
           <h3 className="text-lg font-semibold mb-4 text-zinc-900 dark:text-zinc-50">
             All Items ({items.length})
           </h3>
@@ -81,7 +81,7 @@ export const TastingActivePhase: React.FC<TastingActivePhaseProps> = ({
                 className={`p-3 rounded-lg text-left transition-all ${
                   index === currentItemIndex
                     ? 'bg-primary text-white ring-2 ring-primary ring-offset-2'
-                    : 'bg-white dark:bg-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-600 border border-zinc-200 dark:border-zinc-600'
+                    : 'bg-white dark:bg-zinc-700 hover:bg-bg-inset dark:hover:bg-zinc-600 border border-line dark:border-zinc-600'
                 }`}
               >
                 <div className="font-medium text-sm truncate">
@@ -92,7 +92,7 @@ export const TastingActivePhase: React.FC<TastingActivePhaseProps> = ({
                 {item.overall_score && (
                   <div
                     className={`text-xs mt-1 ${
-                      index === currentItemIndex ? 'text-white/80' : 'text-zinc-500'
+                      index === currentItemIndex ? 'text-white/80' : 'text-fg-subtle'
                     }`}
                   >
                     Score: {item.overall_score}/100

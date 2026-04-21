@@ -64,7 +64,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
       className={cn(
         'fixed bottom-0 left-0 right-0 z-50',
         'bg-white dark:bg-zinc-900',
-        'border-t border-zinc-200 dark:border-zinc-700/50',
+        'border-t border-line dark:border-zinc-700/50',
         'shadow-[0_-4px_20px_rgba(0,0,0,0.03)]'
       )}
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
@@ -87,7 +87,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
                 active
                   ? 'text-primary'
-                  : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300'
+                  : 'text-fg-subtle dark:text-fg-subtle hover:text-fg-muted dark:hover:text-zinc-300'
               )}
               aria-current={active ? 'page' : undefined}
               data-testid={item.testId}

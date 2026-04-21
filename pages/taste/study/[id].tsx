@@ -127,10 +127,10 @@ const StudyTastingPage: React.FC = () => {
       </div>
 
       {/* Bottom Navigation */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
+      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-line dark:border-zinc-700 bg-background-light dark:bg-background-dark">
         <nav className="flex justify-around p-2">
           <Link
-            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-zinc-300"
             href="/dashboard"
           >
             <span className="material-symbols-outlined">home</span>
@@ -141,14 +141,14 @@ const StudyTastingPage: React.FC = () => {
             <span className="text-xs font-bold">Taste</span>
           </Link>
           <Link
-            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-zinc-300"
             href="/review"
           >
             <span className="material-symbols-outlined">reviews</span>
             <span className="text-xs font-medium">Review</span>
           </Link>
           <Link
-            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-zinc-300"
             href="/flavor-wheels"
           >
             <span className="material-symbols-outlined">donut_small</span>

@@ -165,10 +165,7 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
         const scaleEffect = 0.98 + intensity * 0.08; // 0.98 a 1.06
 
         return {
-          background: `radial-gradient(circle at 30% 30%,
-          rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity + 0.2}) 0%,
-          rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity}) 50%,
-          rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity - 0.1}) 100%)`,
+          background: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity})`,
           borderColor: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${0.8 + intensity * 0.2})`,
           borderWidth: '2px',
           boxShadow: `
@@ -182,10 +179,7 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
         };
       } else {
         return {
-          background: `radial-gradient(circle at 30% 30%,
-          rgba(255, 255, 255, 0.15) 0%,
-          rgba(255, 255, 255, 0.08) 50%,
-          rgba(255, 255, 255, 0.05) 100%)`,
+          background: 'rgba(255, 255, 255, 0.08)',
           borderColor: 'rgba(156, 163, 175, 0.3)',
           borderWidth: '2px',
           boxShadow: `
@@ -565,10 +559,7 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
 
                               if (currentScore < score) {
                                 // Preview del nivel al hacer hover
-                                e.currentTarget.style.background = `radial-gradient(circle at 30% 30%,
-                                rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3) 0%,
-                                rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2) 50%,
-                                rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1) 100%)`;
+                                e.currentTarget.style.background = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`;
                                 e.currentTarget.style.borderColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.6)`;
                                 e.currentTarget.style.transform = 'scale(1.05)';
                               } else {

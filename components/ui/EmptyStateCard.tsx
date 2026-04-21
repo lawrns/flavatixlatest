@@ -42,7 +42,7 @@ export const EmptyStateCard: React.FC<EmptyStateCardProps> = ({
         <h3 className="text-h2 font-semibold text-fg dark:text-white">
           {headline}
         </h3>
-        <p className="text-body text-fg-muted dark:text-zinc-400 leading-relaxed">
+        <p className="text-body text-fg-muted dark:text-fg-subtle leading-relaxed">
           {description}
         </p>
       </div>

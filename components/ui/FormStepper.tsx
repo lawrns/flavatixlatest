@@ -226,7 +226,7 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
                   ? 'bg-primary text-white'
                   : isStepComplete(index)
                     ? 'bg-primary/20 text-primary'
-                    : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400'
+                    : 'bg-zinc-200 dark:bg-zinc-700 text-fg-subtle dark:text-fg-subtle'
               )}
             >
               {isStepComplete(index) ? (
@@ -278,7 +278,7 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
                     ? 'bg-primary text-white border-primary'
                     : isStepComplete(index)
                       ? 'bg-primary/10 text-primary border-primary'
-                      : 'bg-white dark:bg-zinc-800 text-zinc-500 border-zinc-300 dark:border-zinc-600 group-hover:border-primary/50'
+                      : 'bg-white dark:bg-zinc-800 text-fg-subtle border-line dark:border-zinc-600 group-hover:border-primary/50'
                 )}
               >
                 {isStepComplete(index) ? (
@@ -306,19 +306,19 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
                       index === currentStep
                         ? 'text-primary'
                         : isStepComplete(index)
-                          ? 'text-zinc-700 dark:text-zinc-300'
-                          : 'text-zinc-500 dark:text-zinc-400'
+                          ? 'text-fg-muted dark:text-zinc-300'
+                          : 'text-fg-subtle dark:text-fg-subtle'
                     )}
                   >
                     {step.title}
                   </span>
                   {step.description && (
-                    <span className="text-xs text-zinc-400 dark:text-zinc-500 hidden sm:block">
+                    <span className="text-xs text-fg-subtle dark:text-fg-subtle hidden sm:block">
                       {step.description}
                     </span>
                   )}
                   {step.isOptional && (
-                    <span className="text-xs text-zinc-400 dark:text-zinc-500">(Optional)</span>
+                    <span className="text-xs text-fg-subtle dark:text-fg-subtle">(Optional)</span>
                   )}
                 </span>
               )}
@@ -418,7 +418,7 @@ export const StepperNavigation: React.FC<StepperNavigationProps> = ({
   return (
     <div
       className={cn(
-        'flex items-center justify-between pt-6 border-t border-zinc-200 dark:border-zinc-700',
+        'flex items-center justify-between pt-6 border-t border-line dark:border-zinc-700',
         className
       )}
     >
@@ -426,7 +426,7 @@ export const StepperNavigation: React.FC<StepperNavigationProps> = ({
         <button
           type="button"
           onClick={handlePrev}
-          className="px-4 py-2 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors"
+          className="px-4 py-2 text-sm font-medium text-fg-muted dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors"
         >
           ← {prevLabel}
         </button>

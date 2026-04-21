@@ -596,7 +596,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
       </div>
 
       {/* Action footer — sticky on mobile so actions are always reachable */}
-      <div className="sticky bottom-0 z-10 -mx-4 px-4 pb-4 pt-3 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm border-t border-zinc-100 dark:border-zinc-800 sm:static sm:mx-0 sm:px-0 sm:pb-0 sm:pt-0 sm:bg-transparent sm:dark:bg-transparent sm:backdrop-blur-none sm:border-0">
+      <div className="sticky bottom-0 z-10 -mx-4 px-4 pb-4 pt-3 bg-white/95 dark:bg-zinc-900/95  border-t border-zinc-100 dark:border-zinc-800 sm:static sm:mx-0 sm:px-0 sm:pb-0 sm:pt-0 sm:bg-transparent sm:dark:bg-transparent sm:backdrop-blur-none sm:border-0">
         <div className="flex flex-col sm:flex-row gap-3">
           <button
             type="submit"

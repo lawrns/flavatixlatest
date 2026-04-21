@@ -121,7 +121,7 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
         <div className="flex items-center justify-between">
           <div>
             <p className="text-2xl font-bold text-gray-900 dark:text-zinc-50">{stats.totalTastings}</p>
-            <p className="text-sm text-gray-600 dark:text-zinc-400">Catas totales</p>
+            <p className="text-sm text-gray-600 dark:text-fg-subtle">Catas totales</p>
           </div>
           <span className="material-symbols-outlined text-gray-400">analytics</span>
         </div>
@@ -134,7 +134,7 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
             <p className={`text-2xl font-bold ${getRatingColor(stats.averageScore)}`}>
               {stats.averageScore.toFixed(1)}
             </p>
-            <p className="text-sm text-gray-600 dark:text-zinc-400">Puntuación media</p>
+            <p className="text-sm text-gray-600 dark:text-fg-subtle">Puntuación media</p>
           </div>
           <span className="material-symbols-outlined text-gray-400">star</span>
         </div>
@@ -147,7 +147,7 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
             <p className={`text-2xl font-bold ${getStreakColor(stats.currentStreak)}`}>
               {stats.currentStreak}
             </p>
-            <p className="text-sm text-gray-600 dark:text-zinc-400">Racha actual</p>
+            <p className="text-sm text-gray-600 dark:text-fg-subtle">Racha actual</p>
           </div>
           <span className="material-symbols-outlined text-gray-400">local_fire_department</span>
         </div>
@@ -160,7 +160,7 @@ const TastingHistoryStats: React.FC<TastingHistoryStatsProps> = ({ className = '
             <p className="text-lg font-bold text-gray-900 dark:text-zinc-50 capitalize">
               {stats.mostTastedCategory || 'N/A'}
             </p>
-            <p className="text-sm text-gray-600 dark:text-zinc-400">Categoría favorita</p>
+            <p className="text-sm text-gray-600 dark:text-fg-subtle">Categoría favorita</p>
           </div>
           <span className="material-symbols-outlined text-gray-400">
             {stats.mostTastedCategory ? getCategoryIcon(stats.mostTastedCategory) : 'help'}

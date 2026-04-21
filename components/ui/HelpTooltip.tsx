@@ -95,7 +95,7 @@ export const HelpTooltip: React.FC<HelpTooltipProps> = ({
         title={short}
         type="button"
       >
-        {icon || <HelpCircle className="w-4 h-4 text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200" />}
+        {icon || <HelpCircle className="w-4 h-4 text-gray-500 dark:text-fg-subtle hover:text-gray-700 dark:hover:text-zinc-200" />}
       </button>
 
       {/* Tooltip content */}

@@ -74,11 +74,11 @@ interface SectionProps {
 const Section: React.FC<SectionProps> = ({ id, title, description, children }) => (
   <section
     id={id}
-    className="scroll-mt-24 py-12 border-b border-zinc-200 dark:border-zinc-800 last:border-0"
+    className="scroll-mt-24 py-12 border-b border-line dark:border-zinc-800 last:border-0"
   >
     <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">{title}</h2>
     {description && (
-      <p className="text-zinc-600 dark:text-zinc-400 mb-8 max-w-2xl">{description}</p>
+      <p className="text-fg-muted dark:text-fg-subtle mb-8 max-w-2xl">{description}</p>
     )}
     {children}
   </section>
@@ -130,9 +130,9 @@ const ColorSwatch: React.FC<ColorSwatchProps> = ({
     </div>
     <div className="mt-2">
       <p className="font-medium text-sm text-zinc-900 dark:text-white">{name}</p>
-      {variable && <p className="text-xs text-zinc-500 font-mono">{variable}</p>}
-      {tailwind && <p className="text-xs text-zinc-400">{tailwind}</p>}
-      {usage && <p className="text-xs text-zinc-400 mt-1">{usage}</p>}
+      {variable && <p className="text-xs text-fg-subtle font-mono">{variable}</p>}
+      {tailwind && <p className="text-xs text-fg-subtle">{tailwind}</p>}
+      {usage && <p className="text-xs text-fg-subtle mt-1">{usage}</p>}
     </div>
   </div>
 );
@@ -149,7 +149,7 @@ interface ShowcaseProps {
 
 const Showcase: React.FC<ShowcaseProps> = ({ title, children }) => (
   <div className="mb-6">
-    <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-3">{title}</p>
+    <p className="text-sm font-medium text-fg-muted dark:text-fg-subtle mb-3">{title}</p>
     <div className="flex flex-wrap items-center gap-4">{children}</div>
   </div>
 );
@@ -225,7 +225,7 @@ export default function DesignSystemPage() {
 
       <div className="min-h-screen bg-white dark:bg-zinc-900 transition-colors">
         {/* Header */}
-        <header className="sticky top-0 z-50 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-b border-zinc-200 dark:border-zinc-800">
+        <header className="sticky top-0 z-50 bg-bg-surface dark:dark:bg-zinc-800  border-b border-line dark:border-zinc-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center gap-4">
@@ -241,24 +241,24 @@ export default function DesignSystemPage() {
                 {/* Dark mode toggle */}
                 <button
                   onClick={() => setIsDark(!isDark)}
-                  className="p-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                  className="p-2 rounded-xl hover:bg-bg-inset dark:hover:bg-zinc-800 transition-colors"
                   aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
                 >
                   {isDark ? (
-                    <Sun className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
+                    <Sun className="w-5 h-5 text-fg-muted dark:text-fg-subtle" />
                   ) : (
-                    <Moon className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
+                    <Moon className="w-5 h-5 text-fg-muted dark:text-fg-subtle" />
                   )}
                 </button>
 
                 {/* Mobile nav toggle */}
                 <button
                   onClick={() => setMobileNavOpen(!mobileNavOpen)}
-                  className="lg:hidden p-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                  className="lg:hidden p-2 rounded-xl hover:bg-bg-inset dark:hover:bg-zinc-800 transition-colors"
                   aria-label="Toggle navigation"
                 >
                   <svg
-                    className="w-5 h-5 text-zinc-600 dark:text-zinc-400"
+                    className="w-5 h-5 text-fg-muted dark:text-fg-subtle"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -277,7 +277,7 @@ export default function DesignSystemPage() {
 
           {/* Mobile navigation */}
           {mobileNavOpen && (
-            <nav className="lg:hidden border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
+            <nav className="lg:hidden border-t border-line dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
               <ul className="space-y-2">
                 {sections.map(({ id, label }) => (
                   <li key={id}>
@@ -287,7 +287,7 @@ export default function DesignSystemPage() {
                         'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                         activeSection === id
                           ? 'bg-primary/10 text-primary'
-                          : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                          : 'text-fg-muted dark:text-fg-subtle hover:bg-bg-inset dark:hover:bg-zinc-800'
                       )}
                     >
                       {label}
@@ -313,7 +313,7 @@ export default function DesignSystemPage() {
                           'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                           activeSection === id
                             ? 'bg-primary/10 text-primary'
-                            : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                            : 'text-fg-muted dark:text-fg-subtle hover:bg-bg-inset dark:hover:bg-zinc-800'
                         )}
                       >
                         {label}
@@ -590,24 +590,24 @@ export default function DesignSystemPage() {
                 {/* Background & Surface Colors */}
                 <SubSection title="Background & Surface Colors">
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    <div className="p-4 rounded-xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+                    <div className="p-4 rounded-xl border-2 border-dashed border-line dark:border-zinc-700 bg-white dark:bg-zinc-900">
                       <p className="text-sm font-medium text-zinc-900 dark:text-white">
                         App Background
                       </p>
-                      <p className="text-xs text-zinc-500 font-mono">--color-background-app</p>
-                      <p className="text-xs text-zinc-400">Light: #FFFFFF / Dark: #18181b</p>
+                      <p className="text-xs text-fg-subtle font-mono">--color-background-app</p>
+                      <p className="text-xs text-fg-subtle">Light: #FFFFFF / Dark: #18181b</p>
                     </div>
                     <div className="p-4 rounded-xl bg-gemini-card dark:bg-zinc-800">
                       <p className="text-sm font-medium text-zinc-900 dark:text-white">
                         Surface / Card
                       </p>
-                      <p className="text-xs text-zinc-500 font-mono">--color-background-surface</p>
-                      <p className="text-xs text-zinc-400">Light: #F6F6F6 / Dark: #27272a</p>
+                      <p className="text-xs text-fg-subtle font-mono">--color-background-surface</p>
+                      <p className="text-xs text-fg-subtle">Light: #F6F6F6 / Dark: #27272a</p>
                     </div>
-                    <div className="p-4 rounded-xl bg-zinc-100 dark:bg-zinc-700">
+                    <div className="p-4 rounded-xl bg-bg-inset dark:bg-zinc-700">
                       <p className="text-sm font-medium text-zinc-900 dark:text-white">Muted</p>
-                      <p className="text-xs text-zinc-500 font-mono">--color-background-muted</p>
-                      <p className="text-xs text-zinc-400">Subtle backgrounds</p>
+                      <p className="text-xs text-fg-subtle font-mono">--color-background-muted</p>
+                      <p className="text-xs text-fg-subtle">Subtle backgrounds</p>
                     </div>
                   </div>
                 </SubSection>
@@ -624,43 +624,43 @@ export default function DesignSystemPage() {
                 {/* Heading Scale */}
                 <SubSection title="Heading Scale">
                   <div className="space-y-6 bg-gemini-card dark:bg-zinc-800 rounded-2xl p-6">
-                    <div className="border-b border-zinc-200 dark:border-zinc-700 pb-4">
+                    <div className="border-b border-line dark:border-zinc-700 pb-4">
                       <h1 className="text-h1 font-bold text-zinc-900 dark:text-white">
                         Heading 1 - Page Titles
                       </h1>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                      <p className="text-xs text-fg-subtle font-mono mt-1">
                         text-h1 · clamp(2.25rem, 1.9rem + 1.75vw, 3rem) · font-bold
                       </p>
                     </div>
-                    <div className="border-b border-zinc-200 dark:border-zinc-700 pb-4">
+                    <div className="border-b border-line dark:border-zinc-700 pb-4">
                       <h2 className="text-h2 font-semibold text-zinc-900 dark:text-white">
                         Heading 2 - Section Headers
                       </h2>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                      <p className="text-xs text-fg-subtle font-mono mt-1">
                         text-h2 · clamp(1.875rem, 1.6rem + 1.375vw, 2.25rem) · font-semibold
                       </p>
                     </div>
-                    <div className="border-b border-zinc-200 dark:border-zinc-700 pb-4">
+                    <div className="border-b border-line dark:border-zinc-700 pb-4">
                       <h3 className="text-h3 font-semibold text-zinc-900 dark:text-white">
                         Heading 3 - Subsections
                       </h3>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                      <p className="text-xs text-fg-subtle font-mono mt-1">
                         text-h3 · clamp(1.5rem, 1.3rem + 1vw, 1.875rem) · font-semibold
                       </p>
                     </div>
-                    <div className="border-b border-zinc-200 dark:border-zinc-700 pb-4">
+                    <div className="border-b border-line dark:border-zinc-700 pb-4">
                       <h4 className="text-h4 font-medium text-zinc-900 dark:text-white">
                         Heading 4 - Card Titles
                       </h4>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                      <p className="text-xs text-fg-subtle font-mono mt-1">
                         text-h4 · clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem) · font-medium
                       </p>
                     </div>
-                    <div className="border-b border-zinc-200 dark:border-zinc-700 pb-4">
+                    <div className="border-b border-line dark:border-zinc-700 pb-4">
                       <h5 className="text-h5 font-medium text-zinc-900 dark:text-white">
                         Heading 5 - Labels
                       </h5>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                      <p className="text-xs text-fg-subtle font-mono mt-1">
                         text-h5 · clamp(1.125rem, 1rem + 0.625vw, 1.25rem) · font-medium
                       </p>
                     </div>
@@ -668,7 +668,7 @@ export default function DesignSystemPage() {
                       <h6 className="text-h6 font-medium text-zinc-900 dark:text-white">
                         Heading 6 - Small Headers
                       </h6>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                      <p className="text-xs text-fg-subtle font-mono mt-1">
                         text-h6 · clamp(1rem, 0.9rem + 0.5vw, 1.125rem) · font-medium
                       </p>
                     </div>
@@ -683,7 +683,7 @@ export default function DesignSystemPage() {
                         Large body text for hero sections and feature highlights. Used sparingly for
                         emphasis.
                       </p>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                      <p className="text-xs text-fg-subtle font-mono mt-1">
                         text-lg · clamp(1.125rem, 1rem + 0.625vw, 1.25rem)
                       </p>
                     </div>
@@ -692,24 +692,24 @@ export default function DesignSystemPage() {
                         Default body text for paragraphs and descriptions. This is the standard
                         reading size optimized for comfortable reading across all screen sizes.
                       </p>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                      <p className="text-xs text-fg-subtle font-mono mt-1">
                         text-base · clamp(1rem, 0.9rem + 0.5vw, 1.125rem)
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                      <p className="text-sm text-fg-muted dark:text-fg-subtle">
                         Small text for captions, helper text, and secondary information. Also used
                         for timestamps.
                       </p>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                      <p className="text-xs text-fg-subtle font-mono mt-1">
                         text-sm · clamp(0.875rem, 0.8rem + 0.375vw, 1rem)
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-zinc-500">
+                      <p className="text-xs text-fg-subtle">
                         Extra small text for labels, badges, and metadata.
                       </p>
-                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                      <p className="text-xs text-fg-subtle font-mono mt-1">
                         text-xs · clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem)
                       </p>
                     </div>
@@ -720,37 +720,37 @@ export default function DesignSystemPage() {
                 <SubSection title="Domain-Specific Text Patterns">
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <Card variant="default" padding="md">
-                      <p className="text-xs text-zinc-500 mb-1">Tasting ID</p>
+                      <p className="text-xs text-fg-subtle mb-1">Tasting ID</p>
                       <p className="font-mono text-sm text-zinc-900 dark:text-white">
                         TST-2024-001234
                       </p>
                     </Card>
                     <Card variant="default" padding="md">
-                      <p className="text-xs text-zinc-500 mb-1">Score Display</p>
+                      <p className="text-xs text-fg-subtle mb-1">Score Display</p>
                       <p className="text-3xl font-bold text-primary tabular-nums">
-                        92<span className="text-lg text-zinc-400">/100</span>
+                        92<span className="text-lg text-fg-subtle">/100</span>
                       </p>
                     </Card>
                     <Card variant="default" padding="md">
-                      <p className="text-xs text-zinc-500 mb-1">Spirit Name</p>
+                      <p className="text-xs text-fg-subtle mb-1">Spirit Name</p>
                       <p className="text-lg font-semibold text-zinc-900 dark:text-white">
                         Casa Noble Añejo
                       </p>
-                      <p className="text-sm text-zinc-500">Jalisco, Mexico</p>
+                      <p className="text-sm text-fg-subtle">Jalisco, Mexico</p>
                     </Card>
                     <Card variant="default" padding="md">
-                      <p className="text-xs text-zinc-500 mb-1">Date/Time</p>
+                      <p className="text-xs text-fg-subtle mb-1">Date/Time</p>
                       <p className="text-sm text-zinc-900 dark:text-white">December 9, 2024</p>
-                      <p className="text-xs text-zinc-500">2:30 PM</p>
+                      <p className="text-xs text-fg-subtle">2:30 PM</p>
                     </Card>
                     <Card variant="default" padding="md">
-                      <p className="text-xs text-zinc-500 mb-1">Price Display</p>
+                      <p className="text-xs text-fg-subtle mb-1">Price Display</p>
                       <p className="text-xl font-semibold text-zinc-900 dark:text-white">
-                        $89<span className="text-sm text-zinc-400">.99</span>
+                        $89<span className="text-sm text-fg-subtle">.99</span>
                       </p>
                     </Card>
                     <Card variant="default" padding="md">
-                      <p className="text-xs text-zinc-500 mb-1">Status Label</p>
+                      <p className="text-xs text-fg-subtle mb-1">Status Label</p>
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
                         Completed
                       </span>
@@ -763,23 +763,23 @@ export default function DesignSystemPage() {
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                     <div className="text-center p-4 bg-gemini-card dark:bg-zinc-800 rounded-xl">
                       <p className="font-light text-2xl text-zinc-900 dark:text-white">Aa</p>
-                      <p className="text-xs text-zinc-500 mt-2">Light (300)</p>
+                      <p className="text-xs text-fg-subtle mt-2">Light (300)</p>
                     </div>
                     <div className="text-center p-4 bg-gemini-card dark:bg-zinc-800 rounded-xl">
                       <p className="font-normal text-2xl text-zinc-900 dark:text-white">Aa</p>
-                      <p className="text-xs text-zinc-500 mt-2">Normal (400)</p>
+                      <p className="text-xs text-fg-subtle mt-2">Normal (400)</p>
                     </div>
                     <div className="text-center p-4 bg-gemini-card dark:bg-zinc-800 rounded-xl">
                       <p className="font-medium text-2xl text-zinc-900 dark:text-white">Aa</p>
-                      <p className="text-xs text-zinc-500 mt-2">Medium (500)</p>
+                      <p className="text-xs text-fg-subtle mt-2">Medium (500)</p>
                     </div>
                     <div className="text-center p-4 bg-gemini-card dark:bg-zinc-800 rounded-xl">
                       <p className="font-semibold text-2xl text-zinc-900 dark:text-white">Aa</p>
-                      <p className="text-xs text-zinc-500 mt-2">Semibold (600)</p>
+                      <p className="text-xs text-fg-subtle mt-2">Semibold (600)</p>
                     </div>
                     <div className="text-center p-4 bg-gemini-card dark:bg-zinc-800 rounded-xl">
                       <p className="font-bold text-2xl text-zinc-900 dark:text-white">Aa</p>
-                      <p className="text-xs text-zinc-500 mt-2">Bold (700)</p>
+                      <p className="text-xs text-fg-subtle mt-2">Bold (700)</p>
                     </div>
                   </div>
                 </SubSection>
@@ -977,7 +977,7 @@ export default function DesignSystemPage() {
                 <SubSection title="Combobox">
                   <div className="max-w-md space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
+                      <label className="block text-sm font-medium text-fg-muted dark:text-zinc-300 mb-1.5">
                         Spirit Type
                       </label>
                       <Combobox
@@ -1012,7 +1012,7 @@ export default function DesignSystemPage() {
                   <Card variant="default">
                     <CardHeader title="Default Card" subtitle="Clean, minimal styling" />
                     <CardContent>
-                      <p className="text-zinc-600 dark:text-zinc-400">
+                      <p className="text-fg-muted dark:text-fg-subtle">
                         The default Gemini-style card with soft gray background.
                       </p>
                     </CardContent>
@@ -1027,7 +1027,7 @@ export default function DesignSystemPage() {
                   <Card variant="default">
                     <CardHeader title="Gemini Card" subtitle="Explicit Gemini styling" />
                     <CardContent>
-                      <p className="text-zinc-600 dark:text-zinc-400">
+                      <p className="text-fg-muted dark:text-fg-subtle">
                         Same as default, for explicit naming.
                       </p>
                     </CardContent>
@@ -1037,7 +1037,7 @@ export default function DesignSystemPage() {
                   <Card variant="default">
                     <CardHeader title="Tasting Card" subtitle="With accent bar" />
                     <CardContent>
-                      <p className="text-zinc-600 dark:text-zinc-400">
+                      <p className="text-fg-muted dark:text-fg-subtle">
                         Features a primary-colored top accent bar for tasting sessions.
                       </p>
                     </CardContent>
@@ -1047,7 +1047,7 @@ export default function DesignSystemPage() {
                   <Card variant="default">
                     <CardHeader title="Elevated Card" subtitle="Prominent shadow" />
                     <CardContent>
-                      <p className="text-zinc-600 dark:text-zinc-400">
+                      <p className="text-fg-muted dark:text-fg-subtle">
                         Uses larger shadow for visual prominence.
                       </p>
                     </CardContent>
@@ -1057,7 +1057,7 @@ export default function DesignSystemPage() {
                   <Card variant="default">
                     <CardHeader title="Outlined Card" subtitle="Border emphasis" />
                     <CardContent>
-                      <p className="text-zinc-600 dark:text-zinc-400">
+                      <p className="text-fg-muted dark:text-fg-subtle">
                         Transparent background with 2px border.
                       </p>
                     </CardContent>
@@ -1067,7 +1067,7 @@ export default function DesignSystemPage() {
                   <Card variant="default">
                     <CardHeader title="Glass Card" subtitle="Frosted glass effect" />
                     <CardContent>
-                      <p className="text-zinc-600 dark:text-zinc-400">
+                      <p className="text-fg-muted dark:text-fg-subtle">
                         Backdrop blur with semi-transparent background.
                       </p>
                     </CardContent>
@@ -1077,7 +1077,7 @@ export default function DesignSystemPage() {
                   <Card variant="default">
                     <CardHeader title="Gradient Card" subtitle="Subtle gradient" />
                     <CardContent>
-                      <p className="text-zinc-600 dark:text-zinc-400">
+                      <p className="text-fg-muted dark:text-fg-subtle">
                         Primary-tinted gradient background.
                       </p>
                     </CardContent>
@@ -1087,7 +1087,7 @@ export default function DesignSystemPage() {
                   <Card variant="default">
                     <CardHeader title="Social Card" subtitle="For social posts" />
                     <CardContent>
-                      <p className="text-zinc-600 dark:text-zinc-400">
+                      <p className="text-fg-muted dark:text-fg-subtle">
                         Optimized for social feed items.
                       </p>
                     </CardContent>
@@ -1101,7 +1101,7 @@ export default function DesignSystemPage() {
                   >
                     <CardHeader title="Interactive Card" subtitle="Click me!" />
                     <CardContent>
-                      <p className="text-zinc-600 dark:text-zinc-400">
+                      <p className="text-fg-muted dark:text-fg-subtle">
                         Cards can be made clickable.
                       </p>
                     </CardContent>
@@ -1113,20 +1113,20 @@ export default function DesignSystemPage() {
                   <div className="flex flex-wrap gap-4">
                     <Card variant="default" padding="none" className="w-32">
                       <div className="p-2 text-center">
-                        <p className="text-xs text-zinc-500">none</p>
+                        <p className="text-xs text-fg-subtle">none</p>
                       </div>
                     </Card>
                     <Card variant="default" padding="sm" className="w-32">
-                      <p className="text-xs text-zinc-500 text-center">sm</p>
+                      <p className="text-xs text-fg-subtle text-center">sm</p>
                     </Card>
                     <Card variant="default" padding="md" className="w-32">
-                      <p className="text-xs text-zinc-500 text-center">md</p>
+                      <p className="text-xs text-fg-subtle text-center">md</p>
                     </Card>
                     <Card variant="default" padding="lg" className="w-32">
-                      <p className="text-xs text-zinc-500 text-center">lg</p>
+                      <p className="text-xs text-fg-subtle text-center">lg</p>
                     </Card>
                     <Card variant="default" padding="lg" className="w-32">
-                      <p className="text-xs text-zinc-500 text-center">xl</p>
+                      <p className="text-xs text-fg-subtle text-center">xl</p>
                     </Card>
                   </div>
                 </SubSection>
@@ -1136,7 +1136,7 @@ export default function DesignSystemPage() {
                   <Card variant="default" className="max-w-md">
                     <CardHeader title="Highlighted Card" subtitle="With glow ring" />
                     <CardContent>
-                      <p className="text-zinc-600 dark:text-zinc-400">
+                      <p className="text-fg-muted dark:text-fg-subtle">
                         Use for focused or featured content.
                       </p>
                     </CardContent>
@@ -1200,7 +1200,7 @@ export default function DesignSystemPage() {
                   ariaDescription="Example modal dialog"
                 >
                   <ModalBody>
-                    <p className="text-zinc-600 dark:text-zinc-400 mb-4">
+                    <p className="text-fg-muted dark:text-fg-subtle mb-4">
                       This is a {modalSize} modal. It has focus trapping, closes on Escape, and
                       supports overlay click to close.
                     </p>
@@ -1245,11 +1245,11 @@ export default function DesignSystemPage() {
                 {/* Inline Loading */}
                 <SubSection title="Inline Loading">
                   <Showcase title="Inline spinners for buttons/text">
-                    <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+                    <div className="flex items-center gap-2 text-fg-muted dark:text-fg-subtle">
                       <InlineLoading size="sm" />
                       <span>Saving...</span>
                     </div>
-                    <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+                    <div className="flex items-center gap-2 text-fg-muted dark:text-fg-subtle">
                       <InlineLoading size="lg" />
                       <span>Processing...</span>
                     </div>
@@ -1371,7 +1371,7 @@ export default function DesignSystemPage() {
                 <SubSection title="Form Stepper">
                   <div className="space-y-8">
                     <div>
-                      <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-4">
+                      <p className="text-sm font-medium text-fg-muted dark:text-fg-subtle mb-4">
                         Full Variant (with labels)
                       </p>
                       <Card variant="default" className="max-w-2xl">
@@ -1382,7 +1382,7 @@ export default function DesignSystemPage() {
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-4">
+                      <p className="text-sm font-medium text-fg-muted dark:text-fg-subtle mb-4">
                         Numbers Variant
                       </p>
                       <Card variant="default" className="max-w-md">
@@ -1393,7 +1393,7 @@ export default function DesignSystemPage() {
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-4">
+                      <p className="text-sm font-medium text-fg-muted dark:text-fg-subtle mb-4">
                         Dots Variant
                       </p>
                       <Card variant="default" className="max-w-xs">
@@ -1484,7 +1484,7 @@ export default function DesignSystemPage() {
                       <div className="w-11 h-11 border-2 border-dashed border-primary rounded-xl flex items-center justify-center text-xs text-primary font-medium">
                         44px
                       </div>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                      <p className="text-sm text-fg-muted dark:text-fg-subtle">
                         Minimum touch target size (44×44px) for all interactive elements
                       </p>
                     </div>
@@ -1492,7 +1492,7 @@ export default function DesignSystemPage() {
                       <div className="w-12 h-12 border-2 border-dashed border-secondary rounded-xl flex items-center justify-center text-xs text-secondary font-medium">
                         48px
                       </div>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                      <p className="text-sm text-fg-muted dark:text-fg-subtle">
                         Large touch target (48×48px) for primary actions on mobile
                       </p>
                     </div>
@@ -1501,7 +1501,7 @@ export default function DesignSystemPage() {
 
                 {/* Focus States */}
                 <SubSection title="Focus States">
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
+                  <p className="text-sm text-fg-muted dark:text-fg-subtle mb-4">
                     Tab through these elements to see focus rings:
                   </p>
                   <div className="flex flex-wrap gap-4">
@@ -1510,7 +1510,7 @@ export default function DesignSystemPage() {
                     <input
                       type="text"
                       placeholder="Focusable input"
-                      className="px-4 py-2 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white"
+                      className="px-4 py-2 border-2 border-line dark:border-zinc-700 rounded-xl focus:border-primary focus:outline-none focus:border-accent outline-none bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white"
                     />
                   </div>
                 </SubSection>
@@ -1518,13 +1518,13 @@ export default function DesignSystemPage() {
                 {/* Color Contrast */}
                 <SubSection title="Color Contrast">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
-                    <div className="p-4 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700">
+                    <div className="p-4 bg-white dark:bg-zinc-900 rounded-xl border border-line dark:border-zinc-700">
                       <p className="text-zinc-900 dark:text-white font-medium">Primary Text</p>
-                      <p className="text-xs text-zinc-500 mt-1">WCAG AAA compliant (7:1+)</p>
+                      <p className="text-xs text-fg-subtle mt-1">WCAG AAA compliant (7:1+)</p>
                     </div>
-                    <div className="p-4 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700">
-                      <p className="text-zinc-600 dark:text-zinc-400">Secondary Text</p>
-                      <p className="text-xs text-zinc-500 mt-1">WCAG AA compliant (4.5:1+)</p>
+                    <div className="p-4 bg-white dark:bg-zinc-900 rounded-xl border border-line dark:border-zinc-700">
+                      <p className="text-fg-muted dark:text-fg-subtle">Secondary Text</p>
+                      <p className="text-xs text-fg-subtle mt-1">WCAG AA compliant (4.5:1+)</p>
                     </div>
                     <div className="p-4 bg-primary rounded-xl">
                       <p className="text-white font-medium">White on Primary</p>
@@ -1532,7 +1532,7 @@ export default function DesignSystemPage() {
                     </div>
                     <div className="p-4 bg-zinc-900 dark:bg-white rounded-xl">
                       <p className="text-white dark:text-zinc-900 font-medium">Inverse Text</p>
-                      <p className="text-xs text-white/80 dark:text-zinc-600 mt-1">
+                      <p className="text-xs text-white/80 dark:text-fg-muted mt-1">
                         WCAG AAA compliant
                       </p>
                     </div>
@@ -1541,9 +1541,9 @@ export default function DesignSystemPage() {
 
                 {/* Reduced Motion */}
                 <SubSection title="Reduced Motion">
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-2xl">
+                  <p className="text-sm text-fg-muted dark:text-fg-subtle max-w-2xl">
                     All animations respect the{' '}
-                    <code className="px-1.5 py-0.5 bg-zinc-100 dark:bg-zinc-800 rounded text-xs font-mono">
+                    <code className="px-1.5 py-0.5 bg-bg-inset dark:bg-zinc-800 rounded text-xs font-mono">
                       prefers-reduced-motion
                     </code>{' '}
                     media query. When enabled, transitions and animations are disabled or minimized
@@ -1555,34 +1555,34 @@ export default function DesignSystemPage() {
                 <SubSection title="Keyboard Navigation">
                   <div className="space-y-3 max-w-2xl">
                     <div className="flex items-center gap-4">
-                      <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded text-sm font-mono">
+                      <kbd className="px-2 py-1 bg-bg-inset dark:bg-zinc-800 rounded text-sm font-mono">
                         Tab
                       </kbd>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                      <p className="text-sm text-fg-muted dark:text-fg-subtle">
                         Navigate between interactive elements
                       </p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded text-sm font-mono">
+                      <kbd className="px-2 py-1 bg-bg-inset dark:bg-zinc-800 rounded text-sm font-mono">
                         Enter / Space
                       </kbd>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                      <p className="text-sm text-fg-muted dark:text-fg-subtle">
                         Activate buttons and links
                       </p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded text-sm font-mono">
+                      <kbd className="px-2 py-1 bg-bg-inset dark:bg-zinc-800 rounded text-sm font-mono">
                         Escape
                       </kbd>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                      <p className="text-sm text-fg-muted dark:text-fg-subtle">
                         Close modals and dropdowns
                       </p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded text-sm font-mono">
+                      <kbd className="px-2 py-1 bg-bg-inset dark:bg-zinc-800 rounded text-sm font-mono">
                         Arrow Keys
                       </kbd>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                      <p className="text-sm text-fg-muted dark:text-fg-subtle">
                         Navigate within components (combobox, stepper)
                       </p>
                     </div>
@@ -1591,7 +1591,7 @@ export default function DesignSystemPage() {
               </Section>
 
               {/* Footer */}
-              <div className="py-12 text-center text-sm text-zinc-500">
+              <div className="py-12 text-center text-sm text-fg-subtle">
                 <p>Flavatix Design System v1.0</p>
                 <p className="mt-1">Built with React, Tailwind CSS, and CSS Custom Properties</p>
               </div>

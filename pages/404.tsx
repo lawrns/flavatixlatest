@@ -27,7 +27,7 @@ export default function Custom404() {
             <h2 className="text-3xl font-bold text-zinc-900 dark:text-white mb-4">
               Oops! Page Not Found
             </h2>
-            <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-md mx-auto mb-8">
+            <p className="text-lg text-fg-muted dark:text-fg-subtle max-w-md mx-auto mb-8">
               The page you&apos;re looking for seems to have wandered off during a tasting session.
               Let&apos;s get you back to discovering flavors!
             </p>
@@ -36,7 +36,7 @@ export default function Custom404() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-600 text-white rounded-card font-medium transition-all duration-200 shadow-primary hover:shadow-primary-hover hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-600 text-white rounded-card font-medium transition-all duration-200 shadow-primary hover:shadow-primary-hover "
               >
                 <ArrowLeft className="w-5 h-5" />
                 Back to Home
@@ -44,7 +44,7 @@ export default function Custom404() {
 
               <Link
                 href="/flavor-wheels"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white rounded-card font-medium transition-all duration-200"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-bg-inset dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white rounded-card font-medium transition-all duration-200"
               >
                 <PieChart className="w-5 h-5" />
                 Explore Flavor Wheels
@@ -62,7 +62,7 @@ export default function Custom404() {
               {/* Start Tasting */}
               <Link
                 href="/taste"
-                className="group flex flex-col items-center p-6 bg-white dark:bg-zinc-900 rounded-card hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
+                className="group flex flex-col items-center p-6 bg-white dark:bg-zinc-900 rounded-card hover:shadow-lg transition-all duration-200 "
               >
                 <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
                   <FileText className="w-6 h-6 text-primary" />
@@ -70,7 +70,7 @@ export default function Custom404() {
                 <h4 className="font-semibold text-zinc-900 dark:text-white mb-1">
                   Start Tasting
                 </h4>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400 text-center">
+                <p className="text-sm text-fg-muted dark:text-fg-subtle text-center">
                   Record a new tasting session
                 </p>
               </Link>
@@ -78,7 +78,7 @@ export default function Custom404() {
               {/* Explore Flavors */}
               <Link
                 href="/flavor-wheels"
-                className="group flex flex-col items-center p-6 bg-white dark:bg-zinc-900 rounded-card hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
+                className="group flex flex-col items-center p-6 bg-white dark:bg-zinc-900 rounded-card hover:shadow-lg transition-all duration-200 "
               >
                 <div className="w-12 h-12 bg-secondary/10 dark:bg-secondary/20 rounded-full flex items-center justify-center mb-3 group-hover:bg-secondary/20 transition-colors">
                   <PieChart className="w-6 h-6 text-secondary" />
@@ -86,7 +86,7 @@ export default function Custom404() {
                 <h4 className="font-semibold text-zinc-900 dark:text-white mb-1">
                   Explore Flavors
                 </h4>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400 text-center">
+                <p className="text-sm text-fg-muted dark:text-fg-subtle text-center">
                   Discover flavor wheels
                 </p>
               </Link>
@@ -94,7 +94,7 @@ export default function Custom404() {
               {/* My Tastings */}
               <Link
                 href="/my-tastings"
-                className="group flex flex-col items-center p-6 bg-white dark:bg-zinc-900 rounded-card hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
+                className="group flex flex-col items-center p-6 bg-white dark:bg-zinc-900 rounded-card hover:shadow-lg transition-all duration-200 "
               >
                 <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
                   <Search className="w-6 h-6 text-primary" />
@@ -102,7 +102,7 @@ export default function Custom404() {
                 <h4 className="font-semibold text-zinc-900 dark:text-white mb-1">
                   My Tastings
                 </h4>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400 text-center">
+                <p className="text-sm text-fg-muted dark:text-fg-subtle text-center">
                   View your tasting history
                 </p>
               </Link>
@@ -111,7 +111,7 @@ export default function Custom404() {
 
           {/* Support Link */}
           <div className="text-center">
-            <p className="text-sm text-zinc-500 dark:text-zinc-500 mb-2">
+            <p className="text-sm text-fg-subtle dark:text-fg-subtle mb-2">
               Still can&apos;t find what you&apos;re looking for?
             </p>
             <a
@@ -133,7 +133,7 @@ export default function Custom404() {
               alt="Flavatix"
               className="w-32 h-auto mx-auto opacity-50"
             />
-            <p className="text-xs text-zinc-400 dark:text-zinc-600 mt-2">
+            <p className="text-xs text-fg-subtle dark:text-fg-muted mt-2">
               The one place for all your tasting needs
             </p>
           </div>

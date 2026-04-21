@@ -77,7 +77,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
     <header
       className={cn(
         'w-full bg-background-app dark:bg-zinc-900',
-        sticky && 'sticky top-0 z-40 backdrop-blur-sm bg-background-app/95 dark:bg-zinc-900/95',
+        sticky && 'sticky top-0 z-40  bg-background-app/95 dark:bg-zinc-900/95',
         className
       )}
     >
@@ -85,12 +85,12 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         {/* Breadcrumbs */}
         {breadcrumbs && breadcrumbs.length > 0 && (
           <nav aria-label="Breadcrumb" className="mb-2">
-            <ol className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+            <ol className="flex items-center gap-2 text-sm text-fg-subtle dark:text-fg-subtle">
               {breadcrumbs.map((crumb, index) => (
                 <li key={index} className="flex items-center gap-2">
                   {index > 0 && (
                     <svg
-                      className="w-4 h-4 text-zinc-400"
+                      className="w-4 h-4 text-fg-subtle"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -112,7 +112,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
                       {crumb.label}
                     </a>
                   ) : (
-                    <span className="text-zinc-700 dark:text-zinc-300">
+                    <span className="text-fg-muted dark:text-zinc-300">
                       {crumb.label}
                     </span>
                   )}
@@ -129,10 +129,10 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
               <button
                 onClick={handleBack}
                 className={cn(
-                  'flex items-center gap-1 text-zinc-600 dark:text-zinc-400',
+                  'flex items-center gap-1 text-fg-muted dark:text-fg-subtle',
                   'hover:text-primary transition-colors',
                   'min-h-[44px] min-w-[44px] -ml-2 px-2 rounded-lg',
-                  'hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                  'hover:bg-bg-inset dark:hover:bg-zinc-800'
                 )}
                 aria-label={backLabel}
               >
@@ -165,7 +165,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
                 {title}
               </h1>
               {subtitle && (
-                <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400 truncate">
+                <p className="mt-1 text-sm text-fg-subtle dark:text-fg-subtle truncate">
                   {subtitle}
                 </p>
               )}
@@ -217,10 +217,10 @@ export const BackButton: React.FC<BackButtonProps> = ({
     <button
       onClick={handleClick}
       className={cn(
-        'inline-flex items-center gap-2 text-zinc-600 dark:text-zinc-400',
+        'inline-flex items-center gap-2 text-fg-muted dark:text-fg-subtle',
         'hover:text-primary transition-colors',
         'min-h-[44px] px-3 py-2 rounded-lg',
-        'hover:bg-zinc-100 dark:hover:bg-zinc-800',
+        'hover:bg-bg-inset dark:hover:bg-zinc-800',
         className
       )}
     >

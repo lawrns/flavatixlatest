@@ -150,7 +150,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
             />
           </svg>
         </div>
-        <p className="text-zinc-600 dark:text-zinc-400">
+        <p className="text-fg-muted dark:text-fg-subtle">
           {typeof error === 'string' ? error : error.message || 'Something went wrong'}
         </p>
       </div>
@@ -223,9 +223,9 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
 
     return (
       <div className={cn('flex flex-col items-center justify-center p-8 text-center', className)}>
-        <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-4">
+        <div className="w-12 h-12 rounded-full bg-bg-inset dark:bg-zinc-800 flex items-center justify-center mb-4">
           <svg
-            className="w-6 h-6 text-zinc-400"
+            className="w-6 h-6 text-fg-subtle"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -238,7 +238,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
             />
           </svg>
         </div>
-        <p className="text-zinc-500 dark:text-zinc-400">No items found</p>
+        <p className="text-fg-subtle dark:text-fg-subtle">No items found</p>
       </div>
     );
   }

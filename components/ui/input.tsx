@@ -72,7 +72,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       ? 'border-red-400 dark:border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/10'
       : success
       ? 'border-green-400 dark:border-green-500 focus-visible:border-green-500 focus-visible:ring-green-500/10'
-      : 'border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600 focus-visible:border-primary focus-visible:ring-primary/10'
+      : 'border-line dark:border-zinc-700 hover:border-line dark:hover:border-zinc-600 focus-visible:border-primary focus-visible:ring-primary/10'
 
     return (
       <div className={cn('flex flex-col gap-1.5', fullWidth && 'w-full')}>
@@ -81,7 +81,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <label
             htmlFor={inputId}
             className={cn(
-              'text-sm font-medium text-zinc-700 dark:text-zinc-300',
+              'text-sm font-medium text-fg-muted dark:text-zinc-300',
               'flex items-center justify-between'
             )}
           >
@@ -90,7 +90,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               <span
                 className={cn(
                   'text-xs tabular-nums',
-                  charCount >= maxLength ? 'text-red-500' : 'text-zinc-400'
+                  charCount >= maxLength ? 'text-red-500' : 'text-fg-subtle'
                 )}
               >
                 {charCount}/{maxLength}
@@ -106,7 +106,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             <div
               className={cn(
                 'absolute left-3 top-1/2 -translate-y-1/2',
-                'text-zinc-400 dark:text-zinc-500',
+                'text-fg-subtle dark:text-fg-subtle',
                 'group-focus-within:text-primary',
                 'transition-colors duration-200',
                 'pointer-events-none'
@@ -123,7 +123,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className={cn(
               'flex w-full border-2 bg-white',
               'text-zinc-900 dark:text-white',
-              'placeholder:text-zinc-400 dark:placeholder:text-zinc-500',
+              'placeholder:text-fg-subtle dark:placeholder:text-fg-subtle',
               'ring-offset-white dark:ring-offset-zinc-950',
               'file:border-0 file:bg-transparent file:text-sm file:font-medium',
               'focus-visible:outline-none focus-visible:ring-4',
@@ -159,7 +159,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 'transition-colors duration-200',
                 success
                   ? 'text-green-500'
-                  : 'text-zinc-400 dark:text-zinc-500 group-focus-within:text-primary'
+                  : 'text-fg-subtle dark:text-fg-subtle group-focus-within:text-primary'
               )}
             >
               {success ? (
@@ -213,7 +213,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {helperText && !error && (
           <p
             id={`${inputId}-helper`}
-            className="text-sm text-zinc-500 dark:text-zinc-400"
+            className="text-sm text-fg-subtle dark:text-fg-subtle"
           >
             {helperText}
           </p>

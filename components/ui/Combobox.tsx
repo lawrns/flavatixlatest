@@ -158,7 +158,7 @@ const Combobox: React.FC<ComboboxProps> = ({
             type="button"
             onClick={handleClear}
             aria-label="Clear selection"
-            className="absolute right-8 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-zinc-400 dark:hover:text-zinc-200 p-1 min-w-[24px] min-h-[24px]"
+            className="absolute right-8 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-fg-subtle dark:hover:text-zinc-200 p-1 min-w-[24px] min-h-[24px]"
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -169,7 +169,7 @@ const Combobox: React.FC<ComboboxProps> = ({
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? 'Close options' : 'Open options'}
           tabIndex={-1}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-zinc-400 dark:hover:text-zinc-200 p-1 min-w-[24px] min-h-[24px]"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-fg-subtle dark:hover:text-zinc-200 p-1 min-w-[24px] min-h-[24px]"
         >
           <ChevronDown
             className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
@@ -230,7 +230,7 @@ const Combobox: React.FC<ComboboxProps> = ({
           className="
             absolute z-50 w-full mt-1 px-3 py-2 bg-white dark:bg-zinc-800
             border border-gray-300 dark:border-zinc-600 rounded-lg shadow-lg
-            text-sm text-gray-500 dark:text-zinc-400
+            text-sm text-gray-500 dark:text-fg-subtle
           "
         >
           Press Enter to use &quot;{value}&quot;

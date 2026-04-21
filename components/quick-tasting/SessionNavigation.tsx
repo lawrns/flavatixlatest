@@ -88,7 +88,7 @@ export const SessionNavigation: React.FC<SessionNavigationProps> = ({
         disabled={isLoading || incompleteCount > 0}
         className={`w-full max-w-xs px-6 py-3 rounded-soft text-base font-semibold transition-colors ${
           incompleteCount > 0
-            ? 'bg-zinc-300 text-zinc-500 cursor-not-allowed dark:bg-zinc-700 dark:text-zinc-400'
+            ? 'bg-zinc-300 text-fg-subtle cursor-not-allowed dark:bg-zinc-700 dark:text-fg-subtle'
             : 'text-white bg-primary hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed'
         }`}
       >

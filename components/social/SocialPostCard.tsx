@@ -70,7 +70,7 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = React.memo(({
         'bg-white dark:bg-zinc-800/90 p-4 sm:p-5',
         'border-b border-zinc-100 dark:border-zinc-700/50',
         'transition-all duration-200 ease-out',
-        'hover:bg-zinc-50/50 dark:hover:bg-zinc-700/30',
+        'hover:bg-bg-inset/50 dark:hover:bg-zinc-700/30',
         'animate-fade-in'
       )}
     >
@@ -103,7 +103,7 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = React.memo(({
               <p className="font-bold text-zinc-900 dark:text-zinc-50 truncate">
                 {post.user.full_name || 'Anonymous User'}
               </p>
-              <p className="text-sm text-zinc-500 dark:text-zinc-300">
+              <p className="text-sm text-fg-subtle dark:text-zinc-300">
                 {formatTimeAgo(post.completed_at || post.created_at)}
               </p>
             </div>
@@ -113,7 +113,7 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = React.memo(({
                 className={`px-4 py-1.5 text-sm font-medium rounded-full transition-colors ${
                   post.isFollowed
                     ? 'bg-primary text-white hover:bg-primary/90'
-                    : 'bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-600'
+                    : 'bg-bg-inset dark:bg-zinc-700 text-fg-muted dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-600'
                 }`}
               >
                 {post.isFollowed ? 'Following' : 'Follow'}
@@ -145,7 +145,7 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = React.memo(({
 
       {/* Notes */}
       {post.notes && (
-        <p className="text-zinc-700 dark:text-zinc-200 mb-3 leading-relaxed">{post.notes}</p>
+        <p className="text-fg-muted dark:text-zinc-200 mb-3 leading-relaxed">{post.notes}</p>
       )}
 
       {/* Photo Grid */}
@@ -162,7 +162,7 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = React.memo(({
           }`}
         >
           {post.photos.slice(0, 4).map((photo, idx) => (
-            <div key={idx} className="relative aspect-square bg-zinc-100 dark:bg-zinc-800">
+            <div key={idx} className="relative aspect-square bg-bg-inset dark:bg-zinc-800">
               <Image
                 src={photo}
                 alt={`Tasting photo ${idx + 1}`}
@@ -186,14 +186,14 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = React.memo(({
         <div className="mb-3">
           <button
             onClick={onToggleExpand}
-            className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 hover:text-primary transition-colors mb-2"
+            className="flex items-center gap-2 text-sm font-semibold text-fg-muted dark:text-zinc-200 hover:text-primary transition-colors mb-2"
           >
             <span className="material-symbols-outlined text-base">
               {isExpanded ? 'expand_less' : 'expand_more'}
             </span>
             {post.total_items} items tasted
             {post.average_score && (
-              <span className="text-zinc-500 font-normal">
+              <span className="text-fg-subtle font-normal">
                 • Avg: {post.average_score.toFixed(0)}/100
               </span>
             )}
@@ -204,7 +204,7 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = React.memo(({
               {post.items.slice(0, 5).map((item, idx) => (
                 <div key={item.id} className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <span className="text-zinc-400">{idx + 1}.</span>
+                    <span className="text-fg-subtle">{idx + 1}.</span>
                     <span className="text-zinc-900 dark:text-zinc-50 truncate">
                       {item.item_name}
                     </span>
@@ -225,7 +225,7 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = React.memo(({
                 </div>
               ))}
               {post.items.length > 5 && (
-                <p className="text-xs text-zinc-500 pl-5">+{post.items.length - 5} more items</p>
+                <p className="text-xs text-fg-subtle pl-5">+{post.items.length - 5} more items</p>
               )}
             </div>
           )}
@@ -233,7 +233,7 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = React.memo(({
       )}
 
       {/* Stats Bar */}
-      <div className="flex items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400 py-2 border-t border-zinc-100 dark:border-zinc-700">
+      <div className="flex items-center gap-4 text-sm text-fg-subtle dark:text-fg-subtle py-2 border-t border-zinc-100 dark:border-zinc-700">
         <span>{post.stats.likes} likes</span>
         <span>•</span>
         <span>{post.stats.comments} comments</span>
@@ -243,8 +243,8 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = React.memo(({
       <div className="flex justify-between gap-2 border-t border-zinc-100 dark:border-zinc-700 pt-3 px-2">
         <button
           onClick={onLike}
-          className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors ${
-            post.isLiked ? 'text-red-500' : 'text-zinc-600 dark:text-zinc-300'
+          className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg hover:bg-bg-inset dark:hover:bg-zinc-700 transition-colors ${
+            post.isLiked ? 'text-red-500' : 'text-fg-muted dark:text-zinc-300'
           }`}
         >
           <span className="material-symbols-outlined text-xl">
@@ -254,14 +254,14 @@ export const SocialPostCard: React.FC<SocialPostCardProps> = React.memo(({
         </button>
         <button
           onClick={onComment}
-          className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors text-zinc-600 dark:text-zinc-300"
+          className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg hover:bg-bg-inset dark:hover:bg-zinc-700 transition-colors text-fg-muted dark:text-zinc-300"
         >
           <span className="material-symbols-outlined text-xl">mode_comment</span>
           <span className="text-sm font-medium">Comment</span>
         </button>
         <button
           onClick={onShare}
-          className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors text-zinc-600 dark:text-zinc-300"
+          className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg hover:bg-bg-inset dark:hover:bg-zinc-700 transition-colors text-fg-muted dark:text-zinc-300"
         >
           <span className="material-symbols-outlined text-xl">share</span>
           <span className="text-sm font-medium">Share</span>

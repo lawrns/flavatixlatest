@@ -54,7 +54,7 @@ export const RoleIndicator: React.FC<RoleIndicatorProps> = ({
         return {
           label: 'Host + Participant',
           icon: '👑👤',
-          color: 'bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 border-purple-200',
+          color: 'bg-bg-inset text-purple-800 border-purple-200',
           description: 'Hosts and participates in tasting',
           badge: 'dual',
         };
@@ -158,7 +158,7 @@ function getRoleConfig(role: ParticipantRole) {
       return {
         label: 'Host + Participant',
         icon: '👑👤',
-        color: 'bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 border-purple-200',
+        color: 'bg-bg-inset text-purple-800 border-purple-200',
         description: 'Hosts and participates in tasting',
         badge: 'dual',
       };

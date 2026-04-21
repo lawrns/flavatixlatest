@@ -27,7 +27,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 "
       role="dialog"
       aria-modal="true"
       aria-labelledby="confirm-title"
@@ -38,7 +38,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         className={cn(
           'w-full max-w-sm bg-bg-surface dark:bg-zinc-800',
           'rounded-pane shadow-lg border border-line dark:border-zinc-700',
-          'p-6 animate-scale-in'
+          'p-6 animate-fade-in'
         )}
         onClick={(e) => e.stopPropagation()}
       >
@@ -48,7 +48,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         >
           {title}
         </h3>
-        <p id="confirm-desc" className="text-body text-fg-muted dark:text-zinc-400 mb-6">
+        <p id="confirm-desc" className="text-body text-fg-muted dark:text-fg-subtle mb-6">
           {description}
         </p>
         <div className="flex gap-3 justify-end">

@@ -698,7 +698,7 @@ const NewStudyTastingPage: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setShowPreview(false)}
-                  className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-text-secondary hover:text-text-primary hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+                  className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-text-secondary hover:text-text-primary hover:bg-bg-inset dark:hover:bg-zinc-700 transition-colors"
                   aria-label="Close preview"
                 >
                   <X size={20} />

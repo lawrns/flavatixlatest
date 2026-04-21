@@ -162,7 +162,7 @@ export default function ShareButton({ disabled, onShare, className = '' }: Share
                 type="text"
                 value={shareData.url}
                 readOnly
-                className="flex-1 px-3 py-2 border border-gray-300 dark:border-zinc-600 rounded-md bg-gray-50 dark:bg-zinc-700 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
+                className="flex-1 px-3 py-2 border border-gray-300 dark:border-zinc-600 rounded-md bg-gray-50 dark:bg-zinc-700 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-fg-subtle dark:placeholder:text-fg-subtle"
               />
               <button
                 onClick={copyToClipboard}

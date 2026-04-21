@@ -282,7 +282,7 @@ export default function SocialPage() {
     return (
       <div className="bg-white dark:bg-zinc-900 font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
         <div className="flex min-h-screen flex-col">
-          <header className="border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4">
+          <header className="border-b border-line dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4">
             <div className="flex items-center justify-between mb-4">
               <div className="w-10 h-10 bg-zinc-200 dark:bg-zinc-700 rounded-full animate-pulse" />
               <div className="h-6 bg-zinc-200 dark:bg-zinc-700 rounded w-32 animate-pulse" />
@@ -307,18 +307,18 @@ export default function SocialPage() {
       <div className="bg-white dark:bg-zinc-900 font-display text-zinc-900 dark:text-zinc-50 min-h-screen">
         <div className="flex min-h-screen flex-col">
           {/* Header */}
-          <header className="border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 sticky top-0 z-40">
+          <header className="border-b border-line dark:border-zinc-700 bg-white dark:bg-zinc-900 sticky top-0 z-40">
             <div className="max-w-md mx-auto w-full flex items-center justify-between p-4">
               <button
                 onClick={() => router.back()}
-                className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-bg-inset dark:hover:bg-zinc-800"
               >
                 <span className="material-symbols-outlined">arrow_back</span>
               </button>
               <h1 className="text-xl font-bold">Social Feed</h1>
               <button
                 onClick={() => router.push('/quick-tasting')}
-                className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-bg-inset dark:hover:bg-zinc-800"
               >
                 <span className="material-symbols-outlined">add_circle</span>
               </button>
@@ -349,7 +349,7 @@ export default function SocialPage() {
                   <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
                     No tastings yet
                   </h3>
-                  <p className="text-zinc-600 dark:text-zinc-300 mb-4">
+                  <p className="text-fg-muted dark:text-zinc-300 mb-4">
                     Be the first to share your tasting experience!
                   </p>
                   <button onClick={() => router.push('/quick-tasting')} className="btn-primary">
@@ -384,13 +384,13 @@ export default function SocialPage() {
               {!loadingPosts && filteredPosts.length > 0 && (
                 <div id="scroll-sentinel" className="h-20 flex items-center justify-center">
                   {isFetchingNextPage && (
-                    <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-300">
+                    <div className="flex items-center gap-2 text-fg-subtle dark:text-zinc-300">
                       <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                       <span className="text-sm">Loading more...</span>
                     </div>
                   )}
                   {!hasNextPage && !isFetchingNextPage && (
-                    <p className="text-sm text-zinc-400">You&apos;ve reached the end!</p>
+                    <p className="text-sm text-fg-subtle">You&apos;ve reached the end!</p>
                   )}
                 </div>
               )}

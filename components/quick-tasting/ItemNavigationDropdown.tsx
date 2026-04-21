@@ -42,7 +42,7 @@ export const ItemNavigationDropdown: React.FC<ItemNavigationDropdownProps> = ({
         <span className="flex items-center">
           <span className="mr-2">Item {currentIndex + 1} of {items.length}</span>
           {currentItem && (
-            <span className="text-gray-500 dark:text-zinc-400 truncate max-w-32">
+            <span className="text-gray-500 dark:text-fg-subtle truncate max-w-32">
               {currentItem.name}
             </span>
           )}
@@ -69,7 +69,7 @@ export const ItemNavigationDropdown: React.FC<ItemNavigationDropdownProps> = ({
                   {item.isCompleted ? (
                     <CheckCircle size={16} className="text-green-500" />
                   ) : (
-                    <Circle size={16} className="text-gray-400 dark:text-zinc-500" />
+                    <Circle size={16} className="text-gray-400 dark:text-fg-subtle" />
                   )}
                 </div>
                 <span className="truncate">
@@ -78,10 +78,10 @@ export const ItemNavigationDropdown: React.FC<ItemNavigationDropdownProps> = ({
               </div>
               <div className="flex items-center ml-2">
                 {item.hasPhoto && (
-                  <Camera size={14} className="text-gray-400 dark:text-zinc-500 mr-1" />
+                  <Camera size={14} className="text-gray-400 dark:text-fg-subtle mr-1" />
                 )}
                 {item.score && (
-                  <span className="text-xs text-gray-500 dark:text-zinc-400">
+                  <span className="text-xs text-gray-500 dark:text-fg-subtle">
                     {item.score}/100
                   </span>
                 )}

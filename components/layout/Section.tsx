@@ -46,7 +46,7 @@ export const Section: React.FC<SectionProps> = ({
             </h2>
           )}
           {subtitle && (
-            <p className="text-sm text-gemini-text-gray dark:text-zinc-400">
+            <p className="text-sm text-gemini-text-gray dark:text-fg-subtle">
               {subtitle}
             </p>
           )}

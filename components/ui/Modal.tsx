@@ -72,7 +72,7 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 "
       onClick={handleOverlayClick}
       role="presentation"
     >
@@ -99,7 +99,7 @@ const Modal: React.FC<ModalProps> = ({
         )}
 
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-6 border-b border-zinc-200 dark:border-zinc-700">
+          <div className="flex items-center justify-between p-6 border-b border-line dark:border-zinc-700">
             {title && (
               <h2 id={titleId} className="text-xl font-semibold text-zinc-900 dark:text-white">
                 {title}
@@ -108,7 +108,7 @@ const Modal: React.FC<ModalProps> = ({
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                className="p-2 text-fg-subtle hover:text-fg-muted dark:hover:text-zinc-200 transition-colors rounded-lg hover:bg-bg-inset dark:hover:bg-zinc-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
                 aria-label="Close modal"
                 type="button"
               >
@@ -164,7 +164,7 @@ const ModalFooter: React.FC<ModalFooterProps> = ({ children, className }) => {
   return (
     <div
       className={cn(
-        'flex justify-end gap-3 pt-4 border-t border-zinc-200 dark:border-zinc-700',
+        'flex justify-end gap-3 pt-4 border-t border-line dark:border-zinc-700',
         className
       )}
     >

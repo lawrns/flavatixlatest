@@ -60,7 +60,7 @@ const TastingHistoryItem: React.FC<TastingHistoryItemProps> = ({ tasting, onClic
 
   return (
     <div
-      className="group/card bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-gray-200/60 p-4 sm:p-6 hover:shadow-lg hover:border-gray-300/60 transition-all duration-300 cursor-pointer relative overflow-hidden backdrop-blur-sm"
+      className="group/card bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-gray-200/60 p-4 sm:p-6 hover:shadow-lg hover:border-gray-300/60 transition-all duration-300 cursor-pointer relative overflow-hidden "
       onClick={() => onClick(tasting)}
     >
       {/* Gradiente sutil de fondo */}
@@ -70,7 +70,7 @@ const TastingHistoryItem: React.FC<TastingHistoryItemProps> = ({ tasting, onClic
       <button
         onClick={handleDeleteClick}
         disabled={isDeleting}
-        className="absolute top-3 right-3 sm:top-4 sm:right-4 group flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-white via-white to-gray-50/90 dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-800/90 backdrop-blur-xl border border-red-100/80 dark:border-red-900/40 text-red-500 hover:text-white hover:bg-gradient-to-br hover:from-red-500 hover:to-red-600 hover:border-red-400 hover:shadow-red-200/40 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-out disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-white disabled:hover:via-white disabled:hover:to-gray-50/90 disabled:hover:text-red-500 disabled:hover:border-red-100/80 z-20 transform hover:scale-110 hover:-translate-y-0.5 active:scale-95 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-red-400/60 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-800"
+        className="absolute top-3 right-3 sm:top-4 sm:right-4 group flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-white via-white to-gray-50/90 dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-800/90  border border-red-100/80 dark:border-red-900/40 text-red-500 hover:text-white hover:bg-gradient-to-br hover:from-red-500 hover:to-red-600 hover:border-red-400 hover:shadow-red-200/40 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-out disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-white disabled:hover:via-white disabled:hover:to-gray-50/90 disabled:hover:text-red-500 disabled:hover:border-red-100/80 z-20 transform hover:scale-110  active:scale-95 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-red-400/60 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-800"
         aria-label="Eliminar cata"
         title="Eliminar cata"
       >
@@ -121,7 +121,7 @@ const TastingHistoryItem: React.FC<TastingHistoryItemProps> = ({ tasting, onClic
               >
                 {tasting.category}
               </span>
-              <span className="text-sm text-gray-500 dark:text-zinc-400 font-medium">
+              <span className="text-sm text-gray-500 dark:text-fg-subtle font-medium">
                 {formatDate(tasting.created_at)}
               </span>
             </div>
@@ -211,7 +211,7 @@ const TastingHistoryItem: React.FC<TastingHistoryItemProps> = ({ tasting, onClic
                   d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
                 />
               </svg>
-              <p className="text-sm text-gray-600 dark:text-zinc-400 leading-relaxed line-clamp-2 flex-1">
+              <p className="text-sm text-gray-600 dark:text-fg-subtle leading-relaxed line-clamp-2 flex-1">
                 {tasting.notes}
               </p>
             </div>

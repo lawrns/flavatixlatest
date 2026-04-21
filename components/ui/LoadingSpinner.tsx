@@ -23,7 +23,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   const colorClasses = {
     primary: 'text-primary',
     white: 'text-white',
-    zinc: 'text-zinc-500'
+    zinc: 'text-fg-subtle'
   };
 
   return (
@@ -50,7 +50,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         />
       </svg>
       {text && (
-        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="mt-2 text-sm text-fg-muted dark:text-fg-subtle">
           {text}
         </p>
       )}

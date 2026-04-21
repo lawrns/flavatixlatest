@@ -23,7 +23,7 @@ const CompetitionPage: React.FC = () => {
           <h1 className="text-3xl font-bold text-text-primary mb-8">Competitions</h1>
           
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-sm border border-zinc-200 dark:border-zinc-700">
+            <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-sm border border-line dark:border-zinc-700">
               <h2 className="text-xl font-semibold text-text-primary mb-4">Join Competition</h2>
               <p className="text-text-secondary mb-4">
                 Enter a competition code to join an existing tasting competition.
@@ -36,7 +36,7 @@ const CompetitionPage: React.FC = () => {
               </button>
             </div>
 
-            <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-sm border border-zinc-200 dark:border-zinc-700">
+            <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-sm border border-line dark:border-zinc-700">
               <h2 className="text-xl font-semibold text-text-primary mb-4">Create Competition</h2>
               <p className="text-text-secondary mb-4">
                 Start a new tasting competition and invite others to participate.
@@ -52,7 +52,7 @@ const CompetitionPage: React.FC = () => {
 
           <div className="mt-8">
             <h2 className="text-xl font-semibold text-text-primary mb-4">My Competitions</h2>
-            <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-sm border border-zinc-200 dark:border-zinc-700">
+            <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-sm border border-line dark:border-zinc-700">
               <p className="text-text-secondary text-center py-8">
                 No competitions yet. Join or create one to get started!
               </p>

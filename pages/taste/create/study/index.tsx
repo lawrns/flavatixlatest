@@ -47,7 +47,7 @@ const StudyModeLanding: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
             <button
               onClick={() => router.push('/taste/create/study/new')}
-              className="card p-xl text-center hover:shadow-xl transition-all duration-200 hover:-translate-y-1 group"
+              className="card p-xl text-center hover:shadow-xl transition-all duration-200  group"
             >
               <div className="flex flex-col items-center space-y-md">
                 <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -66,7 +66,7 @@ const StudyModeLanding: React.FC = () => {
 
             <button
               onClick={() => router.push('/taste/create/study/templates')}
-              className="card p-xl text-center hover:shadow-xl transition-all duration-200 hover:-translate-y-1 group"
+              className="card p-xl text-center hover:shadow-xl transition-all duration-200  group"
             >
               <div className="flex flex-col items-center space-y-md">
                 <div className="w-20 h-20 rounded-full bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
@@ -85,11 +85,11 @@ const StudyModeLanding: React.FC = () => {
 
             <button
               onClick={() => router.push('/create-tasting')}
-              className="card p-xl text-center hover:shadow-xl transition-all duration-200 hover:-translate-y-1 group"
+              className="card p-xl text-center hover:shadow-xl transition-all duration-200  group"
             >
               <div className="flex flex-col items-center space-y-md">
-                <div className="w-20 h-20 rounded-full bg-zinc-100 flex items-center justify-center group-hover:bg-zinc-200 transition-colors">
-                  <ArrowLeft size={40} className="text-zinc-600 dark:text-zinc-300" />
+                <div className="w-20 h-20 rounded-full bg-bg-inset flex items-center justify-center group-hover:bg-zinc-200 transition-colors">
+                  <ArrowLeft size={40} className="text-fg-muted dark:text-zinc-300" />
                 </div>
                 <div>
                   <h2 className="text-h3 font-heading font-semibold text-text-primary mb-sm">
@@ -105,10 +105,10 @@ const StudyModeLanding: React.FC = () => {
         </div>
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
+      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-line dark:border-zinc-700 bg-background-light dark:bg-background-dark">
         <nav className="flex justify-around p-2">
           <Link
-            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-zinc-300"
             href="/dashboard"
           >
             <span className="material-symbols-outlined">home</span>
@@ -119,14 +119,14 @@ const StudyModeLanding: React.FC = () => {
             <span className="text-xs font-bold">Taste</span>
           </Link>
           <Link
-            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-zinc-300"
             href="/review"
           >
             <span className="material-symbols-outlined">reviews</span>
             <span className="text-xs font-medium">Review</span>
           </Link>
           <Link
-            className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300"
+            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-zinc-300"
             href="/flavor-wheels"
           >
             <span className="material-symbols-outlined">donut_small</span>

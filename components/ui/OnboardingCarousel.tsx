@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 
 interface OnboardingCard {
   id: number;
@@ -21,84 +21,9 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
   onComplete,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [translateX, setTranslateX] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Check for reduced motion preference
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
-
-  // Trigger entrance animation on card change
-  useEffect(() => {
-    if (prefersReducedMotion) {return;}
-    setIsAnimating(true);
-    const timer = setTimeout(() => setIsAnimating(false), 500);
-    return () => clearTimeout(timer);
-  }, [currentIndex, prefersReducedMotion]);
 
   const card = cards[currentIndex];
   const isLastCard = currentIndex === cards.length - 1;
-  const _progress = ((currentIndex + 1) / cards.length) * 100;
-
-  // Handle swipe start
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setStartX(e.clientX);
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setIsDragging(true);
-    setStartX(e.touches[0].clientX);
-  };
-
-  // Handle swipe move
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) {
-      return;
-    }
-    setTranslateX(e.clientX - startX);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) {
-      return;
-    }
-    setTranslateX(e.touches[0].clientX - startX);
-  };
-
-  // Handle swipe end
-  const handleMouseUp = () => {
-    handleSwipeEnd();
-  };
-
-  const handleTouchEnd = () => {
-    handleSwipeEnd();
-  };
-
-  const handleSwipeEnd = () => {
-    setIsDragging(false);
-
-    // If swiped more than 50px, go to next card
-    if (translateX < -50) {
-      goToNext();
-    }
-    // If swiped more than 50px back, go to previous card
-    else if (translateX > 50) {
-      goToPrevious();
-    }
-
-    setTranslateX(0);
-  };
 
   const goToNext = () => {
     if (isLastCard) {
@@ -124,18 +49,18 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-gradient-to-b from-white to-zinc-50 dark:from-zinc-900 dark:to-zinc-800 relative overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-bg relative overflow-hidden">
       {/* Header: Progress & Skip Button */}
       <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-0 mx-auto w-full max-w-md">
         {/* Progress Indicator */}
-        <span className="text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-400">
+        <span className="text-xs sm:text-sm font-medium text-fg-muted">
           {currentIndex + 1} of {cards.length}
         </span>
 
         {/* Skip Button */}
         <button
           onClick={onComplete}
-          className="text-xs sm:text-sm font-medium text-zinc-500 dark:text-zinc-500 hover:text-primary dark:hover:text-primary transition-colors"
+          className="text-xs sm:text-sm font-medium text-fg-muted hover:text-primary transition-colors"
         >
           Skip
         </button>
@@ -150,67 +75,24 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
       </div>
 
       {/* Carousel Container */}
-      <div
-        ref={containerRef}
-        className="relative flex-1 flex items-center justify-center overflow-hidden px-4 sm:px-6 py-8 sm:py-12 mx-auto w-full max-w-md"
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
+      <div className="relative flex-1 flex items-center justify-center overflow-hidden px-4 sm:px-6 py-8 sm:py-12 mx-auto w-full max-w-md">
         {/* Card Content */}
-        <div
-          className="transition-transform duration-300 ease-spring select-none w-full"
-          style={{
-            transform: isDragging ? `translateX(${translateX}px)` : 'translateX(0)',
-          }}
-        >
+        <div className="w-full">
           <div className="flex flex-col items-center max-w-lg mx-auto">
-            {/* Image: 4:5 aspect ratio, responsive sizing with entrance animation */}
-            {/* Light/dark mode compatible with subtle background and shadow adjustments */}
-            <div
-              className={`w-full max-w-xs aspect-[4/5] rounded-2xl overflow-hidden shadow-xl mb-8 sm:mb-10 transition-all duration-500 ease-out bg-zinc-100 dark:bg-zinc-800 ring-1 ring-black/5 dark:ring-white/10 ${
-                isAnimating && !prefersReducedMotion
-                  ? 'opacity-0 translate-y-6 scale-95'
-                  : 'opacity-100 translate-y-0 scale-100'
-              }`}
-              style={{ transitionDelay: '0ms' }}
-            >
-              {/* Intentional: next/image emits a fetchPriority DOM warning in this stack for the onboarding carousel. */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={card.image}
-                alt={card.headline}
-                className="w-full h-full object-cover dark:brightness-95 dark:contrast-105"
-                draggable={false}
-                loading={currentIndex === 0 ? 'eager' : 'lazy'}
-              />
+            {/* Image placeholder */}
+            <div className="w-full max-w-xs aspect-[4/5] rounded-pane bg-bg-inset dark:bg-zinc-800 flex items-center justify-center mb-8 sm:mb-10">
+              <span className="material-symbols-outlined text-6xl text-fg-subtle">
+                {card.id === 1 ? 'explore' : card.id === 2 ? 'local_dining' : card.id === 3 ? 'group' : 'play_circle'}
+              </span>
             </div>
 
-            {/* Heading: 28-32px mobile, 32-36px desktop with staggered animation */}
-            <h2
-              className={`text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-white text-center mb-4 transition-all duration-500 ease-out ${
-                isAnimating && !prefersReducedMotion
-                  ? 'opacity-0 translate-y-4'
-                  : 'opacity-100 translate-y-0'
-              }`}
-              style={{ transitionDelay: '100ms' }}
-            >
+            {/* Heading */}
+            <h2 className="text-2xl sm:text-3xl font-bold text-fg text-center mb-4">
               {card.headline}
             </h2>
 
-            {/* Body Text: 16-18px with proper line height and staggered animation */}
-            <p
-              className={`text-base sm:text-lg text-zinc-600 dark:text-zinc-400 text-center leading-relaxed mb-8 sm:mb-12 max-w-md transition-all duration-500 ease-out ${
-                isAnimating && !prefersReducedMotion
-                  ? 'opacity-0 translate-y-4'
-                  : 'opacity-100 translate-y-0'
-              }`}
-              style={{ transitionDelay: '200ms' }}
-            >
+            {/* Body Text */}
+            <p className="text-base sm:text-lg text-fg-muted text-center leading-relaxed mb-8 sm:mb-12 max-w-md">
               {card.description}
             </p>
 
@@ -219,19 +101,19 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
               <div className="w-full space-y-3">
                 <button
                   onClick={onComplete}
-                  className="w-full h-12 bg-primary text-white rounded-soft font-semibold transition-all hover:opacity-90 active:scale-[0.98]"
+                  className="w-full h-12 bg-primary text-white rounded-soft font-semibold hover:opacity-90"
                 >
                   Sign Up
                 </button>
                 <button
                   onClick={onComplete}
-                  className="w-full h-12 bg-white dark:bg-zinc-800 text-primary border-2 border-primary dark:text-white rounded-lg font-semibold transition-spring hover:shadow-md active:scale-95"
+                  className="w-full h-12 bg-bg-surface text-primary border-2 border-primary dark:text-fg rounded-soft font-semibold hover:bg-bg-hover"
                 >
                   Log In
                 </button>
               </div>
             ) : card.cta ? (
-              <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 animate-pulse">
+              <p className="text-xs sm:text-sm text-fg-muted">
                 {card.cta}
               </p>
             ) : null}
@@ -259,7 +141,7 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
               className={`rounded-full transition-all duration-300 ${
                 index === currentIndex
                   ? 'bg-primary w-8 h-2'
-                  : 'bg-zinc-300 dark:bg-zinc-600 w-2 h-2 hover:bg-zinc-400 dark:hover:bg-zinc-500'
+                  : 'bg-zinc-300 dark:bg-zinc-600 w-2 h-2 hover:bg-zinc-400 dark:hover:bg-bg-inset0'
               }`}
             />
           </button>

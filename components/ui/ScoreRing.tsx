@@ -100,7 +100,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
           fill="none"
           stroke="currentColor"
           strokeWidth={config.stroke}
-          className="text-zinc-200 dark:text-zinc-700"
+          className="text-zinc-200 dark:text-fg-muted"
         />
 
         {/* Gradient definition */}
@@ -157,7 +157,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
             {Math.round(normalizedScore)}
           </span>
           {size !== 'sm' && (
-            <span className={cn('text-zinc-500 dark:text-zinc-400 -mt-1', config.labelSize)}>
+            <span className={cn('text-fg-subtle dark:text-fg-subtle -mt-1', config.labelSize)}>
               / 100
             </span>
           )}
@@ -166,7 +166,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
 
       {/* Label */}
       {label && (
-        <span className={cn('mt-2 text-zinc-600 dark:text-zinc-400 font-medium', config.labelSize)}>
+        <span className={cn('mt-2 text-fg-muted dark:text-fg-subtle font-medium', config.labelSize)}>
           {label}
         </span>
       )}

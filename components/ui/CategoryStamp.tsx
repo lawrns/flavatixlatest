@@ -37,9 +37,9 @@ const CategoryStamp: React.FC<CategoryStampProps> = ({
       className={cn(
         'inline-flex items-center rounded-full border font-medium',
         sizeClasses[size].wrap,
-        pack?.tint.bg || 'bg-zinc-100',
-        pack?.tint.text || 'text-zinc-700',
-        pack?.tint.border || 'border-zinc-200',
+        pack?.tint.bg || 'bg-bg-inset',
+        pack?.tint.text || 'text-fg-muted',
+        pack?.tint.border || 'border-line',
         className
       )}
     >

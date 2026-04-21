@@ -92,8 +92,8 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           'relative flex items-center justify-center',
           sizes.iconSize,
           'rounded-2xl',
-          'bg-gradient-to-br from-primary/10 to-orange-100/50',
-          'dark:from-primary/20 dark:to-orange-900/20',
+          'bg-bg-inset',
+          'dark:bg-zinc-800',
           'border border-primary/10'
         )}>
           {iconElement ? (
@@ -124,7 +124,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       {/* Description */}
       {description && (
         <p className={cn(
-          'text-zinc-500 dark:text-zinc-400 max-w-xs mb-6',
+          'text-fg-subtle dark:text-fg-subtle max-w-xs mb-6',
           sizes.description
         )}>
           {description}
@@ -139,10 +139,10 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
               onClick={action.onClick}
               className={cn(
                 'px-6 py-2.5 rounded-xl font-semibold transition-[transform,box-shadow] duration-200',
-                'hover:-translate-y-0.5 active:scale-[0.98]',
+                ' active:scale-[0.98]',
                 action.variant === 'secondary'
-                  ? 'bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white hover:border-primary/50'
-                  : 'bg-gradient-to-r from-primary to-orange-500 text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30'
+                  ? 'bg-white dark:bg-zinc-800 border-2 border-line dark:border-zinc-700 text-zinc-900 dark:text-white hover:border-primary/50'
+                  : 'bg-primary text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30'
               )}
             >
               {action.label}
@@ -151,7 +151,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           {secondaryAction && (
             <button
               onClick={secondaryAction.onClick}
-              className="px-6 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-primary transition-colors"
+              className="px-6 py-2.5 text-sm font-medium text-fg-muted dark:text-zinc-300 hover:text-primary transition-colors"
             >
               {secondaryAction.label}
             </button>

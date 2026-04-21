@@ -509,13 +509,13 @@ export default function FlavorWheelsPage() {
       {/* Selectors + view mode toggle */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1.5">
+          <label className="block text-sm font-medium text-fg-muted dark:text-zinc-200 mb-1.5">
             Wheel Type
           </label>
           <select
             value={wheelType}
             onChange={(e) => setWheelType(e.target.value as WheelType)}
-            className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-soft bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-3 py-2 border border-line dark:border-zinc-600 rounded-soft bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option value="aroma">Aroma Wheel</option>
             <option value="flavor">Flavor Wheel</option>
@@ -524,13 +524,13 @@ export default function FlavorWheelsPage() {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1.5">
+          <label className="block text-sm font-medium text-fg-muted dark:text-zinc-200 mb-1.5">
             Scope
           </label>
           <select
             value={scopeType}
             onChange={(e) => setScopeType(e.target.value as ScopeType)}
-            className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-soft bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-3 py-2 border border-line dark:border-zinc-600 rounded-soft bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option value="personal">My Flavor Wheel</option>
             <option value="universal">Universal (All Users)</option>
@@ -540,14 +540,14 @@ export default function FlavorWheelsPage() {
 
       {/* View mode toggle */}
       <div className="flex items-center gap-3">
-        <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200">View:</span>
+        <span className="text-sm font-medium text-fg-muted dark:text-zinc-200">View:</span>
         <div className="inline-flex rounded-soft border border-gemini-border dark:border-zinc-700 bg-gemini-card dark:bg-zinc-800 p-1">
           <button
             onClick={() => setViewMode('wheel')}
             className={`flex items-center gap-2 px-4 py-1.5 rounded-soft text-sm font-medium transition-colors ${
               viewMode === 'wheel'
                 ? 'bg-primary text-white'
-                : 'text-fg-muted dark:text-zinc-400 hover:text-fg dark:hover:text-zinc-200'
+                : 'text-fg-muted dark:text-fg-subtle hover:text-fg dark:hover:text-zinc-200'
             }`}
           >
             <CircleDot className="w-4 h-4" />
@@ -558,7 +558,7 @@ export default function FlavorWheelsPage() {
             className={`flex items-center gap-2 px-4 py-1.5 rounded-soft text-sm font-medium transition-colors ${
               viewMode === 'list'
                 ? 'bg-primary text-white'
-                : 'text-fg-muted dark:text-zinc-400 hover:text-fg dark:hover:text-zinc-200'
+                : 'text-fg-muted dark:text-fg-subtle hover:text-fg dark:hover:text-zinc-200'
             }`}
   >
             <List className="w-4 h-4" />
@@ -630,10 +630,10 @@ export default function FlavorWheelsPage() {
           {user && loading && (
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mb-4"></div>
-              <p className="text-zinc-600 dark:text-zinc-300 text-lg">
+              <p className="text-fg-muted dark:text-zinc-300 text-lg">
                 {autoRegenerating ? 'Updating with new data…' : 'Generating your flavor wheel…'}
               </p>
-              <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-2">
+              <p className="text-fg-subtle dark:text-fg-subtle text-sm mt-2">
                 {autoRegenerating ? 'New tasting data detected' : 'This may take a moment'}
               </p>
             </div>
@@ -745,7 +745,7 @@ export default function FlavorWheelsPage() {
                   <div className="text-caption font-medium text-fg dark:text-zinc-100">
                     AI-Enhanced
                   </div>
-                  <div className="text-caption text-fg-muted dark:text-zinc-400">
+                  <div className="text-caption text-fg-muted dark:text-fg-subtle">
                     {wheelData.aiMetadata.aiExtractedCount} AI descriptors ({Math.round(wheelData.aiMetadata.percentageAI)}%)
                   </div>
                 </div>
@@ -763,7 +763,7 @@ export default function FlavorWheelsPage() {
                   <div className="text-2xl sm:text-3xl font-bold text-primary dark:text-primary-400">
                     {value}
                   </div>
-                  <div className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 mt-1">{label}</div>
+                  <div className="text-xs sm:text-sm text-fg-muted dark:text-zinc-300 mt-1">{label}</div>
                 </div>
               ))}
             </div>
@@ -780,10 +780,10 @@ export default function FlavorWheelsPage() {
                       className="w-3 h-3 rounded-full flex-shrink-0"
                       style={{ backgroundColor: getCategoryColor(idx) }}
                     />
-                    <span className="text-sm text-zinc-700 dark:text-zinc-200 truncate">
+                    <span className="text-sm text-fg-muted dark:text-zinc-200 truncate">
                       {category.name}
                     </span>
-                    <span className="text-xs text-zinc-400 dark:text-zinc-500 tabular-nums ml-auto">
+                    <span className="text-xs text-fg-subtle dark:text-fg-subtle tabular-nums ml-auto">
                       {category.count}
                     </span>
                   </div>
@@ -809,19 +809,19 @@ export default function FlavorWheelsPage() {
         ariaDescription="Details for the selected flavor wheel segment"
       >
         {!selectedSegment ? (
-          <p className="text-sm text-gemini-text-gray dark:text-zinc-400">
+          <p className="text-sm text-gemini-text-gray dark:text-fg-subtle">
             Select a segment to see details.
           </p>
         ) : (
           <div className="space-y-4">
             <div className="space-y-1">
-              <p className="text-xs font-medium text-gemini-text-muted dark:text-zinc-500">Category</p>
+              <p className="text-xs font-medium text-gemini-text-muted dark:text-fg-subtle">Category</p>
               <p className="text-sm font-semibold text-gemini-text-dark dark:text-zinc-100">
                 {selectedSegment.category}
               </p>
               {selectedSegment.subcategory && (
                 <>
-                  <p className="text-xs font-medium text-gemini-text-muted dark:text-zinc-500 mt-2">
+                  <p className="text-xs font-medium text-gemini-text-muted dark:text-fg-subtle mt-2">
                     Subcategory
                   </p>
                   <p className="text-sm font-semibold text-gemini-text-dark dark:text-zinc-100">
@@ -837,7 +837,7 @@ export default function FlavorWheelsPage() {
                   <p className="text-sm font-semibold text-gemini-text-dark dark:text-zinc-100">Mentions</p>
                   <p className="text-sm font-bold text-primary tabular-nums">{selectedDescriptor.count}</p>
                 </div>
-                <p className="text-xs text-gemini-text-gray dark:text-zinc-400 mt-1">
+                <p className="text-xs text-gemini-text-gray dark:text-fg-subtle mt-1">
                   Avg intensity: {selectedDescriptor.avgIntensity}
                 </p>
               </div>
@@ -845,7 +845,7 @@ export default function FlavorWheelsPage() {
 
             {selectedSubcategory ? (
               <div className="space-y-2">
-                <p className="text-xs font-medium text-gemini-text-muted dark:text-zinc-500">Top descriptors</p>
+                <p className="text-xs font-medium text-gemini-text-muted dark:text-fg-subtle">Top descriptors</p>
                 <div className="flex flex-wrap gap-2">
                   {selectedSubcategory.descriptors.slice(0, 12).map((d) => (
                     <FlavorPill
@@ -865,7 +865,7 @@ export default function FlavorWheelsPage() {
               </div>
             ) : selectedCategory ? (
               <div className="space-y-2">
-                <p className="text-xs font-medium text-gemini-text-muted dark:text-zinc-500">Subcategories</p>
+                <p className="text-xs font-medium text-gemini-text-muted dark:text-fg-subtle">Subcategories</p>
                 <div className="space-y-2">
                   {selectedCategory.subcategories.slice(0, 10).map((s) => (
                     <button
@@ -876,7 +876,7 @@ export default function FlavorWheelsPage() {
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium text-gemini-text-dark dark:text-zinc-100">{s.name}</span>
-                        <span className="text-xs font-semibold text-gemini-text-gray dark:text-zinc-400 tabular-nums">{s.count}</span>
+                        <span className="text-xs font-semibold text-gemini-text-gray dark:text-fg-subtle tabular-nums">{s.count}</span>
                       </div>
                     </button>
                   ))}
@@ -886,18 +886,18 @@ export default function FlavorWheelsPage() {
 
             {selectedSegment.descriptor ? (
               <div className="space-y-2">
-                <p className="text-xs font-medium text-gemini-text-muted dark:text-zinc-500">Contributing items</p>
+                <p className="text-xs font-medium text-gemini-text-muted dark:text-fg-subtle">Contributing items</p>
                 {sourcesLoading ? (
                   <div className="surface-inset p-4">
-                    <p className="text-sm text-gemini-text-gray dark:text-zinc-400">Loading…</p>
+                    <p className="text-sm text-gemini-text-gray dark:text-fg-subtle">Loading…</p>
                   </div>
                 ) : sourcesError ? (
                   <div className="surface-inset p-4">
-                    <p className="text-sm text-gemini-text-gray dark:text-zinc-400">{sourcesError}</p>
+                    <p className="text-sm text-gemini-text-gray dark:text-fg-subtle">{sourcesError}</p>
                   </div>
                 ) : sources.length === 0 ? (
                   <div className="surface-inset p-4">
-                    <p className="text-sm text-gemini-text-gray dark:text-zinc-400">No linked items found yet.</p>
+                    <p className="text-sm text-gemini-text-gray dark:text-fg-subtle">No linked items found yet.</p>
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -924,9 +924,9 @@ export default function FlavorWheelsPage() {
                           <div className="flex items-center justify-between gap-3">
                             <div className="min-w-0">
                               <p className="text-sm font-medium text-gemini-text-dark dark:text-zinc-100 truncate">{s.item_name || label}</p>
-                              <p className="text-xs text-gemini-text-gray dark:text-zinc-400 truncate">{label}</p>
+                              <p className="text-xs text-gemini-text-gray dark:text-fg-subtle truncate">{label}</p>
                             </div>
-                            <span className="text-xs text-gemini-text-muted dark:text-zinc-500 tabular-nums">
+                            <span className="text-xs text-gemini-text-muted dark:text-fg-subtle tabular-nums">
                               {new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                             </span>
                           </div>
@@ -938,7 +938,7 @@ export default function FlavorWheelsPage() {
               </div>
             ) : (
               <div className="surface-inset p-4">
-                <p className="text-sm text-gemini-text-gray dark:text-zinc-400">
+                <p className="text-sm text-gemini-text-gray dark:text-fg-subtle">
                   Select a specific descriptor to see which tastings or reviews contributed.
                 </p>
               </div>

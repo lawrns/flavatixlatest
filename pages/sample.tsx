@@ -7,8 +7,8 @@ export default function SamplePage() {
     <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
       <div className="flex min-h-screen flex-col">
         {/* Header */}
-        <header className="flex items-center border-b border-zinc-200 dark:border-zinc-700 p-4">
-          <button className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-100:bg-zinc-800">
+        <header className="flex items-center border-b border-line dark:border-zinc-700 p-4">
+          <button className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-bg-inset:bg-zinc-800">
             <span className="material-symbols-outlined">arrow_back</span>
           </button>
           <h1 className="flex-1 text-center text-xl font-bold">Design System Sample</h1>
@@ -33,7 +33,7 @@ export default function SamplePage() {
                 </div>
               </div>
               <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50 mb-2">Flavatix México</h1>
-              <p className="text-zinc-600 dark:text-zinc-300">Taste, analyze, and share your reviews of México&apos;s finest beverages.</p>
+              <p className="text-fg-muted dark:text-zinc-300">Taste, analyze, and share your reviews of México&apos;s finest beverages.</p>
             </section>
 
             {/* Buttons Section */}
@@ -77,7 +77,7 @@ export default function SamplePage() {
                       { label: 'Woody', value: 50 }
                     ].map((item, index) => (
                       <div key={index} className="flex items-center">
-                        <span className="w-16 text-sm font-medium text-zinc-700 dark:text-zinc-200">{item.label}</span>
+                        <span className="w-16 text-sm font-medium text-fg-muted dark:text-zinc-200">{item.label}</span>
                         <div className="flex-1 h-2 rounded-full bg-zinc-200">
                           <div className="bg-primary h-2 rounded-full" style={{width: `${item.value}%`}}></div>
                         </div>
@@ -89,7 +89,7 @@ export default function SamplePage() {
                 <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg">
                   <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-2">Community Average</h3>
                   <div className="flex items-baseline gap-2 mb-4">
-                    <p className="text-4xl font-bold text-zinc-700 dark:text-zinc-200">75%</p>
+                    <p className="text-4xl font-bold text-fg-muted dark:text-zinc-200">75%</p>
                     <span className="text-red-500 font-medium">-5% vs You</span>
                   </div>
                   <div className="space-y-3">
@@ -101,7 +101,7 @@ export default function SamplePage() {
                       { label: 'Woody', value: 10 }
                     ].map((item, index) => (
                       <div key={index} className="flex items-center">
-                        <span className="w-16 text-sm font-medium text-zinc-700 dark:text-zinc-200">{item.label}</span>
+                        <span className="w-16 text-sm font-medium text-fg-muted dark:text-zinc-200">{item.label}</span>
                         <div className="flex-1 h-2 rounded-full bg-zinc-200">
                           <div className="bg-primary/50 h-2 rounded-full" style={{width: `${item.value}%`}}></div>
                         </div>
@@ -117,43 +117,43 @@ export default function SamplePage() {
               <h2 className="text-2xl font-bold mb-4">Form Elements</h2>
               <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
+                  <label className="block text-sm font-medium text-fg-muted dark:text-zinc-200 mb-1">
                     Full Name
                   </label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50"
+                    className="w-full px-3 py-2 border border-line dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50"
                     placeholder="Enter your full name"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
+                  <label className="block text-sm font-medium text-fg-muted dark:text-zinc-200 mb-1">
                     Email
                   </label>
                   <input
                     type="email"
-                    className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50"
+                    className="w-full px-3 py-2 border border-line dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50"
                     placeholder="Enter your email"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
+                  <label className="block text-sm font-medium text-fg-muted dark:text-zinc-200 mb-1">
                     Password
                   </label>
                   <input
                     type="password"
-                    className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50"
+                    className="w-full px-3 py-2 border border-line dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50"
                     placeholder="Enter your password"
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200">Notifications</span>
+                  <span className="text-sm font-medium text-fg-muted dark:text-zinc-200">Notifications</span>
                   <label className="relative inline-flex cursor-pointer items-center">
                     <input className="peer sr-only" type="checkbox" defaultChecked />
-                    <div className="peer h-6 w-11 rounded-full bg-zinc-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-zinc-300 dark:border-zinc-600 after:bg-white dark:bg-zinc-800 after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white"></div>
+                    <div className="peer h-6 w-11 rounded-full bg-zinc-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-line dark:border-zinc-600 after:bg-white dark:bg-zinc-800 after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white"></div>
                   </label>
                 </div>
               </div>
@@ -178,25 +178,25 @@ export default function SamplePage() {
                   </div>
                   <div className="text-center">
                     <p className="text-2xl font-bold">Alejandro</p>
-                    <p className="text-zinc-500 dark:text-zinc-300">@alejandro_mx</p>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-300">Joined 2021</p>
+                    <p className="text-fg-subtle dark:text-zinc-300">@alejandro_mx</p>
+                    <p className="text-sm text-fg-subtle dark:text-zinc-300">Joined 2021</p>
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <h3 className="mb-2 px-2 text-lg font-bold">Personal Information</h3>
-                  <div className="divide-y divide-zinc-200 rounded-lg bg-zinc-50">
+                  <div className="divide-y divide-zinc-200 rounded-lg bg-bg-inset">
                     {[
                       { label: 'Name', value: 'Alejandro' },
                       { label: 'Nationality', value: 'Mexico' },
                       { label: 'Tasting Experience', value: 'Intermediate' }
                     ].map((item, index) => (
-                      <div key={index} className="flex items-center justify-between p-4 transition-colors hover:bg-zinc-100:bg-zinc-700">
+                      <div key={index} className="flex items-center justify-between p-4 transition-colors hover:bg-bg-inset:bg-zinc-700">
                         <div>
                           <p className="font-medium">{item.label}</p>
-                          <p className="text-sm text-zinc-500 dark:text-zinc-300">{item.value}</p>
+                          <p className="text-sm text-fg-subtle dark:text-zinc-300">{item.value}</p>
                         </div>
-                        <span className="material-symbols-outlined text-zinc-400">chevron_right</span>
+                        <span className="material-symbols-outlined text-fg-subtle">chevron_right</span>
                       </div>
                     ))}
                   </div>
@@ -210,11 +210,11 @@ export default function SamplePage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg text-center">
                   <div className="text-3xl font-bold text-primary">24</div>
-                  <div className="text-sm text-zinc-600 dark:text-zinc-300">Total Tastings</div>
+                  <div className="text-sm text-fg-muted dark:text-zinc-300">Total Tastings</div>
                 </div>
                 <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg text-center">
                   <div className="text-3xl font-bold text-primary">4.2</div>
-                  <div className="text-sm text-zinc-600 dark:text-zinc-300">Average Score</div>
+                  <div className="text-sm text-fg-muted dark:text-zinc-300">Average Score</div>
                 </div>
               </div>
             </section>
@@ -225,19 +225,19 @@ export default function SamplePage() {
               <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg space-y-4">
                 <div>
                   <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-50">Heading 1</h1>
-                  <p className="text-zinc-600 dark:text-zinc-300">Large display text for main headings</p>
+                  <p className="text-fg-muted dark:text-zinc-300">Large display text for main headings</p>
                 </div>
                 <div>
                   <h2 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">Heading 2</h2>
-                  <p className="text-zinc-600 dark:text-zinc-300">Section headings</p>
+                  <p className="text-fg-muted dark:text-zinc-300">Section headings</p>
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Heading 3</h3>
-                  <p className="text-zinc-600 dark:text-zinc-300">Card titles and subsections</p>
+                  <p className="text-fg-muted dark:text-zinc-300">Card titles and subsections</p>
                 </div>
                 <div>
                   <p className="text-base text-zinc-900 dark:text-zinc-50">Body text - Regular paragraph content</p>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-300">Small text - Secondary information</p>
+                  <p className="text-sm text-fg-muted dark:text-zinc-300">Small text - Secondary information</p>
                 </div>
               </div>
             </section>
@@ -245,21 +245,21 @@ export default function SamplePage() {
         </main>
 
         {/* Bottom Navigation */}
-        <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark">
+        <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-line dark:border-zinc-700 bg-background-light dark:bg-background-dark">
           <nav className="flex justify-around p-2">
             <Link className="flex flex-col items-center gap-1 p-2 text-primary" href="/dashboard">
               <span className="material-symbols-outlined">home</span>
               <span className="text-xs font-bold">Home</span>
             </Link>
-            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/taste">
+            <Link className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-zinc-300" href="/taste">
               <span className="material-symbols-outlined">restaurant</span>
               <span className="text-xs font-medium">Taste</span>
             </Link>
-            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/review">
+            <Link className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-zinc-300" href="/review">
               <span className="material-symbols-outlined">reviews</span>
               <span className="text-xs font-medium">Review</span>
             </Link>
-            <Link className="flex flex-col items-center gap-1 p-2 text-zinc-500 dark:text-zinc-300" href="/flavor-wheels">
+            <Link className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-zinc-300" href="/flavor-wheels">
               <span className="material-symbols-outlined">donut_small</span>
               <span className="text-xs font-medium">Wheels</span>
             </Link>

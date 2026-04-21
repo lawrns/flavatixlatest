@@ -599,7 +599,7 @@ const NewCompetitionPage: React.FC = () => {
                     </div>
                   )}
 
-                  <div className="pt-4 border-t border-zinc-200 dark:border-zinc-700">
+                  <div className="pt-4 border-t border-line dark:border-zinc-700">
                     <label className="flex items-center gap-3">
                       <input
                         type="checkbox"
@@ -637,7 +637,7 @@ const NewCompetitionPage: React.FC = () => {
               </CardHeader>
               <CardContent>
                 {form.parameterTemplates.length === 0 ? (
-                  <div className="text-center py-8 border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-lg">
+                  <div className="text-center py-8 border-2 border-dashed border-line dark:border-zinc-700 rounded-lg">
                     <p className="text-text-secondary mb-4">
                       No parameters yet. Add parameters that participants will evaluate.
                     </p>
@@ -701,7 +701,7 @@ const NewCompetitionPage: React.FC = () => {
               </CardHeader>
               <CardContent>
                 {form.items.length === 0 ? (
-                  <div className="text-center py-8 border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-lg">
+                  <div className="text-center py-8 border-2 border-dashed border-line dark:border-zinc-700 rounded-lg">
                     <p className="text-text-secondary mb-4">
                       No items yet. Add items for participants to evaluate.
                     </p>

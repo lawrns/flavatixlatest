@@ -23,13 +23,13 @@ export const SocialFeedFilters: React.FC<SocialFeedFiltersProps> = ({
   return (
     <>
       {/* Tabs */}
-      <div className="flex border-b border-zinc-200 dark:border-zinc-700">
+      <div className="flex border-b border-line dark:border-zinc-700">
         <button
           onClick={() => onTabChange('all')}
           className={`flex-1 py-3 text-sm font-medium transition-colors ${
             activeTab === 'all'
               ? 'text-primary border-b-2 border-primary'
-              : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-200'
+              : 'text-fg-subtle hover:text-fg-muted dark:text-zinc-200'
           }`}
         >
           For You
@@ -39,7 +39,7 @@ export const SocialFeedFilters: React.FC<SocialFeedFiltersProps> = ({
           className={`flex-1 py-3 text-sm font-medium transition-colors ${
             activeTab === 'following'
               ? 'text-primary border-b-2 border-primary'
-              : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-200'
+              : 'text-fg-subtle hover:text-fg-muted dark:text-zinc-200'
           }`}
         >
           Following
@@ -56,7 +56,7 @@ export const SocialFeedFilters: React.FC<SocialFeedFiltersProps> = ({
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors capitalize min-h-[36px] ${
                 categoryFilter === cat
                   ? 'bg-primary text-white'
-                  : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700'
+                  : 'bg-bg-inset dark:bg-zinc-800 text-fg-muted dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700'
               }`}
             >
               {cat}

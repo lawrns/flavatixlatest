@@ -332,7 +332,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
             <div className="min-w-0 flex-1">
               {/* Item # Label */}
               {!isBlindItems && itemIndex && (
-                <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                <div className="text-xs font-medium text-fg-subtle dark:text-fg-subtle mb-1">
                   Item #{itemIndex}
                 </div>
               )}
@@ -352,7 +352,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                       }
                     }}
                     placeholder="<enter name>"
-                    className="text-lg tablet:text-h4 font-heading font-semibold text-text-primary bg-transparent border-b border-primary-500 focus:outline-none flex-1 placeholder:text-zinc-400 placeholder:italic"
+                    className="text-lg tablet:text-h4 font-heading font-semibold text-text-primary bg-transparent border-b border-primary-500 focus:outline-none flex-1 placeholder:text-fg-subtle placeholder:italic"
                     autoFocus
                   />
                 </div>
@@ -466,7 +466,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                           })
                         }
                         placeholder={`Enter ${category.name.toLowerCase()} notes...`}
-                        className="w-full h-20 px-3 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all resize-none placeholder:text-zinc-400 mb-3"
+                        className="w-full h-20 px-3 py-2 bg-white dark:bg-zinc-800 border border-line dark:border-zinc-700 rounded-lg text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all resize-none placeholder:text-fg-subtle mb-3"
                       />
                     )}
 
@@ -549,7 +549,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
               <>
                 {/* Default Aroma Section */}
                 <div className="mb-5">
-                  <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-fg-muted dark:text-zinc-200 mb-2">
                     <Flower2 size={20} className="text-primary" />
                     Aroma
                   </label>
@@ -557,13 +557,13 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                     value={localAroma}
                     onChange={(e) => handleAromaChange(e.target.value)}
                     placeholder={`Describe the aroma...`}
-                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
+                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-line dark:border-zinc-700 rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-fg-subtle"
                   />
                 </div>
 
                 {/* Default Flavor Section */}
                 <div className="mb-5">
-                  <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-fg-muted dark:text-zinc-200 mb-2">
                     <Droplet size={20} className="text-primary" />
                     Flavor
                   </label>
@@ -571,13 +571,13 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                     value={localFlavor}
                     onChange={(e) => handleFlavorChange(e.target.value)}
                     placeholder={`Describe the flavor, taste, and mouthfeel...`}
-                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
+                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-line dark:border-zinc-700 rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-fg-subtle"
                   />
                 </div>
 
                 {/* Other Notes Section */}
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-200 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-fg-muted dark:text-zinc-200 mb-2">
                     <FileText size={20} className="text-primary" />
                     Other Notes
                   </label>
@@ -585,7 +585,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                     value={localNotes}
                     onChange={(e) => handleNotesChange(e.target.value)}
                     placeholder={`Additional notes...`}
-                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
+                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-line dark:border-zinc-700 rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-fg-subtle"
                   />
                 </div>
               </>
@@ -595,7 +595,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
             {showOverallScore && (
               <div className="mb-6 py-5 px-4 bg-gemini-card dark:bg-zinc-800/60 rounded-pane border border-gemini-border dark:border-zinc-700">
                 <div className="text-center">
-                  <div className="inline-flex items-center gap-2 text-xs font-semibold text-gemini-text-gray dark:text-zinc-400 mb-3 tracking-widest uppercase">
+                  <div className="inline-flex items-center gap-2 text-xs font-semibold text-gemini-text-gray dark:text-fg-subtle mb-3 tracking-widest uppercase">
                     <Star size={12} className="fill-current" />
                     Overall Score
                   </div>
@@ -606,7 +606,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                         {localScore}
                       </div>
                       {scoreTouched && (
-                        <div className="mt-1 text-xs font-medium text-gemini-text-muted dark:text-zinc-500">
+                        <div className="mt-1 text-xs font-medium text-gemini-text-muted dark:text-fg-subtle">
                           {getScoreLabel(localScore)}
                         </div>
                       )}
@@ -630,7 +630,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                           #E6E6E6 100%)`,
                         }}
                       />
-                      <div className="flex justify-between mt-1 text-xs text-gemini-text-muted dark:text-zinc-500">
+                      <div className="flex justify-between mt-1 text-xs text-gemini-text-muted dark:text-fg-subtle">
                         <span>0</span>
                         <span>50</span>
                         <span>100</span>

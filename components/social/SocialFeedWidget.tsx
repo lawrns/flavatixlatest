@@ -321,7 +321,7 @@ const SocialFeedWidget = React.memo(
                     <div className="pb-3">
                       <div
                         onClick={() => router.push('/social')}
-                        className="bg-zinc-50 dark:bg-zinc-700 p-3 rounded-lg cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors"
+                        className="bg-bg-inset dark:bg-zinc-700 p-3 rounded-lg cursor-pointer hover:bg-bg-inset dark:hover:bg-zinc-600 transition-colors"
                       >
                         <div className="flex items-start gap-2 mb-2">
                           {/* Avatar */}
@@ -348,11 +348,11 @@ const SocialFeedWidget = React.memo(
                               <span className="font-medium text-zinc-900 dark:text-zinc-50 text-sm truncate">
                                 {post.user.full_name || post.user.username || 'Anonymous'}
                               </span>
-                              <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                              <span className="text-xs text-fg-subtle dark:text-fg-subtle">
                                 {new Date(post.created_at).toLocaleDateString()}
                               </span>
                             </div>
-                            <p className="text-sm text-zinc-600 dark:text-zinc-200 truncate">
+                            <p className="text-sm text-fg-muted dark:text-zinc-200 truncate">
                               {post.session_name || `${post.category} tasting`} • {post.total_items} items
                               {post.average_score && (
                                 <>
@@ -380,7 +380,7 @@ const SocialFeedWidget = React.memo(
                         </div>
 
                         {/* Stats */}
-                        <div className="flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400 ml-10">
+                        <div className="flex items-center gap-4 text-xs text-fg-subtle dark:text-fg-subtle ml-10">
                           <button
                             onClick={(e) => handleLike(post.id, e)}
                             className={`flex items-center gap-1 touch-manipulation min-h-[44px] min-w-[44px] justify-center ${post.isLiked ? 'text-red-500' : 'hover:text-red-500'} transition-colors`}

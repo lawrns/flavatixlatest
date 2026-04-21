@@ -120,7 +120,7 @@ const MyReviewsPage: React.FC = () => {
         <div className="flex items-center justify-center py-12">
           <div className="flex flex-col items-center">
             <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-            <div className="text-zinc-600 dark:text-zinc-400 font-medium">Loading reviews...</div>
+            <div className="text-fg-muted dark:text-fg-subtle font-medium">Loading reviews...</div>
           </div>
         </div>
       </PageLayout>
@@ -136,17 +136,17 @@ const MyReviewsPage: React.FC = () => {
       {/* Reviews Section */}
       <div className="space-y-6">
         {/* Completed Reviews */}
-        <div className="bg-white dark:bg-zinc-800/50 rounded-pane border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
+        <div className="bg-white dark:bg-zinc-800 rounded-pane border border-line dark:border-zinc-700 p-4 sm:p-6">
           <div className="flex items-center mb-4">
             <FileText size={24} className="text-primary mr-2" />
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Reviews</h2>
-            <span className="ml-auto text-sm text-zinc-500 dark:text-zinc-400">
+            <span className="ml-auto text-sm text-fg-subtle dark:text-fg-subtle">
               {completedReviews.length} {completedReviews.length === 1 ? 'review' : 'reviews'}
             </span>
           </div>
 
           {completedReviews.length === 0 ? (
-            <p className="text-zinc-500 dark:text-zinc-400 text-center py-8">
+            <p className="text-fg-subtle dark:text-fg-subtle text-center py-8">
               No completed reviews yet
             </p>
           ) : (
@@ -155,17 +155,17 @@ const MyReviewsPage: React.FC = () => {
                 <button
                   key={review.id}
                   onClick={() => router.push(`/review/summary/${review.id}`)}
-                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-soft transition-colors border border-zinc-200 dark:border-zinc-700"
+                  className="w-full text-left p-4 bg-bg-inset dark:bg-zinc-800 hover:bg-bg-inset dark:hover:bg-zinc-700 rounded-soft transition-colors border border-line dark:border-zinc-700"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-zinc-900 dark:text-white mb-1 truncate">
                         {review.review_id || review.item_name}
                       </div>
-                      <div className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
+                      <div className="text-sm text-fg-subtle dark:text-fg-subtle truncate">
                         {review.item_name} • {review.category}
                       </div>
-                      <div className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+                      <div className="text-xs text-fg-subtle dark:text-fg-subtle mt-1">
                         {formatDate(review.created_at)}
                       </div>
                     </div>
@@ -178,18 +178,18 @@ const MyReviewsPage: React.FC = () => {
         </div>
 
         {/* Prose Reviews */}
-        <div className="bg-white dark:bg-zinc-800/50 rounded-pane border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
+        <div className="bg-white dark:bg-zinc-800 rounded-pane border border-line dark:border-zinc-700 p-4 sm:p-6">
           <div className="flex items-center mb-4">
             <PenTool size={24} className="text-primary mr-2" />
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Prose Reviews</h2>
-            <span className="ml-auto text-sm text-zinc-500 dark:text-zinc-400">
+            <span className="ml-auto text-sm text-fg-subtle dark:text-fg-subtle">
               {completedProseReviews.length}{' '}
               {completedProseReviews.length === 1 ? 'review' : 'reviews'}
             </span>
           </div>
 
           {completedProseReviews.length === 0 ? (
-            <p className="text-zinc-500 dark:text-zinc-400 text-center py-8">
+            <p className="text-fg-subtle dark:text-fg-subtle text-center py-8">
               No completed prose reviews yet
             </p>
           ) : (
@@ -198,17 +198,17 @@ const MyReviewsPage: React.FC = () => {
                 <button
                   key={review.id}
                   onClick={() => router.push(`/review/summary/${review.id}?type=prose`)}
-                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-soft transition-colors border border-zinc-200 dark:border-zinc-700"
+                  className="w-full text-left p-4 bg-bg-inset dark:bg-zinc-800 hover:bg-bg-inset dark:hover:bg-zinc-700 rounded-soft transition-colors border border-line dark:border-zinc-700"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-zinc-900 dark:text-white mb-1 truncate">
                         {review.review_id || review.item_name}
                       </div>
-                      <div className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
+                      <div className="text-sm text-fg-subtle dark:text-fg-subtle truncate">
                         {review.item_name} • {review.category}
                       </div>
-                      <div className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+                      <div className="text-xs text-fg-subtle dark:text-fg-subtle mt-1">
                         {formatDate(review.created_at)}
                       </div>
                     </div>
@@ -221,13 +221,13 @@ const MyReviewsPage: React.FC = () => {
         </div>
 
         {/* Reviews in Progress */}
-        <div className="bg-white dark:bg-zinc-800/50 rounded-pane border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
+        <div className="bg-white dark:bg-zinc-800 rounded-pane border border-line dark:border-zinc-700 p-4 sm:p-6">
           <div className="flex items-center mb-4">
             <Clock size={24} className="text-primary mr-2" />
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
               Reviews in Progress
             </h2>
-            <span className="ml-auto text-sm text-zinc-500 dark:text-zinc-400">
+            <span className="ml-auto text-sm text-fg-subtle dark:text-fg-subtle">
               {inProgressReviews.length + inProgressProseReviews.length}{' '}
               {inProgressReviews.length + inProgressProseReviews.length === 1
                 ? 'review'
@@ -236,7 +236,7 @@ const MyReviewsPage: React.FC = () => {
           </div>
 
           {inProgressReviews.length === 0 && inProgressProseReviews.length === 0 ? (
-            <p className="text-zinc-500 dark:text-zinc-400 text-center py-8">
+            <p className="text-fg-subtle dark:text-fg-subtle text-center py-8">
               No reviews in progress
             </p>
           ) : (
@@ -245,17 +245,17 @@ const MyReviewsPage: React.FC = () => {
                 <button
                   key={review.id}
                   onClick={() => router.push(`/review/structured?id=${review.id}`)}
-                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-soft transition-colors border border-zinc-200 dark:border-zinc-700"
+                  className="w-full text-left p-4 bg-bg-inset dark:bg-zinc-800 hover:bg-bg-inset dark:hover:bg-zinc-700 rounded-soft transition-colors border border-line dark:border-zinc-700"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-zinc-900 dark:text-white mb-1 truncate">
                         {review.review_id || review.item_name}
                       </div>
-                      <div className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
+                      <div className="text-sm text-fg-subtle dark:text-fg-subtle truncate">
                         {review.item_name} • {review.category} • Review
                       </div>
-                      <div className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+                      <div className="text-xs text-fg-subtle dark:text-fg-subtle mt-1">
                         Last updated: {formatDate(review.updated_at)}
                       </div>
                     </div>
@@ -267,17 +267,17 @@ const MyReviewsPage: React.FC = () => {
                 <button
                   key={review.id}
                   onClick={() => router.push(`/review/prose?id=${review.id}`)}
-                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-soft transition-colors border border-zinc-200 dark:border-zinc-700"
+                  className="w-full text-left p-4 bg-bg-inset dark:bg-zinc-800 hover:bg-bg-inset dark:hover:bg-zinc-700 rounded-soft transition-colors border border-line dark:border-zinc-700"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-zinc-900 dark:text-white mb-1 truncate">
                         {review.review_id || review.item_name}
                       </div>
-                      <div className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
+                      <div className="text-sm text-fg-subtle dark:text-fg-subtle truncate">
                         {review.item_name} • {review.category} • Prose Review
                       </div>
-                      <div className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+                      <div className="text-xs text-fg-subtle dark:text-fg-subtle mt-1">
                         Last updated: {formatDate(review.updated_at)}
                       </div>
                     </div>

@@ -388,7 +388,7 @@ export default function CommentsModal({
 
         {/* Comment Content */}
         <div className="flex-1 min-w-0">
-          <div className="bg-zinc-50 dark:bg-zinc-700 rounded-2xl px-4 py-2">
+          <div className="bg-bg-inset dark:bg-zinc-700 rounded-2xl px-4 py-2">
             <p className="font-semibold text-sm text-zinc-900 dark:text-zinc-50">
               {comment.user.full_name || 'Anonymous'}
             </p>
@@ -398,7 +398,7 @@ export default function CommentsModal({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-4 mt-1 px-4 text-xs text-zinc-500">
+          <div className="flex items-center gap-4 mt-1 px-4 text-xs text-fg-subtle">
             <span>{formatTimeAgo(comment.created_at)}</span>
             <button
               onClick={() => handleLikeComment(comment.id)}
@@ -446,7 +446,7 @@ export default function CommentsModal({
         style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-700">
+        <div className="flex items-center justify-between p-4 border-b border-line dark:border-zinc-700">
           <h2 id="comments-modal-title" className="text-lg font-bold">
             Comments ({comments.length})
           </h2>
@@ -454,7 +454,7 @@ export default function CommentsModal({
             ref={closeButtonRef}
             onClick={onClose}
             aria-label="Close comments"
-            className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-bg-inset dark:hover:bg-zinc-700 transition-colors"
           >
             <span className="material-symbols-outlined">close</span>
           </button>
@@ -467,7 +467,7 @@ export default function CommentsModal({
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
             </div>
           ) : comments.length === 0 ? (
-            <div className="text-center py-8 text-zinc-500">
+            <div className="text-center py-8 text-fg-subtle">
               <p>No comments yet. Be the first to comment!</p>
             </div>
           ) : (
@@ -477,11 +477,11 @@ export default function CommentsModal({
 
         {/* Input */}
         <div
-          className="border-t border-zinc-200 dark:border-zinc-700 p-4 pb-safe"
+          className="border-t border-line dark:border-zinc-700 p-4 pb-safe"
           style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
         >
           {replyingTo && (
-            <div className="flex items-center gap-2 mb-2 text-sm text-zinc-600 dark:text-zinc-300 dark:text-zinc-300">
+            <div className="flex items-center gap-2 mb-2 text-sm text-fg-muted dark:text-zinc-300 dark:text-zinc-300">
               <span>Replying to comment</span>
               <button onClick={() => setReplyingTo(null)} className="text-primary font-semibold">
                 Cancel
@@ -495,7 +495,7 @@ export default function CommentsModal({
               onChange={(e) => setCommentText(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmitComment()}
               placeholder="Add a comment..."
-              className="flex-1 px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-full bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 placeholder-zinc-500 dark:placeholder-zinc-400 focus:outline-none focus:border-primary text-base"
+              className="flex-1 px-4 py-2 border border-line dark:border-zinc-600 rounded-full bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 placeholder-zinc-500 dark:placeholder-zinc-400 focus:outline-none focus:border-primary text-base"
               disabled={submitting}
             />
             <button

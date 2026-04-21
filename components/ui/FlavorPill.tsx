@@ -25,7 +25,7 @@ const FLAVOR_COLORS: Record<string, { bg: string; text: string; border: string }
   sour: { bg: 'bg-yellow-100', text: 'text-yellow-700', border: 'border-yellow-200' },
   oak: { bg: 'bg-amber-100', text: 'text-amber-800', border: 'border-amber-300' },
   // Default fallback
-  default: { bg: 'bg-zinc-100', text: 'text-zinc-700', border: 'border-zinc-200' },
+  default: { bg: 'bg-bg-inset', text: 'text-fg-muted', border: 'border-line' },
 };
 
 interface FlavorPillProps {

@@ -219,7 +219,7 @@ const AuthSection = () => {
 
   if (showOnboarding === null) {
     return (
-      <div className="font-display text-zinc-900 dark:text-zinc-50 fixed inset-0 flex items-center justify-center overflow-hidden bg-white dark:bg-zinc-900">
+      <div className="font-display text-fg fixed inset-0 flex items-center justify-center overflow-hidden bg-bg">
         <LoadingSpinner text="Preparing your experience..." />
       </div>
     );
@@ -228,7 +228,7 @@ const AuthSection = () => {
   // Show onboarding carousel first, then form
   if (showOnboarding) {
     return (
-      <div className="font-display text-zinc-900 dark:text-zinc-50 fixed inset-0 overflow-hidden">
+      <div className="font-display text-fg fixed inset-0 overflow-hidden">
         <Head>
           <meta
             name="viewport"
@@ -241,33 +241,18 @@ const AuthSection = () => {
   }
 
   return (
-    <div className="font-display text-zinc-900 dark:text-zinc-50">
+    <div className="font-display text-fg">
       <Head>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
         />
       </Head>
-      {/* Premium Gradient Background - Same as homepage */}
-      <div
-        className="fixed inset-0 -z-10"
-        style={{
-          background: 'radial-gradient(90% 120% at 0% 0%, #FDF4E6 0%, #F7E9D6 60%, #F4E3CC 100%)',
-        }}
-      >
-        {/* Subtle rust red glow accent */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(circle at 80% 20%, rgba(198, 60, 34, 0.08), transparent 60%)',
-          }}
-        />
-      </div>
+      <div className="fixed inset-0 -z-10 bg-bg" />
 
       <div className="flex min-h-screen flex-col items-center justify-center py-8 sm:py-12">
-        {/* Centered Premium Card */}
-        <Container size="md" className="rounded-2xl bg-white/95 dark:bg-zinc-900/95 shadow-lg dark:shadow-2xl backdrop-blur-sm border border-white/20 dark:border-zinc-700/30 p-8 sm:p-12">
+        {/* Centered Card */}
+        <Container size="md" className="surface-page p-8 sm:p-12">
           {/* Logo */}
           <div className="mb-8 text-center">
             <Image
@@ -281,14 +266,14 @@ const AuthSection = () => {
 
           {/* Heading */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">
+            <h1 className="text-3xl font-bold text-fg tracking-tight">
               {showEmailForm
                 ? mode === 'login'
                   ? 'Welcome Back'
                   : 'Create Account'
                 : 'Get Started'}
             </h1>
-            <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="mt-2 text-sm text-fg-muted">
               {showEmailForm && mode === 'login'
                 ? 'Sign in to continue your tasting journey.'
                 : showEmailForm && mode === 'register'
@@ -303,7 +288,7 @@ const AuthSection = () => {
               <>
                 <button
                   onClick={() => setShowEmailForm(true)}
-                  className="flex w-full items-center justify-center gap-3 rounded-lg bg-primary px-4 py-3 text-white font-bold transition-spring hover:bg-primary/90 active:scale-95"
+                  className="flex w-full items-center justify-center gap-3 rounded-soft bg-primary px-4 py-3 text-white font-bold transition-colors duration-150 hover:bg-primary/90"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                     <path
@@ -316,14 +301,14 @@ const AuthSection = () => {
                   <span>Continue with Email</span>
                 </button>
                 <div className="flex items-center gap-3">
-                  <hr className="flex-1 border-zinc-200 dark:border-zinc-700" />
-                  <span className="text-xs text-zinc-500 dark:text-zinc-400">or</span>
-                  <hr className="flex-1 border-zinc-200 dark:border-zinc-700" />
+                  <hr className="flex-1 border-line" />
+                  <span className="text-xs text-fg-muted">or</span>
+                  <hr className="flex-1 border-line" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => handleSocialAuth('google')}
-                    className="flex items-center justify-center gap-2 rounded-lg bg-white dark:bg-zinc-800 px-3 py-2.5 font-medium text-zinc-900 dark:text-zinc-50 ring-1 ring-zinc-200 dark:ring-zinc-700 transition-spring hover:-translate-y-0.5 hover:shadow-md active:scale-95"
+                    className="flex items-center justify-center gap-2 rounded-soft bg-bg-surface dark:bg-zinc-800 px-3 py-2.5 font-medium text-fg ring-1 ring-line transition-colors duration-150 hover:bg-bg-hover"
                   >
                     <svg
                       className="h-4 w-4"
@@ -340,7 +325,7 @@ const AuthSection = () => {
                   </button>
                   <button
                     onClick={() => handleSocialAuth('apple')}
-                    className="flex items-center justify-center gap-2 rounded-lg bg-white dark:bg-zinc-800 px-3 py-2.5 font-medium text-zinc-900 dark:text-zinc-50 ring-1 ring-zinc-200 dark:ring-zinc-700 transition-spring hover:-translate-y-0.5 hover:shadow-md active:scale-95"
+                    className="flex items-center justify-center gap-2 rounded-soft bg-bg-surface dark:bg-zinc-800 px-3 py-2.5 font-medium text-fg ring-1 ring-line transition-colors duration-150 hover:bg-bg-hover"
                   >
                     <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M10 2.5a5.556 5.556 0 0 0-2.327.498 5.485 5.485 0 0 0-1.879 1.344c-1.332 1.306-1.579 3.32-1.579 5.158 0 1.838.247 3.852 1.579 5.158a5.485 5.485 0 0 0 1.879 1.344A5.556 5.556 0 0 0 10 17.5a5.717 5.717 0 0 0 2.215-.47c.563-.223.94-.486 1.393-1.07.453-.585.62-1.32.62-2.189 0-1.637-1.127-2.32-2.33-2.32h-1.488v-2.134h3.76c.118-.002.217-.058.217-.176 0-1.423-.97-2.733-2.5-3.138A5.54 5.54 0 0 0 10 2.5Zm-1.116 1.435a3.111 3.111 0 0 1 2.332 0c.93.308 1.421 1.116 1.421 2.015 0 .9-.508 1.708-1.42 2.015a3.111 3.111 0 0 1-2.332 0c-.913-.307-1.421-1.116-1.421-2.015 0-.9.508-1.708 1.42-2.015Z" />
@@ -353,7 +338,7 @@ const AuthSection = () => {
               <form onSubmit={handleEmailAuth} className="space-y-4">
                 {mode === 'register' && (
                   <div>
-                    <label htmlFor="auth-full-name" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+                    <label htmlFor="auth-full-name" className="block text-sm font-medium text-fg-muted mb-2">
                       Full Name
                     </label>
                     <input
@@ -362,14 +347,14 @@ const AuthSection = () => {
                       autoComplete="name"
                       value={formData.full_name || ''}
                       onChange={(e) => handleInputChange('full_name', e.target.value)}
-                      className="w-full px-4 py-2.5 border-2 border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 placeholder-zinc-500 dark:placeholder-zinc-400 transition-spring focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
+                      className="w-full px-4 py-2.5 border border-line rounded-soft bg-bg-surface dark:bg-zinc-800 text-fg placeholder-fg-muted transition-colors duration-150 focus:border-accent focus:shadow-[0_0_0_3px_var(--accent-weak)] focus:outline-none"
                       placeholder="Enter your full name"
                       required
                     />
                   </div>
                 )}
                 <div>
-                  <label htmlFor="auth-email" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+                  <label htmlFor="auth-email" className="block text-sm font-medium text-fg-muted mb-2">
                     Email Address
                   </label>
                   <input
@@ -379,13 +364,13 @@ const AuthSection = () => {
                     spellCheck={false}
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    className="w-full px-4 py-2.5 border-2 border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 placeholder-zinc-500 dark:placeholder-zinc-400 transition-spring focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
+                    className="w-full px-4 py-2.5 border border-line rounded-soft bg-bg-surface dark:bg-zinc-800 text-fg placeholder-fg-muted transition-colors duration-150 focus:border-accent focus:shadow-[0_0_0_3px_var(--accent-weak)] focus:outline-none"
                     placeholder="your@email.com"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="auth-password" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+                  <label htmlFor="auth-password" className="block text-sm font-medium text-fg-muted mb-2">
                     Password
                   </label>
                   <input
@@ -394,7 +379,7 @@ const AuthSection = () => {
                     autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
-                    className="w-full px-4 py-2.5 border-2 border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 placeholder-zinc-500 dark:placeholder-zinc-400 transition-spring focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
+                    className="w-full px-4 py-2.5 border border-line rounded-soft bg-bg-surface dark:bg-zinc-800 text-fg placeholder-fg-muted transition-colors duration-150 focus:border-accent focus:shadow-[0_0_0_3px_var(--accent-weak)] focus:outline-none"
                     placeholder="Enter your password"
                     required
                   />
@@ -402,7 +387,7 @@ const AuthSection = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-primary text-white py-3 px-4 rounded-lg font-semibold transition-spring hover:bg-primary/90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-primary text-white py-3 px-4 rounded-soft font-semibold transition-colors duration-150 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Processing...' : mode === 'login' ? 'Sign In' : 'Create Account'}
                 </button>
@@ -417,21 +402,21 @@ const AuthSection = () => {
                   <button
                     type="button"
                     onClick={() => setShowOnboarding(true)}
-                    className="w-full text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 text-xs font-medium transition-colors"
+                    className="w-full text-fg-muted hover:text-fg text-xs font-medium transition-colors"
                   >
                     Back to intro
                   </button>
                 </div>
               </form>
             )}
-            <div className="pt-2 text-center border-t border-zinc-200 dark:border-zinc-700">
+            <div className="pt-2 text-center border-t border-line">
               <button
                 onClick={() => {
                   setMode(mode === 'login' ? 'register' : 'login');
                   setShowEmailForm(false);
                   setFormData({ email: '', password: '' });
                 }}
-                className="mt-4 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary transition-colors"
+                className="mt-4 text-sm font-medium text-fg-muted hover:text-primary transition-colors"
               >
                 {mode === 'login'
                   ? "Don't have an account? Sign up"

@@ -139,12 +139,12 @@ const InspirationBox: React.FC<InspirationBoxProps> = ({ className = '' }) => {
         </div>
 
         {/* Content */}
-        <p className="text-sm leading-relaxed font-body text-zinc-700 dark:text-zinc-200">
+        <p className="text-sm leading-relaxed font-body text-fg-muted dark:text-zinc-200">
           {currentContent.text}
         </p>
 
         {/* Category indicator */}
-        <div className="mt-3 text-xs uppercase tracking-wide font-medium text-zinc-600 dark:text-zinc-400">
+        <div className="mt-3 text-xs uppercase tracking-wide font-medium text-fg-muted dark:text-fg-subtle">
           {currentContent.category.replace(/_/g, ' ')}
         </div>
       </div>

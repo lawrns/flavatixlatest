@@ -93,7 +93,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
                 onClick={handleBack}
                 className={cn(
                   'flex items-center gap-1 mb-4',
-                  'text-gemini-text-gray dark:text-zinc-400',
+                  'text-gemini-text-gray dark:text-fg-subtle',
                   'hover:text-gemini-text-dark dark:hover:text-zinc-100',
                   'transition-colors font-medium text-sm'
                 )}
@@ -112,7 +112,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
                   </h1>
                 )}
                 {subtitle && (
-                  <p className="text-gemini-text-gray dark:text-zinc-400 mt-1">
+                  <p className="text-gemini-text-gray dark:text-fg-subtle mt-1">
                     {subtitle}
                   </p>
                 )}

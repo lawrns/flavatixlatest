@@ -101,7 +101,7 @@ const CardHeader: React.FC<CardHeaderProps> = ({
           </h3>
         )}
         {subtitle && (
-          <p className="text-body-sm text-fg-muted dark:text-zinc-400 mt-1">
+          <p className="text-body-sm text-fg-muted dark:text-fg-subtle mt-1">
             {subtitle}
           </p>
         )}

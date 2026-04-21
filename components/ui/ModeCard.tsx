@@ -1,11 +1,11 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { ChevronRight, LucideIcon } from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 
 export interface ModeCardProps {
   icon: LucideIcon;
-  iconBgColor: string;
-  iconColor: string;
+  iconBgColor?: string;
+  iconColor?: string;
   title: string;
   description: string;
   href: string;
@@ -15,8 +15,6 @@ export interface ModeCardProps {
 
 const ModeCard: React.FC<ModeCardProps> = ({
   icon: Icon,
-  iconBgColor,
-  iconColor,
   title,
   description,
   href,
@@ -27,37 +25,25 @@ const ModeCard: React.FC<ModeCardProps> = ({
   return (
     <button
       onClick={() => router.push(href)}
-      className="surface-action-card group w-full text-left p-5"
+      className="w-full text-left p-4 rounded-soft bg-bg-surface hover:bg-bg-hover transition-colors"
     >
-      <div className="flex items-center gap-4">
-        {/* Icon badge */}
-        <div
-          className={`flex-shrink-0 w-12 h-12 rounded-full ${iconBgColor}
-                      flex items-center justify-center`}
-        >
-          <Icon className={`w-6 h-6 ${iconColor}`} />
-        </div>
+      <div className="flex items-center gap-3">
+        <Icon className="w-5 h-5 text-fg-muted flex-shrink-0" />
 
-        {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-semibold text-gemini-text-dark dark:text-zinc-50">
+            <h3 className="text-body-sm font-medium text-fg">
               {title}
             </h3>
             {badge && (
-              <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+              <span className="text-caption text-fg-muted">
                 {badge}
               </span>
             )}
           </div>
-          <p className="text-sm text-gemini-text-gray dark:text-zinc-400 line-clamp-1 mt-0.5">
+          <p className="text-caption text-fg-subtle line-clamp-1">
             {description}
           </p>
-        </div>
-
-        {/* Chevron */}
-        <div className="flex-shrink-0">
-          <ChevronRight className="w-5 h-5 text-gemini-text-muted dark:text-zinc-500" />
         </div>
       </div>
     </button>

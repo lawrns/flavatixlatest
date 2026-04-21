@@ -299,7 +299,7 @@ export default function AvatarUpload({
         >
           <input {...getInputProps()} />
 
-          <Upload className="w-8 h-8 mx-auto mb-xs text-gray-400 dark:text-zinc-500" />
+          <Upload className="w-8 h-8 mx-auto mb-xs text-gray-400 dark:text-fg-subtle" />
 
           {isDragActive ? (
             isDragReject ? (
@@ -312,7 +312,7 @@ export default function AvatarUpload({
               <p className="text-gray-600 dark:text-zinc-300 mb-xs">
                 Drag & drop an image here, or click to select
               </p>
-              <p className="text-small font-body text-gray-500 dark:text-zinc-400">
+              <p className="text-small font-body text-gray-500 dark:text-fg-subtle">
                 Supports: JPEG, PNG, WebP (max 5MB)
               </p>
             </div>
@@ -337,7 +337,7 @@ export default function AvatarUpload({
       )}
 
       {/* Upload Guidelines */}
-      <div className="text-caption font-body text-gray-500 dark:text-zinc-400 space-y-xs">
+      <div className="text-caption font-body text-gray-500 dark:text-fg-subtle space-y-xs">
         <p>• Images will be automatically resized to 400x400 pixels</p>
         <p>• Supported formats: JPEG, PNG, WebP</p>
         <p>• Maximum file size: 5MB</p>

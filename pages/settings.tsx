@@ -169,21 +169,21 @@ export default function SettingsPage() {
           icon: FileText,
           label: 'Privacy Policy',
           description: 'View our privacy policy and data practices',
-          action: <ChevronRight size={20} className="text-zinc-400" />,
+          action: <ChevronRight size={20} className="text-fg-subtle" />,
           onClick: () => router.push('/privacy'),
         },
         {
           icon: FileText,
           label: 'Terms of Service',
           description: 'View our terms of service and user agreement',
-          action: <ChevronRight size={20} className="text-zinc-400" />,
+          action: <ChevronRight size={20} className="text-fg-subtle" />,
           onClick: () => router.push('/terms'),
         },
         {
           icon: Shield,
           label: 'Privacy Settings',
           description: 'Manage your data and privacy preferences',
-          action: <ChevronRight size={20} className="text-zinc-400" />,
+          action: <ChevronRight size={20} className="text-fg-subtle" />,
           onClick: () => toast.info('Privacy settings coming soon'),
         },
       ],
@@ -215,7 +215,7 @@ export default function SettingsPage() {
       <div className="space-y-6">
         {settingsSections.map((section) => (
           <div key={section.title}>
-            <h2 className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-3 px-1">
+            <h2 className="text-sm font-semibold text-fg-subtle dark:text-fg-subtle uppercase tracking-wider mb-3 px-1">
               {section.title}
             </h2>
             <Card>
@@ -225,7 +225,7 @@ export default function SettingsPage() {
                     key={item.label}
                     className={cn(
                       'flex items-center justify-between p-4',
-                      item.onClick && 'cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors',
+                      item.onClick && 'cursor-pointer hover:bg-bg-inset dark:hover:bg-zinc-800/50 transition-colors',
                       index === 0 && 'rounded-t-lg',
                       index === section.items.length - 1 && 'rounded-b-lg'
                     )}
@@ -239,7 +239,7 @@ export default function SettingsPage() {
                           'w-10 h-10 rounded-full flex items-center justify-center',
                           item.danger
                             ? 'bg-red-100 dark:bg-red-900/30'
-                            : 'bg-zinc-100 dark:bg-zinc-700'
+                            : 'bg-bg-inset dark:bg-zinc-700'
                         )}
                       >
                         <item.icon
@@ -247,7 +247,7 @@ export default function SettingsPage() {
                           className={cn(
                             item.danger
                               ? 'text-red-600 dark:text-red-400'
-                              : 'text-zinc-600 dark:text-zinc-300'
+                              : 'text-fg-muted dark:text-zinc-300'
                           )}
                         />
                       </div>
@@ -262,7 +262,7 @@ export default function SettingsPage() {
                         >
                           {item.label}
                         </p>
-                        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                        <p className="text-sm text-fg-subtle dark:text-fg-subtle">
                           {item.description}
                         </p>
                       </div>
@@ -277,20 +277,20 @@ export default function SettingsPage() {
 
         {/* Quick Presets Configuration */}
         <div>
-          <h2 className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-3 px-1">
+          <h2 className="text-sm font-semibold text-fg-subtle dark:text-fg-subtle uppercase tracking-wider mb-3 px-1">
             Quick Presets
           </h2>
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-zinc-100 dark:bg-zinc-700">
-                  <Zap size={20} className="text-zinc-600 dark:text-zinc-300" />
+                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-bg-inset dark:bg-zinc-700">
+                  <Zap size={20} className="text-fg-muted dark:text-zinc-300" />
                 </div>
                 <div>
                   <p className="font-medium text-zinc-900 dark:text-white">
                     Dashboard Presets
                   </p>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  <p className="text-sm text-fg-subtle dark:text-fg-subtle">
                     Choose which categories appear on your dashboard
                   </p>
                 </div>
@@ -321,7 +321,7 @@ export default function SettingsPage() {
 
         {/* App Version */}
         <div className="text-center py-4">
-          <p className="text-sm text-zinc-400 dark:text-zinc-500">
+          <p className="text-sm text-fg-subtle dark:text-fg-subtle">
             Flavatix v1.0.0
           </p>
         </div>
