@@ -15,6 +15,7 @@ jest.mock('@/lib/logger');
 jest.mock('@/lib/flavorWheelGenerator');
 
 describe('POST /api/flavor-wheels/generate', () => {
+  const tastingId = '44444444-4444-4444-8444-444444444444';
   let mockSupabase: any;
   let req: Partial<NextApiRequest>;
   let res: Partial<NextApiResponse>;
@@ -185,13 +186,15 @@ describe('POST /api/flavor-wheels/generate', () => {
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
-          wheelData: expect.objectContaining({
-            categories: expect.arrayContaining([
-              expect.objectContaining({ name: 'Fruity' }),
-            ]),
+          data: expect.objectContaining({
+            wheelData: expect.objectContaining({
+              categories: expect.arrayContaining([
+                expect.objectContaining({ name: 'Fruity' }),
+              ]),
+            }),
+            wheelId: 'wheel-123',
+            cached: false,
           }),
-          wheelId: 'wheel-123',
-          cached: false,
         })
       );
     });
@@ -281,7 +284,7 @@ describe('POST /api/flavor-wheels/generate', () => {
           wheelType: 'flavor',
           scopeType: 'tasting',
           scopeFilter: {
-            tastingId: 'tasting-456',
+            tastingId,
           },
         },
       });
@@ -293,7 +296,7 @@ describe('POST /api/flavor-wheels/generate', () => {
         expect.objectContaining({
           scopeType: 'tasting',
           scopeFilter: expect.objectContaining({
-            tastingId: 'tasting-456',
+            tastingId,
           }),
         })
       );
@@ -344,7 +347,9 @@ describe('POST /api/flavor-wheels/generate', () => {
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
-          cached: true,
+          data: expect.objectContaining({
+            cached: true,
+          }),
         })
       );
     });
@@ -395,7 +400,9 @@ describe('POST /api/flavor-wheels/generate', () => {
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
-          error: expect.stringContaining('No flavor descriptors found'),
+          data: expect.objectContaining({
+            warning: expect.stringContaining('No flavor descriptors found'),
+          }),
         })
       );
     });

@@ -22,6 +22,8 @@ export type { TastingPost, TastingItem as SocialTastingItem, FeedTab } from './u
 
 export { useFocusTrap } from './useFocusTrap';
 export { default as useFocusTrapDefault } from './useFocusTrap';
+export { useRequireAuth } from './useRequireAuth';
+export { default as useRequireAuthDefault } from './useRequireAuth';
 
 // Accessibility hooks
 export { 

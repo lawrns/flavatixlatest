@@ -320,7 +320,7 @@ When you create a tasting:
 6. **Response** - API sends back the created tasting
 7. **UI Update** - Component shows success message
 
-You'll learn more about this in [ARCHITECTURE_API_FLOW.md](./ARCHITECTURE_API_FLOW.md).
+You'll learn more about request flow and API structure in [ARCHITECTURE.md](./ARCHITECTURE.md) and [FEATURES_API_ENDPOINTS.md](./FEATURES_API_ENDPOINTS.md).
 
 ## Section 5: Troubleshooting
 
@@ -430,7 +430,7 @@ Congratulations! You have a working Flavatix development environment.
 - **Want to understand the code?** → Read [ARCHITECTURE_STATE_MANAGEMENT.md](./ARCHITECTURE_STATE_MANAGEMENT.md)
 - **Want to add a feature?** → Read [FEATURES_API_ENDPOINTS.md](./FEATURES_API_ENDPOINTS.md)
 - **Want to write tests?** → Read [TESTING_UNIT_TESTS.md](./TESTING_UNIT_TESTS.md)
-- **Want to debug something?** → Read [DEBUG_DEVTOOLS.md](./DEBUG_DEVTOOLS.md)
+- **Want to debug something?** → Read [DEBUG_API_ERRORS.md](./DEBUG_API_ERRORS.md) and [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
 
 ## Summary
 

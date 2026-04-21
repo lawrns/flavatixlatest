@@ -15,6 +15,7 @@ import {
   requireUser,
   type ApiContext,
 } from '@/lib/api/middleware';
+import { requirePermission, AdminPermission } from '@/lib/admin/rbac';
 
 interface ExtractionStats {
   period: string;
@@ -43,19 +44,22 @@ async function getExtractionStatsHandler(
   res: NextApiResponse,
   context: ApiContext
 ) {
-  requireUser(context); // Verify authentication
+  const user = requireUser(context); // Verify authentication
+  await requirePermission(req, res, user.id, AdminPermission.ANALYTICS_READ);
   const supabase = getSupabaseClient(req, res);
 
   try {
-    const period = (req.query.period as string) || '7d';
-
-    // Calculate date range
-    const daysAgo = period === '7d' ? 7 : period === '30d' ? 30 : 1;
+    const validPeriods = { '1d': 1, '7d': 7, '30d': 30 } as const;
+    const periodKey = req.query.period as string;
+    if (periodKey && !(periodKey in validPeriods)) {
+      return res.status(400).json({ success: false, error: 'Invalid period. Use 1d, 7d, or 30d.' });
+    }
+    const period = (periodKey || '7d') as keyof typeof validPeriods;
+    const daysAgo = validPeriods[period];
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - daysAgo);
 
-    // Get items with content created in period
-    const { data: items, error: itemsError } = await (supabase as any)
+    const { data: items, error: itemsError } = await supabase
       .from('quick_tasting_items')
       .select('id, tasting_id, notes, aroma, flavor, created_at')
       .gte('created_at', startDate.toISOString());
@@ -64,14 +68,12 @@ async function getExtractionStatsHandler(
       return sendServerError(res, itemsError, 'Failed to fetch items');
     }
 
-    // Filter items with content
     const itemsWithContent = (items || []).filter(
-      (item: any) => item.notes?.trim() || item.aroma?.trim() || item.flavor?.trim()
+      (item) => item.notes?.trim() || item.aroma?.trim() || item.flavor?.trim()
     );
 
-    // Get extracted descriptors for these items
-    const itemIds = itemsWithContent.map((item: any) => item.id);
-    const { data: descriptors, error: descriptorsError } = await (supabase as any)
+    const itemIds = itemsWithContent.map((item) => item.id);
+    const { data: descriptors, error: descriptorsError } = await supabase
       .from('flavor_descriptors')
       .select('source_id, created_at')
       .eq('source_type', 'quick_tasting')
@@ -81,22 +83,15 @@ async function getExtractionStatsHandler(
       return sendServerError(res, descriptorsError, 'Failed to fetch descriptors');
     }
 
-    // Calculate extraction statistics
-    const extractedItemIds = new Set(
-      (descriptors || []).map((d: any) => d.source_id)
-    );
-
-    const itemsExtracted = itemsWithContent.filter((item: any) =>
-      extractedItemIds.has(item.id)
-    ).length;
+    const extractedItemIds = new Set((descriptors || []).map((d) => d.source_id));
+    const itemsExtracted = itemsWithContent.filter((item) => extractedItemIds.has(item.id)).length;
 
     const extractionRate = itemsWithContent.length > 0
       ? (itemsExtracted / itemsWithContent.length) * 100
       : 0;
 
-    // Group by date for trend
     const extractionsByDate = new Map<string, number>();
-    (descriptors || []).forEach((d: any) => {
+    (descriptors || []).forEach((d) => {
       const date = new Date(d.created_at).toISOString().split('T')[0];
       extractionsByDate.set(date, (extractionsByDate.get(date) || 0) + 1);
     });
@@ -106,8 +101,8 @@ async function getExtractionStatsHandler(
       .sort((a, b) => a.date.localeCompare(b.date));
 
     // Get tastings to group by category
-    const tastingIds = Array.from(new Set(itemsWithContent.map((item: any) => item.tasting_id)));
-    const { data: tastings, error: tastingsError } = await (supabase as any)
+    const tastingIds = Array.from(new Set(itemsWithContent.map((item) => item.tasting_id)));
+    const { data: tastings, error: tastingsError } = await supabase
       .from('quick_tastings')
       .select('id, category')
       .in('id', tastingIds);
@@ -116,15 +111,12 @@ async function getExtractionStatsHandler(
       return sendServerError(res, tastingsError, 'Failed to fetch tastings');
     }
 
-    const tastingCategoryMap = new Map(
-      (tastings || []).map((t: any) => [t.id, t.category])
-    );
+    const tastingCategoryMap = new Map((tastings || []).map((t) => [t.id, t.category]));
 
-    // Group by category
     const categoryStats = new Map<string, { total: number; extracted: number }>();
 
-    itemsWithContent.forEach((item: any) => {
-      const category = (tastingCategoryMap.get(item.tasting_id) as string) || 'unknown';
+    itemsWithContent.forEach((item) => {
+      const category = tastingCategoryMap.get(item.tasting_id) || 'unknown';
       const stats = categoryStats.get(category) || { total: 0, extracted: 0 };
       stats.total++;
       if (extractedItemIds.has(item.id)) {

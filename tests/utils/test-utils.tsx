@@ -1,26 +1,26 @@
 /**
- * Test Utilities
- * 
- * Provides common test utilities, wrappers, and mocks for testing React components.
+ * Shared test harness utilities.
+ *
+ * This file centralizes router/auth mocks and the minimal app providers used by
+ * maintained tests under /tests.
  */
 
 import React, { ReactElement, ReactNode } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { LiveRegionProvider } from '@/components/ui/LiveRegion';
+import { createMockSupabaseClient } from '@/lib/test-utils/mocks/mockSupabase';
+import { createTestUser, testUser } from '@/lib/test-utils/fixtures/testUser';
 
-// ============================================================================
-// MOCK DATA FACTORIES
-// ============================================================================
-
-export const createMockUser = (overrides = {}) => ({
-  id: 'test-user-id',
-  email: 'test@example.com',
-  ...overrides,
-});
+export const createMockUser = (overrides = {}) =>
+  createTestUser({
+    email: 'test@example.com',
+    ...overrides,
+  });
 
 export const createMockSession = (overrides = {}) => ({
-  id: 'test-session-id',
-  user_id: 'test-user-id',
+  id: '11111111-1111-4111-8111-111111111111',
+  user_id: (testUser.id as string),
   category: 'coffee',
   session_name: 'Test Session',
   notes: '',
@@ -33,8 +33,8 @@ export const createMockSession = (overrides = {}) => ({
 });
 
 export const createMockTastingItem = (overrides = {}) => ({
-  id: 'test-item-id',
-  tasting_id: 'test-session-id',
+  id: '22222222-2222-4222-8222-222222222222',
+  tasting_id: '11111111-1111-4111-8111-111111111111',
   item_name: 'Test Item',
   notes: '',
   overall_score: null,
@@ -44,76 +44,102 @@ export const createMockTastingItem = (overrides = {}) => ({
 });
 
 export const createMockProfile = (overrides = {}) => ({
-  user_id: 'test-user-id',
+  user_id: testUser.id,
   full_name: 'Test User',
   username: 'testuser',
   avatar_url: null,
   ...overrides,
 });
 
-// ============================================================================
-// MOCK SUPABASE CLIENT
-// ============================================================================
+export interface MockAuthState {
+  user: any;
+  session: any;
+  loading: boolean;
+  signOut: jest.Mock;
+  refreshSession: jest.Mock;
+}
 
-export const createMockSupabaseClient = (customMocks = {}) => {
-  const defaultMocks = {
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => ({
-          single: jest.fn(() => Promise.resolve({ data: null, error: null })),
-          order: jest.fn(() => Promise.resolve({ data: [], error: null })),
-        })),
-        in: jest.fn(() => Promise.resolve({ data: [], error: null })),
-        order: jest.fn(() => ({
-          range: jest.fn(() => Promise.resolve({ data: [], error: null })),
-        })),
-      })),
-      insert: jest.fn(() => ({
-        select: jest.fn(() => ({
-          single: jest.fn(() => Promise.resolve({ data: null, error: null })),
-        })),
-      })),
-      update: jest.fn(() => ({
-        eq: jest.fn(() => ({
-          select: jest.fn(() => ({
-            single: jest.fn(() => Promise.resolve({ data: null, error: null })),
-          })),
-        })),
-      })),
-      delete: jest.fn(() => ({
-        eq: jest.fn(() => Promise.resolve({ error: null })),
-      })),
-    })),
-    auth: {
-      getUser: jest.fn(() => Promise.resolve({ data: { user: null }, error: null })),
-      getSession: jest.fn(() => Promise.resolve({ data: { session: null }, error: null })),
-      signInWithPassword: jest.fn(),
-      signOut: jest.fn(),
-      onAuthStateChange: jest.fn(() => ({ data: { subscription: { unsubscribe: jest.fn() } } })),
-    },
-    storage: {
-      from: jest.fn(() => ({
-        upload: jest.fn(() => Promise.resolve({ data: null, error: null })),
-        getPublicUrl: jest.fn(() => ({ data: { publicUrl: 'mock-url' } })),
-      })),
-    },
-    channel: jest.fn(() => ({
-      on: jest.fn().mockReturnThis(),
-      subscribe: jest.fn(() => ({ status: 'SUBSCRIBED' })),
-      unsubscribe: jest.fn(),
-    })),
-    removeChannel: jest.fn(),
-  };
+export const createMockRouter = (overrides: Record<string, any> = {}) => ({
+  basePath: '',
+  pathname: '/',
+  route: '/',
+  asPath: '/',
+  push: jest.fn(),
+  replace: jest.fn(),
+  reload: jest.fn(),
+  back: jest.fn(),
+  prefetch: jest.fn().mockResolvedValue(undefined),
+  beforePopState: jest.fn(),
+  events: {
+    on: jest.fn(),
+    off: jest.fn(),
+    emit: jest.fn(),
+  },
+  isFallback: false,
+  isLocaleDomain: false,
+  isPreview: false,
+  isReady: true,
+  ...overrides,
+  query: {
+    ...(overrides.query ?? {}),
+  },
+});
 
-  return { ...defaultMocks, ...customMocks };
+const createDefaultAuthState = (): MockAuthState => ({
+  user: createMockUser(),
+  session: null,
+  loading: false,
+  signOut: jest.fn().mockResolvedValue(undefined),
+  refreshSession: jest.fn().mockResolvedValue(undefined),
+});
+
+let currentRouter = createMockRouter();
+let currentAuthState = createDefaultAuthState();
+
+export const mockUseRouter = jest.fn(() => currentRouter);
+export const mockUseAuth = jest.fn(() => currentAuthState);
+
+export const resetMockRouter = () => {
+  currentRouter = createMockRouter();
+  mockUseRouter.mockImplementation(() => currentRouter);
+  mockUseRouter.mockClear();
+  return currentRouter;
 };
 
-// ============================================================================
-// TEST PROVIDERS
-// ============================================================================
+export const setMockRouter = (overrides: Record<string, any> = {}) => {
+  currentRouter = createMockRouter({
+    ...currentRouter,
+    ...overrides,
+    query: {
+      ...currentRouter.query,
+      ...(overrides.query ?? {}),
+    },
+  });
+  mockUseRouter.mockImplementation(() => currentRouter);
+  return currentRouter;
+};
 
-// Create a new QueryClient for each test
-const createTestQueryClient = () =>
+export const getMockRouter = () => currentRouter;
+
+export const resetMockAuthState = () => {
+  currentAuthState = createDefaultAuthState();
+  mockUseAuth.mockImplementation(() => currentAuthState);
+  mockUseAuth.mockClear();
+  return currentAuthState;
+};
+
+export const setMockAuthState = (overrides: Partial<MockAuthState> = {}) => {
+  currentAuthState = {
+    ...currentAuthState,
+    ...overrides,
+  };
+  mockUseAuth.mockImplementation(() => currentAuthState);
+  return currentAuthState;
+};
+
+export const getMockAuthState = () => currentAuthState;
+
+export const createTestQueryClient = () =>
   new QueryClient({
     defaultOptions: {
       queries: {
@@ -127,82 +153,51 @@ const createTestQueryClient = () =>
     },
   });
 
-// Mock Auth Context
-const MockAuthContext = React.createContext<{
-  user: any;
-  loading: boolean;
-  signOut: () => void;
-}>({
-  user: null,
-  loading: false,
-  signOut: jest.fn(),
-});
-
-export const MockAuthProvider: React.FC<{
-  children: ReactNode;
-  user?: any;
-  loading?: boolean;
-}> = ({ children, user = null, loading = false }) => (
-  <MockAuthContext.Provider value={{ user, loading, signOut: jest.fn() }}>
-    {children}
-  </MockAuthContext.Provider>
-);
-
-// All providers wrapper
 interface AllProvidersProps {
   children: ReactNode;
-  user?: any;
-  loading?: boolean;
+  queryClient: QueryClient;
 }
 
-const AllProviders: React.FC<AllProvidersProps> = ({
-  children,
-  user = createMockUser(),
-  loading = false,
-}) => {
-  const queryClient = createTestQueryClient();
+const AllProviders: React.FC<AllProvidersProps> = ({ children, queryClient }) => (
+  <QueryClientProvider client={queryClient}>
+    <LiveRegionProvider>{children}</LiveRegionProvider>
+  </QueryClientProvider>
+);
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      <MockAuthProvider user={user} loading={loading}>
-        {children}
-      </MockAuthProvider>
-    </QueryClientProvider>
-  );
-};
-
-// ============================================================================
-// CUSTOM RENDER
-// ============================================================================
-
-interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
-  user?: any;
-  loading?: boolean;
+interface RenderAppOptions extends Omit<RenderOptions, 'wrapper'> {
+  route?: string;
+  router?: Record<string, any>;
+  auth?: Partial<MockAuthState>;
+  queryClient?: QueryClient;
 }
 
-const customRender = (
-  ui: ReactElement,
-  options: CustomRenderOptions = {}
-) => {
-  const { user, loading, ...renderOptions } = options;
+export const renderApp = (ui: ReactElement, options: RenderAppOptions = {}) => {
+  const { route, router, auth, queryClient = createTestQueryClient(), ...renderOptions } = options;
+
+  if (route) {
+    setMockRouter({
+      pathname: route,
+      route,
+      asPath: route,
+    });
+  }
+
+  if (router) {
+    setMockRouter(router);
+  }
+
+  if (auth) {
+    setMockAuthState(auth);
+  }
 
   return render(ui, {
     wrapper: ({ children }) => (
-      <AllProviders user={user} loading={loading}>
-        {children}
-      </AllProviders>
+      <AllProviders queryClient={queryClient}>{children}</AllProviders>
     ),
     ...renderOptions,
   });
 };
 
-// ============================================================================
-// ASYNC UTILITIES
-// ============================================================================
-
-/**
- * Wait for a condition to be true
- */
 export const waitForCondition = async (
   condition: () => boolean,
   timeout = 5000,
@@ -217,17 +212,7 @@ export const waitForCondition = async (
   }
 };
 
-/**
- * Flush all pending promises
- */
 export const flushPromises = () => new Promise(resolve => setImmediate(resolve));
 
-// ============================================================================
-// EXPORTS
-// ============================================================================
-
-// Re-export everything from testing-library
 export * from '@testing-library/react';
-
-// Override render with custom render
-export { customRender as render };
+export { renderApp as render, createMockSupabaseClient };

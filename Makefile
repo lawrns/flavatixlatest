@@ -1,4 +1,4 @@
-.PHONY: help setup install dev build start lint lint-fix format type-check test test-unit test-watch test-e2e clean check check-all security audit debug
+.PHONY: help setup install dev build start lint lint-fix format type-check test test-unit test-api test-data test-watch test-e2e test-e2e-smoke test-e2e-full test-performance clean check check-all security audit debug
 
 # Default target
 .DEFAULT_GOAL := help
@@ -62,6 +62,14 @@ test-unit: ## Run unit tests only
 	@echo "$(BLUE)Running unit tests...$(NC)"
 	npm run test:unit
 
+test-api: ## Run API tests only
+	@echo "$(BLUE)Running API tests...$(NC)"
+	npm run test:api
+
+test-data: ## Run data quality tests only
+	@echo "$(BLUE)Running data quality tests...$(NC)"
+	npm run test:data
+
 test-watch: ## Run tests in watch mode
 	@echo "$(BLUE)Running tests in watch mode...$(NC)"
 	npm run test:watch
@@ -74,6 +82,14 @@ test-e2e: ## Run end-to-end tests
 	@echo "$(BLUE)Running e2e tests...$(NC)"
 	npm run test:e2e
 
+test-e2e-smoke: ## Run smoke end-to-end tests
+	@echo "$(BLUE)Running smoke e2e tests...$(NC)"
+	npm run test:e2e:smoke
+
+test-e2e-full: ## Run full browser-matrix end-to-end tests
+	@echo "$(BLUE)Running full e2e suite...$(NC)"
+	npm run test:e2e:full
+
 test-e2e-ui: ## Run e2e tests with UI
 	@echo "$(BLUE)Running e2e tests with UI...$(NC)"
 	npm run test:e2e:ui
@@ -82,12 +98,16 @@ test-e2e-debug: ## Debug e2e tests
 	@echo "$(BLUE)Debugging e2e tests...$(NC)"
 	npm run test:e2e:debug
 
+test-performance: ## Run performance tests
+	@echo "$(BLUE)Running performance tests...$(NC)"
+	npm run test:performance
+
 # Quality Checks
-check: ## Quick check: lint + type + unit tests
+check: ## Quick check: lint + type + unit + API tests
 	@echo "$(BLUE)Running quick checks...$(NC)"
 	npm run check
 
-check-all: ## Full check: lint + type + all tests
+check-all: ## Full check: lint + type + unit + API + data + smoke e2e
 	@echo "$(BLUE)Running full checks...$(NC)"
 	npm run check:all
 
@@ -101,7 +121,7 @@ audit: ## Run npm audit (alias for security)
 # Maintenance
 clean: ## Clean build artifacts
 	@echo "$(BLUE)Cleaning build artifacts...$(NC)"
-	rm -rf .next dist build coverage
+	rm -rf .next dist build coverage playwright-report test-results tsconfig.tsbuildinfo e2e_test_log.txt e2e_test_report.html
 	@echo "$(GREEN)✓ Cleaned$(NC)"
 
 clean-node: ## Clean node_modules and reinstall

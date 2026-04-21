@@ -851,8 +851,8 @@ export default createApiHandler({
 
 ## Related Documentation
 
-- [OpenAPI Specification](./openapi.yaml) - Full API reference
+- [API Reference](./API_REFERENCE.md) - Current endpoint surface
 - [API Versioning Strategy](./api-versioning.md) - Versioning and deprecation
-- [Authentication Guide](./authentication.md) - Detailed auth flow
-- [Rate Limiting](./rate-limiting.md) - Rate limit configuration
-- [Error Codes](./error-codes.md) - Complete error code reference
+- [Security](./SECURITY.md) - Authentication and security posture
+- [Redis Rate Limiting](./redis-rate-limiting.md) - Production rate limit configuration
+- [Troubleshooting](./TROUBLESHOOTING.md) - Runtime debugging and operational issues

@@ -149,11 +149,19 @@ if (!user) {
   return null
 }
 
-// Or use the auth guard hook
-import { useAuthGuard } from '@/hooks/useAuthGuard'
+// Or guard the route explicitly in your page
+import { useRouter } from 'next/router'
+import { useAuth } from '@/contexts/SimpleAuthContext'
 
 export default function ProtectedPage() {
-  useAuthGuard() // Redirects to login if not authenticated
+  const router = useRouter()
+  const { user, loading } = useAuth()
+
+  if (loading) return null
+  if (!user) {
+    router.push('/auth')
+    return null
+  }
 
   return <div>Protected content</div>
 }
@@ -505,11 +513,11 @@ You've learned:
 
 ## Next Steps
 
-- **Want to debug state?** → [DEBUG_STATE_ISSUES.md](./DEBUG_STATE_ISSUES.md)
-- **Want to debug authentication?** → [DEBUG_AUTH_ISSUES.md](./DEBUG_AUTH_ISSUES.md)
-- **Want to use DevTools effectively?** → [DEBUG_DEVTOOLS.md](./DEBUG_DEVTOOLS.md)
+- **Want general troubleshooting?** → [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
+- **Need API contract details?** → [API_REFERENCE.md](./API_REFERENCE.md)
+- **Need endpoint implementation patterns?** → [FEATURES_API_ENDPOINTS.md](./FEATURES_API_ENDPOINTS.md)
 - **Back to index** → [TUTORIALS_INDEX.md](./TUTORIALS_INDEX.md)
 
 ---
 
-**Pro Tip:** Use Sentry in production to catch errors automatically. See [DEPLOY_MONITORING.md](./DEPLOY_MONITORING.md).
+**Pro Tip:** Use Sentry in production to catch errors automatically. See [DEPLOY_PRODUCTION.md](./DEPLOY_PRODUCTION.md).

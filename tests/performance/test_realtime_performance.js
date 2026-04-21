@@ -7,6 +7,10 @@
 
 describe('Real-time Performance Tests', () => {
   const PERFORMANCE_THRESHOLD = 100; // ms
+  const studyModeRealtime = {
+    unsubscribeFromTasting: jest.fn(),
+    cleanup: jest.fn(),
+  };
 
   beforeAll(() => {
     // Setup performance testing environment
@@ -147,5 +151,4 @@ describe('Real-time Performance Tests', () => {
     });
   });
 });
-
 

@@ -26,18 +26,27 @@ describe('POST /api/social/likes', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-
-    // Create a shared chainable mock for Supabase query builder
-    const queryBuilder: any = {
-      select: jest.fn().mockReturnThis(),
-      insert: jest.fn().mockReturnThis(),
-      delete: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      single: jest.fn(),
+    const quickTastingsBuilder: any = {
+      select: jest.fn(),
+    };
+    const tastingLikesBuilder: any = {
+      select: jest.fn(),
+      insert: jest.fn(),
+      delete: jest.fn(),
     };
 
     mockSupabase = {
-      from: jest.fn(() => queryBuilder),
+      from: jest.fn((table: string) => {
+        if (table === 'quick_tastings') {
+          return quickTastingsBuilder;
+        }
+
+        if (table === 'tasting_likes') {
+          return tastingLikesBuilder;
+        }
+
+        throw new Error(`Unexpected table ${table}`);
+      }),
       auth: {
         getUser: jest.fn().mockResolvedValue({
           data: { user: testUser },
@@ -46,8 +55,8 @@ describe('POST /api/social/likes', () => {
       },
     };
 
-    // Store reference to query builder for test setup
-    (mockSupabase as any).queryBuilder = queryBuilder;
+    (mockSupabase as any).quickTastingsBuilder = quickTastingsBuilder;
+    (mockSupabase as any).tastingLikesBuilder = tastingLikesBuilder;
 
     const { getSupabaseClient } = require('@/lib/supabase');
     getSupabaseClient.mockReturnValue(mockSupabase);
@@ -68,17 +77,14 @@ describe('POST /api/social/likes', () => {
   });
 
   it('should return 404 when tasting does not exist', async () => {
-    // Mock auth success
-    mockSupabase.auth.getUser.mockResolvedValue({
-      data: { user: testUser },
-      error: null,
-    });
-
-    // Mock tasting not found
-    const queryBuilder = (mockSupabase as any).queryBuilder;
-    queryBuilder.single.mockResolvedValue({
-      data: null,
-      error: { message: 'Not found' },
+    const { quickTastingsBuilder } = mockSupabase as any;
+    quickTastingsBuilder.select.mockReturnValue({
+      eq: jest.fn().mockReturnValue({
+        single: jest.fn().mockResolvedValue({
+          data: null,
+          error: { message: 'Not found' },
+        }),
+      }),
     });
 
     req = createMockRequest({
@@ -93,34 +99,44 @@ describe('POST /api/social/likes', () => {
   });
 
   it('should create a like when not already liked', async () => {
-    // Mock auth success
-    mockSupabase.auth.getUser.mockResolvedValue({
-      data: { user: testUser },
-      error: null,
+    const { quickTastingsBuilder, tastingLikesBuilder } = mockSupabase as any;
+    quickTastingsBuilder.select.mockReturnValue({
+      eq: jest.fn().mockReturnValue({
+        single: jest.fn().mockResolvedValue({
+          data: { id: tastingId },
+          error: null,
+        }),
+      }),
     });
 
-    const queryBuilder = (mockSupabase as any).queryBuilder;
+    tastingLikesBuilder.select.mockImplementation((_columns: string, options?: Record<string, unknown>) => {
+      if (options?.count === 'exact') {
+        return {
+          eq: jest.fn().mockResolvedValue({
+            count: 1,
+            error: null,
+          }),
+        };
+      }
 
-    // Mock tasting exists, like doesn't exist, then create succeeds
-    queryBuilder.single
-      .mockResolvedValueOnce({
-        data: { id: tastingId },
-        error: null,
-      })
-      .mockResolvedValueOnce({
-        data: null,
-        error: { code: 'PGRST116' }, // Not found - like doesn't exist
-      })
-      .mockResolvedValueOnce({
-        data: { id: 'like-id', user_id: testUser.id, tasting_id: tastingId },
-        error: null,
-      });
+      return {
+        eq: jest.fn().mockReturnValue({
+          eq: jest.fn().mockReturnValue({
+            single: jest.fn().mockResolvedValue({
+              data: null,
+              error: { code: 'PGRST116' },
+            }),
+          }),
+        }),
+      };
+    });
 
-    // Mock count query for like count
-    queryBuilder.eq.mockReturnValue({
-      eq: jest.fn().mockResolvedValue({
-        count: 1,
-        error: null,
+    tastingLikesBuilder.insert.mockReturnValue({
+      select: jest.fn().mockReturnValue({
+        single: jest.fn().mockResolvedValue({
+          data: { id: 'like-id', user_id: testUser.id, tasting_id: tastingId },
+          error: null,
+        }),
       }),
     });
 
@@ -143,39 +159,44 @@ describe('POST /api/social/likes', () => {
 
   it('should delete a like when already liked', async () => {
     const existingLike = { id: 'like-id' };
+    const { quickTastingsBuilder, tastingLikesBuilder } = mockSupabase as any;
 
-    // Mock auth success
-    mockSupabase.auth.getUser.mockResolvedValue({
-      data: { user: testUser },
-      error: null,
-    });
-
-    const queryBuilder = (mockSupabase as any).queryBuilder;
-
-    // Mock tasting exists, like exists
-    queryBuilder.single
-      .mockResolvedValueOnce({
-        data: { id: tastingId },
-        error: null,
-      })
-      .mockResolvedValueOnce({
-        data: existingLike,
-        error: null,
-      });
-
-    // Mock delete and count
-    queryBuilder.delete.mockReturnValue({
+    quickTastingsBuilder.select.mockReturnValue({
       eq: jest.fn().mockReturnValue({
-        eq: jest.fn().mockResolvedValue({
+        single: jest.fn().mockResolvedValue({
+          data: { id: tastingId },
           error: null,
         }),
       }),
     });
 
-    queryBuilder.eq.mockReturnValue({
-      eq: jest.fn().mockResolvedValue({
-        count: 0,
-        error: null,
+    tastingLikesBuilder.select.mockImplementation((_columns: string, options?: Record<string, unknown>) => {
+      if (options?.count === 'exact') {
+        return {
+          eq: jest.fn().mockResolvedValue({
+            count: 0,
+            error: null,
+          }),
+        };
+      }
+
+      return {
+        eq: jest.fn().mockReturnValue({
+          eq: jest.fn().mockReturnValue({
+            single: jest.fn().mockResolvedValue({
+              data: existingLike,
+              error: null,
+            }),
+          }),
+        }),
+      };
+    });
+
+    tastingLikesBuilder.delete.mockReturnValue({
+      eq: jest.fn().mockReturnValue({
+        eq: jest.fn().mockResolvedValue({
+          error: null,
+        }),
       }),
     });
 

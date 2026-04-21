@@ -49,6 +49,7 @@ class AnalyticsTracker {
   private gaMeasurementId: string | null = null;
   private sessionId: string | null = null;
   private sessionStart: number | null = null;
+  private backendTrackingDisabled = false;
 
   /**
    * Initialize analytics tracker
@@ -64,14 +65,14 @@ class AnalyticsTracker {
     // Generate session ID
     this.sessionId = this.generateSessionId();
     this.sessionStart = Date.now();
+    this.isInitialized = true;
 
     // Track initial page view
     if (typeof window !== 'undefined') {
-      this.trackPageView(window.location.pathname);
+      void this.trackPageView(window.location.pathname);
       this.setupPWAInstallTracking();
     }
 
-    this.isInitialized = true;
     logger.debug('Analytics', 'Analytics tracker initialized');
   }
 
@@ -96,6 +97,41 @@ class AnalyticsTracker {
     );
 
     return isMobile ? 'mobile' : 'desktop';
+  }
+
+  private async postToBackend(endpoint: string, payload: unknown, context: string): Promise<void> {
+    if (this.backendTrackingDisabled) {
+      return;
+    }
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.clone().json().catch(() => null);
+      const backendWarning =
+        !response.ok || (result && typeof result === 'object' && 'warning' in result);
+
+      if (backendWarning) {
+        this.backendTrackingDisabled = true;
+        logger.warn('Analytics', 'Disabling backend analytics for the current session', {
+          context,
+          endpoint,
+          status: response.status,
+        });
+      }
+    } catch (error) {
+      this.backendTrackingDisabled = true;
+      logger.warn('Analytics', 'Disabling backend analytics after request failure', {
+        context,
+        endpoint,
+        error: error instanceof Error ? error : undefined,
+        metadata: error instanceof Error ? undefined : { error },
+      });
+    }
   }
 
   /**
@@ -126,15 +162,7 @@ class AnalyticsTracker {
     }
 
     // Send to backend for storage
-    try {
-      await fetch('/api/analytics/event', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(eventData),
-      });
-    } catch (error) {
-      logger.error('Analytics', 'Failed to send event to backend', error);
-    }
+    await this.postToBackend('/api/analytics/event', eventData, `event:${event.eventName}`);
 
     logger.debug('Analytics', `Tracked event: ${event.eventName}`, eventData);
   }
@@ -165,15 +193,7 @@ class AnalyticsTracker {
     }
 
     // Send to backend
-    try {
-      await fetch('/api/analytics/pageview', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pageViewData),
-      });
-    } catch (error) {
-      logger.error('Analytics', 'Failed to track page view', error);
-    }
+    await this.postToBackend('/api/analytics/pageview', pageViewData, `pageview:${path}`);
 
     logger.debug('Analytics', `Page view tracked: ${path}`);
   }
@@ -205,15 +225,7 @@ class AnalyticsTracker {
     });
 
     // Send to backend
-    try {
-      await fetch('/api/analytics/pwa-install', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(installData),
-      });
-    } catch (error) {
-      logger.error('Analytics', 'Failed to track PWA install', error);
-    }
+    await this.postToBackend('/api/analytics/pwa-install', installData, 'pwa-install');
 
     logger.info('Analytics', 'PWA installation tracked', installData as any);
   }
@@ -273,15 +285,7 @@ class AnalyticsTracker {
       timestamp: Date.now(),
     };
 
-    try {
-      await fetch('/api/analytics/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(sessionData),
-      });
-    } catch (error) {
-      logger.error('Analytics', 'Failed to track session end', error);
-    }
+    await this.postToBackend('/api/analytics/session', sessionData, 'session-end');
 
     // Reset session
     this.sessionId = this.generateSessionId();
@@ -320,6 +324,10 @@ class AnalyticsTracker {
     // Track session end on page unload
     window.addEventListener('beforeunload', () => {
       // Use sendBeacon for reliable delivery during page unload
+      if (this.backendTrackingDisabled || !this.sessionStart || !this.sessionId) {
+        return;
+      }
+
       if (this.sessionStart && this.sessionId) {
         const sessionData: UserSessionEvent = {
           userId: this.getUserId(),

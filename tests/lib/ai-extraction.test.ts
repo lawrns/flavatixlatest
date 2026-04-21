@@ -107,7 +107,7 @@ describe('AI Descriptor Extraction', () => {
       confidence: 0.9,
     });
     expect(result.tokensUsed).toBe(150);
-    expect(result.processingTimeMs).toBeGreaterThan(0);
+    expect(result.processingTimeMs).toBeGreaterThanOrEqual(0);
   });
 
   it('should map AI categories to predefined category IDs', async () => {

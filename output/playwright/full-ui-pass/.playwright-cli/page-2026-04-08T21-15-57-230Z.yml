@@ -1,0 +1,108 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e4]:
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - button "Back" [ref=e62] [cursor=pointer]:
+              - img [ref=e63]
+              - text: Back
+            - heading "Competition Mode" [level=1] [ref=e65]
+            - paragraph [ref=e66]: Create competitions with answer keys and participant rankings
+          - generic [ref=e67]:
+            - button "Create New Competition Set up items with answer keys, define parameters, and configure scoring. Participants will be ranked based on their accuracy. Answer Keys Participant Ranking Multiple Choice & More" [ref=e68] [cursor=pointer]:
+              - generic [ref=e69]:
+                - img [ref=e71]
+                - generic [ref=e77]:
+                  - heading "Create New Competition" [level=2] [ref=e78]
+                  - paragraph [ref=e79]: Set up items with answer keys, define parameters, and configure scoring. Participants will be ranked based on their accuracy.
+                  - generic [ref=e80]:
+                    - generic [ref=e81]: Answer Keys
+                    - generic [ref=e82]: Participant Ranking
+                    - generic [ref=e83]: Multiple Choice & More
+            - button "Join Competition Enter a competition code to participate. Submit your answers and see how you rank against other participants." [ref=e84] [cursor=pointer]:
+              - generic [ref=e85]:
+                - img [ref=e87]
+                - generic [ref=e92]:
+                  - heading "Join Competition" [level=2] [ref=e93]
+                  - paragraph [ref=e94]: Enter a competition code to participate. Submit your answers and see how you rank against other participants.
+          - generic [ref=e95]:
+            - heading "Competition Mode Features" [level=3] [ref=e96]
+            - generic [ref=e97]:
+              - generic [ref=e98]:
+                - heading "Answer Keys" [level=4] [ref=e99]:
+                  - img [ref=e100]
+                  - text: Answer Keys
+                - paragraph [ref=e104]: Define correct answers for each parameter. Supports multiple choice, true/false, exact match, contains text, and numeric ranges.
+              - generic [ref=e105]:
+                - heading "Automatic Scoring" [level=4] [ref=e106]:
+                  - img [ref=e107]
+                  - text: Automatic Scoring
+                - paragraph [ref=e109]: Participants are automatically scored based on accuracy. Configure point values for each parameter.
+              - generic [ref=e110]:
+                - heading "Leaderboards" [level=4] [ref=e111]:
+                  - img [ref=e112]
+                  - text: Leaderboards
+                - paragraph [ref=e115]: Real-time ranking of participants. Choose from total points, accuracy percentage, or weighted scoring.
+              - generic [ref=e116]:
+                - heading "Blind Tasting" [level=4] [ref=e117]:
+                  - img [ref=e118]
+                  - text: Blind Tasting
+                - paragraph [ref=e121]: Hide item names during tasting to eliminate bias. Perfect for objective evaluation.
+              - generic [ref=e122]:
+                - heading "Multi-User Support" [level=4] [ref=e123]:
+                  - img [ref=e124]
+                  - text: Multi-User Support
+                - paragraph [ref=e128]: Invite unlimited participants with a simple join code. Real-time synchronization across devices.
+              - generic [ref=e129]:
+                - heading "Mobile Friendly" [level=4] [ref=e130]:
+                  - img [ref=e131]
+                  - text: Mobile Friendly
+                - paragraph [ref=e133]: Optimized for mobile devices. Participants can join and submit answers from any device.
+          - generic [ref=e134]:
+            - heading "Perfect For" [level=3] [ref=e135]
+            - list [ref=e136]:
+              - listitem [ref=e137]:
+                - generic [ref=e138]: •
+                - generic [ref=e139]:
+                  - strong [ref=e140]: "Coffee Cuppings:"
+                  - text: Blind tastings with origin identification and quality scoring
+              - listitem [ref=e141]:
+                - generic [ref=e142]: •
+                - generic [ref=e143]:
+                  - strong [ref=e144]: "Wine Competitions:"
+                  - text: Varietal identification and flavor profile matching
+              - listitem [ref=e145]:
+                - generic [ref=e146]: •
+                - generic [ref=e147]:
+                  - strong [ref=e148]: "Educational Sessions:"
+                  - text: Teach students to identify key characteristics
+              - listitem [ref=e149]:
+                - generic [ref=e150]: •
+                - generic [ref=e151]:
+                  - strong [ref=e152]: "Team Building:"
+                  - text: Friendly competitions with scoring and rankings
+        - navigation "Main navigation" [ref=e154]:
+          - link "Home" [ref=e155] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e157]: home
+            - generic [ref=e158]: Home
+          - link "Taste" [ref=e159] [cursor=pointer]:
+            - /url: /taste
+            - generic [ref=e161]: restaurant
+            - generic [ref=e162]: Taste
+          - link "Review" [ref=e163] [cursor=pointer]:
+            - /url: /review
+            - generic [ref=e165]: rate_review
+            - generic [ref=e166]: Review
+          - link "Wheels" [ref=e167] [cursor=pointer]:
+            - /url: /flavor-wheels
+            - generic [ref=e169]: donut_small
+            - generic [ref=e170]: Wheels
+    - status [ref=e56]
+    - alert [ref=e57]
+    - region "Notifications Alt+T"
+    - region "Notifications alt+T"
+  - alert [ref=e58]: Flavatix - The one place for all your tasting needs

@@ -1,0 +1,307 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e4]:
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - button "arrow_back" [ref=e82] [cursor=pointer]:
+              - generic [ref=e83]: arrow_back
+            - heading "Social Feed" [level=1] [ref=e84]
+            - button "add_circle" [ref=e85] [cursor=pointer]:
+              - generic [ref=e86]: add_circle
+          - generic [ref=e87]:
+            - button "For You" [ref=e88] [cursor=pointer]
+            - button "Following" [ref=e89] [cursor=pointer]
+          - generic [ref=e91]:
+            - button "all" [ref=e92] [cursor=pointer]
+            - button "coffee" [ref=e93] [cursor=pointer]
+            - button "wine" [ref=e94] [cursor=pointer]
+            - button "beer" [ref=e95] [cursor=pointer]
+            - button "spirits" [ref=e96] [cursor=pointer]
+            - button "tea" [ref=e97] [cursor=pointer]
+            - button "chocolate" [ref=e98] [cursor=pointer]
+        - main [ref=e99]:
+          - generic [ref=e100]:
+            - article [ref=e101]:
+              - generic [ref=e102]:
+                - generic [ref=e103]: T
+                - generic [ref=e105]:
+                  - generic [ref=e106]:
+                    - paragraph [ref=e107]: Thomas Weber
+                    - paragraph [ref=e108]: 2/6/2026
+                  - button "Follow" [ref=e109] [cursor=pointer]
+              - generic [ref=e111]: whisky
+              - heading "Whisky Tasting" [level=3] [ref=e112]
+              - generic [ref=e113]:
+                - generic [ref=e114]: 0 likes
+                - generic [ref=e115]: •
+                - generic [ref=e116]: 0 comments
+              - generic [ref=e117]:
+                - button "favorite_border Like" [ref=e118] [cursor=pointer]:
+                  - generic [ref=e119]: favorite_border
+                  - generic [ref=e120]: Like
+                - button "mode_comment Comment" [ref=e121] [cursor=pointer]:
+                  - generic [ref=e122]: mode_comment
+                  - generic [ref=e123]: Comment
+                - button "share Share" [ref=e124] [cursor=pointer]:
+                  - generic [ref=e125]: share
+                  - generic [ref=e126]: Share
+            - article [ref=e127]:
+              - generic [ref=e128]:
+                - img "han's avatar" [ref=e130]
+                - generic [ref=e133]:
+                  - paragraph [ref=e134]: han
+                  - paragraph [ref=e135]: 1/18/2026
+              - generic [ref=e137]: whiskey
+              - heading "Whiskey Tasting" [level=3] [ref=e138]
+              - 'button "expand_more 1 items tasted • Avg: 92/100" [ref=e140] [cursor=pointer]':
+                - generic [ref=e141]: expand_more
+                - text: 1 items tasted
+                - generic [ref=e142]: "• Avg: 92/100"
+              - generic [ref=e143]:
+                - generic [ref=e144]: 1 likes
+                - generic [ref=e145]: •
+                - generic [ref=e146]: 1 comments
+              - generic [ref=e147]:
+                - button "favorite Like" [active] [ref=e417] [cursor=pointer]:
+                  - generic [ref=e149]: favorite
+                  - generic [ref=e150]: Like
+                - button "mode_comment Comment" [ref=e151] [cursor=pointer]:
+                  - generic [ref=e152]: mode_comment
+                  - generic [ref=e153]: Comment
+                - button "share Share" [ref=e154] [cursor=pointer]:
+                  - generic [ref=e155]: share
+                  - generic [ref=e156]: Share
+            - article [ref=e157]:
+              - generic [ref=e158]:
+                - img "han's avatar" [ref=e160]
+                - generic [ref=e163]:
+                  - paragraph [ref=e164]: han
+                  - paragraph [ref=e165]: 1/18/2026
+              - generic [ref=e167]: whiskey
+              - heading "Whiskey Tasting" [level=3] [ref=e168]
+              - 'button "expand_more 1 items tasted • Avg: 92/100" [ref=e170] [cursor=pointer]':
+                - generic [ref=e171]: expand_more
+                - text: 1 items tasted
+                - generic [ref=e172]: "• Avg: 92/100"
+              - generic [ref=e173]:
+                - generic [ref=e174]: 0 likes
+                - generic [ref=e175]: •
+                - generic [ref=e176]: 0 comments
+              - generic [ref=e177]:
+                - button "favorite_border Like" [ref=e178] [cursor=pointer]:
+                  - generic [ref=e179]: favorite_border
+                  - generic [ref=e180]: Like
+                - button "mode_comment Comment" [ref=e181] [cursor=pointer]:
+                  - generic [ref=e182]: mode_comment
+                  - generic [ref=e183]: Comment
+                - button "share Share" [ref=e184] [cursor=pointer]:
+                  - generic [ref=e185]: share
+                  - generic [ref=e186]: Share
+            - article [ref=e187]:
+              - generic [ref=e188]:
+                - img "han's avatar" [ref=e190]
+                - generic [ref=e193]:
+                  - paragraph [ref=e194]: han
+                  - paragraph [ref=e195]: 1/17/2026
+              - generic [ref=e197]: whiskey
+              - heading "Whiskey Tasting" [level=3] [ref=e198]
+              - 'button "expand_more 1 items tasted • Avg: 92/100" [ref=e200] [cursor=pointer]':
+                - generic [ref=e201]: expand_more
+                - text: 1 items tasted
+                - generic [ref=e202]: "• Avg: 92/100"
+              - generic [ref=e203]:
+                - generic [ref=e204]: 0 likes
+                - generic [ref=e205]: •
+                - generic [ref=e206]: 0 comments
+              - generic [ref=e207]:
+                - button "favorite_border Like" [ref=e208] [cursor=pointer]:
+                  - generic [ref=e209]: favorite_border
+                  - generic [ref=e210]: Like
+                - button "mode_comment Comment" [ref=e211] [cursor=pointer]:
+                  - generic [ref=e212]: mode_comment
+                  - generic [ref=e213]: Comment
+                - button "share Share" [ref=e214] [cursor=pointer]:
+                  - generic [ref=e215]: share
+                  - generic [ref=e216]: Share
+            - article [ref=e217]:
+              - generic [ref=e218]:
+                - img "han's avatar" [ref=e220]
+                - generic [ref=e223]:
+                  - paragraph [ref=e224]: han
+                  - paragraph [ref=e225]: 1/17/2026
+              - generic [ref=e227]: whiskey
+              - heading "Whiskey Tasting" [level=3] [ref=e228]
+              - 'button "expand_more 1 items tasted • Avg: 92/100" [ref=e230] [cursor=pointer]':
+                - generic [ref=e231]: expand_more
+                - text: 1 items tasted
+                - generic [ref=e232]: "• Avg: 92/100"
+              - generic [ref=e233]:
+                - generic [ref=e234]: 0 likes
+                - generic [ref=e235]: •
+                - generic [ref=e236]: 0 comments
+              - generic [ref=e237]:
+                - button "favorite_border Like" [ref=e238] [cursor=pointer]:
+                  - generic [ref=e239]: favorite_border
+                  - generic [ref=e240]: Like
+                - button "mode_comment Comment" [ref=e241] [cursor=pointer]:
+                  - generic [ref=e242]: mode_comment
+                  - generic [ref=e243]: Comment
+                - button "share Share" [ref=e244] [cursor=pointer]:
+                  - generic [ref=e245]: share
+                  - generic [ref=e246]: Share
+            - article [ref=e247]:
+              - generic [ref=e248]:
+                - img "han's avatar" [ref=e250]
+                - generic [ref=e253]:
+                  - paragraph [ref=e254]: han
+                  - paragraph [ref=e255]: 1/17/2026
+              - generic [ref=e257]: whiskey
+              - heading "Whiskey Tasting" [level=3] [ref=e258]
+              - 'button "expand_more 1 items tasted • Avg: 92/100" [ref=e260] [cursor=pointer]':
+                - generic [ref=e261]: expand_more
+                - text: 1 items tasted
+                - generic [ref=e262]: "• Avg: 92/100"
+              - generic [ref=e263]:
+                - generic [ref=e264]: 0 likes
+                - generic [ref=e265]: •
+                - generic [ref=e266]: 0 comments
+              - generic [ref=e267]:
+                - button "favorite_border Like" [ref=e268] [cursor=pointer]:
+                  - generic [ref=e269]: favorite_border
+                  - generic [ref=e270]: Like
+                - button "mode_comment Comment" [ref=e271] [cursor=pointer]:
+                  - generic [ref=e272]: mode_comment
+                  - generic [ref=e273]: Comment
+                - button "share Share" [ref=e274] [cursor=pointer]:
+                  - generic [ref=e275]: share
+                  - generic [ref=e276]: Share
+            - article [ref=e277]:
+              - generic [ref=e278]:
+                - img "han's avatar" [ref=e280]
+                - generic [ref=e283]:
+                  - paragraph [ref=e284]: han
+                  - paragraph [ref=e285]: 1/17/2026
+              - generic [ref=e287]: whiskey
+              - heading "Whiskey Tasting" [level=3] [ref=e288]
+              - 'button "expand_more 1 items tasted • Avg: 92/100" [ref=e290] [cursor=pointer]':
+                - generic [ref=e291]: expand_more
+                - text: 1 items tasted
+                - generic [ref=e292]: "• Avg: 92/100"
+              - generic [ref=e293]:
+                - generic [ref=e294]: 0 likes
+                - generic [ref=e295]: •
+                - generic [ref=e296]: 0 comments
+              - generic [ref=e297]:
+                - button "favorite_border Like" [ref=e298] [cursor=pointer]:
+                  - generic [ref=e299]: favorite_border
+                  - generic [ref=e300]: Like
+                - button "mode_comment Comment" [ref=e301] [cursor=pointer]:
+                  - generic [ref=e302]: mode_comment
+                  - generic [ref=e303]: Comment
+                - button "share Share" [ref=e304] [cursor=pointer]:
+                  - generic [ref=e305]: share
+                  - generic [ref=e306]: Share
+            - article [ref=e307]:
+              - generic [ref=e308]:
+                - img "han's avatar" [ref=e310]
+                - generic [ref=e313]:
+                  - paragraph [ref=e314]: han
+                  - paragraph [ref=e315]: 1/17/2026
+              - generic [ref=e317]: whiskey
+              - heading "Whiskey Tasting" [level=3] [ref=e318]
+              - 'button "expand_more 1 items tasted • Avg: 92/100" [ref=e320] [cursor=pointer]':
+                - generic [ref=e321]: expand_more
+                - text: 1 items tasted
+                - generic [ref=e322]: "• Avg: 92/100"
+              - generic [ref=e323]:
+                - generic [ref=e324]: 0 likes
+                - generic [ref=e325]: •
+                - generic [ref=e326]: 0 comments
+              - generic [ref=e327]:
+                - button "favorite_border Like" [ref=e328] [cursor=pointer]:
+                  - generic [ref=e329]: favorite_border
+                  - generic [ref=e330]: Like
+                - button "mode_comment Comment" [ref=e331] [cursor=pointer]:
+                  - generic [ref=e332]: mode_comment
+                  - generic [ref=e333]: Comment
+                - button "share Share" [ref=e334] [cursor=pointer]:
+                  - generic [ref=e335]: share
+                  - generic [ref=e336]: Share
+            - article [ref=e337]:
+              - generic [ref=e338]:
+                - img "han's avatar" [ref=e340]
+                - generic [ref=e343]:
+                  - paragraph [ref=e344]: han
+                  - paragraph [ref=e345]: 1/17/2026
+              - generic [ref=e347]: whiskey
+              - heading "Whiskey Tasting" [level=3] [ref=e348]
+              - 'button "expand_more 1 items tasted • Avg: 92/100" [ref=e350] [cursor=pointer]':
+                - generic [ref=e351]: expand_more
+                - text: 1 items tasted
+                - generic [ref=e352]: "• Avg: 92/100"
+              - generic [ref=e353]:
+                - generic [ref=e354]: 0 likes
+                - generic [ref=e355]: •
+                - generic [ref=e356]: 0 comments
+              - generic [ref=e357]:
+                - button "favorite_border Like" [ref=e358] [cursor=pointer]:
+                  - generic [ref=e359]: favorite_border
+                  - generic [ref=e360]: Like
+                - button "mode_comment Comment" [ref=e361] [cursor=pointer]:
+                  - generic [ref=e362]: mode_comment
+                  - generic [ref=e363]: Comment
+                - button "share Share" [ref=e364] [cursor=pointer]:
+                  - generic [ref=e365]: share
+                  - generic [ref=e366]: Share
+            - article [ref=e367]:
+              - generic [ref=e368]:
+                - img "han's avatar" [ref=e370]
+                - generic [ref=e373]:
+                  - paragraph [ref=e374]: han
+                  - paragraph [ref=e375]: 1/17/2026
+              - generic [ref=e377]: whiskey
+              - heading "Whiskey Tasting" [level=3] [ref=e378]
+              - 'button "expand_more 1 items tasted • Avg: 92/100" [ref=e380] [cursor=pointer]':
+                - generic [ref=e381]: expand_more
+                - text: 1 items tasted
+                - generic [ref=e382]: "• Avg: 92/100"
+              - generic [ref=e383]:
+                - generic [ref=e384]: 0 likes
+                - generic [ref=e385]: •
+                - generic [ref=e386]: 0 comments
+              - generic [ref=e387]:
+                - button "favorite_border Like" [ref=e388] [cursor=pointer]:
+                  - generic [ref=e389]: favorite_border
+                  - generic [ref=e390]: Like
+                - button "mode_comment Comment" [ref=e391] [cursor=pointer]:
+                  - generic [ref=e392]: mode_comment
+                  - generic [ref=e393]: Comment
+                - button "share Share" [ref=e394] [cursor=pointer]:
+                  - generic [ref=e395]: share
+                  - generic [ref=e396]: Share
+        - navigation "Main navigation" [ref=e399]:
+          - link "Home" [ref=e400] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e402]: home
+            - generic [ref=e403]: Home
+          - link "Taste" [ref=e404] [cursor=pointer]:
+            - /url: /taste
+            - generic [ref=e406]: restaurant
+            - generic [ref=e407]: Taste
+          - link "Review" [ref=e408] [cursor=pointer]:
+            - /url: /review
+            - generic [ref=e410]: rate_review
+            - generic [ref=e411]: Review
+          - link "Wheels" [ref=e412] [cursor=pointer]:
+            - /url: /flavor-wheels
+            - generic [ref=e414]: donut_small
+            - generic [ref=e415]: Wheels
+    - status [ref=e76]
+    - alert [ref=e77]
+    - region "Notifications Alt+T"
+    - region "Notifications alt+T"
+  - alert [ref=e416]
+  - generic [ref=e418]: Post liked!

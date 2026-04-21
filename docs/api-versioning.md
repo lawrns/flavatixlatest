@@ -621,6 +621,6 @@ fetch('/api/v2/tastings/123', {
 ## Related Documentation
 
 - [API Design Patterns](./api-design-patterns.md) - Middleware and patterns
-- [OpenAPI Specification](./openapi.yaml) - Full API reference
-- [Changelog](./CHANGELOG.md) - Version history and changes
-- [Migration Guides](./migrations/) - Version migration guides
+- [API Reference](./API_REFERENCE.md) - Current stable endpoint surface
+- [Features API Endpoints](./FEATURES_API_ENDPOINTS.md) - Endpoint implementation walkthrough
+- [MIGRATION_CHECKLIST.md](./MIGRATION_CHECKLIST.md) - Operational migration checklist

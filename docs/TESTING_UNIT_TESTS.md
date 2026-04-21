@@ -652,9 +652,9 @@ You've learned:
 
 ## Next Steps
 
-- **Ready for integration tests?** → [TESTING_INTEGRATION.md](./TESTING_INTEGRATION.md)
-- **Want E2E tests?** → [TESTING_E2E.md](./TESTING_E2E.md)
-- **Need to mock API?** → [TESTING_MOCKING.md](./TESTING_MOCKING.md)
+- **Need the current suite status?** → [TEST_SUITE_STATUS.md](./TEST_SUITE_STATUS.md)
+- **Need the current coverage guardrails?** → [COVERAGE_MATRIX.md](./COVERAGE_MATRIX.md)
+- **Need the day-to-day command cheat sheet?** → [QUICK_REFERENCE.md](./QUICK_REFERENCE.md)
 - **Back to index** → [TUTORIALS_INDEX.md](./TUTORIALS_INDEX.md)
 
 ---

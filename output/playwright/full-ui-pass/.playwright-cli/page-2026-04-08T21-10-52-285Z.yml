@@ -1,0 +1,85 @@
+- generic [active] [ref=e28]:
+  - generic [ref=e29]:
+    - link "Skip to main content" [ref=e1] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e30]:
+      - generic [ref=e353]:
+        - generic [ref=e355]:
+          - button "Back" [ref=e356] [cursor=pointer]:
+            - img [ref=e357]
+            - text: Back
+          - generic [ref=e359]:
+            - generic [ref=e360]:
+              - heading "Taste" [level=1] [ref=e361]
+              - paragraph [ref=e362]: Choose how you want to capture your tasting experience.
+            - button "User menu" [ref=e365] [cursor=pointer]:
+              - img "han" [ref=e366]: H
+        - main [ref=e367]:
+          - generic [ref=e368]:
+            - generic [ref=e369]:
+              - paragraph [ref=e370]: Quick presets
+              - generic [ref=e371]:
+                - button "Whisky" [ref=e372] [cursor=pointer]:
+                  - generic [ref=e373]:
+                    - img [ref=e374]
+                    - generic [ref=e377]: Whisky
+                - button "Coffee" [ref=e378] [cursor=pointer]:
+                  - generic [ref=e379]:
+                    - img [ref=e380]
+                    - generic [ref=e382]: Coffee
+                - button "Mezcal" [ref=e383] [cursor=pointer]:
+                  - generic [ref=e384]:
+                    - img [ref=e385]
+                    - generic [ref=e388]: Mezcal
+            - generic [ref=e389]:
+              - button "Quick Tasting Fast notes while tasting — grow your flavor wheels." [ref=e390] [cursor=pointer]:
+                - generic [ref=e391]:
+                  - img [ref=e393]
+                  - generic [ref=e395]:
+                    - heading "Quick Tasting" [level=3] [ref=e396]
+                    - paragraph [ref=e397]: Fast notes while tasting — grow your flavor wheels.
+                  - img [ref=e399]
+              - button "Create Tasting Study, competition, or group tasting sessions." [ref=e401] [cursor=pointer]:
+                - generic [ref=e402]:
+                  - img [ref=e404]
+                  - generic [ref=e409]:
+                    - heading "Create Tasting" [level=3] [ref=e410]
+                    - paragraph [ref=e411]: Study, competition, or group tasting sessions.
+                  - img [ref=e413]
+              - button "Join Tasting Enter a code to join someone else's session." [ref=e415] [cursor=pointer]:
+                - generic [ref=e416]:
+                  - img [ref=e418]
+                  - generic [ref=e421]:
+                    - heading "Join Tasting" [level=3] [ref=e422]
+                    - paragraph [ref=e423]: Enter a code to join someone else's session.
+                  - img [ref=e425]
+              - button "My Tastings Browse your past and ongoing sessions." [ref=e427] [cursor=pointer]:
+                - generic [ref=e428]:
+                  - img [ref=e430]
+                  - generic [ref=e434]:
+                    - heading "My Tastings" [level=3] [ref=e435]
+                    - paragraph [ref=e436]: Browse your past and ongoing sessions.
+                  - img [ref=e438]
+            - paragraph [ref=e441]: Every tasting builds your flavor wheels and creates a personal archive of your palate.
+        - navigation "Main navigation" [ref=e443]:
+          - link "Home" [ref=e444] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e446]: home
+            - generic [ref=e447]: Home
+          - link "Taste" [ref=e448] [cursor=pointer]:
+            - /url: /taste
+            - generic [ref=e450]: restaurant
+            - generic [ref=e451]: Taste
+          - link "Review" [ref=e452] [cursor=pointer]:
+            - /url: /review
+            - generic [ref=e454]: rate_review
+            - generic [ref=e455]: Review
+          - link "Wheels" [ref=e456] [cursor=pointer]:
+            - /url: /flavor-wheels
+            - generic [ref=e458]: donut_small
+            - generic [ref=e459]: Wheels
+    - status [ref=e25]
+    - alert [ref=e26]
+    - region "Notifications Alt+T"
+    - region "Notifications alt+T"
+  - alert [ref=e27]: Flavatix - The one place for all your tasting needs

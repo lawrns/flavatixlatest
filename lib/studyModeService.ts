@@ -69,7 +69,7 @@ export class StudyModeService {
 
     const { data, error } = await this.supabase
       .from('tasting_item_suggestions')
-      .insert(suggestion as any)
+      .insert(suggestion)
       .select()
       .single();
 
@@ -112,21 +112,18 @@ export class StudyModeService {
       query = query.eq('status', status);
     }
 
-    // If user is not a moderator, only show their own suggestions
+    // If user is not a moderator, only show their own suggestions.
+    // Single query replaces the previous getUserPermissions + separate participant lookup (N+1).
     if (userId) {
-      const permissions = await this.getUserPermissions(userId, tastingId);
-      if (!permissions.canModerate) {
-        // Find participant's suggestions
-        const { data: participant } = await this.supabase
-          .from('tasting_participants')
-          .select('id')
-          .eq('tasting_id', tastingId)
-          .eq('user_id', userId)
-          .single();
+      const { data: participant } = await this.supabase
+        .from('tasting_participants')
+        .select('id, can_moderate')
+        .eq('user_id', userId)
+        .eq('tasting_id', tastingId)
+        .single();
 
-        if (participant) {
-          query = query.eq('participant_id', (participant as any).id);
-        }
+      if (participant && !participant.can_moderate) {
+        query = query.eq('participant_id', participant.id);
       }
     }
 
@@ -167,7 +164,7 @@ export class StudyModeService {
       throw new Error('Suggestion not found');
     }
 
-    if ((suggestion as any).status !== 'pending') {
+    if (suggestion.status !== 'pending') {
       throw new Error('Suggestion has already been moderated');
     }
 
@@ -180,8 +177,7 @@ export class StudyModeService {
 
     const { data: updatedSuggestion, error: updateError } = await this.supabase
       .from('tasting_item_suggestions')
-      // @ts-ignore - Supabase type inference issue with complex queries
-      .update(updateData as any)
+      .update(updateData)
       .eq('id', suggestionId)
       .select()
       .single();
@@ -195,12 +191,11 @@ export class StudyModeService {
       await this.createTastingItemFromSuggestion(updatedSuggestion, tastingId);
     }
 
-    // Broadcast the suggestion update in real-time
     studyModeRealtime.broadcastEvent(tastingId, 'suggestion_update', {
-      id: (updatedSuggestion as any).id,
-      status: (updatedSuggestion as any).status,
-      moderated_by: (updatedSuggestion as any).moderated_by,
-      moderated_at: (updatedSuggestion as any).moderated_at,
+      id: updatedSuggestion.id,
+      status: updatedSuggestion.status,
+      moderated_by: updatedSuggestion.moderated_by,
+      moderated_at: updatedSuggestion.moderated_at,
     });
 
     return updatedSuggestion;
@@ -225,9 +220,9 @@ export class StudyModeService {
     }
 
     return {
-      role: (data as any).role as 'host' | 'participant' | 'both',
-      canModerate: (data as any).can_moderate,
-      canAddItems: (data as any).can_add_items,
+      role: data.role as 'host' | 'participant' | 'both',
+      canModerate: data.can_moderate,
+      canAddItems: data.can_add_items,
     };
   }
 
@@ -247,9 +242,9 @@ export class StudyModeService {
     }
 
     return {
-      role: (data as any).role as 'host' | 'participant' | 'both',
-      canModerate: (data as any).can_moderate,
-      canAddItems: (data as any).can_add_items,
+      role: data.role as 'host' | 'participant' | 'both',
+      canModerate: data.can_moderate,
+      canAddItems: data.can_add_items,
     };
   }
 
@@ -302,8 +297,8 @@ export class StudyModeService {
       .insert({
         tasting_id: tastingId,
         item_name: suggestion.suggested_item_name,
-        include_in_ranking: true, // Approved suggestions are included in ranking
-      } as any)
+        include_in_ranking: true,
+      })
       .select()
       .single();
 
@@ -311,10 +306,9 @@ export class StudyModeService {
       throw new Error(`Failed to create tasting item: ${error.message}`);
     }
 
-    // Broadcast that a new item was approved and created
     studyModeRealtime.broadcastEvent(tastingId, 'item_approved', {
-      item_id: (data as any).id,
-      item_name: (data as any).item_name,
+      item_id: data.id,
+      item_name: data.item_name,
       suggestion_id: suggestion.id,
     });
 

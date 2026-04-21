@@ -1,0 +1,23 @@
+- generic [active]:
+  - generic:
+    - link "Skip to main content" [ref=e1] [cursor=pointer]:
+      - /url: "#main-content"
+    - main:
+      - generic [ref=e3]:
+        - generic [ref=e4]:
+          - generic [ref=e5]: 1 of 4
+          - button "Skip" [ref=e6] [cursor=pointer]
+        - generic [ref=e11]:
+          - img "Discover Your Next Favorite" [ref=e13]
+          - heading "Discover Your Next Favorite" [level=2] [ref=e14]
+          - paragraph [ref=e15]: Explore flavors across coffee, wine, spirits, and more
+        - tablist "Onboarding slides" [ref=e16]:
+          - tab "Go to slide 1 of 4" [selected] [ref=e17] [cursor=pointer]
+          - tab "Go to slide 2 of 4" [ref=e19] [cursor=pointer]
+          - tab "Go to slide 3 of 4" [ref=e21] [cursor=pointer]
+          - tab "Go to slide 4 of 4" [ref=e23] [cursor=pointer]
+    - status [ref=e25]
+    - alert [ref=e26]
+    - region "Notifications Alt+T"
+    - region "Notifications alt+T"
+  - alert [ref=e27]

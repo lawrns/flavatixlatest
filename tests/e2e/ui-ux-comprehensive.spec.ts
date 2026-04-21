@@ -95,9 +95,9 @@ test.describe('Requirement 1: Modal Positioning and Layering', () => {
     const modalZIndex = await page.evaluate(() => {
       // Check CSS for modal z-index classes
       const styles = document.styleSheets;
-      for (const sheet of styles) {
+      for (const sheet of Array.from(styles)) {
         try {
-          for (const rule of sheet.cssRules) {
+          for (const rule of Array.from(sheet.cssRules)) {
             if (rule instanceof CSSStyleRule) {
               if (rule.selectorText?.includes('z-50') || rule.selectorText?.includes('modal')) {
                 return 50;
@@ -534,9 +534,9 @@ test.describe('Requirement 11: Animation and Transition Consistency', () => {
     // Check for motion-reduce classes
     const hasReducedMotion = await page.evaluate(() => {
       const styles = document.styleSheets;
-      for (const sheet of styles) {
+      for (const sheet of Array.from(styles)) {
         try {
-          for (const rule of sheet.cssRules) {
+          for (const rule of Array.from(sheet.cssRules)) {
             if (rule.cssText?.includes('prefers-reduced-motion') ||
                 rule.cssText?.includes('motion-reduce')) {
               return true;
@@ -624,7 +624,7 @@ test.describe('Requirement 12: Form Input Consistency', () => {
     // Check for loading-related attributes or classes on buttons
     const hasLoadingSupport = await page.evaluate(() => {
       const buttons = document.querySelectorAll('button[type="submit"]');
-      for (const btn of buttons) {
+      for (const btn of Array.from(buttons)) {
         if (btn.className.includes('disabled') || 
             btn.hasAttribute('disabled') ||
             btn.className.includes('loading')) {

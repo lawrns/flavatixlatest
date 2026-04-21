@@ -1,0 +1,111 @@
+- generic [active] [ref=e5]:
+  - generic [ref=e6]:
+    - link "Skip to main content" [ref=e1] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e7]:
+      - generic [ref=e307]:
+        - generic [ref=e309]:
+          - button "Back" [ref=e310] [cursor=pointer]:
+            - img [ref=e311]
+            - text: Back
+          - generic [ref=e313]:
+            - heading "Settings" [level=1] [ref=e315]
+            - button "User menu" [ref=e319] [cursor=pointer]:
+              - img "han" [ref=e321]
+        - main [ref=e322]:
+          - generic [ref=e324]:
+            - generic [ref=e325]:
+              - heading "Appearance" [level=2] [ref=e326]
+              - generic [ref=e329]:
+                - generic [ref=e330]:
+                  - img [ref=e332]
+                  - generic [ref=e338]:
+                    - paragraph [ref=e339]: Dark Mode
+                    - paragraph [ref=e340]: Currently using light theme
+                - button [ref=e341] [cursor=pointer]
+            - generic [ref=e342]:
+              - heading "Notifications" [level=2] [ref=e343]
+              - generic [ref=e346]:
+                - generic [ref=e347]:
+                  - img [ref=e349]
+                  - generic [ref=e352]:
+                    - paragraph [ref=e353]: Push Notifications
+                    - paragraph [ref=e354]: Receive updates about tastings and reviews
+                - button [ref=e355] [cursor=pointer]
+            - generic [ref=e356]:
+              - heading "Privacy & Security" [level=2] [ref=e357]
+              - generic [ref=e359]:
+                - button "Privacy Policy View our privacy policy and data practices" [ref=e360] [cursor=pointer]:
+                  - generic [ref=e361]:
+                    - img [ref=e363]
+                    - generic [ref=e365]:
+                      - paragraph [ref=e366]: Privacy Policy
+                      - paragraph [ref=e367]: View our privacy policy and data practices
+                  - img [ref=e368]
+                - button "Terms of Service View our terms of service and user agreement" [ref=e370] [cursor=pointer]:
+                  - generic [ref=e371]:
+                    - img [ref=e373]
+                    - generic [ref=e375]:
+                      - paragraph [ref=e376]: Terms of Service
+                      - paragraph [ref=e377]: View our terms of service and user agreement
+                  - img [ref=e378]
+                - button "Privacy Settings Manage your data and privacy preferences" [ref=e380] [cursor=pointer]:
+                  - generic [ref=e381]:
+                    - img [ref=e383]
+                    - generic [ref=e385]:
+                      - paragraph [ref=e386]: Privacy Settings
+                      - paragraph [ref=e387]: Manage your data and privacy preferences
+                  - img [ref=e388]
+            - generic [ref=e390]:
+              - heading "Delete Account" [level=2] [ref=e391]
+              - button "Delete Account Permanently delete your account and all data" [ref=e394] [cursor=pointer]:
+                - generic [ref=e395]:
+                  - img [ref=e397]
+                  - generic [ref=e400]:
+                    - paragraph [ref=e401]: Delete Account
+                    - paragraph [ref=e402]: Permanently delete your account and all data
+                - img [ref=e403]
+            - generic [ref=e405]:
+              - heading "Quick Presets" [level=2] [ref=e406]
+              - generic [ref=e408]:
+                - generic [ref=e409]:
+                  - img [ref=e411]
+                  - generic [ref=e413]:
+                    - paragraph [ref=e414]: Dashboard Presets
+                    - paragraph [ref=e415]: Choose which categories appear on your dashboard
+                - generic [ref=e416]:
+                  - button "Whisky" [ref=e417] [cursor=pointer]:
+                    - generic [ref=e418]:
+                      - img [ref=e419]
+                      - generic [ref=e422]: Whisky
+                  - button "Coffee" [ref=e423] [cursor=pointer]:
+                    - generic [ref=e424]:
+                      - img [ref=e425]
+                      - generic [ref=e427]: Coffee
+                  - button "Mezcal" [ref=e428] [cursor=pointer]:
+                    - generic [ref=e429]:
+                      - img [ref=e430]
+                      - generic [ref=e433]: Mezcal
+            - paragraph [ref=e435]: Flavatix v1.0.0
+        - navigation "Main navigation" [ref=e437]:
+          - link "Home" [ref=e438] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e440]: home
+            - generic [ref=e441]: Home
+          - link "Taste" [ref=e442] [cursor=pointer]:
+            - /url: /taste
+            - generic [ref=e444]: restaurant
+            - generic [ref=e445]: Taste
+          - link "Review" [ref=e446] [cursor=pointer]:
+            - /url: /review
+            - generic [ref=e448]: rate_review
+            - generic [ref=e449]: Review
+          - link "Wheels" [ref=e450] [cursor=pointer]:
+            - /url: /flavor-wheels
+            - generic [ref=e452]: donut_small
+            - generic [ref=e453]: Wheels
+    - status [ref=e2]
+    - alert [ref=e3]
+    - region "Notifications Alt+T"
+    - region "Notifications alt+T"
+  - alert [ref=e4]: Flavatix - The one place for all your tasting needs

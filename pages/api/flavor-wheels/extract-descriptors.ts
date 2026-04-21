@@ -8,6 +8,10 @@ import {
 } from '@/lib/flavorDescriptorExtractor';
 import { extractDescriptorsWithAI } from '@/lib/ai/descriptorExtractionService';
 import {
+  normalizeDescriptorText,
+  resolveDescriptorCanonicalText,
+} from '@/lib/flavorDescriptorNormalization';
+import {
   createApiHandler,
   withAuth,
   withValidation,
@@ -54,6 +58,36 @@ interface ExtractResponse {
   tokensUsed?: number;
   processingTimeMs?: number;
   extractionMethod: 'keyword' | 'ai';
+}
+
+function sanitizeExtractedDescriptors(descriptors: ExtractedDescriptor[]): ExtractedDescriptor[] {
+  const normalizedCandidates = descriptors.map((descriptor) => descriptor.text);
+  const deduped = new Map<string, ExtractedDescriptor>();
+
+  for (const descriptor of descriptors) {
+    const text = resolveDescriptorCanonicalText(descriptor.text, normalizedCandidates);
+
+    if (!text) {
+      continue;
+    }
+
+    const key = `${descriptor.type}:${text}`;
+    const existing = deduped.get(key);
+
+    if (!existing || (descriptor.confidence ?? 0) > (existing.confidence ?? 0)) {
+      deduped.set(key, {
+        ...descriptor,
+        text,
+      });
+      continue;
+    }
+
+    if (!existing.intensity && descriptor.intensity) {
+      existing.intensity = descriptor.intensity;
+    }
+  }
+
+  return Array.from(deduped.values());
 }
 
 /**
@@ -172,6 +206,8 @@ async function extractDescriptorsHandler(
       extractionMethod = 'keyword';
     }
 
+    descriptors = sanitizeExtractedDescriptors(descriptors);
+
     if (descriptors.length === 0) {
       return sendSuccess(
         res,
@@ -197,7 +233,7 @@ async function extractDescriptorsHandler(
       intensity: descriptor.intensity,
       item_name: itemContext?.itemName || null,
       item_category: itemContext?.itemCategory || null,
-      normalized_form: descriptor.text.toLowerCase().trim(), // Case-insensitive normalization
+      normalized_form: normalizeDescriptorText(descriptor.text),
       ai_extracted: extractionMethod === 'ai',
       extraction_model: extractionMethod === 'ai' ? 'claude-haiku-3-20240307' : null,
     }));

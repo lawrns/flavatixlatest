@@ -138,8 +138,10 @@ describe('POST /api/categories/get-or-create-taxonomy', () => {
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
-          taxonomy: existingTaxonomy,
-          cached: true,
+          data: expect.objectContaining({
+            taxonomy: existingTaxonomy,
+            cached: true,
+          }),
         })
       );
     });
@@ -236,11 +238,13 @@ describe('POST /api/categories/get-or-create-taxonomy', () => {
 
       expect(mockGenerateCategoryTaxonomy).toHaveBeenCalledWith('Wine');
 
-      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
-          cached: false,
+          data: expect.objectContaining({
+            cached: false,
+          }),
         })
       );
     });
@@ -290,7 +294,7 @@ describe('POST /api/categories/get-or-create-taxonomy', () => {
   });
 
   describe('AI Key Not Available', () => {
-    it('should return 200 with null taxonomy when AI key missing', async () => {
+    it('should return 503 when AI key missing', async () => {
       mockSupabase.single.mockResolvedValue({
         data: null,
         error: new Error('Not found'),
@@ -308,13 +312,14 @@ describe('POST /api/categories/get-or-create-taxonomy', () => {
 
       expect(mockGenerateCategoryTaxonomy).not.toHaveBeenCalled();
 
-      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.status).toHaveBeenCalledWith(503);
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          success: true,
-          taxonomy: null,
-          cached: false,
-          error: expect.stringContaining('AI taxonomy generation not available'),
+          success: false,
+          error: expect.objectContaining({
+            code: 'AI_NOT_AVAILABLE',
+            message: expect.stringContaining('AI taxonomy generation not available'),
+          }),
         })
       );
     });

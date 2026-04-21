@@ -1,29 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../contexts/SimpleAuthContext';
-import { useRouter } from 'next/router';
 import ProfileEditForm from '../components/profile/ProfileEditForm';
 import ProfileService, { UserProfile } from '../lib/profileService';
 import { PageLayout } from '../components/layout/PageLayout';
+import { useRequireAuth } from '@/hooks';
 
 const ProfilePage: React.FC = () => {
-  const { user } = useAuth();
-  const router = useRouter();
+  const { user, loading } = useRequireAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
     if (!user) {
-      router.push('/auth');
-    } else {
-      // Load user profile
-      ProfileService.getProfile(user.id).then(setProfile);
+      return;
     }
-  }, [user, router]);
+
+    ProfileService.getProfile(user.id).then(setProfile);
+  }, [user]);
 
   const handleProfileUpdate = (updatedProfile: UserProfile) => {
     setProfile(updatedProfile);
   };
 
-  if (!user) {
+  if (loading || !user) {
     return null;
   }
 

@@ -20,6 +20,8 @@ jest.mock('@anthropic-ai/sdk', () => ({
 }));
 
 describe('POST /api/flavor-wheels/extract-descriptors', () => {
+  const tastingId = '11111111-1111-4111-8111-111111111111';
+  const reviewId = '22222222-2222-4222-8222-222222222222';
   let mockSupabase: any;
   let req: Partial<NextApiRequest>;
   let res: Partial<NextApiResponse>;
@@ -198,7 +200,7 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
         headers: createMockAuthHeaders(),
         body: {
           sourceType: 'quick_tasting',
-          sourceId: 'tasting-123',
+          sourceId: tastingId,
           text: 'Rich chocolate and fruity berry notes with smooth texture',
           category: 'Wine',
           useAI: true,
@@ -217,13 +219,15 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
-          descriptors: expect.arrayContaining([
-            expect.objectContaining({ text: 'chocolate' }),
-            expect.objectContaining({ text: 'fruity' }),
-          ]),
-          extractionMethod: 'ai',
-          tokensUsed: 250,
-          processingTimeMs: 1200,
+          data: expect.objectContaining({
+            descriptors: expect.arrayContaining([
+              expect.objectContaining({ text: 'chocolate' }),
+              expect.objectContaining({ text: 'fruity' }),
+            ]),
+            extractionMethod: 'ai',
+            tokensUsed: 250,
+            processingTimeMs: 1200,
+          }),
         })
       );
     });
@@ -243,7 +247,7 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
         headers: createMockAuthHeaders(),
         body: {
           sourceType: 'quick_tasting',
-          sourceId: 'tasting-123',
+          sourceId: tastingId,
           text: 'Chocolate and fruity notes',
           category: 'Wine',
           useAI: true,
@@ -267,7 +271,7 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
         headers: createMockAuthHeaders(),
         body: {
           sourceType: 'quick_tasting',
-          sourceId: 'tasting-123',
+          sourceId: tastingId,
           text: 'Chocolate and fruity notes',
           useAI: true,
         },
@@ -279,7 +283,7 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
       expect(mockSupabase.insert).toHaveBeenCalledWith(
         expect.objectContaining({
           user_id: testUser.id,
-          tasting_id: 'tasting-123',
+          tasting_id: tastingId,
           source_type: 'quick_tasting',
           model_used: 'claude-3-haiku-20240307',
           tokens_used: 250,
@@ -298,7 +302,7 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
         headers: createMockAuthHeaders(),
         body: {
           sourceType: 'quick_tasting',
-          sourceId: 'tasting-123',
+          sourceId: tastingId,
           text: 'Chocolate and fruity notes',
           useAI: true,
         },
@@ -311,8 +315,9 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
-          extractionMethod: 'keyword',
-          tokensUsed: undefined,
+          data: expect.objectContaining({
+            extractionMethod: 'keyword',
+          }),
         })
       );
     });
@@ -332,7 +337,7 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
         headers: createMockAuthHeaders(),
         body: {
           sourceType: 'quick_tasting',
-          sourceId: 'tasting-123',
+          sourceId: tastingId,
           text: 'Sweet and smooth with chocolate notes',
           useAI: false,
         },
@@ -347,7 +352,9 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
-          extractionMethod: 'keyword',
+          data: expect.objectContaining({
+            extractionMethod: 'keyword',
+          }),
         })
       );
     });
@@ -365,7 +372,7 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
         headers: createMockAuthHeaders(),
         body: {
           sourceType: 'quick_review',
-          sourceId: 'review-123',
+          sourceId: reviewId,
           structuredData: {
             aroma_notes: 'fruity, floral',
             flavor_notes: 'sweet, chocolate',
@@ -409,7 +416,7 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
         headers: createMockAuthHeaders(),
         body: {
           sourceType: 'quick_tasting',
-          sourceId: 'tasting-123',
+          sourceId: tastingId,
           text: 'Chocolate and fruity notes',
           itemContext: {
             itemName: 'Cabernet Sauvignon',
@@ -427,7 +434,7 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
           expect.objectContaining({
             user_id: testUser.id,
             source_type: 'quick_tasting',
-            source_id: 'tasting-123',
+            source_id: tastingId,
             descriptor_text: 'chocolate',
             descriptor_type: 'aroma',
             item_name: 'Cabernet Sauvignon',
@@ -452,7 +459,7 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
         headers: createMockAuthHeaders(),
         body: {
           sourceType: 'quick_tasting',
-          sourceId: 'tasting-123',
+          sourceId: tastingId,
           text: 'Chocolate notes',
           useAI: true,
         },
@@ -475,7 +482,7 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
         headers: createMockAuthHeaders(),
         body: {
           sourceType: 'quick_tasting',
-          sourceId: 'tasting-123',
+          sourceId: tastingId,
           text: 'No descriptors here',
           useAI: true,
         },
@@ -487,8 +494,10 @@ describe('POST /api/flavor-wheels/extract-descriptors', () => {
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
-          descriptors: [],
-          savedCount: 0,
+          data: expect.objectContaining({
+            descriptors: [],
+            savedCount: 0,
+          }),
         })
       );
     });

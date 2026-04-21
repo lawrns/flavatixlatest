@@ -1,0 +1,10 @@
+- generic [active]:
+  - generic:
+    - link "Skip to main content" [ref=e1] [cursor=pointer]:
+      - /url: "#main-content"
+    - main
+    - status [ref=e2]
+    - alert [ref=e3]
+    - region "Notifications Alt+T"
+    - region "Notifications alt+T"
+  - alert [ref=e4]

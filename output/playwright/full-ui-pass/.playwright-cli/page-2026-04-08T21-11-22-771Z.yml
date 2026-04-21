@@ -1,0 +1,119 @@
+- generic [active] [ref=e28]:
+  - generic [ref=e29]:
+    - link "Skip to main content" [ref=e1] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e30]:
+      - generic [ref=e585]:
+        - generic [ref=e587]:
+          - button "Back" [ref=e588] [cursor=pointer]:
+            - img [ref=e589]
+            - text: Back
+          - generic [ref=e591]:
+            - generic [ref=e592]:
+              - heading "Quick Tasting" [level=1] [ref=e593]
+              - paragraph [ref=e594]: Start a quick tasting session to explore flavors and record your impressions
+            - button "User menu" [ref=e597] [cursor=pointer]:
+              - img "han" [ref=e598]: H
+        - main [ref=e599]:
+          - generic [ref=e600]:
+            - generic [ref=e602]:
+              - generic [ref=e603]:
+                - generic [ref=e604]: "1"
+                - generic [ref=e605]: Category
+              - generic [ref=e607]:
+                - generic [ref=e608]: "2"
+                - generic [ref=e609]: Tasting
+              - generic [ref=e611]:
+                - generic [ref=e612]: "3"
+                - generic [ref=e613]: Summary
+            - generic [ref=e615]:
+              - generic [ref=e617]:
+                - generic [ref=e618]:
+                  - generic "Click to edit session name" [ref=e620] [cursor=pointer]:
+                    - generic [ref=e621]:
+                      - generic [ref=e622]: Session Name
+                      - generic [ref=e623]:
+                        - heading "Coffee Tasting" [level=2] [ref=e624]
+                        - img [ref=e625]
+                  - generic [ref=e628]:
+                    - generic [ref=e629]: "Category:"
+                    - generic [ref=e630]: coffee
+                - generic [ref=e632]:
+                  - generic [ref=e633]:
+                    - generic [ref=e634]: "1"
+                    - generic [ref=e635]: Total items
+                  - generic [ref=e636]:
+                    - generic [ref=e637]: "0"
+                    - generic [ref=e638]: Completed
+              - generic [ref=e639]:
+                - generic [ref=e640]:
+                  - generic [ref=e642]:
+                    - img [ref=e644]
+                    - generic [ref=e646]:
+                      - generic [ref=e647]: "Item #1"
+                      - generic [ref=e648] [cursor=pointer]:
+                        - heading "Item 1" [level=3] [ref=e649]
+                        - img [ref=e650]
+                      - paragraph [ref=e653]: Coffee Tasting
+                  - generic [ref=e654]:
+                    - generic [ref=e655]:
+                      - heading "Photo" [level=4] [ref=e656]
+                      - button "Add Photo" [ref=e657] [cursor=pointer]
+                    - generic [ref=e659]:
+                      - img [ref=e660]
+                      - paragraph [ref=e663]: No photo added
+                  - generic [ref=e664]:
+                    - generic [ref=e665]:
+                      - img [ref=e666]
+                      - text: Aroma
+                    - textbox "Describe the aroma..." [ref=e671]
+                  - generic [ref=e672]:
+                    - generic [ref=e673]:
+                      - img [ref=e674]
+                      - text: Flavor
+                    - textbox "Describe the flavor, taste, and mouthfeel..." [ref=e676]
+                  - generic [ref=e677]:
+                    - generic [ref=e678]:
+                      - img [ref=e679]
+                      - text: Other Notes
+                    - textbox "Additional notes..." [ref=e682]
+                  - generic [ref=e684]:
+                    - generic [ref=e685]:
+                      - img [ref=e686]
+                      - text: Overall Score
+                    - generic [ref=e688]:
+                      - generic [ref=e690]: "0"
+                      - generic [ref=e691]:
+                        - slider "Overall Score" [ref=e692] [cursor=pointer]: "0"
+                        - generic [ref=e693]:
+                          - generic [ref=e694]: "0"
+                          - generic [ref=e695]: "50"
+                          - generic [ref=e696]: "100"
+                - generic [ref=e697]:
+                  - generic [ref=e698]:
+                    - button "Previous" [disabled] [ref=e699]
+                    - generic [ref=e700]: 1 / 1
+                    - button "Add Item" [ref=e701] [cursor=pointer]
+                  - button "Complete Tasting (1 items incomplete)" [disabled] [ref=e702]
+        - navigation "Main navigation" [ref=e704]:
+          - link "Home" [ref=e705] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e707]: home
+            - generic [ref=e708]: Home
+          - link "Taste" [ref=e709] [cursor=pointer]:
+            - /url: /taste
+            - generic [ref=e711]: restaurant
+            - generic [ref=e712]: Taste
+          - link "Review" [ref=e713] [cursor=pointer]:
+            - /url: /review
+            - generic [ref=e715]: rate_review
+            - generic [ref=e716]: Review
+          - link "Wheels" [ref=e717] [cursor=pointer]:
+            - /url: /flavor-wheels
+            - generic [ref=e719]: donut_small
+            - generic [ref=e720]: Wheels
+    - status [ref=e25]
+    - alert [ref=e26]
+    - region "Notifications Alt+T"
+    - region "Notifications alt+T"
+  - alert [ref=e27]: Flavatix - The one place for all your tasting needs

@@ -25,6 +25,9 @@ jest.mock('@anthropic-ai/sdk', () => ({
 }));
 
 describe('Integration: Tasting Creation Flow', () => {
+  const quickTastingId = '11111111-1111-4111-8111-111111111111';
+  const competitionTastingId = '22222222-2222-4222-8222-222222222222';
+  const errorTastingId = '33333333-3333-4333-8333-333333333333';
   let mockSupabase: any;
   let mockExtractDescriptorsWithAI: jest.Mock;
   let mockGetOrGenerateFlavorWheel: jest.Mock;
@@ -62,12 +65,11 @@ describe('Integration: Tasting Creation Flow', () => {
   });
 
   it('should complete full tasting creation workflow', async () => {
-    const tastingId = 'tasting-integration-123';
     const itemName = 'Cabernet Sauvignon 2020';
 
     // Step 1: Create a quick tasting
     const mockTasting = {
-      id: tastingId,
+      id: quickTastingId,
       user_id: testUser.id,
       category: 'wine',
       session_name: 'Wine Quick Tasting',
@@ -106,7 +108,7 @@ describe('Integration: Tasting Creation Flow', () => {
         success: true,
         data: expect.objectContaining({
           tasting: expect.objectContaining({
-            id: tastingId,
+            id: quickTastingId,
             category: 'wine',
             mode: 'quick',
           }),
@@ -145,7 +147,7 @@ describe('Integration: Tasting Creation Flow', () => {
       headers: createMockAuthHeaders(),
       body: {
         sourceType: 'quick_tasting',
-        sourceId: tastingId,
+        sourceId: quickTastingId,
         text: 'Rich blackberry aromas with oak notes and tannic structure',
         itemContext: {
           itemName,
@@ -166,12 +168,14 @@ describe('Integration: Tasting Creation Flow', () => {
     expect(extractRes.json).toHaveBeenCalledWith(
       expect.objectContaining({
         success: true,
-        descriptors: expect.arrayContaining([
-          expect.objectContaining({ text: 'blackberry' }),
-          expect.objectContaining({ text: 'oak' }),
-          expect.objectContaining({ text: 'tannic' }),
-        ]),
-        extractionMethod: 'ai',
+        data: expect.objectContaining({
+          descriptors: expect.arrayContaining([
+            expect.objectContaining({ text: 'blackberry' }),
+            expect.objectContaining({ text: 'oak' }),
+            expect.objectContaining({ text: 'tannic' }),
+          ]),
+          extractionMethod: 'ai',
+        }),
       })
     );
 
@@ -195,7 +199,7 @@ describe('Integration: Tasting Creation Flow', () => {
         wheelType: 'combined',
         scopeType: 'tasting',
         scopeFilter: {
-          tastingId,
+          tastingId: quickTastingId,
         },
       },
     });
@@ -210,7 +214,7 @@ describe('Integration: Tasting Creation Flow', () => {
         wheelType: 'combined',
         scopeType: 'tasting',
         scopeFilter: expect.objectContaining({
-          tastingId,
+          tastingId: quickTastingId,
         }),
       })
     );
@@ -219,11 +223,13 @@ describe('Integration: Tasting Creation Flow', () => {
     expect(generateRes.json).toHaveBeenCalledWith(
       expect.objectContaining({
         success: true,
-        wheelData: expect.objectContaining({
-          categories: expect.arrayContaining([
-            expect.objectContaining({ name: 'Fruity' }),
-            expect.objectContaining({ name: 'Woody' }),
-          ]),
+        data: expect.objectContaining({
+          wheelData: expect.objectContaining({
+            categories: expect.arrayContaining([
+              expect.objectContaining({ name: 'Fruity' }),
+              expect.objectContaining({ name: 'Woody' }),
+            ]),
+          }),
         }),
       })
     );
@@ -232,11 +238,9 @@ describe('Integration: Tasting Creation Flow', () => {
   });
 
   it('should handle multi-item competition tasting workflow', async () => {
-    const tastingId = 'competition-tasting-123';
-
     // Create competition tasting with multiple items
     const mockTasting = {
-      id: tastingId,
+      id: competitionTastingId,
       user_id: testUser.id,
       category: 'wine',
       mode: 'competition',
@@ -244,9 +248,9 @@ describe('Integration: Tasting Creation Flow', () => {
     };
 
     const mockItems = [
-      { id: 'item-1', tasting_id: tastingId, item_name: 'Wine A' },
-      { id: 'item-2', tasting_id: tastingId, item_name: 'Wine B' },
-      { id: 'item-3', tasting_id: tastingId, item_name: 'Wine C' },
+      { id: '44444444-4444-4444-8444-444444444441', tasting_id: competitionTastingId, item_name: 'Wine A' },
+      { id: '44444444-4444-4444-8444-444444444442', tasting_id: competitionTastingId, item_name: 'Wine B' },
+      { id: '44444444-4444-4444-8444-444444444443', tasting_id: competitionTastingId, item_name: 'Wine C' },
     ];
 
     mockSupabase.single.mockResolvedValueOnce({
@@ -287,7 +291,7 @@ describe('Integration: Tasting Creation Flow', () => {
       expect.objectContaining({
         success: true,
         data: expect.objectContaining({
-          tasting: expect.objectContaining({ id: tastingId }),
+          tasting: expect.objectContaining({ id: competitionTastingId }),
           items: expect.arrayContaining([
             expect.objectContaining({ item_name: 'Wine A' }),
             expect.objectContaining({ item_name: 'Wine B' }),
@@ -299,12 +303,10 @@ describe('Integration: Tasting Creation Flow', () => {
   });
 
   it('should handle error in descriptor extraction gracefully', async () => {
-    const tastingId = 'error-tasting-123';
-
     // Create tasting successfully
     mockSupabase.single.mockResolvedValueOnce({
       data: {
-        id: tastingId,
+        id: errorTastingId,
         user_id: testUser.id,
         category: 'wine',
         mode: 'quick',
@@ -346,7 +348,7 @@ describe('Integration: Tasting Creation Flow', () => {
       headers: createMockAuthHeaders(),
       body: {
         sourceType: 'quick_tasting',
-        sourceId: tastingId,
+        sourceId: errorTastingId,
         text: 'Fruity notes',
         useAI: true,
       },
@@ -360,7 +362,9 @@ describe('Integration: Tasting Creation Flow', () => {
     expect(extractRes.json).toHaveBeenCalledWith(
       expect.objectContaining({
         success: true,
-        extractionMethod: 'keyword',
+        data: expect.objectContaining({
+          extractionMethod: 'keyword',
+        }),
       })
     );
 

@@ -17,22 +17,33 @@ describe('Social Comments API', () => {
   let mockSupabase: any;
   let req: Partial<NextApiRequest>;
   let res: Partial<NextApiResponse>;
-  const tastingId = 'test-tasting-id';
-  const commentId = 'test-comment-id';
+  const tastingId = '11111111-1111-4111-8111-111111111111';
+  const commentId = '22222222-2222-4222-8222-222222222222';
 
   beforeEach(() => {
     jest.clearAllMocks();
 
+    const quickTastingsBuilder: any = {
+      select: jest.fn(),
+    };
+    const tastingCommentsBuilder: any = {
+      select: jest.fn(),
+      insert: jest.fn(),
+      delete: jest.fn(),
+    };
+
     mockSupabase = {
-      from: jest.fn().mockReturnThis(),
-      select: jest.fn().mockReturnThis(),
-      insert: jest.fn().mockReturnThis(),
-      delete: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      is: jest.fn().mockReturnThis(),
-      in: jest.fn().mockReturnThis(),
-      order: jest.fn().mockReturnThis(),
-      single: jest.fn(),
+      from: jest.fn((table: string) => {
+        if (table === 'quick_tastings') {
+          return quickTastingsBuilder;
+        }
+
+        if (table === 'tasting_comments') {
+          return tastingCommentsBuilder;
+        }
+
+        throw new Error(`Unexpected table ${table}`);
+      }),
       auth: {
         getUser: jest.fn().mockResolvedValue({
           data: { user: testUser },
@@ -40,6 +51,9 @@ describe('Social Comments API', () => {
         }),
       },
     };
+
+    (mockSupabase as any).quickTastingsBuilder = quickTastingsBuilder;
+    (mockSupabase as any).tastingCommentsBuilder = tastingCommentsBuilder;
 
     const { getSupabaseClient } = require('@/lib/supabase');
     getSupabaseClient.mockReturnValue(mockSupabase);
@@ -58,21 +72,36 @@ describe('Social Comments API', () => {
         },
       ];
 
-      mockSupabase.single.mockResolvedValue({
-        data: { id: tastingId },
-        error: null,
-      });
+      const { quickTastingsBuilder, tastingCommentsBuilder } = mockSupabase as any;
 
-      mockSupabase.select.mockReturnValue({
+      quickTastingsBuilder.select.mockReturnValue({
         eq: jest.fn().mockReturnValue({
-          is: jest.fn().mockReturnValue({
-            order: jest.fn().mockResolvedValue({
-              data: mockComments,
-              error: null,
-            }),
+          single: jest.fn().mockResolvedValue({
+            data: { id: tastingId },
+            error: null,
           }),
         }),
       });
+
+      tastingCommentsBuilder.select
+        .mockImplementationOnce(() => ({
+          eq: jest.fn().mockReturnValue({
+            is: jest.fn().mockReturnValue({
+              order: jest.fn().mockResolvedValue({
+                data: mockComments,
+                error: null,
+              }),
+            }),
+          }),
+        }))
+        .mockImplementationOnce(() => ({
+          in: jest.fn().mockReturnValue({
+            order: jest.fn().mockResolvedValue({
+              data: [],
+              error: null,
+            }),
+          }),
+        }));
 
       req = createMockRequest({
         method: 'GET',
@@ -113,15 +142,25 @@ describe('Social Comments API', () => {
         content: 'Test comment',
       };
 
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: { id: tastingId },
-          error: null,
-        })
-        .mockResolvedValueOnce({
-          data: newComment,
-          error: null,
-        });
+      const { quickTastingsBuilder, tastingCommentsBuilder } = mockSupabase as any;
+
+      quickTastingsBuilder.select.mockReturnValue({
+        eq: jest.fn().mockReturnValue({
+          single: jest.fn().mockResolvedValue({
+            data: { id: tastingId },
+            error: null,
+          }),
+        }),
+      });
+
+      tastingCommentsBuilder.insert.mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          single: jest.fn().mockResolvedValue({
+            data: newComment,
+            error: null,
+          }),
+        }),
+      });
 
       req = createMockRequest({
         method: 'POST',
@@ -135,15 +174,21 @@ describe('Social Comments API', () => {
         requestId: 'test-req',
       });
 
+      expect(res.status).toHaveBeenCalledWith(201);
       expectSuccess(res as NextApiResponse, newComment);
     });
   });
 
   describe('DELETE /api/social/comments', () => {
     it('should return 403 when deleting another user\'s comment', async () => {
-      mockSupabase.single.mockResolvedValue({
-        data: { id: commentId, user_id: testUser2.id },
-        error: null,
+      const { tastingCommentsBuilder } = mockSupabase as any;
+      tastingCommentsBuilder.select.mockReturnValue({
+        eq: jest.fn().mockReturnValue({
+          single: jest.fn().mockResolvedValue({
+            data: { id: commentId, user_id: testUser2.id },
+            error: null,
+          }),
+        }),
       });
 
       req = createMockRequest({
@@ -162,12 +207,17 @@ describe('Social Comments API', () => {
     });
 
     it('should delete own comment successfully', async () => {
-      mockSupabase.single.mockResolvedValue({
-        data: { id: commentId, user_id: testUser.id },
-        error: null,
+      const { tastingCommentsBuilder } = mockSupabase as any;
+      tastingCommentsBuilder.select.mockReturnValue({
+        eq: jest.fn().mockReturnValue({
+          single: jest.fn().mockResolvedValue({
+            data: { id: commentId, user_id: testUser.id },
+            error: null,
+          }),
+        }),
       });
 
-      mockSupabase.delete.mockReturnValue({
+      tastingCommentsBuilder.delete.mockReturnValue({
         eq: jest.fn().mockReturnValue({
           eq: jest.fn().mockResolvedValue({
             error: null,
@@ -191,4 +241,3 @@ describe('Social Comments API', () => {
     });
   });
 });
-

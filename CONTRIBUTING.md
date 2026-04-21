@@ -576,7 +576,7 @@ export const Button: React.FC<ButtonProps> = ({ ... }) => {
 
 ### API Documentation
 
-Document all API endpoints in `API_REFERENCE.md`:
+Document all API endpoints in `docs/API_REFERENCE.md`:
 
 ```markdown
 ### Create Tasting

@@ -34,8 +34,7 @@ export default async function handler(
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
-      console.error('Analytics: Missing Supabase configuration');
-      return res.status(500).json({ error: 'Server configuration error' });
+      return res.status(200).json({ success: true, warning: 'Analytics unavailable' });
     }
 
     // Create Supabase client
@@ -54,13 +53,11 @@ export default async function handler(
       });
 
     if (error) {
-      console.error('Analytics: Failed to insert session', error);
       return res.status(200).json({ success: true, warning: 'Analytics logging failed' });
     }
 
     return res.status(200).json({ success: true });
-  } catch (error) {
-    console.error('Analytics: Unexpected error', error);
+  } catch {
     return res.status(200).json({ success: true, warning: 'Analytics logging failed' });
   }
 }

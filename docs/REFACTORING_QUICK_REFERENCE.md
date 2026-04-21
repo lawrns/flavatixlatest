@@ -174,7 +174,7 @@ const data: MyData = { id: '1', name: 'Item' };
 - `/components/review/ReviewFormRefactored.tsx`
 
 ### Documentation
-- `/docs/CODE_QUALITY_REFACTORING_SUMMARY.md` - Full details
+- `/docs/archive/implementation-history/CODE_QUALITY_REFACTORING_SUMMARY.md` - Full details
 - `/docs/REFACTORING_QUICK_REFERENCE.md` - This file
 
 ## 🚀 Migration Checklist
@@ -218,4 +218,4 @@ A: Business logic → Services/Repositories. Components → UI only.
 
 ---
 
-For complete details, see: `/docs/CODE_QUALITY_REFACTORING_SUMMARY.md`
+For complete details, see: `/docs/archive/implementation-history/CODE_QUALITY_REFACTORING_SUMMARY.md`

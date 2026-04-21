@@ -18,17 +18,32 @@ describe('POST /api/social/follows', () => {
   let req: Partial<NextApiRequest>;
   let res: Partial<NextApiResponse>;
   const followingId = testUser2.id;
+  const missingUserId = '99999999-9999-4999-8999-999999999999';
 
   beforeEach(() => {
     jest.clearAllMocks();
 
+    const profilesBuilder: any = {
+      select: jest.fn(),
+    };
+    const userFollowsBuilder: any = {
+      select: jest.fn(),
+      insert: jest.fn(),
+      delete: jest.fn(),
+    };
+
     mockSupabase = {
-      from: jest.fn().mockReturnThis(),
-      select: jest.fn().mockReturnThis(),
-      insert: jest.fn().mockReturnThis(),
-      delete: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      single: jest.fn(),
+      from: jest.fn((table: string) => {
+        if (table === 'profiles') {
+          return profilesBuilder;
+        }
+
+        if (table === 'user_follows') {
+          return userFollowsBuilder;
+        }
+
+        throw new Error(`Unexpected table ${table}`);
+      }),
       auth: {
         getUser: jest.fn().mockResolvedValue({
           data: { user: testUser },
@@ -36,6 +51,9 @@ describe('POST /api/social/follows', () => {
         }),
       },
     };
+
+    (mockSupabase as any).profilesBuilder = profilesBuilder;
+    (mockSupabase as any).userFollowsBuilder = userFollowsBuilder;
 
     const { getSupabaseClient } = require('@/lib/supabase');
     getSupabaseClient.mockReturnValue(mockSupabase);
@@ -75,15 +93,20 @@ describe('POST /api/social/follows', () => {
   });
 
   it('should return 404 when target user does not exist', async () => {
-    mockSupabase.single.mockResolvedValue({
-      data: null,
-      error: { message: 'Not found' },
+    const { profilesBuilder } = mockSupabase as any;
+    profilesBuilder.select.mockReturnValue({
+      eq: jest.fn().mockReturnValue({
+        single: jest.fn().mockResolvedValue({
+          data: null,
+          error: { message: 'Not found' },
+        }),
+      }),
     });
 
     req = createMockRequest({
       method: 'POST',
       headers: createMockAuthHeaders(),
-      body: { following_id: 'non-existent-user-id' },
+      body: { following_id: missingUserId },
     });
 
     await followsHandler(req as NextApiRequest, res as NextApiResponse, {
@@ -96,24 +119,43 @@ describe('POST /api/social/follows', () => {
   });
 
   it('should create a follow when not already following', async () => {
-    mockSupabase.single
-      .mockResolvedValueOnce({
-        data: { user_id: followingId, full_name: 'Test User 2' },
-        error: null,
-      })
-      .mockResolvedValueOnce({
-        data: null,
-        error: { code: 'PGRST116' }, // Not found - follow doesn't exist
-      })
-      .mockResolvedValueOnce({
-        data: { id: 'follow-id', follower_id: testUser.id, following_id: followingId },
-        error: null,
-      });
-
-    mockSupabase.select.mockReturnValue({
+    const { profilesBuilder, userFollowsBuilder } = mockSupabase as any;
+    profilesBuilder.select.mockReturnValue({
       eq: jest.fn().mockReturnValue({
+        single: jest.fn().mockResolvedValue({
+          data: { user_id: followingId, full_name: 'Test User 2', username: 'test-user-2' },
+          error: null,
+        }),
+      }),
+    });
+
+    userFollowsBuilder.select.mockImplementation((_columns: string, options?: Record<string, unknown>) => {
+      if (options?.count === 'exact') {
+        return {
+          eq: jest.fn().mockResolvedValue({
+            count: 1,
+            error: null,
+          }),
+        };
+      }
+
+      return {
         eq: jest.fn().mockReturnValue({
-          count: 1,
+          eq: jest.fn().mockReturnValue({
+            single: jest.fn().mockResolvedValue({
+              data: null,
+              error: { code: 'PGRST116' },
+            }),
+          }),
+        }),
+      };
+    });
+
+    userFollowsBuilder.insert.mockReturnValue({
+      select: jest.fn().mockReturnValue({
+        single: jest.fn().mockResolvedValue({
+          data: { id: 'follow-id', follower_id: testUser.id, following_id: followingId },
+          error: null,
         }),
       }),
     });
@@ -138,29 +180,43 @@ describe('POST /api/social/follows', () => {
 
   it('should delete a follow when already following', async () => {
     const existingFollow = { id: 'follow-id' };
+    const { profilesBuilder, userFollowsBuilder } = mockSupabase as any;
 
-    mockSupabase.single
-      .mockResolvedValueOnce({
-        data: { user_id: followingId, full_name: 'Test User 2' },
-        error: null,
-      })
-      .mockResolvedValueOnce({
-        data: existingFollow,
-        error: null,
-      });
-
-    mockSupabase.delete.mockReturnValue({
+    profilesBuilder.select.mockReturnValue({
       eq: jest.fn().mockReturnValue({
-        eq: jest.fn().mockResolvedValue({
+        single: jest.fn().mockResolvedValue({
+          data: { user_id: followingId, full_name: 'Test User 2', username: 'test-user-2' },
           error: null,
         }),
       }),
     });
 
-    mockSupabase.select.mockReturnValue({
-      eq: jest.fn().mockReturnValue({
+    userFollowsBuilder.select.mockImplementation((_columns: string, options?: Record<string, unknown>) => {
+      if (options?.count === 'exact') {
+        return {
+          eq: jest.fn().mockResolvedValue({
+            count: 0,
+            error: null,
+          }),
+        };
+      }
+
+      return {
         eq: jest.fn().mockReturnValue({
-          count: 0,
+          eq: jest.fn().mockReturnValue({
+            single: jest.fn().mockResolvedValue({
+              data: existingFollow,
+              error: null,
+            }),
+          }),
+        }),
+      };
+    });
+
+    userFollowsBuilder.delete.mockReturnValue({
+      eq: jest.fn().mockReturnValue({
+        eq: jest.fn().mockResolvedValue({
+          error: null,
         }),
       }),
     });
@@ -183,4 +239,3 @@ describe('POST /api/social/follows', () => {
     }));
   });
 });
-

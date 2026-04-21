@@ -1,0 +1,215 @@
+- generic [ref=e28]:
+  - generic [ref=e29]:
+    - link "Skip to main content" [ref=e1] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e30]:
+      - generic [ref=e74]:
+        - generic [ref=e81]:
+          - heading "Dashboard" [level=1] [ref=e83]
+          - generic [ref=e85]:
+            - button "User menu" [expanded] [active] [ref=e86] [cursor=pointer]:
+              - img "han" [ref=e88]
+            - menu [ref=e329]:
+              - generic [ref=e331]:
+                - img "han" [ref=e333]
+                - generic [ref=e334]:
+                  - paragraph [ref=e335]: han
+                  - paragraph [ref=e336]: han@han.com
+              - generic [ref=e337]:
+                - menuitem "Profile" [ref=e338] [cursor=pointer]:
+                  - img [ref=e340]
+                  - text: Profile
+                - menuitem "Settings" [ref=e343] [cursor=pointer]:
+                  - img [ref=e345]
+                  - text: Settings
+                - menuitem "Sign out" [ref=e348] [cursor=pointer]:
+                  - img [ref=e350]
+                  - text: Sign out
+        - main [ref=e89]:
+          - generic [ref=e90]:
+            - generic [ref=e91]:
+              - generic [ref=e92]:
+                - img "han" [ref=e94]
+                - generic [ref=e95]:
+                  - heading "Welcome back, han" [level=2] [ref=e96]
+                  - paragraph [ref=e97]: 279 tastings | Member since Sep 2025
+              - generic [ref=e98]:
+                - paragraph [ref=e99]: Quick tasting presets
+                - generic [ref=e100]:
+                  - button "Whisky" [ref=e101] [cursor=pointer]:
+                    - generic [ref=e102]:
+                      - img [ref=e103]
+                      - generic [ref=e106]: Whisky
+                  - button "Coffee" [ref=e107] [cursor=pointer]:
+                    - generic [ref=e108]:
+                      - img [ref=e109]
+                      - generic [ref=e111]: Coffee
+                  - button "Mezcal" [ref=e112] [cursor=pointer]:
+                    - generic [ref=e113]:
+                      - img [ref=e114]
+                      - generic [ref=e117]: Mezcal
+            - generic [ref=e118]:
+              - button "history View History Your past tastings" [ref=e119] [cursor=pointer]:
+                - generic [ref=e120]: history
+                - generic [ref=e121]:
+                  - generic [ref=e122]: View History
+                  - generic [ref=e123]: Your past tastings
+              - generic [ref=e124]:
+                - generic [ref=e125]:
+                  - heading "Recent Tastings" [level=3] [ref=e126]
+                  - button "View All" [ref=e127] [cursor=pointer]
+                - generic [ref=e128]:
+                  - button "coffee Jan 26 1 items" [ref=e129] [cursor=pointer]:
+                    - generic [ref=e130]:
+                      - generic [ref=e131]: coffee
+                      - generic [ref=e132]: Jan 26
+                    - generic [ref=e134]: 1 items
+                  - button "mezcal Jan 26 1 items" [ref=e135] [cursor=pointer]:
+                    - generic [ref=e136]:
+                      - generic [ref=e137]: mezcal
+                      - generic [ref=e138]: Jan 26
+                    - generic [ref=e140]: 1 items
+                  - button "whiskey Jan 18 92.0/100 • 1 items" [ref=e141] [cursor=pointer]:
+                    - generic [ref=e142]:
+                      - generic [ref=e143]: whiskey
+                      - generic [ref=e144]: Jan 18
+                    - generic [ref=e145]:
+                      - generic [ref=e146]: 92.0/100
+                      - generic [ref=e147]: •
+                      - generic [ref=e148]: 1 items
+                  - button "whiskey Jan 18 92.0/100 • 1 items" [ref=e149] [cursor=pointer]:
+                    - generic [ref=e150]:
+                      - generic [ref=e151]: whiskey
+                      - generic [ref=e152]: Jan 18
+                    - generic [ref=e153]:
+                      - generic [ref=e154]: 92.0/100
+                      - generic [ref=e155]: •
+                      - generic [ref=e156]: 1 items
+                  - button "whiskey Jan 18 1 items" [ref=e157] [cursor=pointer]:
+                    - generic [ref=e158]:
+                      - generic [ref=e159]: whiskey
+                      - generic [ref=e160]: Jan 18
+                    - generic [ref=e162]: 1 items
+              - generic [ref=e164]:
+                - generic [ref=e165]:
+                  - heading "Recent Activity" [level=3] [ref=e166]
+                  - button "View All" [ref=e167] [cursor=pointer]:
+                    - generic [ref=e168]: View All
+                - generic [ref=e170]:
+                  - generic [ref=e173] [cursor=pointer]:
+                    - generic [ref=e174]:
+                      - generic [ref=e176]: T
+                      - generic [ref=e177]:
+                        - generic [ref=e178]:
+                          - generic [ref=e179]: Thomas Weber
+                          - generic [ref=e180]: 2/6/2026
+                        - paragraph [ref=e181]:
+                          - text: Whisky Tasting • 1 items • 52.0
+                          - generic [ref=e182]: star
+                    - generic [ref=e183]:
+                      - button "Like this tasting" [ref=e184]:
+                        - img [ref=e185]
+                        - generic [ref=e187]: "0"
+                      - button "View comments" [ref=e188]:
+                        - img [ref=e189]
+                        - generic [ref=e191]: "0"
+                      - button "Share this tasting" [ref=e192]:
+                        - img [ref=e193]
+                  - generic [ref=e201] [cursor=pointer]:
+                    - generic [ref=e202]:
+                      - img "han" [ref=e204]
+                      - generic [ref=e205]:
+                        - generic [ref=e206]:
+                          - generic [ref=e207]: han
+                          - generic [ref=e208]: 1/18/2026
+                        - paragraph [ref=e209]:
+                          - text: Whiskey Tasting • 1 items • 92.0
+                          - generic [ref=e210]: star
+                    - generic [ref=e211]:
+                      - button "Like this tasting" [ref=e212]:
+                        - img [ref=e213]
+                        - generic [ref=e215]: "0"
+                      - button "View comments" [ref=e216]:
+                        - img [ref=e217]
+                        - generic [ref=e219]: "1"
+                      - button "Share this tasting" [ref=e220]:
+                        - img [ref=e221]
+                  - generic [ref=e229] [cursor=pointer]:
+                    - generic [ref=e230]:
+                      - img "han" [ref=e232]
+                      - generic [ref=e233]:
+                        - generic [ref=e234]:
+                          - generic [ref=e235]: han
+                          - generic [ref=e236]: 1/18/2026
+                        - paragraph [ref=e237]:
+                          - text: Whiskey Tasting • 1 items • 92.0
+                          - generic [ref=e238]: star
+                    - generic [ref=e239]:
+                      - button "Like this tasting" [ref=e240]:
+                        - img [ref=e241]
+                        - generic [ref=e243]: "0"
+                      - button "View comments" [ref=e244]:
+                        - img [ref=e245]
+                        - generic [ref=e247]: "0"
+                      - button "Share this tasting" [ref=e248]:
+                        - img [ref=e249]
+                  - generic [ref=e257] [cursor=pointer]:
+                    - generic [ref=e258]:
+                      - img "han" [ref=e260]
+                      - generic [ref=e261]:
+                        - generic [ref=e262]:
+                          - generic [ref=e263]: han
+                          - generic [ref=e264]: 1/17/2026
+                        - paragraph [ref=e265]:
+                          - text: Whiskey Tasting • 1 items • 92.0
+                          - generic [ref=e266]: star
+                    - generic [ref=e267]:
+                      - button "Like this tasting" [ref=e268]:
+                        - img [ref=e269]
+                        - generic [ref=e271]: "0"
+                      - button "View comments" [ref=e272]:
+                        - img [ref=e273]
+                        - generic [ref=e275]: "0"
+                      - button "Share this tasting" [ref=e276]:
+                        - img [ref=e277]
+                  - generic [ref=e285] [cursor=pointer]:
+                    - generic [ref=e286]:
+                      - img "han" [ref=e288]
+                      - generic [ref=e289]:
+                        - generic [ref=e290]:
+                          - generic [ref=e291]: han
+                          - generic [ref=e292]: 1/17/2026
+                        - paragraph [ref=e293]:
+                          - text: Whiskey Tasting • 1 items • 92.0
+                          - generic [ref=e294]: star
+                    - generic [ref=e295]:
+                      - button "Like this tasting" [ref=e296]:
+                        - img [ref=e297]
+                        - generic [ref=e299]: "0"
+                      - button "View comments" [ref=e300]:
+                        - img [ref=e301]
+                        - generic [ref=e303]: "0"
+                      - button "Share this tasting" [ref=e304]:
+                        - img [ref=e305]
+        - navigation "Main navigation" [ref=e312]:
+          - link "Home" [ref=e313] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e315]: home
+            - generic [ref=e316]: Home
+          - link "Taste" [ref=e317] [cursor=pointer]:
+            - /url: /taste
+            - generic [ref=e319]: restaurant
+            - generic [ref=e320]: Taste
+          - link "Review" [ref=e321] [cursor=pointer]:
+            - /url: /review
+            - generic [ref=e323]: rate_review
+            - generic [ref=e324]: Review
+          - link "Wheels" [ref=e325] [cursor=pointer]:
+            - /url: /flavor-wheels
+            - generic [ref=e327]: donut_small
+            - generic [ref=e328]: Wheels
+    - status [ref=e25]
+    - alert [ref=e26]
+    - region "Notifications Alt+T"
+    - region "Notifications alt+T"
+  - alert [ref=e27]: Flavatix - The one place for all your tasting needs

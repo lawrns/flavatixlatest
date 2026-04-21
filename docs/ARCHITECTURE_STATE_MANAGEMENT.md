@@ -686,9 +686,9 @@ You've learned:
 
 ## Next Steps
 
-- **Ready to fetch data?** → [ARCHITECTURE_DATA_FETCHING.md](./ARCHITECTURE_DATA_FETCHING.md)
+- **Ready to fetch data?** → [ARCHITECTURE.md](./ARCHITECTURE.md)
 - **Want to test hooks?** → [TESTING_UNIT_TESTS.md](./TESTING_UNIT_TESTS.md)
-- **Need to debug?** → [DEBUG_STATE_ISSUES.md](./DEBUG_STATE_ISSUES.md)
+- **Need to debug?** → [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
 - **Back to index** → [TUTORIALS_INDEX.md](./TUTORIALS_INDEX.md)
 
 ---

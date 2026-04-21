@@ -748,7 +748,7 @@ You've learned:
 ## Next Steps
 
 - **Ready to write tests?** → [TESTING_UNIT_TESTS.md](./TESTING_UNIT_TESTS.md)
-- **Need to add database tables?** → [ARCHITECTURE_DATABASE.md](./ARCHITECTURE_DATABASE.md)
+- **Need to add database tables?** → [DATABASE.md](./DATABASE.md)
 - **Debugging API errors?** → [DEBUG_API_ERRORS.md](./DEBUG_API_ERRORS.md)
 - **Complete guide index** → [TUTORIALS_INDEX.md](./TUTORIALS_INDEX.md)
 

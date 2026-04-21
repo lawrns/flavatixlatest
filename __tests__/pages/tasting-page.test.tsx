@@ -11,7 +11,7 @@ jest.mock('@/components/quick-tasting/QuickTastingSession', () => ({
   default: () => <div>QuickTastingSession</div>,
 }));
 
-// Mock dependencies - useRouter is already mocked in jest.setup.js
+// Mock dependencies - useRouter is already mocked in jest.setup.ts
 const mockPush = jest.fn();
 const mockBack = jest.fn();
 
@@ -362,4 +362,3 @@ describe('TastingSessionPage - Error Handling', () => {
     });
   });
 });
-

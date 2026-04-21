@@ -19,13 +19,19 @@ npm run check            # Quick check (lint + types + unit tests)
 npm run check:all        # Full check (lint + types + all tests)
 
 # Testing
-npm run test             # Run all tests
-npm run test:unit        # Unit tests only
+npm run test             # Run all Jest suites
+npm run test:unit        # Maintained unit/component/integration suites
+npm run test:api         # API suites
+npm run test:data        # Data quality suites
 npm run test:watch       # Watch mode
 npm run test:coverage    # With coverage report
-npm run test:e2e         # End-to-end tests
-npm run test:e2e:ui      # E2E with UI
-npm run test:e2e:debug   # Debug E2E
+npm run test:e2e         # Smoke end-to-end suite
+npm run test:e2e:smoke   # Chromium smoke tests + visual baselines
+npm run test:e2e:smoke -- --update-snapshots # Refresh smoke visual baselines
+npm run test:e2e:full    # Full browser-matrix end-to-end suite
+npm run test:e2e:ui      # Full E2E with UI
+npm run test:e2e:debug   # Debug full E2E
+npm run test:performance # Nightly performance suite
 
 # Utilities
 npm install              # Install dependencies
@@ -42,8 +48,8 @@ hooks/               → Custom hooks
 lib/                 → Utility functions
 styles/              → CSS and Tailwind
 public/              → Static files
-__tests__/           → Unit tests
-e2e/                 → End-to-end tests
+tests/               → Maintained unit/api/e2e/data tests
+__tests__/           → Migration-only legacy tests
 docs/                → Documentation
 ```
 
@@ -134,7 +140,10 @@ return <div>{data}</div>
 
 ```typescript
 export default function ProtectedPage() {
-  useAuthGuard() // Redirects if not authenticated
+  const { user, loading } = useAuth()
+
+  if (loading) return null
+  if (!user) return null
 
   return <div>Protected content</div>
 }
@@ -407,24 +416,23 @@ I want to...
 
   ├─ Add a feature
   │  ├─ FEATURES_API_ENDPOINTS.md
-  │  └─ ARCHITECTURE_DATABASE.md
+  │  └─ DATABASE.md
 
   ├─ Write tests
   │  ├─ TESTING_UNIT_TESTS.md
-  │  └─ TESTING_E2E.md
+  │  └─ TEST_SUITE_STATUS.md
 
   ├─ Debug something
   │  ├─ DEBUG_API_ERRORS.md
-  │  ├─ DEBUG_STATE_ISSUES.md
-  │  └─ DEBUG_DEVTOOLS.md
+  │  └─ TROUBLESHOOTING.md
 
   ├─ Deploy
   │  └─ DEPLOY_PRODUCTION.md
 
   └─ Learn the architecture
      ├─ ARCHITECTURE_STATE_MANAGEMENT.md
-     ├─ ARCHITECTURE_API_FLOW.md
-     └─ ARCHITECTURE_DATA_FETCHING.md
+     ├─ ARCHITECTURE.md
+     └─ API_REFERENCE.md
 ```
 
 ---

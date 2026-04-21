@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import * as d3 from 'd3';
 import { logger } from '../../lib/logger';
 import { FlavorWheelData, WheelCategory } from '@/lib/flavorWheelGenerator';
 import { Card, CardContent, CardHeader } from '../ui/Card';
 import Button from '../ui/Button';
 import { Download, Share2, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { resolveDescriptorCanonicalText } from '@/lib/flavorDescriptorNormalization';
 
 export interface FlavorWheelVisualizationProps {
   wheelData: FlavorWheelData;
@@ -46,6 +47,15 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
   const [_hoveredSegment, setHoveredSegment] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ text: string; x: number; y: number } | null>(null);
   const [currentZoom, setCurrentZoom] = useState(1);
+  const descriptorCandidates = useMemo(
+    () =>
+      wheelData.categories.flatMap((category) =>
+        category.subcategories.flatMap((subcategory) =>
+          subcategory.descriptors.map((descriptor) => descriptor.text)
+        )
+      ),
+    [wheelData.categories]
+  );
 
   // Export functionality
   const handleExport = (format: 'png' | 'svg') => {
@@ -227,7 +237,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
                 .color(categoryColor)
                 ?.brighter(1 + descIdx * 0.3)
                 .toString() || categoryColor,
-            label: descriptor.text,
+            label: resolveDescriptorCanonicalText(descriptor.text, descriptorCandidates),
             count: descriptor.count,
           });
 
@@ -368,7 +378,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
       .attr('fill', 'currentColor')
       .attr('class', 'text-gray-500 dark:text-gray-400')
       .text(`${wheelData.totalDescriptors} notes`);
-  }, [wheelData, width, height, showLabels, interactive, onSegmentClick, colorScale]);
+  }, [descriptorCandidates, wheelData, width, height, showLabels, interactive, onSegmentClick, colorScale]);
 
   // Set up zoom behavior after wheel is rendered
   useEffect(() => {
@@ -556,10 +566,14 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
                               className="block w-full text-left text-xs text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-400 active:text-primary-600 cursor-pointer transition-colors py-1 min-h-[32px] touch-manipulation"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                onSegmentClick?.(category.name, subcategory.name, descriptor.text);
+                                onSegmentClick?.(
+                                  category.name,
+                                  subcategory.name,
+                                  resolveDescriptorCanonicalText(descriptor.text, descriptorCandidates)
+                                );
                               }}
                             >
-                              • {descriptor.text} ({descriptor.count})
+                              • {resolveDescriptorCanonicalText(descriptor.text, descriptorCandidates)} ({descriptor.count})
                             </button>
                           ))}
                           {subcategory.descriptors.length > 3 && (

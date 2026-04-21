@@ -534,5 +534,5 @@ Rate limit keys auto-expire after window:
 
 - [API Design Patterns](./api-design-patterns.md) - Middleware architecture
 - [API Versioning](./api-versioning.md) - Version strategy
-- [Error Codes](./error-codes.md) - Rate limit error handling
-- [Deployment Guide](./deployment.md) - Production configuration
+- [Security](./SECURITY.md) - Production hardening context
+- [Deploying to Production](./DEPLOY_PRODUCTION.md) - Production configuration

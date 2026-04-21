@@ -1,0 +1,91 @@
+- generic [active] [ref=e28]:
+  - generic [ref=e29]:
+    - link "Skip to main content" [ref=e1] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e30]:
+      - generic [ref=e460]:
+        - generic [ref=e462]:
+          - button "Back" [ref=e463] [cursor=pointer]:
+            - img [ref=e464]
+            - text: Back
+          - generic [ref=e466]:
+            - generic [ref=e467]:
+              - heading "Quick Tasting" [level=1] [ref=e468]
+              - paragraph [ref=e469]: Start a quick tasting session to explore flavors and record your impressions
+            - button "User menu" [ref=e472] [cursor=pointer]:
+              - img "han" [ref=e473]: H
+        - main [ref=e474]:
+          - generic [ref=e475]:
+            - generic [ref=e477]:
+              - generic [ref=e478]:
+                - generic [ref=e479]: "1"
+                - generic [ref=e480]: Category
+              - generic [ref=e482]:
+                - generic [ref=e483]: "2"
+                - generic [ref=e484]: Tasting
+              - generic [ref=e486]:
+                - generic [ref=e487]: "3"
+                - generic [ref=e488]: Summary
+            - generic [ref=e490]:
+              - generic [ref=e491]:
+                - heading "What are you tasting?" [level=2] [ref=e492]
+                - paragraph [ref=e493]: Select from the list, type your own, or choose a quick option below
+              - generic [ref=e494]:
+                - generic [ref=e495]:
+                  - generic [ref=e497]:
+                    - generic [ref=e498]: Category selection
+                    - generic [ref=e499]:
+                      - combobox "Category selection" [ref=e500]
+                      - button "Open options" [ref=e501] [cursor=pointer]:
+                        - img [ref=e502]
+                    - status [ref=e504]
+                  - button "Start" [disabled] [ref=e505]
+                - paragraph [ref=e506]: Type any category name or select from the dropdown
+              - generic [ref=e509]: or choose a popular category
+              - generic [ref=e511]:
+                - button "Coffee" [ref=e512] [cursor=pointer]:
+                  - img [ref=e515]
+                  - heading "Coffee" [level=3] [ref=e517]
+                - button "Whisky" [ref=e518] [cursor=pointer]:
+                  - img [ref=e521]
+                  - heading "Whisky" [level=3] [ref=e524]
+                - button "Mezcal" [ref=e525] [cursor=pointer]:
+                  - img [ref=e528]
+                  - heading "Mezcal" [level=3] [ref=e531]
+                - button "Tea" [ref=e532] [cursor=pointer]:
+                  - img [ref=e535]
+                  - heading "Tea" [level=3] [ref=e538]
+                - button "Wine" [ref=e539] [cursor=pointer]:
+                  - img [ref=e542]
+                  - heading "Wine" [level=3] [ref=e544]
+                - button "Spirits" [ref=e545] [cursor=pointer]:
+                  - img [ref=e548]
+                  - heading "Spirits" [level=3] [ref=e550]
+                - button "Beer" [ref=e551] [cursor=pointer]:
+                  - img [ref=e554]
+                  - heading "Beer" [level=3] [ref=e558]
+                - button "Chocolate" [ref=e559] [cursor=pointer]:
+                  - img [ref=e562]
+                  - heading "Chocolate" [level=3] [ref=e566]
+        - navigation "Main navigation" [ref=e568]:
+          - link "Home" [ref=e569] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e571]: home
+            - generic [ref=e572]: Home
+          - link "Taste" [ref=e573] [cursor=pointer]:
+            - /url: /taste
+            - generic [ref=e575]: restaurant
+            - generic [ref=e576]: Taste
+          - link "Review" [ref=e577] [cursor=pointer]:
+            - /url: /review
+            - generic [ref=e579]: rate_review
+            - generic [ref=e580]: Review
+          - link "Wheels" [ref=e581] [cursor=pointer]:
+            - /url: /flavor-wheels
+            - generic [ref=e583]: donut_small
+            - generic [ref=e584]: Wheels
+    - status [ref=e25]
+    - alert [ref=e26]
+    - region "Notifications Alt+T"
+    - region "Notifications alt+T"
+  - alert [ref=e27]: Flavatix - The one place for all your tasting needs

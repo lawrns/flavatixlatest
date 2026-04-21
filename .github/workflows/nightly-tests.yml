@@ -1,0 +1,62 @@
+name: Nightly Tests
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  e2e-full:
+    name: e2e-full
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run full end-to-end suite
+        run: npm run test:e2e:full
+        env:
+          CI: true
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-full-report
+          path: playwright-report/
+          retention-days: 14
+
+  performance:
+    name: performance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run performance suite
+        run: npm run test:performance
+        env:
+          CI: true

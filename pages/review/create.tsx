@@ -41,9 +41,12 @@ const CreateReviewPage: React.FC = () => {
     return publicUrl;
   };
 
-  const handleSubmit = async (data: ReviewFormData, action: 'done' | 'save' | 'new') => {
+  const handleSubmit = async (
+    data: ReviewFormData,
+    action: 'done' | 'save' | 'new'
+  ): Promise<boolean> => {
     if (!user) {
-      return;
+      return false;
     }
 
     setIsSubmitting(true);
@@ -111,18 +114,20 @@ const CreateReviewPage: React.FC = () => {
 
       if (action === 'done') {
         toast.success('Review completed!');
-        router.push(`/review/summary/${review.id}`);
+        void router.push(`/review/summary/${review.id}`);
       } else if (action === 'save') {
         toast.success('Review saved for later');
-        router.push('/review/my-reviews');
+        void router.push('/review/my-reviews');
       } else if (action === 'new') {
         toast.success('Review completed! Ready for new review...');
         // Form will be reset by the ReviewForm component
       }
+      return true;
     } catch (error) {
       console.error('Error saving review:', error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to save review';
       toast.error(errorMessage);
+      return false;
     } finally {
       setIsSubmitting(false);
     }

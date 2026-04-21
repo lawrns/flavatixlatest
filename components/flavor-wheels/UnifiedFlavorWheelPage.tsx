@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { getSupabaseClient } from '@/lib/supabase';
 import { FlavorWheelVisualization } from './FlavorWheelVisualization';
 import { Loader2 } from 'lucide-react';
+import { resolveDescriptorCanonicalText } from '@/lib/flavorDescriptorNormalization';
 
 interface UnifiedFlavorWheelPageProps {
   userId: string;
@@ -14,6 +15,15 @@ export const UnifiedFlavorWheelPage: React.FC<UnifiedFlavorWheelPageProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const supabase = getSupabaseClient();
+  const descriptorCandidates = useMemo(
+    () =>
+      wheelData?.categories?.flatMap((category: any) =>
+        category.subcategories?.flatMap((subcategory: any) =>
+          subcategory.descriptors?.map((descriptor: any) => descriptor.text) || []
+        ) || []
+      ) || [],
+    [wheelData?.categories]
+  );
 
   useEffect(() => {
     loadFlavorWheel();
@@ -161,7 +171,9 @@ export const UnifiedFlavorWheelPage: React.FC<UnifiedFlavorWheelPageProps> = ({
                         key={dIdx}
                         className="inline-flex items-center gap-xs bg-surface-tertiary px-sm py-xs rounded-full text-xs"
                       >
-                        <span className="text-text-primary font-medium">{descriptor.text}</span>
+                        <span className="text-text-primary font-medium">
+                          {resolveDescriptorCanonicalText(descriptor.text, descriptorCandidates)}
+                        </span>
                         <span className="text-text-tertiary">({descriptor.count})</span>
                       </span>
                     ))}

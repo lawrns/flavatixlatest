@@ -22,7 +22,7 @@ This document provides an overview of the unified Toast system implementation us
 
 ### Documentation
 
-3. **`/docs/toast-system-migration.md`** - Complete migration guide
+3. **`docs/toast-system-migration.md`** - Complete migration guide
    - Feature overview
    - Installation steps
    - Usage examples
@@ -326,7 +326,7 @@ Works in all modern browsers that support:
 
 - [Sonner Documentation](https://sonner.emilkowal.ski/)
 - [Next Themes](https://github.com/pacocoursey/next-themes)
-- [Migration Guide](/docs/toast-system-migration.md)
+- [Migration Guide](./toast-system-migration.md)
 - [Examples File](/docs/toast-examples.tsx)
 
 ## Support

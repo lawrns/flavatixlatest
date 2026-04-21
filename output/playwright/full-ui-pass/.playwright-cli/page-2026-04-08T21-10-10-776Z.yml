@@ -1,0 +1,12 @@
+- generic [active] [ref=e28]:
+  - generic [ref=e29]:
+    - link "Skip to main content" [ref=e1] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e30]:
+      - paragraph [ref=e78]: Loading your dashboard...
+    - status [ref=e25]
+    - alert [ref=e26]
+    - region "Notifications Alt+T"
+    - region "Notifications alt+T"
+  - alert [ref=e27]: Flavatix - The one place for all your tasting needs
+  - generic [ref=e79]: Welcome back!

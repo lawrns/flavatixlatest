@@ -1,0 +1,209 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e4]:
+      - generic [ref=e100]:
+        - generic [ref=e102]:
+          - button "Back" [ref=e103] [cursor=pointer]:
+            - img [ref=e104]
+            - text: Back
+          - generic [ref=e106]:
+            - generic [ref=e107]:
+              - heading "Create Review" [level=1] [ref=e108]
+              - paragraph [ref=e109]: In-depth analysis of flavor characteristics
+            - button "User menu" [ref=e112] [cursor=pointer]:
+              - img "han" [ref=e113]: H
+        - main [ref=e114]:
+          - generic [ref=e116]:
+            - generic [ref=e117] [cursor=pointer]:
+              - heading "Item Information" [level=2] [ref=e118]
+              - generic [ref=e119]:
+                - generic [ref=e120]:
+                  - generic [ref=e121]: Item Name/Variety *
+                  - textbox "e.g., Ethiopian Yirgacheffe" [ref=e122]
+                - generic [ref=e123]:
+                  - generic [ref=e124]: Picture
+                  - button "Upload Photo" [ref=e125]:
+                    - img [ref=e126]
+                    - text: Upload Photo
+                - generic [ref=e129]:
+                  - generic [ref=e130]: Brand
+                  - textbox "e.g., Starbucks" [ref=e131]
+                - generic [ref=e132]:
+                  - generic [ref=e133]: Category *
+                  - combobox [ref=e134]:
+                    - option "Select a category" [selected]
+                    - option "Red Wine"
+                    - option "White Wine"
+                    - option "Wine"
+                    - option "Coffee"
+                    - option "Beer"
+                    - option "Gin"
+                    - option "Whisky"
+                    - option "Scotch"
+                    - option "Bourbon"
+                    - option "Rum"
+                    - option "Mezcal"
+                    - option "Agave Spirit"
+                    - option "Sotol"
+                    - option "Raicilla"
+                    - option "Perfume"
+                    - option "Olive Oil"
+                    - option "Chips"
+                    - option "Snacks"
+                    - option "Chocolate"
+                    - option "Dessert"
+                    - option "Cheese"
+                    - option "Meat"
+                - generic [ref=e135]:
+                  - generic [ref=e136]: Country
+                  - combobox [ref=e137]:
+                    - option "Select a country" [selected]
+                    - option "United States"
+                    - option "Mexico"
+                    - option "France"
+                    - option "Italy"
+                    - option "Spain"
+                    - option "Germany"
+                    - option "United Kingdom"
+                    - option "Canada"
+                    - option "Australia"
+                    - option "New Zealand"
+                    - option "Argentina"
+                    - option "Chile"
+                    - option "Brazil"
+                    - option "Colombia"
+                    - option "Peru"
+                    - option "Japan"
+                    - option "China"
+                    - option "India"
+                    - option "South Africa"
+                    - option "Portugal"
+                    - option "Greece"
+                    - option "Austria"
+                    - option "Switzerland"
+                    - option "Belgium"
+                    - option "Netherlands"
+                    - option "Ireland"
+                    - option "Scotland"
+                    - option "Other"
+                - generic [ref=e138]:
+                  - generic [ref=e139]: Region
+                  - textbox "e.g., Napa Valley" [ref=e140]
+                - generic [ref=e141]:
+                  - generic [ref=e142]: Vintage
+                  - textbox "YYYY" [ref=e143]
+                - generic [ref=e144]:
+                  - generic [ref=e145]: Batch ID
+                  - textbox "e.g., LOT-2024-001" [ref=e146]
+                - generic [ref=e147]:
+                  - generic [ref=e148]: UPC/Barcode
+                  - textbox "Scan or enter barcode" [ref=e149]
+            - generic [ref=e150] [cursor=pointer]:
+              - heading "Characteristics" [level=2] [ref=e151]
+              - generic [ref=e152]:
+                - generic [ref=e153]:
+                  - generic [ref=e154]:
+                    - generic [ref=e155]:
+                      - generic [ref=e156]:
+                        - text: Aroma
+                        - generic [ref=e157]: (Intensity of Aroma)
+                      - generic [ref=e158]: 0/100
+                    - slider [ref=e160]: "0"
+                  - textbox "Describe the aroma..." [ref=e161]
+                - generic [ref=e162]:
+                  - generic [ref=e163]:
+                    - generic [ref=e164]:
+                      - generic [ref=e165]: Saltiness
+                      - generic [ref=e166]: 0/100
+                    - slider [ref=e168]: "0"
+                  - textbox "Describe the saltiness..." [ref=e169]
+                - generic [ref=e170]:
+                  - generic [ref=e171]:
+                    - generic [ref=e172]:
+                      - generic [ref=e173]: Sweetness
+                      - generic [ref=e174]: 0/100
+                    - slider [ref=e176]: "0"
+                  - textbox "Describe the sweetness..." [ref=e177]
+                - generic [ref=e178]:
+                  - generic [ref=e179]:
+                    - generic [ref=e180]:
+                      - generic [ref=e181]: Acidity
+                      - generic [ref=e182]: 0/100
+                    - slider [ref=e184]: "0"
+                  - textbox "Describe the acidity..." [ref=e185]
+                - generic [ref=e186]:
+                  - generic [ref=e187]:
+                    - generic [ref=e188]:
+                      - generic [ref=e189]: Umami
+                      - generic [ref=e190]: 0/100
+                    - slider [ref=e192]: "0"
+                  - textbox "Describe the umami..." [ref=e193]
+                - generic [ref=e194]:
+                  - generic [ref=e195]:
+                    - generic [ref=e196]:
+                      - generic [ref=e197]:
+                        - text: Spiciness
+                        - generic [ref=e198]: (Chile pepper)
+                      - generic [ref=e199]: 0/100
+                    - slider [ref=e201]: "0"
+                  - textbox "Describe the spiciness..." [ref=e202]
+                - generic [ref=e203]:
+                  - generic [ref=e204]:
+                    - generic [ref=e205]:
+                      - generic [ref=e206]:
+                        - text: Flavor
+                        - generic [ref=e207]: (Intensity of Flavor)
+                      - generic [ref=e208]: 0/100
+                    - slider [ref=e210]: "0"
+                  - textbox "Describe the flavor..." [ref=e211]
+                - generic [ref=e212]:
+                  - generic [ref=e213]: Texture
+                  - textbox "Describe the texture..." [ref=e214]
+                - generic [ref=e216]:
+                  - generic [ref=e217]:
+                    - generic [ref=e218]:
+                      - text: Typicity
+                      - generic [ref=e219]: (Tastes how it should)
+                    - generic [ref=e220]: 0/100
+                  - slider [ref=e222]: "0"
+                - generic [ref=e224]:
+                  - generic [ref=e225]:
+                    - generic [ref=e226]: Complexity
+                    - generic [ref=e227]: 0/100
+                  - slider [ref=e229]: "0"
+                - generic [ref=e230]:
+                  - generic [ref=e231]: Other
+                  - textbox "Any other notes..." [ref=e232]
+                - generic [ref=e234]:
+                  - generic [ref=e235]:
+                    - generic [ref=e236]: Overall
+                    - generic [ref=e237]: 0/100
+                  - slider [ref=e239]: "0"
+            - generic [ref=e240]:
+              - button "Done" [ref=e241] [cursor=pointer]
+              - button "Save for Later" [ref=e242] [cursor=pointer]
+              - button "New Review" [ref=e243] [cursor=pointer]
+        - navigation "Main navigation" [ref=e245]:
+          - link "Home" [ref=e246] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e248]: home
+            - generic [ref=e249]: Home
+          - link "Taste" [ref=e250] [cursor=pointer]:
+            - /url: /taste
+            - generic [ref=e252]: restaurant
+            - generic [ref=e253]: Taste
+          - link "Review" [ref=e254] [cursor=pointer]:
+            - /url: /review
+            - generic [ref=e256]: rate_review
+            - generic [ref=e257]: Review
+          - link "Wheels" [ref=e258] [cursor=pointer]:
+            - /url: /flavor-wheels
+            - generic [ref=e260]: donut_small
+            - generic [ref=e261]: Wheels
+    - status [ref=e9]
+    - alert [ref=e10]
+    - region "Notifications Alt+T"
+    - region "Notifications alt+T"
+  - alert [ref=e99]: Flavatix - The one place for all your tasting needs

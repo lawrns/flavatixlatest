@@ -1,0 +1,31 @@
+- generic [active] [ref=e28]:
+  - generic [ref=e29]:
+    - link "Skip to main content" [ref=e1] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e30]:
+      - generic [ref=e34]:
+        - img "Flavatix Logo" [ref=e36]
+        - generic [ref=e37]:
+          - heading "Get Started" [level=1] [ref=e38]
+          - paragraph [ref=e39]: The one place for all your tasting needs
+        - generic [ref=e40]:
+          - button "Continue with Email" [ref=e41] [cursor=pointer]:
+            - img [ref=e42]
+            - generic [ref=e45]: Continue with Email
+          - generic [ref=e46]:
+            - separator [ref=e47]
+            - generic [ref=e48]: or
+            - separator [ref=e49]
+          - generic [ref=e50]:
+            - button "Google" [ref=e51] [cursor=pointer]:
+              - img [ref=e52]
+              - generic [ref=e54]: Google
+            - button "Apple" [ref=e55] [cursor=pointer]:
+              - img [ref=e56]
+              - generic [ref=e58]: Apple
+          - button "Don't have an account? Sign up" [ref=e60] [cursor=pointer]
+    - status [ref=e25]
+    - alert [ref=e26]
+    - region "Notifications Alt+T"
+    - region "Notifications alt+T"
+  - alert [ref=e27]

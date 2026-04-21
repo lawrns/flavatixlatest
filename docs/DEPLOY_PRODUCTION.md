@@ -151,7 +151,7 @@ Before committing:
 
 - [ ] Updated README.md if needed
 - [ ] Added comments to complex code
-- [ ] Updated CHANGELOG.md
+- [ ] Updated the relevant guide under `docs/` if behavior changed
 
 ### Git
 
@@ -478,8 +478,8 @@ You've learned:
 
 ## Next Steps
 
-- **Want to monitor errors?** → [DEPLOY_MONITORING.md](./DEPLOY_MONITORING.md)
-- **Emergency happened?** → [DEPLOY_EMERGENCY.md](./DEPLOY_EMERGENCY.md)
+- **Need environment setup details?** → [ENVIRONMENT_CONFIG.md](./ENVIRONMENT_CONFIG.md)
+- **Need rollback and recovery context?** → [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
 - **Want to roll back?** → See Section 6 above
 - **Back to index** → [TUTORIALS_INDEX.md](./TUTORIALS_INDEX.md)
 

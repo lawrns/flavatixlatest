@@ -431,7 +431,7 @@ export function withErrorHandling(handler: ApiHandler): ApiHandler {
  */
 export function createApiHandler(
   handlers: HandlerMap
-): (req: NextApiRequest, res: NextApiResponse) => Promise<void> {
+): (req: NextApiRequest, res: NextApiResponse, context?: ApiContext) => Promise<void> {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     // Generate unique request ID for tracing
     const requestId = generateRequestId();
@@ -677,9 +677,12 @@ if (process.env.REDIS_URL || process.env.UPSTASH_REDIS_REST_URL) {
 } else {
   rateLimitStore = new InMemoryRateLimitStore();
   if (process.env.NODE_ENV === 'production') {
-    console.warn(
-      '⚠️ Production environment detected but REDIS_URL not set. Rate limiting uses in-memory store which will not work across instances.'
-    );
+    const msg = 'Production rate limiting using in-memory store — ineffective across serverless instances. Set UPSTASH_REDIS_REST_URL to enable real rate limiting.';
+    console.warn('⚠️', msg);
+    Sentry.captureMessage(msg, {
+      level: 'warning',
+      tags: { category: 'security', component: 'rate-limiting' },
+    });
   }
 }
 

@@ -2,10 +2,24 @@
  * API Endpoint: /api/analytics/event
  *
  * Records custom analytics events
+ *
+ * NOTE: Requires an RLS policy on analytics_events allowing anon inserts:
+ *   CREATE POLICY "Allow anon analytics inserts" ON analytics_events
+ *     FOR INSERT WITH CHECK (true);
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createClient } from '@supabase/supabase-js';
+import { z } from 'zod';
+
+const eventSchema = z.object({
+  eventName: z.string().min(1).max(100),
+  properties: z.record(z.unknown()).optional().default({}),
+  userId: z.string().uuid().optional().nullable(),
+  platform: z.string().max(50).optional().default('unknown'),
+  timestamp: z.number().optional(),
+  sessionId: z.string().max(100).optional().nullable(),
+});
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,27 +31,25 @@ export default async function handler(
   }
 
   try {
-    const { eventName, properties, userId, platform, timestamp, sessionId } =
-      req.body;
-
-    // Validate required fields
-    if (!eventName) {
-      return res.status(400).json({ error: 'eventName is required' });
+    const parsed = eventSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: 'Invalid event data' });
     }
 
-    // Get environment variables
+    const { eventName, properties, userId, platform, timestamp, sessionId } =
+      parsed.data;
+
+    // Get environment variables — use anon key, not service role
+    // Service role bypasses all RLS; analytics inserts don't need elevated privileges
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
-      console.error('Analytics: Missing Supabase configuration');
-      return res.status(500).json({ error: 'Server configuration error' });
+      return res.status(200).json({ success: true, warning: 'Analytics unavailable' });
     }
 
-    // Create Supabase client with service role for admin access
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Insert event into analytics_events table
     const { error } = await supabase
       .from('analytics_events')
       .insert({
@@ -50,14 +62,12 @@ export default async function handler(
       });
 
     if (error) {
-      console.error('Analytics: Failed to insert event', error);
       // Don't fail the request if analytics fails
       return res.status(200).json({ success: true, warning: 'Analytics logging failed' });
     }
 
     return res.status(200).json({ success: true });
-  } catch (error) {
-    console.error('Analytics: Unexpected error', error);
+  } catch {
     // Don't expose internal errors
     return res.status(200).json({ success: true, warning: 'Analytics logging failed' });
   }

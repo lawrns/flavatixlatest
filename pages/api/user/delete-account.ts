@@ -17,6 +17,7 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
+import * as Sentry from '@sentry/nextjs';
 import {
   createApiHandler,
   withAuth,
@@ -85,12 +86,15 @@ async function handleDeleteAccount(
       },
     };
 
-    try {
-      await supabase
-        .from('audit_logs')
-        .insert(auditLogData);
-    } catch (err) {
-      logger.error('AccountDeletion', 'Failed to create audit log', err instanceof Error ? err : new Error(String(err)));
+    const { error: auditError } = await supabase
+      .from('audit_logs')
+      .insert(auditLogData);
+
+    if (auditError) {
+      // Audit log failure must block deletion — no audit trail = compliance risk
+      logger.error('AccountDeletion', 'Failed to create audit log — deletion blocked', auditError, { userId: user.id });
+      Sentry.captureException(auditError, { tags: { security: true, audit: true, critical: true }, level: 'error' });
+      return sendServerError(res, auditError, 'Unable to process account deletion safely. Please try again.');
     }
 
     // Implement soft delete with 30-day grace period
@@ -132,10 +136,7 @@ async function handleDeleteAccount(
       logger.warn('AccountDeletion', 'Failed to anonymize profile');
     }
 
-    // Delete user-generated content (optional - can be kept with anonymization)
-    // This is configurable based on business requirements
-
-    // Option 1: Delete all content (GDPR compliant)
+    // Delete user-generated content (GDPR Article 17 compliant)
     const tables = [
       'tasting_items',
       'tastings',
@@ -145,27 +146,31 @@ async function handleDeleteAccount(
       'comments',
       'follows',
       'study_mode_responses',
+      'ai_extraction_logs',
     ];
 
+    const deletionFailures: string[] = [];
     for (const table of tables) {
-      try {
-        await supabase
-          .from(table)
-          .delete()
-          .eq('user_id', user.id);
-      } catch {
-        logger.warn('AccountDeletion', `Failed to delete from ${table}`);
+      const { error: deleteError } = await supabase
+        .from(table)
+        .delete()
+        .eq('user_id', user.id);
+
+      if (deleteError) {
+        deletionFailures.push(table);
+        logger.warn('AccountDeletion', `Failed to delete from ${table}`, {
+          userId: user.id,
+          error: new Error(deleteError.message),
+        });
       }
     }
 
-    // Delete AI extraction logs (privacy-sensitive data)
-    try {
-      await supabase
-        .from('ai_extraction_logs')
-        .delete()
-        .eq('user_id', user.id);
-    } catch {
-      logger.warn('AccountDeletion', 'Failed to delete AI logs');
+    if (deletionFailures.length > 0) {
+      Sentry.captureMessage('GDPR account deletion: partial content removal failure', {
+        level: 'error',
+        tags: { security: true, gdpr: true },
+        extra: { userId: user.id, failedTables: deletionFailures },
+      });
     }
 
     // Sign out user immediately

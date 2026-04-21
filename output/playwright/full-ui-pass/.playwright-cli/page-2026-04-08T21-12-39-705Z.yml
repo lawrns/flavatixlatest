@@ -1,0 +1,27 @@
+- generic [ref=e2]:
+  - link "Skip to main content" [ref=e3] [cursor=pointer]:
+    - /url: "#main-content"
+  - main [ref=e4]:
+    - generic [ref=e6]:
+      - main [ref=e12]
+      - navigation "Main navigation" [ref=e59]:
+        - link "Home" [ref=e60] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=e62]: home
+          - generic [ref=e63]: Home
+        - link "Taste" [ref=e64] [cursor=pointer]:
+          - /url: /taste
+          - generic [ref=e66]: restaurant
+          - generic [ref=e67]: Taste
+        - link "Review" [ref=e68] [cursor=pointer]:
+          - /url: /review
+          - generic [ref=e70]: rate_review
+          - generic [ref=e71]: Review
+        - link "Wheels" [ref=e72] [cursor=pointer]:
+          - /url: /flavor-wheels
+          - generic [ref=e74]: donut_small
+          - generic [ref=e75]: Wheels
+  - status [ref=e76]
+  - alert [ref=e77]
+  - region "Notifications Alt+T"
+  - region "Notifications alt+T"

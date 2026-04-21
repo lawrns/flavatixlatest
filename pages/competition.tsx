@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react';
-import { useAuth } from '../contexts/SimpleAuthContext';
 import { useRouter } from 'next/router';
+import { useRequireAuth } from '@/hooks';
 
 const CompetitionPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, loading } = useRequireAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (!user) {
-      router.push('/auth');
+      return;
     }
-  }, [user, router]);
+  }, [user]);
 
-  if (!user) {
+  if (loading || !user) {
     return null;
   }
 

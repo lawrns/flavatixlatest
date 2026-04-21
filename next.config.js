@@ -10,11 +10,20 @@ const nextConfig = {
   // trailingSlash: true,
 
   images: {
-    domains: ['kobuclkvlacdwvxmakvq.supabase.co'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'kobuclkvlacdwvxmakvq.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+    ],
     formats: ['image/webp', 'image/avif'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    deviceSizes: [640, 1080, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
@@ -53,7 +62,7 @@ const nextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://kobuclkvlacdwvxmakvq.supabase.co https://*.sentry.io https://app.netlify.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "img-src 'self' data: blob: https://kobuclkvlacdwvxmakvq.supabase.co https://app.netlify.com",
+              "img-src 'self' data: blob: https://kobuclkvlacdwvxmakvq.supabase.co https://lh3.googleusercontent.com https://app.netlify.com",
               "font-src 'self' data: https://fonts.gstatic.com",
               "connect-src 'self' https://kobuclkvlacdwvxmakvq.supabase.co https://*.sentry.io https://api.anthropic.com wss://kobuclkvlacdwvxmakvq.supabase.co",
               "frame-src 'self' https://app.netlify.com",

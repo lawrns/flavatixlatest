@@ -190,7 +190,7 @@ authToasts.loginError('Invalid credentials')
 
 1. `/components/ui/sonner.tsx` - Toaster component with Gemini styling
 2. `/lib/toast.ts` - Unified toast API with TypeScript
-3. `/docs/toast-system-migration.md` - Complete migration guide
+3. `docs/toast-system-migration.md` - Complete migration guide
 4. `/docs/toast-examples.tsx` - Practical usage examples
 5. `/docs/toast-setup-instructions.md` - This file
 
@@ -202,4 +202,4 @@ authToasts.loginError('Invalid credentials')
 4. Gradually migrate existing toast calls
 5. Explore advanced features (promise, undo, actions)
 
-For detailed usage examples, see `/docs/toast-system-migration.md`.
+For detailed usage examples, see `docs/toast-system-migration.md`.

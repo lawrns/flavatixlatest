@@ -5,18 +5,51 @@ const createJestConfig = nextJest({
   dir: './',
 });
 
+const ignoredArtifacts = [
+  '<rootDir>/.next/',
+  '<rootDir>/.netlify/',
+  '<rootDir>/.worktrees/',
+  '<rootDir>/coverage/',
+  '<rootDir>/playwright-report/',
+  '<rootDir>/test-results/',
+];
+
 // Add any custom config to be passed to Jest
 const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     // Handle module aliases (this will be automatically configured for you based on your tsconfig.json paths)
     '^@/(.*)$': '<rootDir>/$1',
+    '^until-async$': '<rootDir>/tests/shims/until-async.js',
   },
   testEnvironment: 'jest-environment-jsdom',
-  testPathIgnorePatterns: ['<rootDir>/tests/e2e/', '<rootDir>/lib/__tests__/', '<rootDir>/e2e/', '<rootDir>/.next/', '<rootDir>/node_modules/', '<rootDir>/tests/data-quality/', '<rootDir>/tests/api/', '<rootDir>/.worktrees/'],
-  // Transform ESM modules
+  testMatch: [
+    '<rootDir>/tests/**/*.test.{js,jsx,ts,tsx}',
+    '<rootDir>/tests/**/*.spec.{js,jsx,ts,tsx}',
+    '<rootDir>/lib/**/__tests__/**/*.{js,jsx,ts,tsx}',
+  ],
+  testPathIgnorePatterns: [
+    '<rootDir>/tests/e2e/',
+    '<rootDir>/node_modules/',
+    ...ignoredArtifacts,
+  ],
+  modulePathIgnorePatterns: ignoredArtifacts,
+  watchPathIgnorePatterns: ignoredArtifacts,
+  coveragePathIgnorePatterns: [
+    '<rootDir>/tests/e2e/',
+    ...ignoredArtifacts,
+  ],
+  coverageReporters: ['text', 'lcov', 'clover', 'json-summary'],
+  coverageThreshold: {
+    global: {
+      statements: 5,
+      lines: 5,
+      functions: 0,
+      branches: 0,
+    },
+  },
   transformIgnorePatterns: [
-    'node_modules/(?!(@faker-js|@sentry|uuid|nanoid)/)',
+    'node_modules/(?!(@sentry|uuid|nanoid|msw|until-async|@open-draft|headers-polyfill|is-node-process|strict-event-emitter|outvariant)/)',
   ],
   testEnvironmentOptions: {
     url: 'http://localhost:3000',
@@ -30,6 +63,7 @@ const customJestConfig = {
     '!**/node_modules/**',
     '!**/.next/**',
     '!**/coverage/**',
+    '!**/.worktrees/**',
     '!**/jest.config.js',
   ],
 };

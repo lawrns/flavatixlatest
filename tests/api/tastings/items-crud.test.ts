@@ -24,8 +24,14 @@ describe('Tasting Items CRUD Operations', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    mockSupabase = {
-      from: jest.fn().mockReturnThis(),
+    const quickTastingsBuilder: any = {
+      select: jest.fn().mockReturnThis(),
+      update: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      single: jest.fn(),
+    };
+
+    const quickTastingItemsBuilder: any = {
       select: jest.fn().mockReturnThis(),
       insert: jest.fn().mockReturnThis(),
       update: jest.fn().mockReturnThis(),
@@ -34,7 +40,21 @@ describe('Tasting Items CRUD Operations', () => {
       order: jest.fn().mockReturnThis(),
       limit: jest.fn().mockReturnThis(),
       single: jest.fn(),
-      rpc: jest.fn(),
+    };
+
+    mockSupabase = {
+      from: jest.fn((table: string) => {
+        if (table === 'quick_tastings') {
+          return quickTastingsBuilder;
+        }
+
+        if (table === 'quick_tasting_items') {
+          return quickTastingItemsBuilder;
+        }
+
+        throw new Error(`Unexpected table ${table}`);
+      }),
+      rpc: jest.fn().mockResolvedValue({ error: null }),
       auth: {
         getUser: jest.fn().mockResolvedValue({
           data: { user: testUser },
@@ -42,6 +62,9 @@ describe('Tasting Items CRUD Operations', () => {
         }),
       },
     };
+
+    (mockSupabase as any).quickTastingsBuilder = quickTastingsBuilder;
+    (mockSupabase as any).quickTastingItemsBuilder = quickTastingItemsBuilder;
 
     const { getSupabaseClient } = require('@/lib/supabase');
     getSupabaseClient.mockReturnValue(mockSupabase);
@@ -66,7 +89,8 @@ describe('Tasting Items CRUD Operations', () => {
     });
 
     it('should return 404 when tasting does not exist', async () => {
-      mockSupabase.single.mockResolvedValue({
+      const { quickTastingsBuilder } = mockSupabase as any;
+      quickTastingsBuilder.single.mockResolvedValue({
         data: null,
         error: { message: 'Not found' },
       });
@@ -91,14 +115,14 @@ describe('Tasting Items CRUD Operations', () => {
         { id: 'item-1', item_name: 'Item 1', item_order: 0 },
         { id: 'item-2', item_name: 'Item 2', item_order: 1 },
       ];
+      const { quickTastingsBuilder, quickTastingItemsBuilder } = mockSupabase as any;
 
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: { id: tastingId, user_id: testUser.id },
-          error: null,
-        });
+      quickTastingsBuilder.single.mockResolvedValueOnce({
+        data: { id: tastingId, user_id: testUser.id },
+        error: null,
+      });
 
-      mockSupabase.select.mockReturnValue({
+      quickTastingItemsBuilder.select.mockReturnValue({
         eq: jest.fn().mockReturnValue({
           order: jest.fn().mockReturnValue({
             order: jest.fn().mockReturnValue({
@@ -143,7 +167,8 @@ describe('Tasting Items CRUD Operations', () => {
     });
 
     it('should return 403 when trying to add item to competition mode', async () => {
-      mockSupabase.single.mockResolvedValue({
+      const { quickTastingsBuilder } = mockSupabase as any;
+      quickTastingsBuilder.single.mockResolvedValue({
         data: {
           id: tastingId,
           user_id: testUser.id,
@@ -175,28 +200,29 @@ describe('Tasting Items CRUD Operations', () => {
         item_name: 'New Item',
         item_order: 0,
       };
+      const { quickTastingsBuilder, quickTastingItemsBuilder } = mockSupabase as any;
 
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: { id: tastingId, user_id: testUser.id, mode: 'quick' },
-          error: null,
-        })
-        .mockResolvedValueOnce({
-          data: [newItem],
-          error: null,
-        })
-        .mockResolvedValueOnce({
-          data: newItem,
-          error: null,
-        });
+      quickTastingsBuilder.single.mockResolvedValueOnce({
+        data: { id: tastingId, user_id: testUser.id, mode: 'quick' },
+        error: null,
+      });
 
-      mockSupabase.select.mockReturnValue({
+      quickTastingItemsBuilder.select.mockReturnValue({
         eq: jest.fn().mockReturnValue({
           order: jest.fn().mockReturnValue({
             limit: jest.fn().mockReturnValue({
               data: [],
               error: null,
             }),
+          }),
+        }),
+      });
+
+      quickTastingItemsBuilder.insert.mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          single: jest.fn().mockResolvedValue({
+            data: newItem,
+            error: null,
           }),
         }),
       });
@@ -239,15 +265,15 @@ describe('Tasting Items CRUD Operations', () => {
 
   describe('GET /api/tastings/[id]/items/[itemId]', () => {
     it('should return 404 when item does not exist', async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: { id: tastingId, user_id: testUser.id },
-          error: null,
-        })
-        .mockResolvedValueOnce({
-          data: null,
-          error: { message: 'Not found' },
-        });
+      const { quickTastingsBuilder, quickTastingItemsBuilder } = mockSupabase as any;
+      quickTastingsBuilder.single.mockResolvedValueOnce({
+        data: { id: tastingId, user_id: testUser.id },
+        error: null,
+      });
+      quickTastingItemsBuilder.single.mockResolvedValueOnce({
+        data: null,
+        error: { message: 'Not found' },
+      });
 
       req = createMockRequest({
         method: 'GET',
@@ -271,16 +297,16 @@ describe('Tasting Items CRUD Operations', () => {
         item_name: 'Test Item',
         overall_score: 85,
       };
+      const { quickTastingsBuilder, quickTastingItemsBuilder } = mockSupabase as any;
 
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: { id: tastingId, user_id: testUser.id },
-          error: null,
-        })
-        .mockResolvedValueOnce({
-          data: mockItem,
-          error: null,
-        });
+      quickTastingsBuilder.single.mockResolvedValueOnce({
+        data: { id: tastingId, user_id: testUser.id },
+        error: null,
+      });
+      quickTastingItemsBuilder.single.mockResolvedValueOnce({
+        data: mockItem,
+        error: null,
+      });
 
       req = createMockRequest({
         method: 'GET',
@@ -311,20 +337,28 @@ describe('Tasting Items CRUD Operations', () => {
         item_name: 'Updated Name',
         overall_score: 90,
       };
+      const { quickTastingsBuilder, quickTastingItemsBuilder } = mockSupabase as any;
 
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: { id: tastingId, user_id: testUser.id },
-          error: null,
-        })
-        .mockResolvedValueOnce({
-          data: existingItem,
-          error: null,
-        })
-        .mockResolvedValueOnce({
-          data: updatedItem,
-          error: null,
-        });
+      quickTastingsBuilder.single.mockResolvedValueOnce({
+        data: { id: tastingId, user_id: testUser.id },
+        error: null,
+      });
+      quickTastingItemsBuilder.single.mockResolvedValueOnce({
+        data: existingItem,
+        error: null,
+      });
+      quickTastingItemsBuilder.update.mockReturnValue({
+        eq: jest.fn().mockReturnValue({
+          eq: jest.fn().mockReturnValue({
+            select: jest.fn().mockReturnValue({
+              single: jest.fn().mockResolvedValue({
+                data: updatedItem,
+                error: null,
+              }),
+            }),
+          }),
+        }),
+      });
 
       req = createMockRequest({
         method: 'PATCH',
@@ -352,18 +386,18 @@ describe('Tasting Items CRUD Operations', () => {
         id: itemId,
         tasting_id: tastingId,
       };
+      const { quickTastingsBuilder, quickTastingItemsBuilder } = mockSupabase as any;
 
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: { id: tastingId, user_id: testUser.id },
-          error: null,
-        })
-        .mockResolvedValueOnce({
-          data: existingItem,
-          error: null,
-        });
+      quickTastingsBuilder.single.mockResolvedValueOnce({
+        data: { id: tastingId, user_id: testUser.id },
+        error: null,
+      });
+      quickTastingItemsBuilder.single.mockResolvedValueOnce({
+        data: existingItem,
+        error: null,
+      });
 
-      mockSupabase.delete.mockReturnValue({
+      quickTastingItemsBuilder.delete.mockReturnValue({
         eq: jest.fn().mockReturnValue({
           eq: jest.fn().mockResolvedValue({
             error: null,
@@ -387,4 +421,3 @@ describe('Tasting Items CRUD Operations', () => {
     });
   });
 });
-

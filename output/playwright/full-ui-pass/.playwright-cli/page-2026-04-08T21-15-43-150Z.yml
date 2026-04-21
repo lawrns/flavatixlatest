@@ -1,0 +1,50 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e7]:
+          - button "Back" [ref=e8] [cursor=pointer]:
+            - img [ref=e9]
+            - text: Back
+          - generic [ref=e11]:
+            - generic [ref=e12]:
+              - heading "Create Tasting Session" [level=1] [ref=e13]
+              - paragraph [ref=e14]: Set up a new tasting session with your preferred mode and settings
+            - button "User menu" [ref=e17] [cursor=pointer]:
+              - img "han" [ref=e18]: H
+        - main [ref=e19]:
+          - generic [ref=e21]:
+            - heading "Choose Mode" [level=2] [ref=e22]
+            - generic [ref=e23]:
+              - button "Study Mode Structured tasting sessions with custom categories and templates." [ref=e24] [cursor=pointer]:
+                - img [ref=e25]
+                - heading "Study Mode" [level=3] [ref=e27]
+                - paragraph [ref=e28]: Structured tasting sessions with custom categories and templates.
+              - button "Competition Mode Preload items with correct answers. Enable participant ranking." [ref=e29] [cursor=pointer]:
+                - img [ref=e30]
+                - heading "Competition Mode" [level=3] [ref=e36]
+                - paragraph [ref=e37]: Preload items with correct answers. Enable participant ranking.
+        - navigation "Main navigation" [ref=e39]:
+          - link "Home" [ref=e40] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e42]: home
+            - generic [ref=e43]: Home
+          - link "Taste" [ref=e44] [cursor=pointer]:
+            - /url: /taste
+            - generic [ref=e46]: restaurant
+            - generic [ref=e47]: Taste
+          - link "Review" [ref=e48] [cursor=pointer]:
+            - /url: /review
+            - generic [ref=e50]: rate_review
+            - generic [ref=e51]: Review
+          - link "Wheels" [ref=e52] [cursor=pointer]:
+            - /url: /flavor-wheels
+            - generic [ref=e54]: donut_small
+            - generic [ref=e55]: Wheels
+    - status [ref=e56]
+    - alert [ref=e57]
+    - region "Notifications Alt+T"
+    - region "Notifications alt+T"
+  - alert [ref=e58]

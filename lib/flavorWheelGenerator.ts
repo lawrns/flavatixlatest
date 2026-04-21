@@ -5,6 +5,10 @@
  */
 
 import { SupabaseClient } from '@supabase/supabase-js';
+import {
+  normalizeDescriptorText,
+  resolveDescriptorCanonicalText,
+} from '@/lib/flavorDescriptorNormalization';
 
 export interface WheelDescriptor {
   text: string;
@@ -128,7 +132,14 @@ export async function generateFlavorWheel(
   descriptors.forEach(descriptor => {
     const category = descriptor.category || 'Uncategorized';
     const subcategory = descriptor.subcategory || 'General';
-    const text = descriptor.descriptor_text.toLowerCase();
+    const text = resolveDescriptorCanonicalText(
+      descriptor.descriptor_text,
+      descriptors.map((entry) => entry.descriptor_text)
+    );
+
+    if (!text) {
+      return;
+    }
 
     if (!categoryMap.has(category)) {
       categoryMap.set(category, new Map());
@@ -153,7 +164,11 @@ export async function generateFlavorWheel(
 
   // Convert to wheel structure
   const totalDescriptors = descriptors.length;
-  const uniqueDescriptors = new Set(descriptors.map(d => d.descriptor_text.toLowerCase())).size;
+  const uniqueDescriptors = new Set(
+    descriptors
+      .map((descriptor) => normalizeDescriptorText(descriptor.descriptor_text))
+      .filter(Boolean)
+  ).size;
 
   const categories: WheelCategory[] = [];
 

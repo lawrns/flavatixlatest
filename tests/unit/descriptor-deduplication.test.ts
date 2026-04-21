@@ -68,7 +68,7 @@ describe('Descriptor Deduplication', () => {
       const descriptors = ['Chocolate', 'chocolate', 'CHOCOLATE', 'ChOcOlAtE'];
 
       const normalized = descriptors.map((d) => d.toLowerCase().trim());
-      const uniqueNormalized = [...new Set(normalized)];
+      const uniqueNormalized = Array.from(new Set(normalized));
 
       expect(uniqueNormalized.length).toBe(1);
       expect(uniqueNormalized[0]).toBe('chocolate');
@@ -78,7 +78,7 @@ describe('Descriptor Deduplication', () => {
       const descriptors = ['Stone Fruit', 'stone fruit', 'STONE FRUIT', 'Stone fruit'];
 
       const normalized = descriptors.map((d) => d.toLowerCase().trim());
-      const uniqueNormalized = [...new Set(normalized)];
+      const uniqueNormalized = Array.from(new Set(normalized));
 
       expect(uniqueNormalized.length).toBe(1);
       expect(uniqueNormalized[0]).toBe('stone fruit');
@@ -88,7 +88,7 @@ describe('Descriptor Deduplication', () => {
       const descriptors = ['chocolate', 'chocolatey', 'cocoa', 'dark chocolate'];
 
       const normalized = descriptors.map((d) => d.toLowerCase().trim());
-      const uniqueNormalized = [...new Set(normalized)];
+      const uniqueNormalized = Array.from(new Set(normalized));
 
       expect(uniqueNormalized.length).toBe(4);
     });
