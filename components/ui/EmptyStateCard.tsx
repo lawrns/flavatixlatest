@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import { Button } from './Button';
 
 interface EmptyStateCardProps {
   image: string;
@@ -26,7 +27,7 @@ export const EmptyStateCard: React.FC<EmptyStateCardProps> = ({
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4">
       {/* Empty State Image */}
-      <div className="w-full max-w-xs h-48 sm:h-64 mb-8 rounded-2xl overflow-hidden">
+      <div className="w-full max-w-xs h-48 sm:h-64 mb-8 rounded-pane overflow-hidden">
         <Image
           src={image}
           alt={headline}
@@ -38,10 +39,10 @@ export const EmptyStateCard: React.FC<EmptyStateCardProps> = ({
 
       {/* Text Content */}
       <div className="text-center space-y-4 max-w-md">
-        <h3 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-white">
+        <h3 className="text-h2 font-semibold text-fg dark:text-white">
           {headline}
         </h3>
-        <p className="text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
+        <p className="text-body text-fg-muted dark:text-zinc-400 leading-relaxed">
           {description}
         </p>
       </div>
@@ -50,24 +51,18 @@ export const EmptyStateCard: React.FC<EmptyStateCardProps> = ({
       {(cta || secondaryCta) && (
         <div className="flex flex-col sm:flex-row gap-3 mt-8">
           {cta && (
-            <button
+            <Button
+              variant={cta.variant === 'secondary' ? 'secondary' : 'primary'}
+              size="lg"
               onClick={cta.onClick}
-              className={`px-6 py-3 rounded-lg font-semibold transition-spring ${
-                cta.variant === 'secondary'
-                  ? 'bg-white dark:bg-zinc-800 text-primary border-2 border-primary hover:shadow-md active:scale-95'
-                  : 'bg-gradient-to-r from-primary to-orange-500 text-white hover:shadow-lg hover:-translate-y-0.5 active:scale-95'
-              }`}
             >
               {cta.label}
-            </button>
+            </Button>
           )}
           {secondaryCta && (
-            <button
-              onClick={secondaryCta.onClick}
-              className="px-6 py-3 rounded-lg font-semibold bg-white dark:bg-zinc-800 text-primary border-2 border-primary hover:shadow-md transition-spring active:scale-95"
-            >
+            <Button variant="secondary" size="lg" onClick={secondaryCta.onClick}>
               {secondaryCta.label}
-            </button>
+            </Button>
           )}
         </div>
       )}

@@ -58,16 +58,16 @@ module.exports = {
         'background-dark': '#18181b',
         // Gemini Design System Colors
         'gemini': {
-          primary: '#C63C22',
-          'primary-hover': '#b3351e',
-          bg: '#FFFFFF',
-          card: '#F6F6F6',
-          'text-dark': '#111111',
-          'text-gray': '#6A6A6A',
-          'text-muted': '#A8A8A8',
-          border: '#E6E6E6',
-          success: '#2E8B57',
-          warning: '#E7A32B',
+          primary: 'var(--color-primary-500)',
+          'primary-hover': 'var(--color-primary-600)',
+          bg: 'var(--bg)',
+          card: 'var(--bg-inset)',
+          'text-dark': 'var(--fg)',
+          'text-gray': 'var(--fg-muted)',
+          'text-muted': 'var(--fg-subtle)',
+          border: 'var(--line)',
+          success: 'var(--signal-good)',
+          warning: 'var(--signal-warn)',
         },
         zinc: {
           50: '#fafafa',
@@ -230,22 +230,10 @@ module.exports = {
       },
       borderRadius: {
         none: '0px',
-        sm: '0.125rem', // 2px
-        DEFAULT: '0.25rem', // 4px
-        md: '0.375rem', // 6px
-        lg: '0.5rem', // 8px
-        xl: '0.75rem', // 12px
-        '2xl': '1rem', // 16px
-        '3xl': '1.375rem', // 22px - Gemini card radius
+        sharp: 'var(--r-sharp)',   // 2px  — chips, badges
+        soft: 'var(--r-soft)',     // 10px — buttons, inputs
+        pane: 'var(--r-pane)',     // 18px — cards, sheets
         full: '9999px',
-        // Component-specific - Gemini Style
-        'button': '14px',
-        'card': '22px',
-        'input': '14px',
-        // Tier system - Gemini Style
-        'small': '10px',
-        'medium': '14px',
-        'large': '22px',
       },
       maxWidth: {
         none: 'none',
@@ -269,49 +257,10 @@ module.exports = {
         screen: '100vw',
       },
       boxShadow: {
-        // Standard shadows
-        'xs': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-        'sm': '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
-        'base': '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
-        'md': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-        'lg': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
-        'xl': '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
-        '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
-        'inner': 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
+        'sm': 'var(--shadow-sm)',
+        'md': 'var(--shadow-md)',
+        'lg': 'var(--shadow-lg)',
         'none': '0 0 #0000',
-        // Brand-specific shadows
-        'primary': '0 2px 8px rgba(31, 93, 76, 0.25)',
-        'primary-hover': '0 4px 16px rgba(31, 93, 76, 0.35)',
-        'primary-focus': '0 0 0 3px rgba(31, 93, 76, 0.1)',
-        'accent': '0 2px 8px rgba(198, 90, 46, 0.25)',
-        'accent-hover': '0 4px 16px rgba(198, 90, 46, 0.35)',
-        'tasting': '0 2px 8px rgba(31, 93, 76, 0.08)',
-        'tasting-hover': '0 8px 24px rgba(31, 93, 76, 0.15)',
-        // Neumorphic shadows
-        'neumorphic': 'inset 0 2px 4px rgba(255,255,255,0.5), 0 1px 3px rgba(0,0,0,0.1)',
-        'neumorphic-inset': 'inset 0 2px 4px rgba(0,0,0,0.1), inset 0 -2px 4px rgba(255,255,255,0.5)',
-        'neumorphic-pressed': 'inset 0 2px 8px rgba(0,0,0,0.15), inset 0 -1px 2px rgba(255,255,255,0.3)',
-        // Elevation system
-        'elevation-1': '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
-        'elevation-2': '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
-        'elevation-3': '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
-        'elevation-4': '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
-        'elevation-5': '0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22)',
-        // Semantic shadow aliases - use these for consistent styling
-        'card': 'var(--shadow-card)',
-        'card-hover': 'var(--shadow-card-hover)',
-        'card-active': 'var(--shadow-card-active)',
-        'modal': 'var(--shadow-modal)',
-        'dropdown': 'var(--shadow-dropdown)',
-        'popover': 'var(--shadow-popover)',
-        'tooltip': 'var(--shadow-tooltip)',
-        'button': 'var(--shadow-button)',
-        'button-hover': 'var(--shadow-button-hover)',
-        'button-active': 'var(--shadow-button-active)',
-        'input': 'var(--shadow-input)',
-        'input-hover': 'var(--shadow-input-hover)',
-        'nav': 'var(--shadow-nav)',
-        'nav-sticky': 'var(--shadow-nav-sticky)',
       },
       backgroundImage: {
         // Primary gradients
@@ -479,19 +428,10 @@ module.exports = {
         1000: '1000ms',
       },
       transitionTimingFunction: {
-        DEFAULT: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        DEFAULT: 'var(--ease-out)',
         linear: 'linear',
-        in: 'cubic-bezier(0.4, 0, 1, 1)',
-        out: 'cubic-bezier(0, 0, 0.2, 1)',
-        'in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
-        'ease-in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
-        'ease-out': 'cubic-bezier(0, 0, 0.2, 1)',
-        'ease-in': 'cubic-bezier(0.4, 0, 1, 1)',
-        // Spring easing for 2025 premium feel
-        'spring': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-        'spring-tight': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-        'spring-gentle': 'cubic-bezier(0.215, 0.61, 0.355, 1)',
-        'spring-back': 'cubic-bezier(0.6, 0.04, 0.98, 0.335)',
+        out: 'var(--ease-out)',
+        spring: 'var(--ease-spring)',
       },
       screens: {
         'xs': '375px',

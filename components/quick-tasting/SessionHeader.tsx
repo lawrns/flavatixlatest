@@ -82,7 +82,7 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
   };
 
   return (
-    <div className="rounded-[22px] bg-gemini-card dark:bg-zinc-800/80 border border-gemini-border dark:border-zinc-700 p-4 mb-6">
+    <div className="rounded-pane bg-gemini-card dark:bg-zinc-800/80 border border-gemini-border dark:border-zinc-700 p-4 mb-6">
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div className="min-w-0 flex-1">
           {/* Session Name */}
@@ -186,7 +186,7 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
           {phase === 'setup' && (
             <button
               onClick={onToggleEditDashboard}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-[14px] text-sm font-medium text-gemini-text-gray hover:bg-white dark:hover:bg-zinc-700 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-soft text-sm font-medium text-gemini-text-gray hover:bg-white dark:hover:bg-zinc-700 transition-colors"
             >
               <Settings size={14} />
               Edit
@@ -199,7 +199,7 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
             phase === 'setup' && (
               <button
                 onClick={onToggleSuggestions}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-[14px] text-sm font-medium transition-colors ${
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-soft text-sm font-medium transition-colors ${
                   showSuggestions
                     ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300'
                     : 'text-gemini-text-gray hover:bg-white dark:hover:bg-zinc-700'

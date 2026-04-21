@@ -836,21 +836,21 @@ export default function DesignSystemPage() {
                   </Showcase>
 
                   <Showcase title="Success - Positive confirmations">
-                    <Button variant="success">Confirm</Button>
-                    <Button variant="success" disabled>
+                    <Button variant="primary">Confirm</Button>
+                    <Button variant="primary" disabled>
                       Disabled
                     </Button>
-                    <Button variant="success" loading>
+                    <Button variant="primary" loading>
                       Loading
                     </Button>
                   </Showcase>
 
                   <Showcase title="Gradient - Premium CTAs">
-                    <Button variant="gradient">Get Started</Button>
-                    <Button variant="gradient" disabled>
+                    <Button variant="primary">Get Started</Button>
+                    <Button variant="primary" disabled>
                       Disabled
                     </Button>
-                    <Button variant="gradient" loading>
+                    <Button variant="primary" loading>
                       Loading
                     </Button>
                   </Showcase>
@@ -860,9 +860,9 @@ export default function DesignSystemPage() {
                 <SubSection title="Button Sizes">
                   <Showcase title="All sizes (sm, md, lg, xl)">
                     <Button size="sm">Small</Button>
-                    <Button size="md">Medium</Button>
+                    <Button size="lg">Medium</Button>
                     <Button size="lg">Large</Button>
-                    <Button size="xl">Extra Large</Button>
+                    <Button size="lg">Extra Large</Button>
                   </Showcase>
                 </SubSection>
 
@@ -887,11 +887,11 @@ export default function DesignSystemPage() {
                 {/* Pill Style */}
                 <SubSection title="Pill Style Buttons">
                   <Showcase title="Rounded full">
-                    <Button pill>Pill Button</Button>
-                    <Button pill variant="secondary">
+                    <Button >Pill Button</Button>
+                    <Button  variant="secondary">
                       Secondary Pill
                     </Button>
-                    <Button pill variant="secondary" icon={<Star className="w-4 h-4" />}>
+                    <Button  variant="secondary" icon={<Star className="w-4 h-4" />}>
                       Rate
                     </Button>
                   </Showcase>
@@ -1034,7 +1034,7 @@ export default function DesignSystemPage() {
                   </Card>
 
                   {/* Tasting Card */}
-                  <Card variant="tasting">
+                  <Card variant="default">
                     <CardHeader title="Tasting Card" subtitle="With accent bar" />
                     <CardContent>
                       <p className="text-zinc-600 dark:text-zinc-400">
@@ -1044,7 +1044,7 @@ export default function DesignSystemPage() {
                   </Card>
 
                   {/* Elevated Card */}
-                  <Card variant="elevated">
+                  <Card variant="default">
                     <CardHeader title="Elevated Card" subtitle="Prominent shadow" />
                     <CardContent>
                       <p className="text-zinc-600 dark:text-zinc-400">
@@ -1054,7 +1054,7 @@ export default function DesignSystemPage() {
                   </Card>
 
                   {/* Outlined Card */}
-                  <Card variant="outlined">
+                  <Card variant="default">
                     <CardHeader title="Outlined Card" subtitle="Border emphasis" />
                     <CardContent>
                       <p className="text-zinc-600 dark:text-zinc-400">
@@ -1064,7 +1064,7 @@ export default function DesignSystemPage() {
                   </Card>
 
                   {/* Glass Card */}
-                  <Card variant="glass">
+                  <Card variant="default">
                     <CardHeader title="Glass Card" subtitle="Frosted glass effect" />
                     <CardContent>
                       <p className="text-zinc-600 dark:text-zinc-400">
@@ -1074,7 +1074,7 @@ export default function DesignSystemPage() {
                   </Card>
 
                   {/* Gradient Card */}
-                  <Card variant="gradient">
+                  <Card variant="default">
                     <CardHeader title="Gradient Card" subtitle="Subtle gradient" />
                     <CardContent>
                       <p className="text-zinc-600 dark:text-zinc-400">
@@ -1084,7 +1084,7 @@ export default function DesignSystemPage() {
                   </Card>
 
                   {/* Social Card */}
-                  <Card variant="social">
+                  <Card variant="default">
                     <CardHeader title="Social Card" subtitle="For social posts" />
                     <CardContent>
                       <p className="text-zinc-600 dark:text-zinc-400">
@@ -1125,7 +1125,7 @@ export default function DesignSystemPage() {
                     <Card variant="default" padding="lg" className="w-32">
                       <p className="text-xs text-zinc-500 text-center">lg</p>
                     </Card>
-                    <Card variant="default" padding="xl" className="w-32">
+                    <Card variant="default" padding="lg" className="w-32">
                       <p className="text-xs text-zinc-500 text-center">xl</p>
                     </Card>
                   </div>
@@ -1133,11 +1133,11 @@ export default function DesignSystemPage() {
 
                 {/* Glow Border */}
                 <SubSection title="Glow Border Effect" className="mt-10">
-                  <Card variant="default" glowBorder className="max-w-md">
+                  <Card variant="default" className="max-w-md">
                     <CardHeader title="Highlighted Card" subtitle="With glow ring" />
                     <CardContent>
                       <p className="text-zinc-600 dark:text-zinc-400">
-                        Use glowBorder for focused or featured content.
+                        Use for focused or featured content.
                       </p>
                     </CardContent>
                   </Card>
@@ -1172,7 +1172,7 @@ export default function DesignSystemPage() {
                       Medium Modal
                     </Button>
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       onClick={() => {
                         setModalSize('lg');
                         setIsModalOpen(true);
@@ -1227,7 +1227,7 @@ export default function DesignSystemPage() {
                 <SubSection title="Loading Spinners">
                   <Showcase title="Sizes">
                     <LoadingSpinner size="sm" />
-                    <LoadingSpinner size="md" />
+                    <LoadingSpinner size="lg" />
                     <LoadingSpinner size="lg" />
                   </Showcase>
                   <Showcase title="Colors">
@@ -1250,7 +1250,7 @@ export default function DesignSystemPage() {
                       <span>Saving...</span>
                     </div>
                     <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-                      <InlineLoading size="md" />
+                      <InlineLoading size="lg" />
                       <span>Processing...</span>
                     </div>
                   </Showcase>
@@ -1344,16 +1344,16 @@ export default function DesignSystemPage() {
                 <SubSection title="Score Rings">
                   <Showcase title="Sizes">
                     <ScoreRing score={92} size="sm" />
-                    <ScoreRing score={85} size="md" />
+                    <ScoreRing score={85} size="lg" />
                     <ScoreRing score={78} size="lg" />
-                    <ScoreRing score={95} size="xl" />
+                    <ScoreRing score={95} size="lg" />
                   </Showcase>
                   <Showcase title="Score Ranges (color changes by value)">
-                    <ScoreRing score={95} size="md" label="Exceptional" />
-                    <ScoreRing score={82} size="md" label="Excellent" />
-                    <ScoreRing score={72} size="md" label="Very Good" />
-                    <ScoreRing score={55} size="md" label="Average" />
-                    <ScoreRing score={35} size="md" label="Poor" />
+                    <ScoreRing score={95} size="lg" label="Exceptional" />
+                    <ScoreRing score={82} size="lg" label="Excellent" />
+                    <ScoreRing score={72} size="lg" label="Very Good" />
+                    <ScoreRing score={55} size="lg" label="Average" />
+                    <ScoreRing score={35} size="lg" label="Poor" />
                   </Showcase>
                 </SubSection>
 
@@ -1428,7 +1428,7 @@ export default function DesignSystemPage() {
                   </Showcase>
                   <Showcase title="Sizes">
                     <FlavorPill flavor="Agave" size="sm" />
-                    <FlavorPill flavor="Agave" size="md" />
+                    <FlavorPill flavor="Agave" size="lg" />
                     <FlavorPill flavor="Agave" size="lg" />
                   </Showcase>
                   <Showcase title="With intensity">
@@ -1506,7 +1506,7 @@ export default function DesignSystemPage() {
                   </p>
                   <div className="flex flex-wrap gap-4">
                     <Button>Focusable Button</Button>
-                    <Button variant="outline">Outline Button</Button>
+                    <Button variant="secondary">Outline Button</Button>
                     <input
                       type="text"
                       placeholder="Focusable input"

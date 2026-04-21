@@ -55,7 +55,7 @@ export const SessionNavigation: React.FC<SessionNavigationProps> = ({
         <button
           onClick={onPrevious}
           disabled={isFirstItem}
-          className="px-4 py-2 rounded-[14px] text-sm font-medium text-gemini-text-gray bg-gemini-card border border-gemini-border hover:bg-white dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="px-4 py-2 rounded-soft text-sm font-medium text-gemini-text-gray bg-gemini-card border border-gemini-border hover:bg-white dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           Previous
         </button>
@@ -66,7 +66,7 @@ export const SessionNavigation: React.FC<SessionNavigationProps> = ({
 
         <button
           onClick={onNext}
-          className="px-4 py-2 rounded-[14px] text-sm font-medium text-gemini-text-gray bg-gemini-card border border-gemini-border hover:bg-white dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700 transition-colors"
+          className="px-4 py-2 rounded-soft text-sm font-medium text-gemini-text-gray bg-gemini-card border border-gemini-border hover:bg-white dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700 transition-colors"
         >
           {isLastItem ? 'Add Item' : 'Next'}
         </button>
@@ -86,7 +86,7 @@ export const SessionNavigation: React.FC<SessionNavigationProps> = ({
       <button
         onClick={onComplete}
         disabled={isLoading || incompleteCount > 0}
-        className={`w-full max-w-xs px-6 py-3 rounded-[14px] text-base font-semibold transition-colors ${
+        className={`w-full max-w-xs px-6 py-3 rounded-soft text-base font-semibold transition-colors ${
           incompleteCount > 0
             ? 'bg-zinc-300 text-zinc-500 cursor-not-allowed dark:bg-zinc-700 dark:text-zinc-400'
             : 'text-white bg-primary hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed'

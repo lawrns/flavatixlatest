@@ -160,7 +160,7 @@ export const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }
       </div>
 
       {/* Notifications Modal */}
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Notifications" size="md">
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Notifications" size="lg">
         <ModalBody>
           <div className="space-y-4">
             {notifications.length === 0 ? (
@@ -182,9 +182,9 @@ export const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }
                   {notifications.map((notification) => (
                     <Card
                       key={notification.id}
-                      variant={notification.read ? 'default' : 'elevated'}
+                      variant="default"
                       className={`transition-all duration-200 ${
-                        !notification.read ? 'border-l-4 border-l-blue-500' : ''
+                        !notification.read ? 'border-l-4 border-l-blue-500 shadow-md' : ''
                       }`}
                     >
                       <CardContent>

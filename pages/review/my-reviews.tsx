@@ -136,7 +136,7 @@ const MyReviewsPage: React.FC = () => {
       {/* Reviews Section */}
       <div className="space-y-6">
         {/* Completed Reviews */}
-        <div className="bg-white dark:bg-zinc-800/50 rounded-[22px] border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
+        <div className="bg-white dark:bg-zinc-800/50 rounded-pane border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
           <div className="flex items-center mb-4">
             <FileText size={24} className="text-primary mr-2" />
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Reviews</h2>
@@ -155,7 +155,7 @@ const MyReviewsPage: React.FC = () => {
                 <button
                   key={review.id}
                   onClick={() => router.push(`/review/summary/${review.id}`)}
-                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-[14px] transition-colors border border-zinc-200 dark:border-zinc-700"
+                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-soft transition-colors border border-zinc-200 dark:border-zinc-700"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
@@ -178,7 +178,7 @@ const MyReviewsPage: React.FC = () => {
         </div>
 
         {/* Prose Reviews */}
-        <div className="bg-white dark:bg-zinc-800/50 rounded-[22px] border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
+        <div className="bg-white dark:bg-zinc-800/50 rounded-pane border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
           <div className="flex items-center mb-4">
             <PenTool size={24} className="text-primary mr-2" />
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Prose Reviews</h2>
@@ -198,7 +198,7 @@ const MyReviewsPage: React.FC = () => {
                 <button
                   key={review.id}
                   onClick={() => router.push(`/review/summary/${review.id}?type=prose`)}
-                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-[14px] transition-colors border border-zinc-200 dark:border-zinc-700"
+                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-soft transition-colors border border-zinc-200 dark:border-zinc-700"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
@@ -221,7 +221,7 @@ const MyReviewsPage: React.FC = () => {
         </div>
 
         {/* Reviews in Progress */}
-        <div className="bg-white dark:bg-zinc-800/50 rounded-[22px] border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
+        <div className="bg-white dark:bg-zinc-800/50 rounded-pane border border-zinc-200 dark:border-zinc-700 p-4 sm:p-6">
           <div className="flex items-center mb-4">
             <Clock size={24} className="text-primary mr-2" />
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
@@ -245,7 +245,7 @@ const MyReviewsPage: React.FC = () => {
                 <button
                   key={review.id}
                   onClick={() => router.push(`/review/structured?id=${review.id}`)}
-                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-[14px] transition-colors border border-zinc-200 dark:border-zinc-700"
+                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-soft transition-colors border border-zinc-200 dark:border-zinc-700"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
@@ -267,7 +267,7 @@ const MyReviewsPage: React.FC = () => {
                 <button
                   key={review.id}
                   onClick={() => router.push(`/review/prose?id=${review.id}`)}
-                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-[14px] transition-colors border border-zinc-200 dark:border-zinc-700"
+                  className="w-full text-left p-4 bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-soft transition-colors border border-zinc-200 dark:border-zinc-700"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">

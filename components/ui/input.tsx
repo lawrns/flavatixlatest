@@ -55,9 +55,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     // Size variants following Gemini design system
     const sizeClasses = {
-      sm: 'h-9 px-3 py-2 text-sm rounded-[14px]',
-      md: 'h-11 px-4 py-3 text-base rounded-[14px]',
-      lg: 'h-[52px] px-5 py-4 text-lg rounded-[14px]',
+      sm: 'h-9 px-3 py-2 text-sm rounded-soft',
+      md: 'h-11 px-4 py-3 text-base rounded-soft',
+      lg: 'h-[52px] px-5 py-4 text-lg rounded-soft',
     }
 
     // Icon padding adjustments

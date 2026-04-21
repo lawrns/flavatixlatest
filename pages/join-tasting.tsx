@@ -96,7 +96,7 @@ export default function JoinTastingPage() {
       showBack
       containerSize="md"
     >
-      <div className="bg-white dark:bg-zinc-800 rounded-[22px] shadow-sm border border-zinc-200 dark:border-zinc-700 p-8 mt-2">
+      <div className="bg-white dark:bg-zinc-800 rounded-pane shadow-sm border border-zinc-200 dark:border-zinc-700 p-8 mt-2">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">

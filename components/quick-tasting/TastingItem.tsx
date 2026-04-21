@@ -557,7 +557,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                     value={localAroma}
                     onChange={(e) => handleAromaChange(e.target.value)}
                     placeholder={`Describe the aroma...`}
-                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-[14px] text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
+                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
                   />
                 </div>
 
@@ -571,7 +571,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                     value={localFlavor}
                     onChange={(e) => handleFlavorChange(e.target.value)}
                     placeholder={`Describe the flavor, taste, and mouthfeel...`}
-                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-[14px] text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
+                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
                   />
                 </div>
 
@@ -585,7 +585,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                     value={localNotes}
                     onChange={(e) => handleNotesChange(e.target.value)}
                     placeholder={`Additional notes...`}
-                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-[14px] text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
+                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-zinc-400"
                   />
                 </div>
               </>
@@ -593,7 +593,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
 
             {/* Overall Score - Show when requested */}
             {showOverallScore && (
-              <div className="mb-6 py-5 px-4 bg-gemini-card dark:bg-zinc-800/60 rounded-[22px] border border-gemini-border dark:border-zinc-700">
+              <div className="mb-6 py-5 px-4 bg-gemini-card dark:bg-zinc-800/60 rounded-pane border border-gemini-border dark:border-zinc-700">
                 <div className="text-center">
                   <div className="inline-flex items-center gap-2 text-xs font-semibold text-gemini-text-gray dark:text-zinc-400 mb-3 tracking-widest uppercase">
                     <Star size={12} className="fill-current" />

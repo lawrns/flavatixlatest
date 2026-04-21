@@ -2,8 +2,12 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../contexts/SimpleAuthContext';
 import { toast } from '../lib/toast';
+import { cn } from '@/lib/utils';
 import PageLayout from '../components/layout/PageLayout';
 import EmptyStateCard from '../components/ui/EmptyStateCard';
+import { Button } from '../components/ui/Button';
+import { Badge } from '../components/ui/Badge';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useTastings, useDeleteTasting, TastingFilters } from '../lib/query/hooks/useTastings';
 
 const ITEMS_PER_PAGE = 20;
@@ -15,8 +19,13 @@ export default function MyTastingsPage() {
   const [page, setPage] = useState(1);
   const [selectMode, setSelectMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmConfig, setConfirmConfig] = useState({
+    title: '',
+    description: '',
+    onConfirm: () => {},
+  });
 
-  // Build filters for React Query
   const queryFilters: TastingFilters = {};
   if (filter === 'completed') {
     queryFilters.completed = true;
@@ -24,7 +33,6 @@ export default function MyTastingsPage() {
     queryFilters.completed = false;
   }
 
-  // React Query hooks
   const {
     data: tastingData,
     isLoading: loading,
@@ -42,46 +50,50 @@ export default function MyTastingsPage() {
     }
   }, [user, authLoading, router]);
 
-  const handleDeleteTasting = async (tastingId: string) => {
-    if (!confirm('Are you sure you want to delete this tasting? This action cannot be undone.')) {
-      return;
-    }
-
-    deleteMutation.mutate(tastingId, {
-      onSuccess: () => {
-        toast.success('Tasting deleted successfully');
-      },
-      onError: (error) => {
-        console.error('Error deleting tasting:', error);
-        toast.error('Failed to delete tasting');
+  const handleDeleteTasting = (tastingId: string) => {
+    setConfirmConfig({
+      title: 'Delete tasting?',
+      description: 'This action cannot be undone.',
+      onConfirm: () => {
+        deleteMutation.mutate(tastingId, {
+          onSuccess: () => {
+            toast.success('Tasting deleted');
+          },
+          onError: () => {
+            toast.error('Failed to delete tasting');
+          },
+        });
+        setConfirmOpen(false);
       },
     });
+    setConfirmOpen(true);
   };
 
-  const handleBulkDelete = async () => {
+  const handleBulkDelete = () => {
     const idsToDelete = Array.from(selectedIds);
-    if (!confirm(`Delete ${idsToDelete.length} tastings? This action cannot be undone.`)) {
-      return;
-    }
-
-    try {
-      // Delete all tastings sequentially
-      for (const id of idsToDelete) {
-        await new Promise<void>((resolve, reject) => {
-          deleteMutation.mutate(id, {
-            onSuccess: () => resolve(),
-            onError: (error) => reject(error),
-          });
-        });
-      }
-
-      setSelectedIds(new Set());
-      setSelectMode(false);
-      toast.success(`${idsToDelete.length} tastings deleted`);
-    } catch (error) {
-      console.error('Error deleting tastings:', error);
-      toast.error('Failed to delete tastings');
-    }
+    setConfirmConfig({
+      title: `Delete ${idsToDelete.length} tastings?`,
+      description: 'This action cannot be undone.',
+      onConfirm: async () => {
+        try {
+          for (const id of idsToDelete) {
+            await new Promise<void>((resolve, reject) => {
+              deleteMutation.mutate(id, {
+                onSuccess: () => resolve(),
+                onError: (error) => reject(error),
+              });
+            });
+          }
+          setSelectedIds(new Set());
+          setSelectMode(false);
+          toast.success(`${idsToDelete.length} tastings deleted`);
+        } catch {
+          toast.error('Failed to delete tastings');
+        }
+        setConfirmOpen(false);
+      },
+    });
+    setConfirmOpen(true);
   };
 
   const toggleSelection = (id: string) => {
@@ -104,7 +116,7 @@ export default function MyTastingsPage() {
 
   if (authLoading || !user) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
@@ -117,82 +129,58 @@ export default function MyTastingsPage() {
       showBack
       containerSize="2xl"
     >
+      <ConfirmDialog
+        open={confirmOpen}
+        title={confirmConfig.title}
+        description={confirmConfig.description}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={confirmConfig.onConfirm}
+        onCancel={() => setConfirmOpen(false)}
+      />
+
       {/* Selection Controls */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <button
+          <Button
+            variant={selectMode ? 'primary' : 'secondary'}
+            size="sm"
             onClick={() => {
               setSelectMode(!selectMode);
               setSelectedIds(new Set());
             }}
-            className={`px-4 py-2 rounded-[14px] font-medium transition-colors ${
-              selectMode
-                ? 'bg-zinc-800 text-white dark:bg-zinc-200 dark:text-zinc-800'
-                : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50'
-            }`}
           >
             {selectMode ? 'Cancel' : 'Select'}
-          </button>
+          </Button>
           {selectMode && tastings.length > 0 && (
-            <button
-              onClick={toggleSelectAll}
-              className="px-4 py-2 rounded-[14px] font-medium bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 transition-colors"
-            >
+            <Button variant="secondary" size="sm" onClick={toggleSelectAll}>
               {selectedIds.size === tastings.length ? 'Deselect All' : 'Select All'}
-            </button>
+            </Button>
           )}
         </div>
         {selectMode && selectedIds.size > 0 && (
-          <button
-            onClick={handleBulkDelete}
-            className="px-4 py-2 bg-red-600 text-white rounded-[14px] font-medium hover:bg-red-700 transition-colors"
-          >
-            Delete {selectedIds.size} Selected
-          </button>
+          <Button variant="danger" size="sm" onClick={handleBulkDelete}>
+            Delete {selectedIds.size}
+          </Button>
         )}
       </div>
 
       {/* Filters */}
       <div className="flex gap-2 mb-6">
-        <button
-          onClick={() => {
-            setFilter('all');
-            setPage(1);
-          }}
-          className={`px-4 py-2 rounded-[14px] font-medium transition-colors ${
-            filter === 'all'
-              ? 'bg-primary text-white'
-              : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50'
-          }`}
-        >
-          All
-        </button>
-        <button
-          onClick={() => {
-            setFilter('completed');
-            setPage(1);
-          }}
-          className={`px-4 py-2 rounded-[14px] font-medium transition-colors ${
-            filter === 'completed'
-              ? 'bg-primary text-white'
-              : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50'
-          }`}
-        >
-          Completed
-        </button>
-        <button
-          onClick={() => {
-            setFilter('in_progress');
-            setPage(1);
-          }}
-          className={`px-4 py-2 rounded-[14px] font-medium transition-colors ${
-            filter === 'in_progress'
-              ? 'bg-primary text-white'
-              : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50'
-          }`}
-        >
-          In Progress
-        </button>
+        {(['all', 'completed', 'in_progress'] as const).map((f) => (
+          <Button
+            key={f}
+            variant={filter === f ? 'primary' : 'secondary'}
+            size="sm"
+            onClick={() => {
+              setFilter(f);
+              setPage(1);
+            }}
+          >
+            {f === 'in_progress' ? 'In Progress' : f.charAt(0).toUpperCase() + f.slice(1)}
+          </Button>
+        ))}
       </div>
 
       {/* Tastings List */}
@@ -201,14 +189,14 @@ export default function MyTastingsPage() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
       ) : tastings.length === 0 ? (
-        <div className="bg-white dark:bg-zinc-800 rounded-[22px] shadow-sm border border-zinc-200 dark:border-zinc-700">
+        <div className="surface-page">
           <EmptyStateCard
             image="/generated-images/empty-tastings.webp"
-            headline="No tastings yet, but your palate awaits"
-            description="Start your first tasting to begin discovering new flavors and building your taste profile"
+            headline="No tastings yet — start your first flight"
+            description="Capture a few notes and you'll unlock a personalized flavor wheel that evolves with every session."
             cta={{
-              label: 'Create Your First Tasting',
-              onClick: () => router.push('/taste'),
+              label: 'Start a Tasting',
+              onClick: () => router.push('/quick-tasting'),
               variant: 'primary',
             }}
           />
@@ -218,9 +206,10 @@ export default function MyTastingsPage() {
           {tastings.map((tasting) => (
             <div
               key={tasting.id}
-              className={`bg-white dark:bg-zinc-800 rounded-[22px] shadow-sm border border-zinc-200 dark:border-zinc-700 p-6 hover:shadow-md transition-shadow ${
+              className={cn(
+                'bg-bg-surface dark:bg-zinc-800 rounded-pane shadow-sm border border-line dark:border-zinc-700 p-5 hover:shadow-md transition-shadow',
                 selectMode && selectedIds.has(tasting.id) ? 'ring-2 ring-primary' : ''
-              }`}
+              )}
               onClick={selectMode ? () => toggleSelection(tasting.id) : undefined}
             >
               <div className="flex items-start justify-between mb-4">
@@ -232,15 +221,15 @@ export default function MyTastingsPage() {
                         checked={selectedIds.has(tasting.id)}
                         onChange={() => toggleSelection(tasting.id)}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-5 h-5 rounded border-zinc-300 text-primary focus:ring-primary cursor-pointer"
+                        className="w-5 h-5 rounded-sharp border-line text-primary focus:ring-primary cursor-pointer"
                       />
                     </div>
                   )}
                   <div className="flex-1">
-                    <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-1">
+                    <h3 className="text-h3 font-semibold text-fg dark:text-zinc-50 mb-1">
                       {tasting.session_name || `${tasting.category} Tasting`}
                     </h3>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-300">
+                    <p className="text-body-sm text-fg-muted dark:text-zinc-300">
                       {new Date(tasting.created_at).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
@@ -250,60 +239,64 @@ export default function MyTastingsPage() {
                   </div>
                 </div>
                 {tasting.completed_at ? (
-                  <span className="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
-                    Completed
-                  </span>
+                  <Badge variant="completed">Completed</Badge>
                 ) : (
-                  <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">
-                    In Progress
-                  </span>
+                  <Badge variant="inProgress">In Progress</Badge>
                 )}
               </div>
 
               <div className="grid grid-cols-3 gap-4 mb-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary">{tasting.total_items}</div>
-                  <div className="text-sm text-zinc-600 dark:text-zinc-300">Items</div>
+                  <div className="text-body-sm text-fg-muted dark:text-zinc-300">Items</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary">{tasting.completed_items}</div>
-                  <div className="text-sm text-zinc-600 dark:text-zinc-300">Scored</div>
+                  <div className="text-body-sm text-fg-muted dark:text-zinc-300">Scored</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary">
-                    {tasting.average_score ? tasting.average_score.toFixed(1) : 'N/A'}
+                    {tasting.average_score ? tasting.average_score.toFixed(1) : '—'}
                   </div>
-                  <div className="text-sm text-zinc-600 dark:text-zinc-300">Avg Score</div>
+                  <div className="text-body-sm text-fg-muted dark:text-zinc-300">Avg Score</div>
                 </div>
               </div>
 
               <div className="flex gap-2">
                 {tasting.mode === 'competition' ? (
                   <>
-                    <button
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      fullWidth
                       onClick={() => router.push(`/competition/${tasting.id}`)}
-                      className="flex-1 px-4 py-2 bg-primary text-white rounded-[14px] font-medium hover:bg-primary/90 transition-colors"
                     >
                       {tasting.completed_at ? 'View Results' : 'Start Competition'}
-                    </button>
+                    </Button>
                     {tasting.rank_participants && (
-                      <button
+                      <Button
+                        variant="secondary"
+                        size="lg"
                         onClick={() => router.push(`/competition/${tasting.id}/leaderboard`)}
-                        className="px-4 py-2 bg-yellow-500 text-white rounded-[14px] font-medium hover:bg-yellow-600 transition-colors"
                       >
                         Leaderboard
-                      </button>
+                      </Button>
                     )}
                   </>
                 ) : tasting.mode === 'study' ? (
-                  <button
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    fullWidth
                     onClick={() => router.push(`/taste/study/${tasting.id}`)}
-                    className="flex-1 px-4 py-2 bg-primary text-white rounded-[14px] font-medium hover:bg-primary/90 transition-colors"
                   >
                     {tasting.completed_at ? 'View Study' : 'Continue Study'}
-                  </button>
+                  </Button>
                 ) : (
-                  <button
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    fullWidth
                     onClick={() =>
                       router.push(
                         tasting.completed_at
@@ -311,47 +304,41 @@ export default function MyTastingsPage() {
                           : `/quick-tasting?session=${tasting.id}`
                       )
                     }
-                    className="flex-1 px-4 py-2 bg-primary text-white rounded-[14px] font-medium hover:bg-primary/90 transition-colors"
                   >
                     {tasting.completed_at ? 'View Details' : 'Continue'}
-                  </button>
+                  </Button>
                 )}
-                <button
+                <Button
+                  variant="danger"
+                  size="lg"
                   onClick={() => handleDeleteTasting(tasting.id)}
-                  className="px-4 py-2 bg-red-50 text-red-600 rounded-[14px] font-medium hover:bg-red-100 transition-colors"
                 >
                   Delete
-                </button>
+                </Button>
               </div>
             </div>
           ))}
 
           {/* Pagination Controls */}
           {(page > 1 || hasMore) && (
-            <div className="flex items-center justify-center gap-4 mt-6 pt-4 border-t border-zinc-200 dark:border-zinc-700">
-              <button
+            <div className="flex items-center justify-center gap-4 mt-6 pt-4 border-t border-line dark:border-zinc-700">
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className={`px-4 py-2 rounded-[14px] font-medium transition-colors ${
-                  page === 1
-                    ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed dark:bg-zinc-800 dark:text-zinc-500'
-                    : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-700'
-                }`}
               >
                 Previous
-              </button>
-              <span className="text-sm text-zinc-600 dark:text-zinc-300">Page {page}</span>
-              <button
+              </Button>
+              <span className="text-body-sm text-fg-muted dark:text-zinc-300">Page {page}</span>
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => setPage((p) => p + 1)}
                 disabled={!hasMore}
-                className={`px-4 py-2 rounded-[14px] font-medium transition-colors ${
-                  !hasMore
-                    ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed dark:bg-zinc-800 dark:text-zinc-500'
-                    : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-700'
-                }`}
               >
                 Next
-              </button>
+              </Button>
             </div>
           )}
         </div>

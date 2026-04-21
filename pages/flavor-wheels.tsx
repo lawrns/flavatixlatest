@@ -521,7 +521,7 @@ export default function FlavorWheelsPage() {
           <select
             value={wheelType}
             onChange={(e) => setWheelType(e.target.value as WheelType)}
-            className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-[14px] bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-soft bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option value="aroma">Aroma Wheel</option>
             <option value="flavor">Flavor Wheel</option>
@@ -536,7 +536,7 @@ export default function FlavorWheelsPage() {
           <select
             value={scopeType}
             onChange={(e) => setScopeType(e.target.value as ScopeType)}
-            className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-[14px] bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-soft bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option value="personal">My Flavor Wheel</option>
             <option value="universal">Universal (All Users)</option>
@@ -547,7 +547,7 @@ export default function FlavorWheelsPage() {
       {/* View mode toggle */}
       <div className="flex items-center gap-3">
         <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200">View:</span>
-        <div className="inline-flex rounded-[14px] border border-gemini-border dark:border-zinc-700 bg-gemini-card dark:bg-zinc-800 p-1">
+        <div className="inline-flex rounded-soft border border-gemini-border dark:border-zinc-700 bg-gemini-card dark:bg-zinc-800 p-1">
           <button
             onClick={() => setViewMode('wheel')}
             className={`flex items-center gap-2 px-4 py-1.5 rounded-[10px] text-sm font-medium transition-colors ${
@@ -578,7 +578,7 @@ export default function FlavorWheelsPage() {
         <button
           onClick={handleRegenerateWheel}
           disabled={loading}
-          className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-[14px] hover:bg-primary-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors min-w-[120px]"
+          className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-soft hover:bg-primary-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors min-w-[120px]"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           Regenerate
@@ -591,13 +591,13 @@ export default function FlavorWheelsPage() {
         <button
           onClick={handleExportWheel}
           disabled={!wheelData || loading}
-          className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border border-gemini-border dark:border-zinc-600 text-gemini-text-gray dark:text-zinc-200 rounded-[14px] hover:bg-white dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[100px]"
+          className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border border-gemini-border dark:border-zinc-600 text-gemini-text-gray dark:text-zinc-200 rounded-soft hover:bg-white dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[100px]"
         >
           <Download className="w-4 h-4" />
           Export
         </button>
         {cached && !loading && !autoRegenerating && (
-          <span className={`text-xs px-2 py-1 rounded-[14px] ${STATUS_COLORS.success.bg} ${STATUS_COLORS.success.text}`}>
+          <span className={`text-xs px-2 py-1 rounded-soft ${STATUS_COLORS.success.bg} ${STATUS_COLORS.success.text}`}>
             Up to date
           </span>
         )}
@@ -880,7 +880,7 @@ export default function FlavorWheelsPage() {
                     <button
                       key={s.name}
                       type="button"
-                      className="w-full text-left rounded-[14px] bg-gemini-card dark:bg-zinc-800 px-4 py-3 hover:shadow-sm active:scale-[0.98] transition"
+                      className="w-full text-left rounded-soft bg-gemini-card dark:bg-zinc-800 px-4 py-3 hover:shadow-sm active:scale-[0.98] transition"
                       onClick={() => handleSegmentClick(selectedSegment.category, s.name)}
                     >
                       <div className="flex items-center justify-between">
@@ -927,7 +927,7 @@ export default function FlavorWheelsPage() {
                         <button
                           key={`${s.source_type}:${s.source_id}`}
                           type="button"
-                          className="w-full text-left rounded-[14px] bg-gemini-card dark:bg-zinc-800 px-4 py-3 hover:shadow-sm active:scale-[0.98] transition"
+                          className="w-full text-left rounded-soft bg-gemini-card dark:bg-zinc-800 px-4 py-3 hover:shadow-sm active:scale-[0.98] transition"
                           onClick={() => { setIsDetailOpen(false); router.push(href); }}
                         >
                           <div className="flex items-center justify-between gap-3">
@@ -955,7 +955,7 @@ export default function FlavorWheelsPage() {
 
             <button
               type="button"
-              className="w-full rounded-[14px] bg-primary text-white py-3 font-semibold active:scale-[0.98] transition"
+              className="w-full rounded-soft bg-primary text-white py-3 font-semibold active:scale-[0.98] transition"
               onClick={() => { setIsDetailOpen(false); router.push('/my-tastings'); }}
             >
               View related tastings

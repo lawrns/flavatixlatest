@@ -268,14 +268,14 @@ const SocialFeedWidget = React.memo(
       return (
         <Card>
           <CardContent>
-            <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+            <h3 className="text-h3 font-semibold text-fg dark:text-zinc-50 mb-4">
               Recent Activity
             </h3>
             <div className="text-center py-8">
-              <User className="w-12 h-12 text-zinc-400 mx-auto mb-3" />
-              <p className="text-zinc-500 text-sm mb-4">No recent activity yet</p>
-              <Button variant="primary" size="sm" onClick={() => router.push('/taste')}>
-                Start Your First Tasting
+              <User className="w-12 h-12 text-fg-subtle mx-auto mb-3" />
+              <p className="text-body-sm text-fg-muted mb-4">No activity yet — start your first flight</p>
+              <Button variant="primary" size="sm" onClick={() => router.push('/quick-tasting')}>
+                Start a Tasting
               </Button>
             </div>
           </CardContent>

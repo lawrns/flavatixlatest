@@ -122,7 +122,7 @@ export const UserAvatarMenu: React.FC<UserAvatarMenuProps> = ({
         <div
           className={cn(
             'absolute right-0 mt-2 w-64 z-50',
-            'bg-white dark:bg-zinc-800 rounded-[22px] shadow-xl',
+            'bg-white dark:bg-zinc-800 rounded-pane shadow-xl',
             'border border-zinc-200 dark:border-zinc-700',
             'overflow-hidden animate-fade-in'
           )}
@@ -159,7 +159,7 @@ export const UserAvatarMenu: React.FC<UserAvatarMenuProps> = ({
                 href={item.href}
                 onClick={item.onClick}
                 className={cn(
-                  'flex items-center gap-3 px-3 py-2.5 rounded-[14px]',
+                  'flex items-center gap-3 px-3 py-2.5 rounded-soft',
                   'text-sm font-medium text-zinc-700 dark:text-zinc-200',
                   'hover:bg-zinc-100 dark:hover:bg-zinc-700',
                   'transition-colors'
@@ -177,7 +177,7 @@ export const UserAvatarMenu: React.FC<UserAvatarMenuProps> = ({
             <button
               onClick={handleLogout}
               className={cn(
-                'flex items-center gap-3 px-3 py-2.5 w-full rounded-[14px]',
+                'flex items-center gap-3 px-3 py-2.5 w-full rounded-soft',
                 'text-sm font-medium text-red-600 dark:text-red-400',
                 'hover:bg-red-50 dark:hover:bg-red-900/20',
                 'transition-colors'

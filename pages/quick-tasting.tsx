@@ -28,6 +28,14 @@ type QuickTastingWithNull = {
 
 type TastingStep = 'category' | 'session' | 'summary';
 
+const steps: { key: TastingStep; label: string }[] = [
+  { key: 'category', label: 'Category' },
+  { key: 'session', label: 'Tasting' },
+  { key: 'summary', label: 'Summary' },
+];
+
+const stepIndex = (step: TastingStep) => steps.findIndex((s) => s.key === step);
+
 const QuickTastingPage: React.FC = () => {
   const router = useRouter();
   const { user, loading } = useAuth();
@@ -132,13 +140,9 @@ const QuickTastingPage: React.FC = () => {
     setCurrentStep('category');
   };
 
-  const _handleGoToDashboard = () => {
-    router.push('/dashboard');
-  };
-
   if (loading || isLoading) {
     return (
-      <div className="min-h-screen bg-background-app p-sm">
+      <div className="min-h-screen bg-bg p-sm">
         <main id="main-content" className="flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
         </main>
@@ -150,65 +154,44 @@ const QuickTastingPage: React.FC = () => {
     return null;
   }
 
+  const currentIdx = stepIndex(currentStep);
+
   return (
     <PageLayout
-      title="Quick Tasting"
+      title="New tasting"
       subtitle="Start a quick tasting session to explore flavors and record your impressions"
       showBack
       containerSize="2xl"
     >
-      {/* Step indicator */}
+      {/* Minimal header progress */}
       <div className="mb-6 mt-2">
-        <div className="flex items-center justify-center space-x-sm">
-          <div className={`flex items-center ${
-            currentStep === 'category' ? 'text-neutral-800' :
-            currentStep === 'session' || currentStep === 'summary' ? 'text-neutral-600' : 'text-text-secondary'
-          }`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
-              currentStep === 'category' ? 'border-neutral-800 bg-neutral-800 text-white' :
-              currentStep === 'session' || currentStep === 'summary' ? 'border-neutral-600 bg-neutral-600 text-white' :
-              'border-border-default bg-white dark:bg-zinc-800 text-text-secondary'
-            }`}>
-              1
-            </div>
-            <span className="ml-xs font-body font-medium">Category</span>
-          </div>
-
-          <div className={`w-8 h-0.5 ${
-            currentStep === 'session' || currentStep === 'summary' ? 'bg-neutral-600' : 'bg-border-default'
-          }`} />
-
-          <div className={`flex items-center ${
-            currentStep === 'session' ? 'text-neutral-800' :
-            currentStep === 'summary' ? 'text-neutral-600' : 'text-text-secondary'
-          }`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
-              currentStep === 'session' ? 'border-neutral-800 bg-neutral-800 text-white' :
-              currentStep === 'summary' ? 'border-neutral-600 bg-neutral-600 text-white' :
-              'border-border-default bg-white dark:bg-zinc-800 text-text-secondary'
-            }`}>
-              2
-            </div>
-            <span className="ml-xs font-body font-medium">Tasting</span>
-          </div>
-
-          <div className={`w-8 h-0.5 ${
-            currentStep === 'summary' ? 'bg-neutral-600' : 'bg-border-default'
-          }`} />
-
-          <div className={`flex items-center ${
-            currentStep === 'summary' ? 'text-neutral-800' : 'text-text-secondary'
-          }`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
-              currentStep === 'summary' ? 'border-neutral-800 bg-neutral-800 text-white' :
-              'border-border-default bg-white dark:bg-zinc-800 text-text-secondary'
-            }`}>
-              3
-            </div>
-            <span className="ml-xs font-body font-medium">Summary</span>
-          </div>
+        <div className="flex items-center gap-2">
+          {steps.map((step, idx) => (
+            <React.Fragment key={step.key}>
+              <span
+                className={`text-caption font-medium uppercase tracking-wider ${
+                  idx === currentIdx
+                    ? 'text-primary'
+                    : idx < currentIdx
+                    ? 'text-fg-muted'
+                    : 'text-fg-subtle'
+                }`}
+              >
+                {step.label}
+              </span>
+              {idx < steps.length - 1 && (
+                <span className="text-fg-subtle">/</span>
+              )}
+            </React.Fragment>
+          ))}
         </div>
-          </div>
+        <div className="mt-2 h-1 w-full bg-bg-inset rounded-full overflow-hidden">
+          <div
+            className="h-full bg-primary transition-all duration-300 ease-out"
+            style={{ width: `${((currentIdx + 1) / steps.length) * 100}%` }}
+          />
+        </div>
+      </div>
 
       <div>
         {currentStep === 'category' && (
