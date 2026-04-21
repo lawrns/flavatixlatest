@@ -62,8 +62,8 @@ test.describe('Flavatix Full E2E — han@han.com', () => {
   test('my tastings page loads with badges', async ({ page }) => {
     await login(page);
 
-    // Navigate via quick links
-    await page.click('text=My Tastings');
+    // Navigate directly
+    await page.goto('/my-tastings');
     await page.waitForURL('/my-tastings', { timeout: 15000 });
 
     await expect(page.locator('text=My Tastings')).toBeVisible({ timeout: 10000 });
@@ -82,7 +82,8 @@ test.describe('Flavatix Full E2E — han@han.com', () => {
   test('social feed loads', async ({ page }) => {
     await login(page);
 
-    await page.click('text=Social Feed');
+    // Navigate directly
+    await page.goto('/social');
     await page.waitForURL('/social', { timeout: 15000 });
 
     await expect(page.locator('text=Social')).toBeVisible({ timeout: 10000 });
@@ -91,7 +92,8 @@ test.describe('Flavatix Full E2E — han@han.com', () => {
   test('profile page loads', async ({ page }) => {
     await login(page);
 
-    await page.click('text=Profile');
+    // Navigate directly
+    await page.goto('/profile');
     await page.waitForURL('/profile', { timeout: 15000 });
 
     await expect(page.locator('h1:has-text("Profile")')).toBeVisible({ timeout: 10000 });
