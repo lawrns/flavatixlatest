@@ -141,7 +141,7 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
               className={`rounded-full transition-all duration-300 ${
                 index === currentIndex
                   ? 'bg-primary w-8 h-2'
-                  : 'bg-zinc-300 dark:bg-zinc-600 w-2 h-2 hover:bg-zinc-400 dark:hover:bg-bg-inset0'
+                  : 'bg-zinc-300 dark:bg-zinc-600 w-2 h-2 hover:bg-zinc-400 dark:hover:bg-bg-inset'
               }`}
             />
           </button>
