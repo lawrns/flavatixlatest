@@ -73,14 +73,18 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <p className="max-w-xl text-body-sm text-fg-muted">
               Home shows your latest activity. Taste is the dedicated entry point for
               starting or joining a session.
             </p>
-            <Button onClick={() => router.push('/taste')} className="sm:self-start">
+            <Button
+              onClick={() => router.push('/taste')}
+              className="w-full shrink-0 md:w-auto md:self-start"
+              icon={<ArrowRight className="h-4 w-4" />}
+              iconPosition="right"
+            >
               Open Taste Hub
-              <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
         </div>

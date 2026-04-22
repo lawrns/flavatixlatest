@@ -62,13 +62,15 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
   return (
     <footer
       className={cn(
-        'fixed inset-x-0 bottom-0 z-50 pointer-events-none'
+        'fixed inset-x-0 bottom-0 z-50 pointer-events-none',
+        'sm:static sm:pointer-events-auto sm:px-4 sm:pb-4'
       )}
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <nav
         className={cn(
           'pointer-events-auto mx-auto mb-3 grid h-[72px] w-full max-w-xl grid-cols-4 items-center',
+          'sm:mb-0',
           'rounded-full border border-line bg-bg-surface px-2 shadow-md'
         )}
         role="navigation"

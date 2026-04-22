@@ -160,7 +160,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
     svg.selectAll('*').remove();
 
     // Responsive margin and sizing
-    const margin = Math.max(20, Math.min(40, width * 0.06)); // 6% of width, min 20px, max 40px
+    const margin = Math.max(56, Math.min(92, width * 0.14));
     const radius = Math.min(width, height) / 2 - margin;
     const centerX = width / 2;
     const centerY = height / 2;
@@ -327,7 +327,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
         .append('text')
         .attr('transform', (d) => {
           const midAngle = (d.startAngle + d.endAngle) / 2;
-          const labelRadius = radius * 1.15; // Increased from 1.05 to 1.15 for more space
+          const labelRadius = radius * 1.08;
           const x = Math.cos(midAngle) * labelRadius;
           const y = Math.sin(midAngle) * labelRadius;
           // Rotate text perpendicular to the rim

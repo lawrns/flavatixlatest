@@ -686,7 +686,7 @@ export default function FlavorWheelsPage() {
                         wheelData={wheelData}
                         width={wheelSize}
                         height={wheelSize}
-                        showLabels={true}
+                        showLabels={wheelSize >= 420}
                         interactive={true}
                         onSegmentClick={handleSegmentClick}
                       />

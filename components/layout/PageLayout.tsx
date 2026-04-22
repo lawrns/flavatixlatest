@@ -141,7 +141,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
       <main
         className={cn(
           'py-6',
-          showBottomNav && 'pb-28', // Account for bottom nav (60px) + safe area + extra padding
+          showBottomNav && 'pb-28 sm:pb-6', // Fixed on mobile, in-flow on larger viewports.
           className
         )}
       >
