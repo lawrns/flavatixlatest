@@ -250,7 +250,7 @@ export default function SettingsPage() {
                       <div className="flex items-center gap-4">
                         <div
                           className={cn(
-                            'flex h-11 w-11 items-center justify-center rounded-2xl',
+                            'flex h-11 w-11 items-center justify-center rounded-pane',
                             item.danger
                               ? 'bg-signal-danger-weak'
                               : 'bg-bg-inset'
@@ -296,7 +296,7 @@ export default function SettingsPage() {
             <Card className="rounded-pane border border-line bg-bg-surface shadow-sm">
               <CardContent className="p-5">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-bg-inset">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-pane bg-bg-inset">
                     <Zap size={20} className="text-fg-muted" />
                   </div>
                   <div>

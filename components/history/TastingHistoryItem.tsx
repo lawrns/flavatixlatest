@@ -27,14 +27,14 @@ const TastingHistoryItem: React.FC<TastingHistoryItemProps> = ({ tasting, onClic
       cheese: 'bg-orange-100 text-orange-800',
       beer: 'bg-blue-100 text-blue-800',
       spirits: 'bg-red-100 text-red-800',
-      default: 'bg-gray-100 text-gray-800',
+      default: 'bg-bg-inset text-fg',
     };
     return colors[category.toLowerCase()] || colors.default;
   };
 
   const getScoreColor = (score: number | null) => {
     if (!score) {
-      return 'text-gray-400';
+      return 'text-fg-subtle';
     }
     if (score >= 4.5) {
       return 'text-green-600';
@@ -60,17 +60,17 @@ const TastingHistoryItem: React.FC<TastingHistoryItemProps> = ({ tasting, onClic
 
   return (
     <div
-      className="group/card bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-gray-200/60 p-4 sm:p-6 hover:shadow-lg hover:border-gray-300/60 transition-all duration-300 cursor-pointer relative overflow-hidden "
+      className="group/card bg-white dark:bg-bg-surface rounded-pane shadow-sm border border-line/60 p-4 sm:p-6 hover:shadow-md hover:border-line-strong/60 transition-all duration-300 cursor-pointer relative overflow-hidden "
       onClick={() => onClick(tasting)}
     >
       {/* Gradiente sutil de fondo */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50/30 to-transparent dark:from-zinc-900 dark:via-zinc-900/30 opacity-60 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-white via-bg-hover/30 to-transparent dark:from-bg dark:via-bg/30 opacity-60 pointer-events-none" />
 
       {/* Botón de eliminar */}
       <button
         onClick={handleDeleteClick}
         disabled={isDeleting}
-        className="absolute top-3 right-3 sm:top-4 sm:right-4 group flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-white via-white to-gray-50/90 dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-800/90  border border-red-100/80 dark:border-red-900/40 text-red-500 hover:text-white hover:bg-gradient-to-br hover:from-red-500 hover:to-red-600 hover:border-red-400 hover:shadow-red-200/40 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-out disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-white disabled:hover:via-white disabled:hover:to-gray-50/90 disabled:hover:text-red-500 disabled:hover:border-red-100/80 z-20 transform hover:scale-110  active:scale-95 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-red-400/60 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-800"
+        className="absolute top-3 right-3 sm:top-4 sm:right-4 group flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-white via-white to-bg-hover/90 dark:from-bg-surface dark:via-bg-surface dark:to-bg-surface/90  border border-red-100/80 dark:border-red-900/40 text-red-500 hover:text-white hover:bg-gradient-to-br hover:from-red-500 hover:to-red-600 hover:border-red-400 hover:shadow-red-200/40 rounded-pane shadow-md hover:shadow-md transition-all duration-300 ease-out disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-white disabled:hover:via-white disabled:hover:to-bg-hover/90 disabled:hover:text-red-500 disabled:hover:border-red-100/80 z-20 transform hover:scale-110  active:scale-95 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-red-400/60 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-bg-surface"
         aria-label="Eliminar cata"
         title="Eliminar cata"
       >
@@ -112,7 +112,7 @@ const TastingHistoryItem: React.FC<TastingHistoryItemProps> = ({ tasting, onClic
         {/* Header con título y puntuación */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4 pr-12 sm:pr-16">
           <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-gray-900 dark:text-zinc-50 text-lg sm:text-xl mb-2 truncate group-hover/card:text-orange-600 transition-colors duration-300">
+            <h3 className="font-bold text-fg dark:text-fg text-lg sm:text-xl mb-2 truncate group-hover/card:text-orange-600 transition-colors duration-300">
               {tasting.session_name || `Sesión de ${tasting.category}`}
             </h3>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
@@ -121,7 +121,7 @@ const TastingHistoryItem: React.FC<TastingHistoryItemProps> = ({ tasting, onClic
               >
                 {tasting.category}
               </span>
-              <span className="text-sm text-gray-500 dark:text-fg-subtle font-medium">
+              <span className="text-sm text-fg-subtle dark:text-fg-subtle font-medium">
                 {formatDate(tasting.created_at)}
               </span>
             </div>
@@ -134,7 +134,7 @@ const TastingHistoryItem: React.FC<TastingHistoryItemProps> = ({ tasting, onClic
               >
                 {tasting.average_score.toFixed(1)}
               </div>
-              <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+              <div className="text-xs text-fg-subtle font-medium uppercase tracking-wide">
                 puntuación
               </div>
             </div>
@@ -144,22 +144,22 @@ const TastingHistoryItem: React.FC<TastingHistoryItemProps> = ({ tasting, onClic
         {/* Estadísticas y progreso */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-zinc-200">
+            <div className="flex items-center gap-1 text-sm font-medium text-fg-muted dark:text-fg-muted">
               <span className="text-lg font-bold text-orange-600">{tasting.completed_items}</span>
-              <span className="text-gray-400 font-normal">de</span>
-              <span className="text-lg font-bold text-gray-600">{tasting.total_items}</span>
-              <span className="text-gray-500 ml-1">elementos</span>
+              <span className="text-fg-subtle font-normal">de</span>
+              <span className="text-lg font-bold text-fg-muted">{tasting.total_items}</span>
+              <span className="text-fg-subtle ml-1">elementos</span>
             </div>
 
             {/* Barra de progreso */}
             <div className="hidden sm:flex items-center ml-3">
-              <div className="w-16 h-2 bg-gray-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+              <div className="w-16 h-2 bg-line dark:bg-bg-inset rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-orange-400 to-orange-600 rounded-full transition-all duration-500"
                   style={{ width: `${(tasting.completed_items / tasting.total_items) * 100}%` }}
                 />
               </div>
-              <span className="text-xs text-gray-500 ml-2 font-medium">
+              <span className="text-xs text-fg-subtle ml-2 font-medium">
                 {Math.round((tasting.completed_items / tasting.total_items) * 100)}%
               </span>
             </div>
@@ -180,13 +180,13 @@ const TastingHistoryItem: React.FC<TastingHistoryItemProps> = ({ tasting, onClic
 
         {/* Barra de progreso móvil */}
         <div className="sm:hidden mb-4">
-          <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
+          <div className="flex items-center justify-between text-xs text-fg-subtle mb-1">
             <span className="font-medium">Progreso</span>
             <span className="font-medium">
               {Math.round((tasting.completed_items / tasting.total_items) * 100)}%
             </span>
           </div>
-          <div className="w-full h-2 bg-gray-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+          <div className="w-full h-2 bg-line dark:bg-bg-inset rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-orange-400 to-orange-600 rounded-full transition-all duration-500"
               style={{ width: `${(tasting.completed_items / tasting.total_items) * 100}%` }}
@@ -196,10 +196,10 @@ const TastingHistoryItem: React.FC<TastingHistoryItemProps> = ({ tasting, onClic
 
         {/* Notas */}
         {tasting.notes && (
-          <div className="pt-4 border-t border-gray-100 dark:border-zinc-700">
+          <div className="pt-4 border-t border-line dark:border-line">
             <div className="flex items-start gap-2">
               <svg
-                className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0"
+                className="w-4 h-4 text-fg-subtle mt-0.5 flex-shrink-0"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -211,7 +211,7 @@ const TastingHistoryItem: React.FC<TastingHistoryItemProps> = ({ tasting, onClic
                   d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
                 />
               </svg>
-              <p className="text-sm text-gray-600 dark:text-fg-subtle leading-relaxed line-clamp-2 flex-1">
+              <p className="text-sm text-fg-muted dark:text-fg-subtle leading-relaxed line-clamp-2 flex-1">
                 {tasting.notes}
               </p>
             </div>

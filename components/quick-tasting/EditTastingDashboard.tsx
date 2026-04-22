@@ -211,12 +211,12 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-800 border border-border-primary rounded-lg shadow-sm">
+    <div className="bg-bg-surface border border-line rounded-pane shadow-sm">
       {/* Header */}
-      <div className="p-6 border-b border-border-primary">
+      <div className="p-6 border-b border-line">
         <div>
-          <h2 className="text-xl font-heading font-semibold text-text-primary">Edit Tasting</h2>
-          <p className="text-sm text-text-secondary mt-1">
+          <h2 className="text-xl font-semibold text-fg">Edit Tasting</h2>
+          <p className="text-sm text-fg-muted mt-1">
             Customize your tasting session settings
           </p>
         </div>
@@ -225,14 +225,14 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
         {session.mode !== 'quick' && (
           <div className="mt-4 flex items-center justify-between">
             <div>
-              <h3 className="font-medium text-text-primary">Blind Tasting</h3>
-              <p className="text-sm text-text-secondary">Hide information during tasting</p>
+              <h3 className="font-medium text-fg">Blind Tasting</h3>
+              <p className="text-sm text-fg-muted">Hide information during tasting</p>
             </div>
             <button
               onClick={handleBlindTastingToggle}
               disabled={isLoading}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                isBlindTasting ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'
+              className={`px-4 py-2 rounded-soft font-medium transition-colors ${
+                isBlindTasting ? 'bg-purple-100 text-purple-800' : 'bg-bg-inset text-fg'
               }`}
             >
               {isBlindTasting ? (
@@ -259,25 +259,25 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
       <div className="p-6 space-y-6">
         {/* Session Name */}
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-2">Tasting Name</label>
+          <label className="block text-sm font-medium text-fg mb-2">Tasting Name</label>
           <input
             type="text"
             value={sessionName}
             onChange={(e) => setSessionName(e.target.value)}
             onBlur={handleNameChange}
             onKeyPress={(e) => e.key === 'Enter' && handleNameChange()}
-            className="w-full px-3 py-2 border border-border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full px-3 py-2 border border-line rounded-soft focus:outline-none focus:ring-2 focus:ring-primary-500"
             placeholder="Enter tasting name"
           />
         </div>
 
         {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-2">Category</label>
+          <label className="block text-sm font-medium text-fg mb-2">Category</label>
           <select
             value={session.category}
             onChange={(e) => handleCategoryChange(e.target.value)}
-            className="w-full px-3 py-2 border border-border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full px-3 py-2 border border-line rounded-soft focus:outline-none focus:ring-2 focus:ring-primary-500"
             disabled={isLoading}
           >
             {categories.map((category) => (
@@ -291,7 +291,7 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
         {/* Custom Category Name - Only show when "Other" is selected */}
         {session.category === 'other' && (
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">
+            <label className="block text-sm font-medium text-fg mb-2">
               Custom Category Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -300,13 +300,13 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
               onChange={(e) => setCustomCategoryName(e.target.value)}
               onBlur={handleCustomCategoryNameChange}
               onKeyPress={(e) => e.key === 'Enter' && handleCustomCategoryNameChange()}
-              className="w-full px-3 py-2 border border-border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-3 py-2 border border-line rounded-soft focus:outline-none focus:ring-2 focus:ring-primary-500"
               placeholder="Enter custom category name"
               disabled={isLoading}
               required
             />
             {session.category === 'other' && !customCategoryName.trim() && (
-              <p className="text-sm text-red-500 mt-1">
+            <p className="text-sm text-signal-danger mt-1">
                 Custom category name is required when &quot;Other&quot; is selected
               </p>
             )}
@@ -315,13 +315,13 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
 
         {/* Presets */}
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-2">
+          <label className="block text-sm font-medium text-fg mb-2">
             Preset Configuration
           </label>
           <select
             value={selectedPreset}
             onChange={(e) => handlePresetChange(e.target.value)}
-            className="w-full px-3 py-2 border border-border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full px-3 py-2 border border-line rounded-soft focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">Select a preset...</option>
             {tastingPresets.map((preset) => (
@@ -331,16 +331,16 @@ export const EditTastingDashboard: React.FC<EditTastingDashboardProps> = ({
             ))}
           </select>
           {selectedPreset && (
-            <p className="text-sm text-text-secondary mt-1">
+            <p className="text-sm text-fg-muted mt-1">
               {tastingPresets.find((p) => p.id === selectedPreset)?.description}
             </p>
           )}
         </div>
 
         {/* Current Settings Summary */}
-        <div className="p-4 bg-background-secondary rounded-lg">
-          <h4 className="font-medium text-text-primary mb-2">Current Settings</h4>
-          <div className="text-sm text-text-secondary space-y-1">
+        <div className="p-4 bg-bg-inset rounded-soft">
+          <h4 className="font-medium text-fg mb-2">Current Settings</h4>
+          <div className="text-sm text-fg-muted space-y-1">
             <div>Blind Participants: {session.is_blind_participants ? 'Yes' : 'No'}</div>
             <div>Blind Items: {session.is_blind_items ? 'Yes' : 'No'}</div>
             <div>Blind Attributes: {session.is_blind_attributes ? 'Yes' : 'No'}</div>

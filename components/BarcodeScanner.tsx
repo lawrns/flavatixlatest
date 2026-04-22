@@ -281,7 +281,7 @@ export default function BarcodeScanner({
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="relative">
               {/* Scanning frame */}
-              <div className="w-64 h-64 border-2 border-white rounded-lg">
+              <div className="w-64 h-64 border-2 border-white rounded-soft">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-white text-center">
                     <Camera className="w-8 h-8 mx-auto mb-2 animate-pulse" />
@@ -305,7 +305,7 @@ export default function BarcodeScanner({
           <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
             <button
               onClick={() => setIsManualEntry(true)}
-              className="w-full py-3 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors"
+              className="w-full py-3 bg-white/20 hover:bg-white/30 text-white rounded-soft transition-colors"
             >
               Enter barcode manually
             </button>
@@ -316,7 +316,7 @@ export default function BarcodeScanner({
       {/* Product Found */}
       {detectedCode && productInfo && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/90 p-4">
-          <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-md w-full">
+          <div className="bg-white dark:bg-bg-surface rounded-soft p-6 max-w-md w-full">
             <div className="flex items-center mb-4">
               <CheckCircle className="w-8 h-8 text-green-500 mr-3" />
               <h3 className="text-lg font-semibold">Product Found!</h3>
@@ -324,22 +324,22 @@ export default function BarcodeScanner({
 
             <div className="space-y-3 mb-6">
               <div>
-                <span className="text-sm text-gray-500">Barcode:</span>
+                <span className="text-sm text-fg-subtle">Barcode:</span>
                 <p className="font-mono">{productInfo.barcode}</p>
               </div>
               <div>
-                <span className="text-sm text-gray-500">Product:</span>
+                <span className="text-sm text-fg-subtle">Product:</span>
                 <p className="font-medium">{productInfo.name}</p>
               </div>
               {productInfo.brand && (
                 <div>
-                  <span className="text-sm text-gray-500">Brand:</span>
+                  <span className="text-sm text-fg-subtle">Brand:</span>
                   <p>{productInfo.brand}</p>
                 </div>
               )}
               {productInfo.vintage && (
                 <div>
-                  <span className="text-sm text-gray-500">Vintage:</span>
+                  <span className="text-sm text-fg-subtle">Vintage:</span>
                   <p>{productInfo.vintage}</p>
                 </div>
               )}
@@ -348,13 +348,13 @@ export default function BarcodeScanner({
             <div className="flex space-x-3">
               <button
                 onClick={confirmProduct}
-                className="flex-1 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
+                className="flex-1 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-soft transition-colors"
               >
                 Use This Product
               </button>
               <button
                 onClick={resetScanner}
-                className="flex-1 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors"
+                className="flex-1 py-2 bg-line hover:bg-line-strong text-fg rounded-soft transition-colors"
               >
                 Scan Again
               </button>
@@ -366,7 +366,7 @@ export default function BarcodeScanner({
       {/* Manual Entry Modal */}
       {isManualEntry && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/90 p-4">
-          <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-md w-full">
+          <div className="bg-white dark:bg-bg-surface rounded-soft p-6 max-w-md w-full">
             <h3 className="text-lg font-semibold mb-4">Enter Barcode</h3>
 
             <input
@@ -374,20 +374,20 @@ export default function BarcodeScanner({
               value={manualCode}
               onChange={(e) => setManualCode(e.target.value)}
               placeholder="Enter barcode number"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 mb-4"
+              className="w-full px-3 py-2 border rounded-soft focus:outline-none focus:ring-2 focus:ring-primary-500 mb-4"
               autoFocus
             />
 
             <div className="flex space-x-3">
               <button
                 onClick={handleManualSubmit}
-                className="flex-1 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
+                className="flex-1 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-soft transition-colors"
               >
                 Look Up
               </button>
               <button
                 onClick={() => setIsManualEntry(false)}
-                className="flex-1 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors"
+                className="flex-1 py-2 bg-line hover:bg-line-strong text-fg rounded-soft transition-colors"
               >
                 Cancel
               </button>
@@ -409,22 +409,22 @@ export default function BarcodeScanner({
       {/* Error State */}
       {error && (
         <div className="absolute inset-0 flex items-center justify-center bg-black p-4">
-          <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-md w-full">
+          <div className="bg-white dark:bg-bg-surface rounded-soft p-6 max-w-md w-full">
             <div className="flex items-center mb-4">
               <AlertCircle className="w-8 h-8 text-red-500 mr-3" />
               <h3 className="text-lg font-semibold">Camera Error</h3>
             </div>
-            <p className="text-gray-600 mb-4">{error}</p>
+            <p className="text-fg-muted mb-4">{error}</p>
             <div className="flex space-x-3">
               <button
                 onClick={startCamera}
-                className="flex-1 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
+                className="flex-1 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-soft transition-colors"
               >
                 Try Again
               </button>
               <button
                 onClick={() => setIsManualEntry(true)}
-                className="flex-1 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors"
+                className="flex-1 py-2 bg-line hover:bg-line-strong text-fg rounded-soft transition-colors"
               >
                 Enter Manually
               </button>

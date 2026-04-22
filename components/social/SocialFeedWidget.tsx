@@ -255,7 +255,7 @@ const SocialFeedWidget = React.memo(
       return (
         <Card>
           <CardContent>
-            <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+            <h3 className="text-lg font-bold text-fg dark:text-fg mb-4">
               Recent Activity
             </h3>
             <LoadingSpinner text="Loading recent activity..." />
@@ -268,7 +268,7 @@ const SocialFeedWidget = React.memo(
       return (
         <Card>
           <CardContent>
-            <h3 className="text-h3 font-semibold text-fg dark:text-zinc-50 mb-4">
+            <h3 className="text-h3 font-semibold text-fg dark:text-fg mb-4">
               Recent Activity
             </h3>
             <div className="text-center py-8">
@@ -287,7 +287,7 @@ const SocialFeedWidget = React.memo(
       <Card>
         <CardContent>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">Recent Activity</h3>
+            <h3 className="text-lg font-bold text-fg dark:text-fg">Recent Activity</h3>
             <Button variant="ghost" size="sm" onClick={() => router.push('/social')}>
               View All
             </Button>
@@ -321,7 +321,7 @@ const SocialFeedWidget = React.memo(
                     <div className="pb-3">
                       <div
                         onClick={() => router.push('/social')}
-                        className="bg-bg-inset dark:bg-zinc-700 p-3 rounded-lg cursor-pointer hover:bg-bg-inset dark:hover:bg-zinc-600 transition-colors"
+                        className="bg-bg-inset dark:bg-bg-inset p-3 rounded-soft cursor-pointer hover:bg-bg-inset dark:hover:bg-fg-muted transition-colors"
                       >
                         <div className="flex items-start gap-2 mb-2">
                           {/* Avatar */}
@@ -345,14 +345,14 @@ const SocialFeedWidget = React.memo(
                           {/* Content */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-baseline gap-2">
-                              <span className="font-medium text-zinc-900 dark:text-zinc-50 text-sm truncate">
+                              <span className="font-medium text-fg dark:text-fg text-sm truncate">
                                 {post.user.full_name || post.user.username || 'Anonymous'}
                               </span>
                               <span className="text-xs text-fg-subtle dark:text-fg-subtle">
                                 {new Date(post.created_at).toLocaleDateString()}
                               </span>
                             </div>
-                            <p className="text-sm text-fg-muted dark:text-zinc-200 truncate">
+                            <p className="text-sm text-fg-muted dark:text-fg-muted truncate">
                               {post.session_name || `${post.category} tasting`} • {post.total_items} items
                               {post.average_score && (
                                 <>

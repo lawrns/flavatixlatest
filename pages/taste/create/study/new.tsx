@@ -361,7 +361,7 @@ const NewStudyTastingPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center">
+      <div className="min-h-screen bg-bg dark:bg-bg flex items-center justify-center">
         <LoadingSpinner size="lg" text="Loading..." />
       </div>
     );
@@ -372,22 +372,22 @@ const NewStudyTastingPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-sans text-zinc-900 dark:text-zinc-50 min-h-screen">
+    <div className="bg-bg dark:bg-bg font-sans text-fg dark:text-fg min-h-screen">
       <main id="main-content" className="pb-20">
         <div className="container mx-auto px-md py-lg max-w-xl">
           {/* Header */}
           <div className="mb-lg">
             <button
               onClick={() => router.back()}
-              className="flex items-center text-text-secondary hover:text-text-primary mb-sm transition-colors font-body"
+              className="flex items-center text-fg-muted hover:text-fg mb-sm transition-colors "
             >
               <ChevronLeft size={20} className="mr-2" />
               Back
             </button>
-            <h1 className="text-h1 font-heading font-bold text-text-primary mb-xs">
+            <h1 className="text-h1 font-bold text-fg mb-xs">
               Create Study Tasting
             </h1>
-            <p className="text-body font-body text-text-secondary">
+            <p className="text-body text-fg-muted">
               Design a custom tasting session with your own categories
             </p>
           </div>
@@ -415,7 +415,7 @@ const NewStudyTastingPage: React.FC = () => {
                   />
 
                   <div>
-                    <label className="block text-small font-body font-medium text-text-primary mb-xs">
+                    <label className="block text-small font-medium text-fg mb-xs">
                       What&apos;s being tasted? *
                     </label>
                     <Combobox
@@ -423,15 +423,15 @@ const NewStudyTastingPage: React.FC = () => {
                       value={form.baseCategory}
                       onChange={(value) => setForm((prev) => ({ ...prev, baseCategory: value }))}
                       placeholder="Select or type what you're tasting..."
-                      className={errors.baseCategory ? 'border-error' : ''}
+                      className={errors.baseCategory ? 'border-signal-danger' : ''}
                       allowCustom={true}
                     />
-                    <p className="text-xs text-text-secondary mt-1">
+                    <p className="text-xs text-fg-muted mt-1">
                       Select from the list or type your own custom category
                     </p>
 
                     {errors.baseCategory && (
-                      <span className="text-small text-error mt-xs block">
+                      <span className="text-small text-signal-danger mt-xs block">
                         {errors.baseCategory}
                       </span>
                     )}
@@ -441,41 +441,38 @@ const NewStudyTastingPage: React.FC = () => {
             </Card>
 
             {/* Categories */}
-            <div className="card p-md">
+            <div className="surface-page p-md rounded-pane">
               <div className="mb-md">
-                <h2 className="text-h3 font-heading font-semibold text-text-primary">Categories</h2>
-                <p className="text-small text-text-secondary">
+                <h2 className="text-h3 font-semibold text-fg">Categories</h2>
+                <p className="text-small text-fg-muted">
                   Define up to 20 evaluation categories
                 </p>
               </div>
 
               {errors.categories && (
-                <div className="mb-md p-sm bg-error/10 border border-error rounded-lg">
-                  <span className="text-small text-error">{errors.categories}</span>
+                <div className="mb-md p-sm bg-signal-danger/10 border border-signal-danger rounded-soft">
+                  <span className="text-small text-signal-danger">{errors.categories}</span>
                 </div>
               )}
 
               {form.categories.length === 0 ? (
-                <div className="text-center py-lg border-2 border-dashed border-border-default rounded-lg">
-                  <p className="text-text-secondary">
+                <div className="text-center py-lg border-2 border-dashed border-line rounded-pane">
+                  <p className="text-fg-muted">
                     No categories yet. Click &quot;Add Category&quot; to get started.
                   </p>
                 </div>
               ) : (
                 <div className="space-y-md">
                   {form.categories.map((category, index) => (
-                    <div
-                      key={category.id}
-                      className="border border-border-default rounded-lg p-md bg-white dark:bg-zinc-800"
-                    >
+                    <div key={category.id} className="surface-page rounded-pane p-md">
                       <div className="flex items-start justify-between mb-sm">
-                        <span className="text-small font-body font-medium text-text-secondary">
+                        <span className="text-small font-medium text-fg-muted">
                           Category {index + 1}
                         </span>
                         <button
                           type="button"
                           onClick={() => removeCategory(category.id)}
-                          className="text-error hover:text-error-dark transition-colors"
+                          className="text-signal-danger hover:text-signal-danger-dark transition-colors"
                           title="Remove category"
                         >
                           <Trash2 size={16} />
@@ -484,7 +481,7 @@ const NewStudyTastingPage: React.FC = () => {
 
                       <div className="space-y-md">
                         <div>
-                          <label className="block text-small font-body font-medium text-text-primary mb-xs">
+                          <label className="block text-small font-medium text-fg mb-xs">
                             Category Name *
                           </label>
                           <input
@@ -492,17 +489,17 @@ const NewStudyTastingPage: React.FC = () => {
                             value={category.name}
                             onChange={(e) => updateCategory(category.id, { name: e.target.value })}
                             placeholder="e.g., Aroma Intensity, Sweetness, Body"
-                            className={`form-input w-full ${errors[`category-${index}-name`] ? 'border-error' : ''}`}
+                            className={`form-input w-full ${errors[`category-${index}-name`] ? 'border-signal-danger' : ''}`}
                           />
                           {errors[`category-${index}-name`] && (
-                            <span className="text-small text-error mt-xs block">
+                            <span className="text-small text-signal-danger mt-xs block">
                               {errors[`category-${index}-name`]}
                             </span>
                           )}
                         </div>
 
                         <div>
-                          <label className="block text-small font-body font-medium text-text-primary mb-xs">
+                          <label className="block text-small font-medium text-fg mb-xs">
                             Parameter *
                           </label>
                           <div className="space-y-sm">
@@ -515,7 +512,7 @@ const NewStudyTastingPage: React.FC = () => {
                                 }
                                 className="form-checkbox mr-sm"
                               />
-                              <span className="text-body font-body">Text Input</span>
+                              <span className="text-body ">Text Input</span>
                             </label>
 
                             <label className="flex items-center">
@@ -531,12 +528,12 @@ const NewStudyTastingPage: React.FC = () => {
                                 }
                                 className="form-checkbox mr-sm"
                               />
-                              <span className="text-body font-body">Scale Input</span>
+                              <span className="text-body ">Scale Input</span>
                             </label>
 
                             {category.hasScale && (
                               <div className="ml-md">
-                                <label className="block text-small font-body font-medium text-text-primary mb-xs">
+                                <label className="block text-small font-medium text-fg mb-xs">
                                   Scale Maximum (5-100)
                                 </label>
                                 <input
@@ -578,10 +575,10 @@ const NewStudyTastingPage: React.FC = () => {
                                   }}
                                   min={5}
                                   max={100}
-                                  className={`form-input w-32 ${errors[`category-${index}-scale`] ? 'border-error' : ''}`}
+                                  className={`form-input w-32 ${errors[`category-${index}-scale`] ? 'border-signal-danger' : ''}`}
                                 />
                                 {errors[`category-${index}-scale`] && (
-                                  <span className="text-small text-error mt-xs block">
+                                  <span className="text-small text-signal-danger mt-xs block">
                                     {errors[`category-${index}-scale`]}
                                   </span>
                                 )}
@@ -597,18 +594,18 @@ const NewStudyTastingPage: React.FC = () => {
                                 }
                                 className="form-checkbox mr-sm"
                               />
-                              <span className="text-body font-body">Yes/No Toggle</span>
+                              <span className="text-body ">Yes/No Toggle</span>
                             </label>
                           </div>
                           {errors[`category-${index}-type`] && (
-                            <span className="text-small text-error mt-xs block">
+                            <span className="text-small text-signal-danger mt-xs block">
                               {errors[`category-${index}-type`]}
                             </span>
                           )}
                         </div>
 
                         {category.hasScale && (
-                          <div className="p-sm bg-blue-50 border border-blue-200 rounded-lg">
+                          <div className="p-sm bg-blue-50 border border-blue-200 rounded-soft">
                             <p className="text-small text-blue-800">
                               <span className="material-symbols-outlined text-sm align-middle mr-1">
                                 check
@@ -683,24 +680,24 @@ const NewStudyTastingPage: React.FC = () => {
           onKeyDown={(e) => e.key === 'Escape' && setShowPreview(false)}
         >
           <div
-            className="bg-white dark:bg-zinc-800 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+            className="surface-page rounded-pane max-w-2xl w-full max-h-[80vh] overflow-y-auto"
             role="dialog"
             aria-modal="true"
             aria-labelledby="preview-modal-title"
           >
-            <div className="sticky top-0 bg-white dark:bg-zinc-800 border-b border-border-default p-md flex justify-between items-center">
-              <h3 id="preview-modal-title" className="text-h3 font-heading font-semibold">
-                Preview
-              </h3>
+            <div className="sticky top-0 surface-page border-b border-line p-md flex justify-between items-center rounded-none">
+                <h3 id="preview-modal-title" className="text-h3 font-semibold">
+                  Preview
+                </h3>
               <div className="flex gap-sm items-center">
                 <button onClick={handleSaveTemplate} className="btn-secondary text-small">
                   Save to My Templates
                 </button>
                 <button
                   onClick={() => setShowPreview(false)}
-                  className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-text-secondary hover:text-text-primary hover:bg-bg-inset dark:hover:bg-zinc-700 transition-colors"
-                  aria-label="Close preview"
-                >
+                    className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-soft text-fg-muted hover:text-fg hover:bg-bg-inset dark:hover:bg-bg-inset transition-colors"
+                    aria-label="Close preview"
+                  >
                   <X size={20} />
                 </button>
               </div>
@@ -708,26 +705,26 @@ const NewStudyTastingPage: React.FC = () => {
 
             <div className="p-md space-y-md">
               <div>
-                <h4 className="font-semibold text-text-primary mb-xs">Tasting Name</h4>
-                <p className="text-text-secondary">{form.name || 'Unnamed Tasting'}</p>
+                <h4 className="font-semibold text-fg mb-xs">Tasting Name</h4>
+                <p className="text-fg-muted">{form.name || 'Unnamed Tasting'}</p>
               </div>
 
               <div>
-                <h4 className="font-semibold text-text-primary mb-xs">What&apos;s being tasted?</h4>
-                <p className="text-text-secondary">{form.baseCategory || 'Not selected'}</p>
+                <h4 className="font-semibold text-fg mb-xs">What&apos;s being tasted?</h4>
+                <p className="text-fg-muted">{form.baseCategory || 'Not selected'}</p>
               </div>
 
               <div>
-                <h4 className="font-semibold text-text-primary mb-sm">
+                <h4 className="font-semibold text-fg mb-sm">
                   Categories ({form.categories.length})
                 </h4>
                 <div className="space-y-sm">
                   {form.categories.map((cat, index) => (
-                    <div key={cat.id} className="border border-border-default rounded-lg p-sm">
-                      <div className="font-medium text-text-primary mb-xs">
+                    <div key={cat.id} className="surface-page rounded-soft p-sm">
+                      <div className="font-medium text-fg mb-xs">
                         {index + 1}. {cat.name || 'Unnamed Category'}
                       </div>
-                      <div className="text-small text-text-secondary">
+                      <div className="text-small text-fg-muted">
                         {cat.hasText && (
                           <span className="inline-block px-2 py-1 bg-fg-subtle/10 text-fg-subtle dark:bg-fg-subtle/20 dark:text-fg-subtle rounded mr-xs">
                             Text

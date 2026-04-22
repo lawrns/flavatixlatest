@@ -91,9 +91,9 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         <div className={cn(
           'relative flex items-center justify-center',
           sizes.iconSize,
-          'rounded-2xl',
+          'rounded-pane',
           'bg-bg-inset',
-          'dark:bg-zinc-800',
+          'dark:bg-bg-surface',
           'border border-primary/10'
         )}>
           {iconElement ? (
@@ -115,7 +115,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
       {/* Title */}
       <h3 className={cn(
-        'font-semibold text-zinc-900 dark:text-white mb-2',
+        'font-semibold text-fg dark:text-white mb-2',
         sizes.title
       )}>
         {title}
@@ -138,11 +138,11 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
             <button
               onClick={action.onClick}
               className={cn(
-                'px-6 py-2.5 rounded-xl font-semibold transition-[transform,box-shadow] duration-200',
+                'px-6 py-2.5 rounded-pane font-semibold transition-[transform,box-shadow] duration-200',
                 ' active:scale-[0.98]',
                 action.variant === 'secondary'
-                  ? 'bg-white dark:bg-zinc-800 border-2 border-line dark:border-zinc-700 text-zinc-900 dark:text-white hover:border-primary/50'
-                  : 'bg-primary text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30'
+                  ? 'bg-white dark:bg-bg-surface border-2 border-line dark:border-line text-fg dark:text-white hover:border-primary/50'
+                  : 'bg-primary text-white shadow-md shadow-primary/25 hover:shadow-md hover:shadow-primary/30'
               )}
             >
               {action.label}
@@ -151,7 +151,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           {secondaryAction && (
             <button
               onClick={secondaryAction.onClick}
-              className="px-6 py-2.5 text-sm font-medium text-fg-muted dark:text-zinc-300 hover:text-primary transition-colors"
+              className="px-6 py-2.5 text-sm font-medium text-fg-muted dark:text-fg-muted hover:text-primary transition-colors"
             >
               {secondaryAction.label}
             </button>

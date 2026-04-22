@@ -98,7 +98,7 @@ export default function App({ Component, pageProps }: AppProps) {
         {/* Skip to main content link for keyboard accessibility */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-300"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-soft focus:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-300"
         >
           Skip to main content
         </a>
@@ -126,7 +126,7 @@ export default function App({ Component, pageProps }: AppProps) {
           theme={isDark ? 'dark' : 'light'}
           limit={2}
           className="!mb-20"
-          toastClassName="!rounded-xl !shadow-lg"
+          toastClassName="!rounded-pane !shadow-md"
         />
         <Toaster />
       </AuthProvider>

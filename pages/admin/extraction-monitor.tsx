@@ -101,27 +101,27 @@ export default function ExtractionMonitor() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-bg-hover p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+              <h1 className="text-3xl font-bold text-fg flex items-center gap-3">
                 <Activity className="w-8 h-8 text-primary-600" />
                 Extraction Rate Monitor
               </h1>
-              <p className="text-gray-500 mt-2">
+              <p className="text-fg-subtle mt-2">
                 Real-time monitoring of flavor descriptor extraction performance
               </p>
             </div>
             <div className="flex items-center gap-4">
-              <div className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="text-sm text-fg-subtle dark:text-fg-subtle">
                 Last updated: {lastUpdated.toLocaleTimeString()}
               </div>
               <button
                 onClick={() => fetchStats()}
-                className="p-2 rounded-lg bg-white dark:bg-zinc-800 border hover:bg-gray-50 transition-colors"
+                className="p-2 rounded-soft bg-white dark:bg-bg-surface border hover:bg-bg-hover transition-colors"
                 title="Refresh now"
               >
                 <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
@@ -144,10 +144,10 @@ export default function ExtractionMonitor() {
               <button
                 key={p}
                 onClick={() => setPeriod(p)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`px-4 py-2 rounded-soft font-medium transition-colors ${
                   period === p
                     ? 'bg-primary-600 text-white'
-                    : 'bg-white dark:bg-zinc-800 text-gray-700 hover:bg-gray-100'
+                    : 'bg-white dark:bg-bg-surface text-fg-muted hover:bg-bg-inset'
                 }`}
               >
                 {p === '24h' ? 'Last 24 Hours' : p === '7d' ? 'Last 7 Days' : 'Last 30 Days'}
@@ -159,16 +159,16 @@ export default function ExtractionMonitor() {
         {loading && !stats ? (
           <div className="text-center py-12">
             <RefreshCw className="w-8 h-8 animate-spin mx-auto text-primary-600 mb-4" />
-            <p className="text-gray-500 dark:text-gray-400">Loading statistics...</p>
+            <p className="text-fg-subtle dark:text-fg-subtle">Loading statistics...</p>
           </div>
         ) : stats ? (
           <>
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm p-6 border-l-4 border-primary-600">
+              <div className="bg-white dark:bg-bg-surface rounded-soft shadow-sm p-6 border-l-4 border-primary-600">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    <p className="text-sm font-medium text-fg-subtle dark:text-fg-subtle">
                       Overall Extraction Rate
                     </p>
                     <p
@@ -179,33 +179,33 @@ export default function ExtractionMonitor() {
                   </div>
                   {getStatusIcon(stats.extractionRate)}
                 </div>
-                <div className="mt-4 text-sm text-gray-600 dark:text-gray-300">
+                <div className="mt-4 text-sm text-fg-muted dark:text-fg-muted">
                   {stats.itemsExtracted} / {stats.itemsWithContent} items extracted
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm p-6">
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Items</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{stats.totalItems}</p>
-                <p className="text-sm text-gray-600 mt-4">{stats.itemsWithContent} with content</p>
+              <div className="bg-white dark:bg-bg-surface rounded-soft shadow-sm p-6">
+                <p className="text-sm font-medium text-fg-subtle dark:text-fg-subtle">Total Items</p>
+                <p className="text-3xl font-bold text-fg mt-2">{stats.totalItems}</p>
+                <p className="text-sm text-fg-muted mt-4">{stats.itemsWithContent} with content</p>
               </div>
 
-              <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm p-6">
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+              <div className="bg-white dark:bg-bg-surface rounded-soft shadow-sm p-6">
+                <p className="text-sm font-medium text-fg-subtle dark:text-fg-subtle">
                   Items Extracted
                 </p>
                 <p className="text-3xl font-bold text-green-600 mt-2">{stats.itemsExtracted}</p>
-                <p className="text-sm text-gray-600 mt-4">Successfully processed</p>
+                <p className="text-sm text-fg-muted mt-4">Successfully processed</p>
               </div>
 
-              <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm p-6">
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+              <div className="bg-white dark:bg-bg-surface rounded-soft shadow-sm p-6">
+                <p className="text-sm font-medium text-fg-subtle dark:text-fg-subtle">
                   Missing Extractions
                 </p>
                 <p className="text-3xl font-bold text-red-600 mt-2">
                   {stats.itemsWithContent - stats.itemsExtracted}
                 </p>
-                <p className="text-sm text-gray-600 mt-4">Require attention</p>
+                <p className="text-sm text-fg-muted mt-4">Require attention</p>
               </div>
             </div>
 
@@ -228,19 +228,19 @@ export default function ExtractionMonitor() {
             )}
 
             {/* Extraction Trend Chart */}
-            <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm p-6 mb-8">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <div className="bg-white dark:bg-bg-surface rounded-soft shadow-sm p-6 mb-8">
+              <h2 className="text-lg font-semibold text-fg mb-4 flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-primary-600" />
                 Extraction Trend
               </h2>
               <div className="space-y-2">
                 {stats.recentExtractions.map((item) => (
                   <div key={item.date} className="flex items-center">
-                    <div className="w-24 text-sm text-gray-600 dark:text-gray-300">
+                    <div className="w-24 text-sm text-fg-muted dark:text-fg-muted">
                       {new Date(item.date).toLocaleDateString()}
                     </div>
                     <div className="flex-1">
-                      <div className="h-8 bg-gray-100 rounded-lg overflow-hidden">
+                      <div className="h-8 bg-bg-inset rounded-soft overflow-hidden">
                         <div
                           className="h-full bg-primary-600 flex items-center justify-end pr-2 text-white text-sm font-medium"
                           style={{
@@ -257,44 +257,44 @@ export default function ExtractionMonitor() {
             </div>
 
             {/* By Category Breakdown */}
-            <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-white dark:bg-bg-surface rounded-soft shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-fg mb-4">
                 Extraction Rate by Category
               </h2>
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50 dark:bg-gray-900">
+                <table className="min-w-full divide-y divide-line">
+                  <thead className="bg-bg-hover dark:bg-bg">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-fg-subtle uppercase tracking-wider">
                         Category
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-fg-subtle uppercase tracking-wider">
                         Total Items
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-fg-subtle uppercase tracking-wider">
                         Extracted
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-fg-subtle uppercase tracking-wider">
                         Success Rate
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-fg-subtle uppercase tracking-wider">
                         Status
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white dark:bg-zinc-800 divide-y divide-gray-200">
+                  <tbody className="bg-white dark:bg-bg-surface divide-y divide-line">
                     {stats.byCategory.map((cat) => (
                       <tr key={cat.category}>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900 capitalize">
+                          <div className="text-sm font-medium text-fg capitalize">
                             {cat.category}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900 dark:text-gray-50">{cat.total}</div>
+                          <div className="text-sm text-fg dark:text-fg">{cat.total}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900 dark:text-gray-50">
+                          <div className="text-sm text-fg dark:text-fg">
                             {cat.extracted}
                           </div>
                         </td>
@@ -326,7 +326,7 @@ export default function ExtractionMonitor() {
             </div>
 
             {/* Instructions */}
-            <div className="mt-8 bg-blue-50 rounded-lg p-6">
+            <div className="mt-8 bg-blue-50 rounded-soft p-6">
               <h3 className="text-sm font-semibold text-blue-900 mb-2">What to Monitor</h3>
               <ul className="text-sm text-blue-800 space-y-1">
                 <li>• Target extraction rate: ≥95%</li>
@@ -339,7 +339,7 @@ export default function ExtractionMonitor() {
           </>
         ) : (
           <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-gray-400">No data available</p>
+            <p className="text-fg-subtle dark:text-fg-subtle">No data available</p>
           </div>
         )}
       </div>

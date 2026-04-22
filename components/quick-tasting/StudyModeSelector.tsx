@@ -33,10 +33,10 @@ export const StudyModeSelector: React.FC<StudyModeSelectorProps> = ({
   return (
     <div className="space-y-4">
       <div className="text-center">
-        <h3 className="text-lg font-heading font-semibold text-text-primary mb-2">
+        <h3 className="text-lg font-semibold text-fg mb-2">
           Study Mode Approach
         </h3>
-        <p className="text-sm text-text-secondary">
+        <p className="text-sm text-fg-muted">
           Choose how participants will contribute to the tasting
         </p>
       </div>
@@ -44,10 +44,10 @@ export const StudyModeSelector: React.FC<StudyModeSelectorProps> = ({
       <div className="grid gap-3">
         {/* Pre-defined Items Approach */}
         <div
-          className={`relative p-4 border-2 rounded-lg cursor-pointer transition-all ${
+          className={`relative p-4 border-2 rounded-pane cursor-pointer transition-all ${
             selectedApproach === 'predefined'
               ? 'border-primary bg-primary/5'
-              : 'border-border-primary hover:border-primary/50'
+              : 'border-line hover:border-primary/50'
           } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
           onClick={() => !disabled && onApproachChange('predefined')}
         >
@@ -55,18 +55,18 @@ export const StudyModeSelector: React.FC<StudyModeSelectorProps> = ({
             <div className={`w-4 h-4 rounded-full border-2 mt-0.5 flex-shrink-0 ${
               selectedApproach === 'predefined'
                 ? 'border-primary bg-primary'
-                : 'border-border-primary'
+                : 'border-line'
             }`}>
               {selectedApproach === 'predefined' && (
-                <div className="w-full h-full rounded-full bg-white dark:bg-zinc-800 scale-50"></div>
+                <div className="w-full h-full rounded-full bg-white dark:bg-bg-surface scale-50"></div>
               )}
             </div>
 
             <div className="flex-1">
-              <h4 className="font-medium text-text-primary mb-1">
-                Pre-defined Items
-              </h4>
-              <p className="text-sm text-text-secondary mb-2">
+                <h4 className="font-medium text-fg mb-1">
+                  Pre-defined Items
+                </h4>
+              <p className="text-sm text-fg-muted mb-2">
                 You add all items and categories upfront. Participants evaluate only the items you provide.
               </p>
               <div className="flex flex-wrap gap-1">
@@ -86,10 +86,10 @@ export const StudyModeSelector: React.FC<StudyModeSelectorProps> = ({
 
         {/* Collaborative Approach */}
         <div
-          className={`relative p-4 border-2 rounded-lg cursor-pointer transition-all ${
+          className={`relative p-4 border-2 rounded-pane cursor-pointer transition-all ${
             selectedApproach === 'collaborative'
               ? 'border-primary bg-primary/5'
-              : 'border-border-primary hover:border-primary/50'
+              : 'border-line hover:border-primary/50'
           } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
           onClick={() => !disabled && onApproachChange('collaborative')}
         >
@@ -97,18 +97,18 @@ export const StudyModeSelector: React.FC<StudyModeSelectorProps> = ({
             <div className={`w-4 h-4 rounded-full border-2 mt-0.5 flex-shrink-0 ${
               selectedApproach === 'collaborative'
                 ? 'border-primary bg-primary'
-                : 'border-border-primary'
+                : 'border-line'
             }`}>
               {selectedApproach === 'collaborative' && (
-                <div className="w-full h-full rounded-full bg-white dark:bg-zinc-800 scale-50"></div>
+                <div className="w-full h-full rounded-full bg-white dark:bg-bg-surface scale-50"></div>
               )}
             </div>
 
             <div className="flex-1">
-              <h4 className="font-medium text-text-primary mb-1">
-                Collaborative
-              </h4>
-              <p className="text-sm text-text-secondary mb-2">
+                <h4 className="font-medium text-fg mb-1">
+                  Collaborative
+                </h4>
+              <p className="text-sm text-fg-muted mb-2">
                 Participants suggest items dynamically. You moderate suggestions to build the tasting together.
               </p>
               <div className="flex flex-wrap gap-1">
@@ -129,12 +129,12 @@ export const StudyModeSelector: React.FC<StudyModeSelectorProps> = ({
 
       {/* Approach Details */}
       {selectedApproach && (
-        <div className="mt-6 p-4 bg-background-secondary rounded-lg">
-          <h5 className="font-medium text-text-primary mb-3">
+        <div className="mt-6 p-4 bg-bg-inset rounded-soft">
+          <h5 className="font-medium text-fg mb-3">
             {selectedApproach === 'predefined' ? 'Pre-defined Items' : 'Collaborative'} Details
           </h5>
 
-          <div className="space-y-2 text-sm text-text-secondary">
+          <div className="space-y-2 text-sm text-fg-muted">
             {selectedApproach === 'predefined' ? (
               <>
                 <div className="flex items-center gap-2">

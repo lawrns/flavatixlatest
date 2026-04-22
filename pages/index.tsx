@@ -74,7 +74,7 @@ export default function Home() {
                   <p className="text-xs font-semibold uppercase tracking-[0.28em] text-fg-subtle">
                     Tasting journal
                   </p>
-                  <h1 className="font-display max-w-3xl text-5xl font-semibold tracking-tight text-fg sm:text-6xl lg:text-7xl lg:leading-[0.92]">
+                  <h1 className="max-w-3xl text-5xl font-semibold tracking-tight text-fg sm:text-6xl lg:text-7xl lg:leading-[0.92]">
                     Your palate,
                     <span className="block text-fg-muted">made legible.</span>
                   </h1>
@@ -198,7 +198,7 @@ export default function Home() {
                 <p className="text-xs font-semibold uppercase tracking-[0.28em] text-fg-subtle">
                   Why it works
                 </p>
-                <h2 className="font-display mt-3 max-w-xl text-3xl font-semibold tracking-tight text-fg sm:text-4xl">
+                <h2 className="mt-3 max-w-xl text-3xl font-semibold tracking-tight text-fg sm:text-4xl">
                   A tasting notebook that behaves like software, not a blank document.
                 </h2>
                 <p className="mt-4 max-w-2xl text-base leading-relaxed text-fg-muted">
@@ -220,7 +220,7 @@ export default function Home() {
                       className="rounded-pane border border-line bg-bg-surface p-5 shadow-[0_16px_40px_-32px_rgba(0,0,0,0.45)]"
                     >
                       <div className="flex items-start gap-4">
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-line bg-bg-inset text-fg-muted">
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-soft border border-line bg-bg-inset text-fg-muted">
                           <Icon className="h-5 w-5" />
                         </div>
                         <div>

@@ -72,7 +72,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       ? 'border-red-400 dark:border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/10'
       : success
       ? 'border-green-400 dark:border-green-500 focus-visible:border-green-500 focus-visible:ring-green-500/10'
-      : 'border-line dark:border-zinc-700 hover:border-line dark:hover:border-zinc-600 focus-visible:border-primary focus-visible:ring-primary/10'
+      : 'border-line dark:border-line hover:border-line dark:hover:border-line-strong focus-visible:border-primary focus-visible:ring-primary/10'
 
     return (
       <div className={cn('flex flex-col gap-1.5', fullWidth && 'w-full')}>
@@ -81,7 +81,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <label
             htmlFor={inputId}
             className={cn(
-              'text-sm font-medium text-fg-muted dark:text-zinc-300',
+              'text-sm font-medium text-fg-muted dark:text-fg-muted',
               'flex items-center justify-between'
             )}
           >
@@ -122,13 +122,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             type={type}
             className={cn(
               'flex w-full border-2 bg-white',
-              'text-zinc-900 dark:text-white',
+              'text-fg dark:text-white',
               'placeholder:text-fg-subtle dark:placeholder:text-fg-subtle',
-              'ring-offset-white dark:ring-offset-zinc-950',
+              'ring-offset-bg-surface dark:ring-offset-bg',
               'file:border-0 file:bg-transparent file:text-sm file:font-medium',
               'focus-visible:outline-none focus-visible:ring-4',
               'disabled:cursor-not-allowed disabled:opacity-50',
-              'dark:bg-zinc-800/80',
+              'dark:bg-bg-surface/80',
               'transition-[border-color,box-shadow] duration-200 ease-out',
               sizeClasses[inputSize],
               stateClasses,

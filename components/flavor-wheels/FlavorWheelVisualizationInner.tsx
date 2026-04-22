@@ -276,7 +276,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
         })
         .attr('dominant-baseline', 'middle')
         .attr('fill', 'currentColor')
-        .attr('class', 'text-gray-700 dark:text-gray-300')
+        .attr('class', 'text-fg-muted dark:text-fg-muted')
         .attr('font-size', `${labelFontSize}px`)
         .attr('font-weight', 'bold')
         .attr('pointer-events', 'none')
@@ -298,7 +298,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
       .attr('font-size', `${centerFontSize}px`)
       .attr('font-weight', 'bold')
       .attr('fill', 'currentColor')
-      .attr('class', 'text-gray-800 dark:text-gray-200')
+      .attr('class', 'text-fg dark:text-fg-muted')
       .text(wheelData.wheelType.toUpperCase());
 
     g.append('text')
@@ -307,7 +307,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
       .attr('dy', '1.5em')
       .attr('font-size', `${baseFontSize}px`)
       .attr('fill', 'currentColor')
-      .attr('class', 'text-gray-500 dark:text-gray-400')
+      .attr('class', 'text-fg-subtle dark:text-fg-subtle')
       .text(`${wheelData.totalDescriptors} notes`);
   }, [descriptorCandidates, wheelData, width, height, showLabels, interactive, onSegmentClick, colorScale]);
 
@@ -385,7 +385,7 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
       {/* Aspect-ratio container ensures the wheel stays square and scales responsively */}
       <div
         ref={containerRef}
-        className="w-full aspect-square max-w-[600px] mx-auto relative overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-zinc-800"
+        className="w-full aspect-square max-w-[600px] mx-auto relative overflow-hidden rounded-soft border border-line dark:border-line bg-white dark:bg-bg-surface"
       >
         <svg
           ref={svgRef}
@@ -396,38 +396,38 @@ export const FlavorWheelVisualization: React.FC<FlavorWheelVisualizationProps> =
         />
 
         {/* Zoom Controls */}
-        <div className="absolute bottom-3 right-3 flex flex-col gap-1 bg-bg-surface/90 dark:bg-zinc-800/90 rounded-soft shadow-md p-1">
+        <div className="absolute bottom-3 right-3 flex flex-col gap-1 bg-bg-surface/90 dark:bg-bg-surface/90 rounded-soft shadow-md p-1">
           <button
             onClick={handleZoomIn}
-            className="p-2 hover:bg-bg-hover dark:hover:bg-zinc-700 rounded-sharp transition-colors"
+            className="p-2 hover:bg-bg-hover dark:hover:bg-bg-inset rounded-sharp transition-colors"
             aria-label="Zoom in"
           >
-            <ZoomIn size={18} className="text-fg-muted dark:text-zinc-300" />
+            <ZoomIn size={18} className="text-fg-muted dark:text-fg-muted" />
           </button>
           <button
             onClick={handleZoomOut}
-            className="p-2 hover:bg-bg-hover dark:hover:bg-zinc-700 rounded-sharp transition-colors"
+            className="p-2 hover:bg-bg-hover dark:hover:bg-bg-inset rounded-sharp transition-colors"
             aria-label="Zoom out"
           >
-            <ZoomOut size={18} className="text-fg-muted dark:text-zinc-300" />
+            <ZoomOut size={18} className="text-fg-muted dark:text-fg-muted" />
           </button>
           <button
             onClick={handleResetZoom}
-            className="p-2 hover:bg-bg-hover dark:hover:bg-zinc-700 rounded-sharp transition-colors"
+            className="p-2 hover:bg-bg-hover dark:hover:bg-bg-inset rounded-sharp transition-colors"
             aria-label="Reset zoom"
           >
-            <RotateCcw size={18} className="text-fg-muted dark:text-zinc-300" />
+            <RotateCcw size={18} className="text-fg-muted dark:text-fg-muted" />
           </button>
         </div>
 
         {/* Zoom indicator */}
-        <div className="absolute top-3 left-3 bg-bg-surface/90 dark:bg-zinc-800/90 px-2 py-1 rounded-sharp text-xs text-fg-muted dark:text-zinc-300 font-medium">
+        <div className="absolute top-3 left-3 bg-bg-surface/90 dark:bg-bg-surface/90 px-2 py-1 rounded-sharp text-xs text-fg-muted dark:text-fg-muted font-medium">
           {Math.round(currentZoom * 100)}%
         </div>
 
         {tooltip && (
           <div
-            className="absolute bg-fg text-fg-inverse px-3 py-2 rounded-sharp text-sm pointer-events-none shadow-lg z-10"
+            className="absolute bg-fg text-fg-inverse px-3 py-2 rounded-sharp text-sm pointer-events-none shadow-md z-10"
             style={{
               left: tooltip.x + 10,
               top: tooltip.y + 10,

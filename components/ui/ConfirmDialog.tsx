@@ -38,8 +38,8 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     >
       <div
         className={cn(
-          'w-full max-w-sm bg-bg-surface dark:bg-zinc-800',
-          'rounded-pane shadow-lg border border-line dark:border-zinc-700',
+          'w-full max-w-sm bg-bg-surface dark:bg-bg-surface',
+          'rounded-pane shadow-md border border-line dark:border-line',
           'p-6 animate-fade-in'
         )}
         onClick={(e) => e.stopPropagation()}

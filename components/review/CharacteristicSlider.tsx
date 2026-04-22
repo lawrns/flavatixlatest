@@ -37,9 +37,9 @@ const CharacteristicSlider: React.FC<CharacteristicSliderProps> = ({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-text-primary">
+        <label className="text-sm font-medium text-fg">
           {label}
-          {description && <span className="ml-2 text-xs text-text-secondary">({description})</span>}
+          {description && <span className="ml-2 text-xs text-fg-muted">({description})</span>}
         </label>
         <span className="text-sm font-semibold text-primary">{value}/100</span>
       </div>
@@ -74,7 +74,7 @@ const CharacteristicSlider: React.FC<CharacteristicSliderProps> = ({
         />
         <div className="absolute -top-1.5 left-0 w-full h-4 pointer-events-none flex items-center">
           <div
-            className={`absolute w-3 h-3 bg-white dark:bg-zinc-800 rounded-full shadow-md border-2 transition-all duration-200 ease-out ${touched ? 'border-primary' : 'border-gray-400'}`}
+            className={`absolute w-3 h-3 bg-white dark:bg-bg-surface rounded-full shadow-md border-2 transition-all duration-200 ease-out ${touched ? 'border-primary' : 'border-line-strong'}`}
             style={{
               left: `calc(${((value - min) / (max - min)) * 100}% - 6px)`,
             }}
@@ -83,7 +83,7 @@ const CharacteristicSlider: React.FC<CharacteristicSliderProps> = ({
       </div>
 
       {value > 0 && (
-        <div className="text-xs text-text-secondary text-center">{getScoreLabel(value)}</div>
+        <div className="text-xs text-fg-muted text-center">{getScoreLabel(value)}</div>
       )}
     </div>
   );

@@ -57,10 +57,10 @@ const ICONS = {
 };
 
 const ICON_COLORS = {
-  inspirational_messages: 'text-orange-500', // primary orange
-  did_you_know: 'text-amber-500', // amber
-  tasting_tips: 'text-orange-600', // primary orange darker
-  community_highlights: 'text-green-600', // green
+  inspirational_messages: 'text-signal-good',
+  did_you_know: 'text-signal-warn',
+  tasting_tips: 'text-fg-muted',
+  community_highlights: 'text-fg-subtle',
 };
 
 const InspirationBox: React.FC<InspirationBoxProps> = ({ className = '' }) => {
@@ -122,8 +122,9 @@ const InspirationBox: React.FC<InspirationBoxProps> = ({ className = '' }) => {
     <div className={`relative ${className}`}>
       <div
         className={`
-          mx-auto max-w-lg rounded-xl p-5 text-center
-          bg-white dark:bg-zinc-800
+          mx-auto max-w-lg rounded-pane p-5 text-center
+          bg-bg-surface
+          border border-line
           shadow-md
           transition-all duration-500 ease-out
           ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
@@ -139,12 +140,12 @@ const InspirationBox: React.FC<InspirationBoxProps> = ({ className = '' }) => {
         </div>
 
         {/* Content */}
-        <p className="text-sm leading-relaxed font-body text-fg-muted dark:text-zinc-200">
+        <p className="text-sm leading-relaxed text-fg-muted">
           {currentContent.text}
         </p>
 
         {/* Category indicator */}
-        <div className="mt-3 text-xs uppercase tracking-wide font-medium text-fg-muted dark:text-fg-subtle">
+        <div className="mt-3 text-xs uppercase tracking-wide font-medium text-fg-subtle">
           {currentContent.category.replace(/_/g, ' ')}
         </div>
       </div>

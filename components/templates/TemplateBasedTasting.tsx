@@ -99,7 +99,7 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
               className="w-full"
               required={field.required}
             />
-            <div className="flex justify-between text-xs text-text-secondary mt-xs">
+            <div className="flex justify-between text-xs text-fg-muted mt-xs">
               <span>{field.min}</span>
               <span className="font-semibold text-primary">{value || field.min || 0}</span>
               <span>{field.max}</span>
@@ -229,12 +229,12 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
       {/* Header */}
       <div className="mb-lg">
         <div className="flex items-center justify-between mb-sm">
-          <h2 className="text-h2 font-heading font-bold text-text-primary">{itemName}</h2>
-          <button onClick={onCancel} className="text-text-secondary hover:text-text-primary">
+          <h2 className="text-h2 font-bold text-fg">{itemName}</h2>
+          <button onClick={onCancel} className="text-fg-muted hover:text-fg">
             <ChevronLeft size={20} />
           </button>
         </div>
-        <p className="text-small text-text-secondary">
+        <p className="text-small text-fg-muted">
           {template.name} • {sectionNames[currentSection]?.toUpperCase()}
         </p>
       </div>
@@ -249,13 +249,13 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
                 index === currentSection
                   ? 'bg-primary'
                   : index < currentSection
-                    ? 'bg-success'
-                    : 'bg-border-default'
+                    ? 'bg-signal-good'
+                    : 'bg-line'
               }`}
             />
           ))}
         </div>
-        <p className="text-xs text-text-secondary mt-xs text-center">
+        <p className="text-xs text-fg-muted mt-xs text-center">
           Section {currentSection + 1} of {sectionNames.length}
         </p>
       </div>
@@ -265,9 +265,9 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
         <div className="space-y-md">
           {currentFields.map((field) => (
             <div key={field.id}>
-              <label className="block text-small font-body font-medium text-text-primary mb-xs">
+              <label className="block text-small font-medium text-fg mb-xs">
                 {field.label}
-                {field.required && <span className="text-error ml-xs">*</span>}
+                {field.required && <span className="text-signal-danger ml-xs">*</span>}
               </label>
               {renderField(field)}
             </div>
@@ -311,7 +311,7 @@ export const TemplateBasedTasting: React.FC<TemplateBasedTastingProps> = ({
       {template.scoringMethod && (
         <div className="mt-lg card p-md bg-primary/5 border-2 border-primary">
           <div className="flex items-center justify-between">
-            <span className="text-small font-semibold text-text-primary">Current Score</span>
+            <span className="text-small font-semibold text-fg">Current Score</span>
             <span className="text-h2 font-bold text-primary">{calculateScore()}</span>
           </div>
         </div>

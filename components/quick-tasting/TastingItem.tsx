@@ -352,7 +352,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                       }
                     }}
                     placeholder="<enter name>"
-                    className="text-lg tablet:text-h4 font-heading font-semibold text-text-primary bg-transparent border-b border-primary-500 focus:outline-none flex-1 placeholder:text-fg-subtle placeholder:italic"
+                    className="text-lg tablet:text-h4 font-semibold text-fg bg-transparent border-b border-primary-500 focus:outline-none flex-1 placeholder:text-fg-subtle placeholder:italic"
                     autoFocus
                   />
                 </div>
@@ -361,18 +361,18 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                   className={`flex items-center space-x-2 ${showEditControls ? 'group cursor-pointer' : ''}`}
                   onClick={showEditControls ? startEditingName : undefined}
                 >
-                  <h3 className="text-lg tablet:text-h4 font-heading font-semibold text-text-primary truncate">
+                  <h3 className="text-lg tablet:text-h4 font-semibold text-fg truncate">
                     {getDisplayName() || '<enter name>'}
                   </h3>
                   {!isBlindItems && showEditControls && (
                     <Edit
                       size={16}
-                      className="text-text-secondary opacity-80 transition-opacity flex-shrink-0"
+                      className="text-fg-muted opacity-80 transition-opacity flex-shrink-0"
                     />
                   )}
                 </div>
               )}
-              <p className="text-xs tablet:text-small font-body text-text-secondary">
+              <p className="text-xs tablet:text-small text-fg-muted">
                 {category.charAt(0).toUpperCase() + category.slice(1)} Tasting
                 {isBlindItems && ' • Blind Tasting'}
               </p>
@@ -384,7 +384,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
         {!isBlindItems && showPhotoControls && (
           <div className="mb-md">
             <div className="flex flex-col tablet:flex-row tablet:items-center tablet:justify-between gap-xs mb-sm">
-              <h4 className="text-base tablet:text-lg font-body font-medium text-text-primary">
+              <h4 className="text-base tablet:text-lg font-medium text-fg">
                 Photo
               </h4>
               <button
@@ -405,30 +405,30 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
             />
 
             {item.photo_url ? (
-              <div className="relative overflow-hidden rounded-lg">
+              <div className="relative overflow-hidden rounded-pane">
                 <Image
                   src={item.photo_url}
                   alt={item.item_name}
                   width={0}
                   height={0}
                   sizes="100vw"
-                  className="w-full h-48 object-cover rounded-lg"
+                  className="w-full h-48 object-cover rounded-pane"
                 />
                 <button
                   onClick={removePhoto}
-                  className="absolute top-xs right-xs min-w-touch min-h-touch w-9 h-9 tablet:w-11 tablet:h-11 bg-error text-white rounded-full hover:bg-error/90 transition-colors flex items-center justify-center text-sm tablet:text-lg font-bold touch-manipulation"
+                  className="absolute top-xs right-xs min-w-touch min-h-touch w-9 h-9 tablet:w-11 tablet:h-11 bg-signal-danger text-white rounded-full hover:bg-signal-danger/90 transition-colors flex items-center justify-center text-sm tablet:text-lg font-bold touch-manipulation"
                 >
                   ×
                 </button>
               </div>
             ) : (
-              <div className="w-full h-40 tablet:h-48 border-2 border-dashed border-border-default rounded-lg flex items-center justify-center bg-background-app">
-                <div className="text-center font-body px-sm">
+              <div className="w-full h-40 tablet:h-48 border-2 border-dashed border-line rounded-pane flex items-center justify-center bg-bg-inset">
+                <div className="text-center px-sm">
                   <Camera
                     size={32}
-                    className="text-text-secondary mb-xs mx-auto tablet:w-12 tablet:h-12"
+                    className="text-fg-muted mb-xs mx-auto tablet:w-12 tablet:h-12"
                   />
-                  <p className="text-sm tablet:text-body font-body text-text-secondary">
+                  <p className="text-sm tablet:text-body text-fg-muted">
                     No photo added
                   </p>
                 </div>
@@ -443,12 +443,12 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
             {/* Study Categories - Replace default fields when present */}
             {studyCategories.length > 0 ? (
               <div className="space-y-5">
-                <h4 className="text-base font-semibold text-text-primary mb-3">
+                <h4 className="text-base font-semibold text-fg mb-3">
                   Evaluation Categories
                 </h4>
                 {studyCategories.map((category, index) => (
                   <div key={index} className="mb-5">
-                    <label className="flex items-center gap-2 text-sm font-semibold text-text-primary mb-2">
+                    <label className="flex items-center gap-2 text-sm font-semibold text-fg mb-2">
                       <span className="w-6 h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center text-xs font-bold">
                         {index + 1}
                       </span>
@@ -466,7 +466,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                           })
                         }
                         placeholder={`Enter ${category.name.toLowerCase()} notes...`}
-                        className="w-full h-20 px-3 py-2 bg-white dark:bg-zinc-800 border border-line dark:border-zinc-700 rounded-lg text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all resize-none placeholder:text-fg-subtle mb-3"
+                        className="w-full h-20 px-3 py-2 bg-bg-surface dark:bg-bg-surface border border-line dark:border-line rounded-soft text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all resize-none placeholder:text-fg-subtle mb-3"
                       />
                     )}
 
@@ -474,7 +474,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                     {category.hasScale && (
                       <div className="mb-3">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs text-text-secondary">
+                          <span className="text-xs text-fg-muted">
                             Rating: {studyCategoryData[category.name]?.scale || 0}/
                             {category.scaleMax || 100}
                           </span>
@@ -490,7 +490,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                               scale: parseInt(e.target.value),
                             })
                           }
-                          className="w-full h-2 rounded-lg appearance-none cursor-pointer"
+                          className="w-full h-2 rounded-soft appearance-none cursor-pointer"
                           style={{
                             background: `linear-gradient(to right,
                             #ec7813 0%,
@@ -499,7 +499,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                             #E6E6E6 100%)`,
                           }}
                         />
-                        <div className="flex justify-between mt-1 text-xs text-text-secondary">
+                        <div className="flex justify-between mt-1 text-xs text-fg-muted">
                           <span>0</span>
                           <span>{Math.round((category.scaleMax || 100) / 2)}</span>
                           <span>{category.scaleMax || 100}</span>
@@ -523,7 +523,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                             }
                             className="mr-2 text-primary focus:ring-primary"
                           />
-                          <span className="text-sm text-text-primary">Yes</span>
+                          <span className="text-sm text-fg">Yes</span>
                         </label>
                         <label className="flex items-center cursor-pointer">
                           <input
@@ -538,7 +538,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                             }
                             className="mr-2 text-primary focus:ring-primary"
                           />
-                          <span className="text-sm text-text-primary">No</span>
+                          <span className="text-sm text-fg">No</span>
                         </label>
                       </div>
                     )}
@@ -549,7 +549,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
               <>
                 {/* Default Aroma Section */}
                 <div className="mb-5">
-                  <label className="flex items-center gap-2 text-sm font-semibold text-fg-muted dark:text-zinc-200 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-fg-muted dark:text-fg-muted mb-2">
                     <Flower2 size={20} className="text-primary" />
                     Aroma
                   </label>
@@ -557,13 +557,13 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                     value={localAroma}
                     onChange={(e) => handleAromaChange(e.target.value)}
                     placeholder={`Describe the aroma...`}
-                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-line dark:border-zinc-700 rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-fg-subtle"
+                    className="w-full h-24 px-4 py-3 bg-white dark:bg-bg-surface border-2 border-line dark:border-line rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-fg-subtle"
                   />
                 </div>
 
                 {/* Default Flavor Section */}
                 <div className="mb-5">
-                  <label className="flex items-center gap-2 text-sm font-semibold text-fg-muted dark:text-zinc-200 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-fg-muted dark:text-fg-muted mb-2">
                     <Droplet size={20} className="text-primary" />
                     Flavor
                   </label>
@@ -571,13 +571,13 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                     value={localFlavor}
                     onChange={(e) => handleFlavorChange(e.target.value)}
                     placeholder={`Describe the flavor, taste, and mouthfeel...`}
-                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-line dark:border-zinc-700 rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-fg-subtle"
+                    className="w-full h-24 px-4 py-3 bg-white dark:bg-bg-surface border-2 border-line dark:border-line rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-fg-subtle"
                   />
                 </div>
 
                 {/* Other Notes Section */}
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-semibold text-fg-muted dark:text-zinc-200 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-fg-muted dark:text-fg-muted mb-2">
                     <FileText size={20} className="text-primary" />
                     Other Notes
                   </label>
@@ -585,7 +585,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                     value={localNotes}
                     onChange={(e) => handleNotesChange(e.target.value)}
                     placeholder={`Additional notes...`}
-                    className="w-full h-24 px-4 py-3 bg-white dark:bg-zinc-800 border-2 border-line dark:border-zinc-700 rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-fg-subtle"
+                    className="w-full h-24 px-4 py-3 bg-white dark:bg-bg-surface border-2 border-line dark:border-line rounded-soft text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none placeholder:text-fg-subtle"
                   />
                 </div>
               </>
@@ -646,7 +646,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
         {/* Flavor Wheel */}
         {showFlavorWheel && !isBlindAttributes && (
           <div className="mb-md">
-            <h4 className="text-base tablet:text-lg font-body font-medium text-text-primary mb-sm">
+            <h4 className="text-base tablet:text-lg font-medium text-fg mb-sm">
               Flavor Profile
             </h4>
             <FlavorWheel
@@ -659,15 +659,15 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
 
         {/* Flavor Summary */}
         {item.flavor_scores && Object.keys(item.flavor_scores).length > 0 && !isBlindAttributes && (
-          <div className="mt-md pt-md border-t border-border-primary">
-            <h4 className="text-base tablet:text-lg font-body font-medium text-text-primary mb-sm">
+          <div className="mt-md pt-md border-t border-line">
+            <h4 className="text-base tablet:text-lg font-medium text-fg mb-sm">
               Flavor Profile
             </h4>
             <div className="flex flex-wrap gap-1 tablet:gap-xs">
               {Object.entries(item.flavor_scores).map(([flavor, score]) => (
                 <div
                   key={flavor}
-                  className="px-xs tablet:px-sm py-1 tablet:py-xs bg-primary-100 text-primary-800 rounded-full text-xs tablet:text-small font-body font-medium"
+                  className="px-xs tablet:px-sm py-1 tablet:py-xs bg-primary-100 text-primary-800 rounded-full text-xs tablet:text-small font-medium"
                 >
                   {flavor} ({score}/100)
                 </div>

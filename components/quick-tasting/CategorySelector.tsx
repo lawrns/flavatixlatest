@@ -47,7 +47,7 @@ const CATEGORY_ICON_COLORS: Record<string, { bg: string; hover: string }> = {
 
 // Helper to get icon colors with fallback
 function getIconColors(categoryId: string) {
-  return CATEGORY_ICON_COLORS[categoryId] || { bg: 'bg-zinc-600', hover: 'hover:bg-zinc-700' };
+  return CATEGORY_ICON_COLORS[categoryId] || { bg: 'bg-fg-muted', hover: 'hover:bg-bg-inset' };
 }
 
 // Category configurations with semantically appropriate icons
@@ -130,10 +130,10 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-lg">
-        <h2 className="text-h2 font-heading font-bold text-text-primary mb-sm">
+        <h2 className="text-h2 font-bold text-fg mb-sm">
           What are you tasting?
         </h2>
-        <p className="text-text-secondary">
+        <p className="text-fg-muted">
           Select from the list, type your own, or choose a quick option below
         </p>
       </div>
@@ -154,21 +154,21 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
           <button
             onClick={handleComboboxSelect}
             disabled={!customCategory.trim() || isLoading}
-            className="px-6 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+            className="px-6 py-2 bg-primary text-white rounded-soft font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
           >
             Start
           </button>
         </div>
-        <p className="text-xs text-text-secondary mt-2 text-center">
+        <p className="text-xs text-fg-muted mt-2 text-center">
           Type any category name or select from the dropdown
         </p>
       </div>
 
       {/* Divider */}
       <div className="flex items-center gap-4 mb-6">
-        <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-700"></div>
-        <span className="text-sm text-text-secondary">or choose a popular category</span>
-        <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-700"></div>
+        <div className="flex-1 h-px bg-line dark:bg-bg-inset"></div>
+        <span className="text-sm text-fg-muted">or choose a popular category</span>
+        <div className="flex-1 h-px bg-line dark:bg-bg-inset"></div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -178,8 +178,8 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
             onClick={() => onCategorySelect(category.id)}
             disabled={isLoading}
             className={`
-              relative p-4 rounded-pane border border-line dark:border-zinc-700
-              bg-white dark:bg-zinc-800 hover:bg-bg-inset dark:hover:bg-zinc-700
+              relative p-4 rounded-pane border border-line dark:border-line
+              bg-white dark:bg-bg-surface hover:bg-bg-inset dark:hover:bg-bg-inset
               transition-all duration-200
               focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
               disabled:opacity-50 disabled:cursor-not-allowed
@@ -199,7 +199,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
             </div>
 
             {/* Category Name Only - no description to prevent overflow */}
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
+            <h3 className="text-sm font-semibold text-fg dark:text-white">
               {category.name}
             </h3>
           </button>
@@ -208,9 +208,9 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
 
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
-          <div className="card p-md flex items-center space-x-sm">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-            <span className="text-text-primary font-medium">Starting your tasting session...</span>
+            <div className="card p-md flex items-center space-x-sm">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+            <span className="text-fg font-medium">Starting your tasting session...</span>
           </div>
         </div>
       )}

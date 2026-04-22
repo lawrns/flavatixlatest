@@ -237,7 +237,7 @@ export function CollaboratorPresence({ users }: { users: PresenceState[] }) {
   if (users.length === 0) {return null;}
 
   return (
-    <div className="flex items-center gap-2 px-3 py-2 bg-primary/5 rounded-lg">
+    <div className="flex items-center gap-2 px-3 py-2 bg-primary/5 rounded-soft">
       <span className="text-sm text-foreground/60">Active:</span>
       <div className="flex -space-x-2">
         {users.slice(0, 5).map((user) => (

@@ -37,12 +37,12 @@ export const ItemNavigationDropdown: React.FC<ItemNavigationDropdownProps> = ({
       {/* Dropdown Trigger */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-zinc-200 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
+        className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-fg-muted dark:text-fg-muted bg-white dark:bg-bg-surface border border-line-strong dark:border-line-strong rounded-md shadow-sm hover:bg-bg-hover dark:hover:bg-bg-inset focus:outline-none focus:ring-2 focus:ring-primary-500"
       >
         <span className="flex items-center">
           <span className="mr-2">Item {currentIndex + 1} of {items.length}</span>
           {currentItem && (
-            <span className="text-gray-500 dark:text-fg-subtle truncate max-w-32">
+            <span className="text-fg-subtle dark:text-fg-subtle truncate max-w-32">
               {currentItem.name}
             </span>
           )}
@@ -55,13 +55,13 @@ export const ItemNavigationDropdown: React.FC<ItemNavigationDropdownProps> = ({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute z-10 w-full mt-1 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-600 rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-10 w-full mt-1 bg-white dark:bg-bg-surface border border-line-strong dark:border-line-strong rounded-md shadow-md max-h-60 overflow-auto">
           {items.map((item) => (
             <button
               key={item.id}
               onClick={() => handleItemClick(item.index)}
-              className={`w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-zinc-700 flex items-center justify-between ${
-                item.isCurrent ? 'bg-primary-50 text-primary-700' : 'text-gray-700 dark:text-zinc-200'
+              className={`w-full px-3 py-2 text-left text-sm hover:bg-bg-hover dark:hover:bg-bg-inset flex items-center justify-between ${
+                item.isCurrent ? 'bg-primary-50 text-primary-700' : 'text-fg-muted dark:text-fg-muted'
               }`}
             >
               <div className="flex items-center min-w-0 flex-1">
@@ -69,7 +69,7 @@ export const ItemNavigationDropdown: React.FC<ItemNavigationDropdownProps> = ({
                   {item.isCompleted ? (
                     <CheckCircle size={16} className="text-green-500" />
                   ) : (
-                    <Circle size={16} className="text-gray-400 dark:text-fg-subtle" />
+                    <Circle size={16} className="text-fg-subtle dark:text-fg-subtle" />
                   )}
                 </div>
                 <span className="truncate">
@@ -78,10 +78,10 @@ export const ItemNavigationDropdown: React.FC<ItemNavigationDropdownProps> = ({
               </div>
               <div className="flex items-center ml-2">
                 {item.hasPhoto && (
-                  <Camera size={14} className="text-gray-400 dark:text-fg-subtle mr-1" />
+                  <Camera size={14} className="text-fg-subtle dark:text-fg-subtle mr-1" />
                 )}
                 {item.score && (
-                  <span className="text-xs text-gray-500 dark:text-fg-subtle">
+                  <span className="text-xs text-fg-subtle dark:text-fg-subtle">
                     {item.score}/100
                   </span>
                 )}

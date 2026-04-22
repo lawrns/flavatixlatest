@@ -192,7 +192,7 @@ export default function AvatarUpload({
             type="button"
             onClick={() => editInputRef.current?.click()}
             disabled={uploading}
-            className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 dark:border-zinc-600 cursor-pointer hover:opacity-80 transition-opacity disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            className="w-32 h-32 rounded-full overflow-hidden border-4 border-line cursor-pointer hover:opacity-80 transition-opacity disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             aria-label={previewUrl ? 'Change profile picture' : 'Add profile picture'}
           >
             {previewUrl ? (
@@ -227,7 +227,7 @@ export default function AvatarUpload({
           {!uploading && (
             <button
               type="button"
-              className="absolute bottom-0 right-0 rounded-full w-9 h-9 p-0 bg-primary hover:bg-primary/90 text-white transition-colors flex items-center justify-center shadow-lg"
+              className="absolute bottom-0 right-0 rounded-full w-9 h-9 p-0 bg-primary hover:bg-primary/90 text-white transition-colors flex items-center justify-center shadow-md"
               onClick={() => editInputRef.current?.click()}
               aria-label="Edit profile picture"
             >
@@ -239,7 +239,7 @@ export default function AvatarUpload({
           {previewUrl && !uploading && (
             <button
               type="button"
-              className="absolute -top-xs -right-xs rounded-full w-8 h-8 p-0 bg-error hover:bg-error/90 text-white transition-colors flex items-center justify-center"
+              className="absolute -top-xs -right-xs rounded-full w-8 h-8 p-0 bg-signal-danger hover:bg-signal-danger/90 text-white transition-colors flex items-center justify-center"
               onClick={removeAvatar}
               aria-label="Remove profile picture"
             >
@@ -252,13 +252,13 @@ export default function AvatarUpload({
       {/* Upload Progress */}
       {uploading && (
         <div className="space-y-xs">
-          <div className="w-full bg-gray-200 dark:bg-zinc-700 rounded-full h-2">
+          <div className="w-full bg-bg-inset rounded-full h-2">
             <div
-              className="bg-gradient-to-r from-[#1F5D4C] to-[#2E7D32] h-2 rounded-full transition-all duration-300"
+              className="bg-signal-good h-2 rounded-full transition-all duration-300"
               style={{ width: `${uploadProgress}%` }}
             ></div>
           </div>
-          <p className="text-small font-body text-center text-gray-600 dark:text-zinc-300">
+          <p className="text-small text-center text-fg-muted">
             {uploadProgress < 100 ? 'Uploading...' : 'Processing...'}
           </p>
         </div>
@@ -290,29 +290,29 @@ export default function AvatarUpload({
         <div
           {...getRootProps()}
           className={`
-            border-2 border-dashed rounded-lg p-md text-center cursor-pointer transition-colors relative z-10
-            ${isDragActive && !isDragReject ? 'border-blue-400 bg-blue-50 dark:bg-blue-900/20' : ''}
-            ${isDragReject ? 'border-red-400 bg-red-50 dark:bg-red-900/20' : ''}
-            ${!isDragActive && !isDragReject ? 'border-gray-300 dark:border-zinc-600 hover:border-gray-400 dark:hover:border-zinc-500' : ''}
+            border-2 border-dashed rounded-soft p-md text-center cursor-pointer transition-colors relative z-10
+            ${isDragActive && !isDragReject ? 'border-signal-good bg-signal-good/10' : ''}
+            ${isDragReject ? 'border-signal-danger bg-signal-danger/10' : ''}
+            ${!isDragActive && !isDragReject ? 'border-line bg-bg-surface hover:border-line-strong' : ''}
             ${uploading ? 'opacity-50 cursor-not-allowed' : ''}
           `}
         >
           <input {...getInputProps()} />
 
-          <Upload className="w-8 h-8 mx-auto mb-xs text-gray-400 dark:text-fg-subtle" />
+          <Upload className="w-8 h-8 mx-auto mb-xs text-fg-subtle" />
 
           {isDragActive ? (
             isDragReject ? (
-              <p className="text-red-600">Invalid file type</p>
+              <p className="text-signal-danger">Invalid file type</p>
             ) : (
-              <p className="text-blue-600">Drop the image here...</p>
+              <p className="text-signal-good">Drop the image here...</p>
             )
           ) : (
             <div>
-              <p className="text-gray-600 dark:text-zinc-300 mb-xs">
+              <p className="text-fg-muted mb-xs">
                 Drag & drop an image here, or click to select
               </p>
-              <p className="text-small font-body text-gray-500 dark:text-fg-subtle">
+              <p className="text-small text-fg-subtle">
                 Supports: JPEG, PNG, WebP (max 5MB)
               </p>
             </div>
@@ -322,22 +322,22 @@ export default function AvatarUpload({
 
       {/* Error Message */}
       {error && (
-        <div className="flex items-center space-x-xs p-sm bg-signal-danger/10 border border-signal-danger/20 rounded-lg text-signal-danger dark:bg-signal-danger/20">
+        <div className="flex items-center space-x-xs p-sm bg-signal-danger/10 border border-signal-danger/20 rounded-soft text-signal-danger">
           <AlertCircle className="h-4 w-4 flex-shrink-0" />
-          <span className="text-small font-body">{error}</span>
+          <span className="text-small">{error}</span>
         </div>
       )}
 
       {/* Success Message */}
       {success && (
-        <div className="flex items-center space-x-xs p-sm bg-signal-good/10 border border-signal-good/20 rounded-lg text-signal-good dark:bg-signal-good/20">
+        <div className="flex items-center space-x-xs p-sm bg-signal-good/10 border border-signal-good/20 rounded-soft text-signal-good">
           <CheckCircle className="h-4 w-4 flex-shrink-0" />
-          <span className="text-small font-body">{success}</span>
+          <span className="text-small">{success}</span>
         </div>
       )}
 
       {/* Upload Guidelines */}
-      <div className="text-caption font-body text-gray-500 dark:text-fg-subtle space-y-xs">
+      <div className="text-caption text-fg-subtle space-y-xs">
         <p>• Images will be automatically resized to 400x400 pixels</p>
         <p>• Supported formats: JPEG, PNG, WebP</p>
         <p>• Maximum file size: 5MB</p>

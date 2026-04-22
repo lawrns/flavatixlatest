@@ -93,7 +93,7 @@ export const CookieConsent: React.FC = () => {
       />
 
       {/* Banner */}
-      <div className="relative w-full max-w-6xl mb-6 mx-4 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-line dark:border-zinc-700 pointer-events-auto overflow-hidden">
+      <div className="relative w-full max-w-6xl mb-6 mx-4 bg-white dark:bg-bg rounded-pane shadow-md border border-line dark:border-line pointer-events-auto overflow-hidden">
         <div className="p-6 md:p-8">
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
@@ -112,7 +112,7 @@ export const CookieConsent: React.FC = () => {
                 />
               </svg>
               <div>
-                <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
+                <h3 className="text-xl font-bold text-fg dark:text-fg">
                   Cookie Preferences
                 </h3>
                 <p className="text-sm text-fg-muted dark:text-fg-subtle mt-1">
@@ -122,7 +122,7 @@ export const CookieConsent: React.FC = () => {
             </div>
             <button
               onClick={() => setShowBanner(false)}
-              className="text-fg-subtle hover:text-fg-muted dark:hover:text-zinc-300 transition-colors"
+              className="text-fg-subtle hover:text-fg-muted dark:hover:text-fg-muted transition-colors"
               aria-label="Close"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -139,7 +139,7 @@ export const CookieConsent: React.FC = () => {
           {/* Content */}
           {!showDetails ? (
             <>
-              <p className="text-fg-muted dark:text-zinc-300 mb-6">
+              <p className="text-fg-muted dark:text-fg-muted mb-6">
                 We use cookies and similar technologies to enhance your experience, analyze site
                 usage, and personalize content. By clicking &quot;Accept All&quot;, you consent to
                 our use of cookies.{' '}
@@ -155,19 +155,19 @@ export const CookieConsent: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={handleAcceptAll}
-                  className="flex-1 bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+                  className="flex-1 bg-primary text-white px-6 py-3 rounded-soft font-semibold hover:bg-primary/90 transition-colors"
                 >
                   Accept All
                 </button>
                 <button
                   onClick={handleRejectAll}
-                  className="flex-1 bg-bg-inset dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 px-6 py-3 rounded-lg font-semibold hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+                  className="flex-1 bg-bg-inset dark:bg-bg-surface text-fg dark:text-fg px-6 py-3 rounded-soft font-semibold hover:bg-line dark:hover:bg-bg-inset transition-colors"
                 >
                   Reject All
                 </button>
                 <button
                   onClick={() => setShowDetails(true)}
-                  className="flex-1 border-2 border-line dark:border-zinc-600 text-zinc-900 dark:text-zinc-50 px-6 py-3 rounded-lg font-semibold hover:bg-bg-inset dark:hover:bg-zinc-800 transition-colors"
+                  className="flex-1 border-2 border-line dark:border-line-strong text-fg dark:text-fg px-6 py-3 rounded-soft font-semibold hover:bg-bg-inset dark:hover:bg-bg-surface transition-colors"
                 >
                   Customize
                 </button>
@@ -178,13 +178,13 @@ export const CookieConsent: React.FC = () => {
               {/* Detailed Cookie Settings */}
               <div className="space-y-6 mb-6">
                 {/* Necessary Cookies */}
-                <div className="flex items-start justify-between gap-4 p-4 bg-bg-inset dark:bg-zinc-800 rounded-lg">
+                <div className="flex items-start justify-between gap-4 p-4 bg-bg-inset dark:bg-bg-surface rounded-soft">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <h4 className="font-semibold text-zinc-900 dark:text-zinc-50">
+                      <h4 className="font-semibold text-fg dark:text-fg">
                         Necessary Cookies
                       </h4>
-                      <span className="text-xs bg-zinc-200 dark:bg-zinc-700 text-fg-muted dark:text-zinc-300 px-2 py-1 rounded">
+                      <span className="text-xs bg-line dark:bg-bg-inset text-fg-muted dark:text-fg-muted px-2 py-1 rounded">
                         Always Active
                       </span>
                     </div>
@@ -208,9 +208,9 @@ export const CookieConsent: React.FC = () => {
                 </div>
 
                 {/* Analytics Cookies */}
-                <div className="flex items-start justify-between gap-4 p-4 bg-bg-inset dark:bg-zinc-800 rounded-lg">
+                <div className="flex items-start justify-between gap-4 p-4 bg-bg-inset dark:bg-bg-surface rounded-soft">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                    <h4 className="font-semibold text-fg dark:text-fg mb-2">
                       Analytics Cookies
                     </h4>
                     <p className="text-sm text-fg-muted dark:text-fg-subtle">
@@ -235,9 +235,9 @@ export const CookieConsent: React.FC = () => {
                 </div>
 
                 {/* Marketing Cookies */}
-                <div className="flex items-start justify-between gap-4 p-4 bg-bg-inset dark:bg-zinc-800 rounded-lg">
+                <div className="flex items-start justify-between gap-4 p-4 bg-bg-inset dark:bg-bg-surface rounded-soft">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                    <h4 className="font-semibold text-fg dark:text-fg mb-2">
                       Marketing Cookies
                     </h4>
                     <p className="text-sm text-fg-muted dark:text-fg-subtle">
@@ -263,8 +263,8 @@ export const CookieConsent: React.FC = () => {
               </div>
 
               {/* Cookie Policy Link */}
-              <div className="mb-6 p-4 bg-signal-warn/10 dark:bg-signal-warn/20 rounded-lg">
-                <p className="text-sm text-fg-muted dark:text-zinc-300">
+              <div className="mb-6 p-4 bg-signal-warn/10 dark:bg-signal-warn/20 rounded-soft">
+                <p className="text-sm text-fg-muted dark:text-fg-muted">
                   For more information about how we use cookies and your choices, please read our{' '}
                   <button
                     onClick={() => router.push('/privacy#cookies')}
@@ -287,13 +287,13 @@ export const CookieConsent: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={handleSavePreferences}
-                  className="flex-1 bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+                  className="flex-1 bg-primary text-white px-6 py-3 rounded-soft font-semibold hover:bg-primary/90 transition-colors"
                 >
                   Save Preferences
                 </button>
                 <button
                   onClick={() => setShowDetails(false)}
-                  className="flex-1 border-2 border-line dark:border-zinc-600 text-zinc-900 dark:text-zinc-50 px-6 py-3 rounded-lg font-semibold hover:bg-bg-inset dark:hover:bg-zinc-800 transition-colors"
+                  className="flex-1 border-2 border-line dark:border-line-strong text-fg dark:text-fg px-6 py-3 rounded-soft font-semibold hover:bg-bg-inset dark:hover:bg-bg-surface transition-colors"
                 >
                   Back
                 </button>

@@ -66,8 +66,8 @@ export const TastingActivePhase: React.FC<TastingActivePhaseProps> = ({
     <div className="max-w-4xl mx-auto">
       {/* All Items Grid View */}
       {showItemNavigation && items.length > 1 && (
-        <div className="mb-6 p-4 bg-bg-inset dark:bg-zinc-800 rounded-xl">
-          <h3 className="text-lg font-semibold mb-4 text-zinc-900 dark:text-zinc-50">
+        <div className="mb-6 p-4 bg-bg-inset dark:bg-bg-surface rounded-pane">
+          <h3 className="text-lg font-semibold mb-4 text-fg dark:text-fg">
             All Items ({items.length})
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -78,10 +78,10 @@ export const TastingActivePhase: React.FC<TastingActivePhaseProps> = ({
                   onItemIndexChange(index);
                   onToggleShowAll();
                 }}
-                className={`p-3 rounded-lg text-left transition-all ${
+                className={`p-3 rounded-soft text-left transition-all ${
                   index === currentItemIndex
                     ? 'bg-primary text-white ring-2 ring-primary ring-offset-2'
-                    : 'bg-white dark:bg-zinc-700 hover:bg-bg-inset dark:hover:bg-zinc-600 border border-line dark:border-zinc-600'
+                    : 'bg-white dark:bg-bg-inset hover:bg-bg-inset dark:hover:bg-fg-muted border border-line dark:border-line-strong'
                 }`}
               >
                 <div className="font-medium text-sm truncate">
@@ -109,7 +109,7 @@ export const TastingActivePhase: React.FC<TastingActivePhaseProps> = ({
         <div className="flex justify-end mb-3">
           <button
             onClick={onDeleteLastItem}
-            className="flex items-center gap-2 px-3 py-2 text-sm text-error hover:bg-error/10 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-sm text-signal-danger hover:bg-signal-danger/10 rounded-soft transition-colors"
           >
             <span className="material-symbols-outlined text-base">delete</span>
             Delete this item

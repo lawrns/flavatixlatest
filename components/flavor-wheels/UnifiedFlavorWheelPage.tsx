@@ -82,8 +82,8 @@ export const UnifiedFlavorWheelPage: React.FC<UnifiedFlavorWheelPageProps> = ({
 
   if (error) {
     return (
-      <div className="text-center p-8 text-text-secondary">
-        <p className="text-red-500">{error}</p>
+      <div className="text-center p-8 text-fg-muted">
+        <p className="text-signal-danger">{error}</p>
         <button
           onClick={loadFlavorWheel}
           className="mt-4 btn-primary"
@@ -96,7 +96,7 @@ export const UnifiedFlavorWheelPage: React.FC<UnifiedFlavorWheelPageProps> = ({
 
   if (!wheelData || wheelData.categories.length === 0) {
     return (
-      <div className="text-center p-8 text-text-secondary">
+      <div className="text-center p-8 text-fg-muted">
         <p>No flavor data yet. Start tasting and we&apos;ll build your flavor wheel!</p>
       </div>
     );
@@ -109,10 +109,10 @@ export const UnifiedFlavorWheelPage: React.FC<UnifiedFlavorWheelPageProps> = ({
   return (
     <div className="space-y-lg">
       <div className="text-center">
-        <h2 className="text-h2 font-heading font-bold text-text-primary">
+        <h2 className="text-h2 font-bold text-fg">
           Your Flavor Profile
         </h2>
-        <p className="text-body text-text-secondary mt-sm">
+        <p className="text-body text-fg-muted mt-sm">
           Based on {totalDescriptors} flavor notes across all your tastings
         </p>
       </div>
@@ -130,23 +130,23 @@ export const UnifiedFlavorWheelPage: React.FC<UnifiedFlavorWheelPageProps> = ({
 
       {/* Wheel Statistics */}
       <div className="grid grid-cols-3 gap-md text-center">
-        <div className="bg-surface-secondary rounded-lg p-md">
-          <div className="text-h3 font-bold text-primary-600">
+        <div className="bg-bg-inset rounded-soft p-md">
+          <div className="text-h3 font-bold text-primary">
             {totalDescriptors}
           </div>
-          <div className="text-body-sm text-text-secondary">Total Mentions</div>
+          <div className="text-body-sm text-fg-muted">Total Mentions</div>
         </div>
-        <div className="bg-surface-secondary rounded-lg p-md">
-          <div className="text-h3 font-bold text-primary-600">
+        <div className="bg-bg-inset rounded-soft p-md">
+          <div className="text-h3 font-bold text-primary">
             {uniqueDescriptors}
           </div>
-          <div className="text-body-sm text-text-secondary">Unique Descriptors</div>
+          <div className="text-body-sm text-fg-muted">Unique Descriptors</div>
         </div>
-        <div className="bg-surface-secondary rounded-lg p-md">
-          <div className="text-h3 font-bold text-primary-600">
+        <div className="bg-bg-inset rounded-soft p-md">
+          <div className="text-h3 font-bold text-primary">
             {wheelData.categories.length}
           </div>
-          <div className="text-body-sm text-text-secondary">Categories</div>
+          <div className="text-body-sm text-fg-muted">Categories</div>
         </div>
       </div>
 
@@ -154,10 +154,10 @@ export const UnifiedFlavorWheelPage: React.FC<UnifiedFlavorWheelPageProps> = ({
       <div className="space-y-sm">
         <h4 className="text-h5 font-semibold">Top Descriptors by Category</h4>
         {wheelData.categories.slice(0, 5).map((category: any) => (
-          <details key={category.name} className="bg-surface-secondary rounded-lg">
-            <summary className="p-md cursor-pointer hover:bg-surface-tertiary transition-colors">
+          <details key={category.name} className="bg-bg-inset rounded-soft">
+            <summary className="p-md cursor-pointer hover:bg-bg-surface transition-colors">
               <span className="font-semibold">{category.name}</span>
-              <span className="text-text-secondary ml-2">
+              <span className="text-fg-muted ml-2">
                 ({category.count} mentions)
               </span>
             </summary>
@@ -169,12 +169,12 @@ export const UnifiedFlavorWheelPage: React.FC<UnifiedFlavorWheelPageProps> = ({
                     {sub.descriptors?.slice(0, 5).map((descriptor: any, dIdx: number) => (
                       <span
                         key={dIdx}
-                        className="inline-flex items-center gap-xs bg-surface-tertiary px-sm py-xs rounded-full text-xs"
+                        className="inline-flex items-center gap-xs bg-bg-surface px-sm py-xs rounded-full text-xs"
                       >
-                        <span className="text-text-primary font-medium">
+                        <span className="text-fg font-medium">
                           {resolveDescriptorCanonicalText(descriptor.text, descriptorCandidates)}
                         </span>
-                        <span className="text-text-tertiary">({descriptor.count})</span>
+                        <span className="text-fg-subtle">({descriptor.count})</span>
                       </span>
                     ))}
                   </div>

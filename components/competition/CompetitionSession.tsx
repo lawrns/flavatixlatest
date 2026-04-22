@@ -333,10 +333,10 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-sm mx-auto"></div>
-          <p className="text-text-secondary">Loading competition...</p>
+          <p className="text-fg-muted">Loading competition...</p>
         </div>
       </div>
     );
@@ -344,9 +344,9 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
         <div className="text-center">
-          <p className="text-text-secondary">Competition not found</p>
+          <p className="text-fg-muted">Competition not found</p>
           <button
             onClick={() => router.push('/my-tastings')}
             className="mt-4 btn-secondary"
@@ -360,9 +360,9 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
         <div className="text-center">
-          <p className="text-text-secondary">No items in this competition</p>
+          <p className="text-fg-muted">No items in this competition</p>
           <button
             onClick={() => router.push('/my-tastings')}
             className="mt-4 btn-secondary"
@@ -376,15 +376,15 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
 
   if (showResults) {
     return (
-      <div className="min-h-screen bg-background-light p-md">
+      <div className="min-h-screen bg-bg p-md">
         <div className="max-w-2xl mx-auto">
           <div className="card p-xl text-center">
             <Trophy size={64} className="mx-auto mb-md text-primary" />
-            <h1 className="text-h1 font-heading font-bold text-text-primary mb-sm">
+            <h1 className="text-h1 font-bold text-fg mb-sm">
               Competition Complete!
             </h1>
             <div className="text-6xl font-bold text-primary mb-md">{score}%</div>
-            <p className="text-body text-text-secondary mb-lg">
+            <p className="text-body text-fg-muted mb-lg">
               You answered {answers.size} out of {items.length} items
             </p>
             <div className="flex gap-md justify-center">
@@ -407,28 +407,28 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
   const currentItem = items[currentItemIndex];
 
   return (
-    <div className="min-h-screen bg-background-light pb-24">
+    <div className="min-h-screen bg-bg pb-24">
       {/* Header */}
-      <div className="bg-white dark:bg-zinc-800 border-b border-border-default p-md">
+      <div className="bg-white dark:bg-bg-surface border-b border-line p-md">
         <div className="max-w-4xl mx-auto">
           <button
             onClick={() => router.push('/my-tastings')}
-            className="flex items-center text-text-secondary hover:text-text-primary mb-sm"
+            className="flex items-center text-fg-muted hover:text-fg mb-sm"
           >
             <ChevronLeft size={20} className="mr-xs" />
             Back
           </button>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-h2 font-heading font-bold text-text-primary">
+              <h1 className="text-h2 font-bold text-fg">
                 {session.session_name}
               </h1>
-              <p className="text-small text-text-secondary">
+              <p className="text-small text-fg-muted">
                 Item {currentItemIndex + 1} of {items.length}
               </p>
             </div>
             <div className="flex items-center gap-md">
-              <div className="flex items-center text-text-secondary">
+              <div className="flex items-center text-fg-muted">
                 <Target size={16} className="mr-xs" />
                 <span className="text-small">
                   {answers.size}/{items.length}
@@ -444,10 +444,10 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
         <div className="card p-lg">
           {/* Item Name */}
           <div className="mb-lg">
-            <h2 className="text-h3 font-heading font-semibold text-text-primary mb-xs">
+            <h2 className="text-h3 font-semibold text-fg mb-xs">
               {session.is_blind_items ? `Item ${currentItemIndex + 1}` : currentItem.item_name}
             </h2>
-            <p className="text-small text-text-secondary">
+            <p className="text-small text-fg-muted">
               {session.category.charAt(0).toUpperCase() + session.category.slice(1)}
             </p>
           </div>
@@ -457,7 +457,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
             {!session.is_blind_attributes && (
               <>
                 <div>
-                  <label className="block text-small font-body font-medium text-text-primary mb-xs">
+                  <label className="block text-small font-medium text-fg mb-xs">
                     Aroma Notes
                   </label>
                   <textarea
@@ -471,7 +471,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
                 </div>
 
                 <div>
-                  <label className="block text-small font-body font-medium text-text-primary mb-xs">
+                  <label className="block text-small font-medium text-fg mb-xs">
                     Flavor Notes
                   </label>
                   <textarea
@@ -487,7 +487,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
             )}
 
             <div>
-              <label className="block text-small font-body font-medium text-text-primary mb-xs">
+              <label className="block text-small font-medium text-fg mb-xs">
                 Overall Score: {currentAnswer.overall_score}
               </label>
               <input
@@ -500,14 +500,14 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
                 }
                 className="w-full"
               />
-              <div className="flex justify-between text-xs text-text-secondary mt-xs">
+              <div className="flex justify-between text-xs text-fg-muted mt-xs">
                 <span>Poor (1)</span>
                 <span>Excellent (100)</span>
               </div>
             </div>
 
             <div>
-              <label className="block text-small font-body font-medium text-text-primary mb-xs">
+              <label className="block text-small font-medium text-fg mb-xs">
                 Additional Notes
               </label>
               <textarea
@@ -520,7 +520,7 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
           </div>
 
           {/* Navigation */}
-          <div className="flex items-center justify-between mt-lg pt-lg border-t border-border-default">
+          <div className="flex items-center justify-between mt-lg pt-lg border-t border-line">
             <button
               onClick={handlePrevious}
               disabled={currentItemIndex === 0}
@@ -556,10 +556,10 @@ export const CompetitionSession: React.FC<CompetitionSessionProps> = ({ sessionI
                 key={item.id}
                 className={`flex-1 h-2 rounded-full ${
                   answers.has(item.id)
-                    ? 'bg-success'
+                    ? 'bg-signal-good'
                     : index === currentItemIndex
                       ? 'bg-primary'
-                      : 'bg-border-default'
+                      : 'bg-line'
                 }`}
               />
             ))}

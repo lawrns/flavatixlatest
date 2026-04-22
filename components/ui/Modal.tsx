@@ -83,7 +83,7 @@ const Modal: React.FC<ModalProps> = ({
         aria-labelledby={title ? titleId : undefined}
         aria-describedby={ariaDescription ? descriptionId : undefined}
         className={cn(
-          'bg-white dark:bg-zinc-800 rounded-pane shadow-xl w-full max-h-[90vh] overflow-hidden pb-safe',
+          'bg-white dark:bg-bg-surface rounded-pane shadow-md w-full max-h-[90vh] overflow-hidden pb-safe',
           'focus:outline-none',
           sizeClasses[size],
           className
@@ -99,16 +99,16 @@ const Modal: React.FC<ModalProps> = ({
         )}
 
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-6 border-b border-line dark:border-zinc-700">
+          <div className="flex items-center justify-between p-6 border-b border-line dark:border-line">
             {title && (
-              <h2 id={titleId} className="text-xl font-semibold text-zinc-900 dark:text-white">
+              <h2 id={titleId} className="text-xl font-semibold text-fg dark:text-white">
                 {title}
               </h2>
             )}
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="p-2 text-fg-subtle hover:text-fg-muted dark:hover:text-zinc-200 transition-colors rounded-lg hover:bg-bg-inset dark:hover:bg-zinc-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                className="p-2 text-fg-subtle hover:text-fg-muted dark:hover:text-fg-muted transition-colors rounded-soft hover:bg-bg-inset dark:hover:bg-bg-inset min-w-[44px] min-h-[44px] flex items-center justify-center"
                 aria-label="Close modal"
                 type="button"
               >
@@ -164,7 +164,7 @@ const ModalFooter: React.FC<ModalFooterProps> = ({ children, className }) => {
   return (
     <div
       className={cn(
-        'flex justify-end gap-3 pt-4 border-t border-line dark:border-zinc-700',
+        'flex justify-end gap-3 pt-4 border-t border-line dark:border-line',
         className
       )}
     >

@@ -67,8 +67,6 @@
 
   /* === TYPOGRAPHY === */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'DM Serif Display', Georgia, 'Times New Roman', serif;
-
   /* Type scale — Inter · 1.200 ratio */
   --text-display:  48px;
   --text-h1:       34px;
@@ -105,7 +103,7 @@
   /* === SHADOWS === */
   --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.06);
   --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg:  0 12px 24px rgba(0, 0, 0, 0.12);
+  --shadow-md:  0 12px 24px rgba(0, 0, 0, 0.12);
 
   /* === MOTION === */
   --duration: 150ms;
@@ -144,7 +142,7 @@
 
   --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg:  0 12px 24px rgba(0, 0, 0, 0.5);
+  --shadow-md:  0 12px 24px rgba(0, 0, 0, 0.5);
 }
 
 /* === REDUCED MOTION === */

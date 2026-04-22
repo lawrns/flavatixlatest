@@ -9,7 +9,7 @@ const labelVariants = cva(
   {
     variants: {
       variant: {
-        default: "text-fg-muted dark:text-zinc-300",
+        default: "text-fg-muted dark:text-fg-muted",
         error: "text-red-600 dark:text-red-400",
         success: "text-green-600 dark:text-green-400",
       },

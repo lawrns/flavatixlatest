@@ -56,7 +56,7 @@ export default function Custom404() {
                 <p className="text-sm font-semibold uppercase tracking-[0.28em] text-fg-subtle">
                   404
                 </p>
-                <h1 className="font-display mt-3 text-5xl font-semibold tracking-tight text-fg sm:text-6xl">
+                <h1 className="mt-3 text-5xl font-semibold tracking-tight text-fg sm:text-6xl">
                   Nothing here.
                 </h1>
                 <p className="mt-4 max-w-xl text-base leading-relaxed text-fg-muted">
@@ -94,7 +94,7 @@ export default function Custom404() {
                     <p className="text-xs font-semibold uppercase tracking-[0.28em] text-fg-subtle">
                       Suggested routes
                     </p>
-                    <h2 className="font-display mt-2 text-2xl font-semibold tracking-tight text-fg">
+                    <h2 className="mt-2 text-2xl font-semibold tracking-tight text-fg">
                       Keep the session moving
                     </h2>
                   </div>
@@ -117,7 +117,7 @@ export default function Custom404() {
                           href={action.href}
                           className="group flex items-start gap-4 rounded-soft border border-line bg-bg-surface p-4 transition-all hover:-translate-y-0.5 hover:border-line-strong hover:shadow-[0_16px_40px_-28px_rgba(0,0,0,0.35)]"
                         >
-                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-line bg-bg-inset text-fg-muted">
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-soft border border-line bg-bg-inset text-fg-muted">
                             <Icon className="h-5 w-5" />
                           </div>
                           <div className="min-w-0 flex-1">
@@ -142,7 +142,7 @@ export default function Custom404() {
                 className="rounded-pane border border-line bg-bg-surface/85 p-6 shadow-[0_24px_70px_-50px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-8"
               >
                 <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-signal-warn/10 text-signal-warn">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-soft bg-signal-warn/10 text-signal-warn">
                     <FileText className="h-5 w-5" />
                   </div>
                   <div>

@@ -192,15 +192,12 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     >
       {/* ITEM ID Section */}
       <div className="card p-md">
-        <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">
+        <h2 className="text-h3 font-semibold text-fg mb-md">
           Item Information
         </h2>
 
         {Object.keys(validationErrors).length > 0 && (
-          <div
-            className="mb-md rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-            role="alert"
-          >
+          <div className="mb-md rounded-pane border border-signal-danger/20 bg-signal-danger/10 px-4 py-3 text-sm text-signal-danger" role="alert">
             Complete the required fields before continuing.
           </div>
         )}
@@ -208,7 +205,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
           {/* 1. Item Name/Variety (REQUIRED) */}
           <div className="md:col-span-2">
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Item Name/Variety *
             </label>
             <input
@@ -232,7 +229,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
           {/* 2. Picture (optional upload) */}
           <div className="md:col-span-2">
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Picture
             </label>
             {formData.picture_url ? (
@@ -243,12 +240,12 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                   width={0}
                   height={0}
                   sizes="100vw"
-                  className="w-full h-48 object-cover rounded-lg"
+                  className="w-full h-48 object-cover rounded-soft"
                 />
                 <button
                   type="button"
                   onClick={() => updateField('picture_url', undefined)}
-                  className="absolute top-2 right-2 w-8 h-8 bg-error text-white rounded-full hover:bg-error/90 transition-colors flex items-center justify-center"
+                  className="absolute top-2 right-2 w-8 h-8 bg-signal-danger text-white rounded-full hover:bg-signal-danger/90 transition-colors flex items-center justify-center"
                 >
                   <X size={16} />
                 </button>
@@ -275,7 +272,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
           {/* 3. Brand */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Brand
             </label>
             <input
@@ -289,7 +286,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
           {/* 10. Category (REQUIRED dropdown) */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Category *
             </label>
             <select
@@ -318,7 +315,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
           {/* 4. Country (dropdown) */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Country
             </label>
             <select
@@ -344,7 +341,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
           {/* 5. State (dropdown - conditional) */}
           {formData.country && hasStates(formData.country) && (
             <div>
-              <label className="block text-small font-body font-medium text-text-primary mb-xs">
+              <label className="block text-small font-medium text-fg mb-xs">
                 State
               </label>
               <select
@@ -364,7 +361,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
           {/* 6. Region */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Region
             </label>
             <input
@@ -378,7 +375,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
           {/* 7. Vintage (4 digit format) */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Vintage
             </label>
             <input
@@ -396,7 +393,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
           {/* 8. Batch ID */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Batch ID
             </label>
             <input
@@ -410,7 +407,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
           {/* 9. Scan UPC/Barcode */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               UPC/Barcode
             </label>
             <input
@@ -426,7 +423,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
       {/* Characteristics Section */}
       <div className="card p-md">
-        <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">
+        <h2 className="text-h3 font-semibold text-fg mb-md">
           Characteristics
         </h2>
 
@@ -541,7 +538,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
           {/* 8. Texture: Text input ONLY (NO SLIDER) */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Texture
             </label>
             <textarea
@@ -573,7 +570,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
           {/* 11. Other: Text input ONLY (NO SLIDER) */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Other
             </label>
             <textarea
@@ -596,7 +593,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
       </div>
 
       {/* Action footer — sticky on mobile so actions are always reachable */}
-      <div className="sticky bottom-0 z-10 -mx-4 px-4 pb-4 pt-3 bg-white/95 dark:bg-zinc-900/95  border-t border-zinc-100 dark:border-zinc-800 sm:static sm:mx-0 sm:px-0 sm:pb-0 sm:pt-0 sm:bg-transparent sm:dark:bg-transparent sm:backdrop-blur-none sm:border-0">
+      <div className="sticky bottom-0 z-10 -mx-4 px-4 pb-4 pt-3 bg-white/95 dark:bg-bg/95  border-t border-line dark:border-line sm:static sm:mx-0 sm:px-0 sm:pb-0 sm:pt-0 sm:bg-transparent sm:dark:bg-transparent sm:backdrop-blur-none sm:border-0">
         <div className="flex flex-col sm:flex-row gap-3">
           <button
             type="submit"

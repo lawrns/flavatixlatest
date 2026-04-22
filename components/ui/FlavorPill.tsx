@@ -17,7 +17,7 @@ const FLAVOR_COLORS: Record<string, { bg: string; text: string; border: string }
   earthy: { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200' },
   herbal: { bg: 'bg-green-100', text: 'text-green-700', border: 'border-green-200' },
   citrus: { bg: 'bg-yellow-100', text: 'text-yellow-700', border: 'border-yellow-200' },
-  smoky: { bg: 'bg-gray-200', text: 'text-gray-700', border: 'border-gray-300' },
+  smoky: { bg: 'bg-line', text: 'text-fg-muted', border: 'border-line-strong' },
   woody: { bg: 'bg-amber-100', text: 'text-amber-800', border: 'border-amber-300' },
   malty: { bg: 'bg-yellow-100', text: 'text-yellow-800', border: 'border-yellow-300' },
   hoppy: { bg: 'bg-lime-100', text: 'text-lime-700', border: 'border-lime-200' },

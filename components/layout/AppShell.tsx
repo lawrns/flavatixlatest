@@ -67,10 +67,10 @@ export const AppShell: React.FC<AppShellProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-background-app flex flex-col">
+    <div className="min-h-screen bg-bg flex flex-col">
       {/* Header */}
       {showHeader && (
-        <header className="sticky top-0 z-40 bg-background-surface border-b border-border-subtle">
+        <header className="sticky top-0 z-40 bg-bg-surface border-b border-line">
           <Container size={maxWidth} padding={false}>
             <div className="flex items-center justify-between h-14 px-4">
               {/* Left: Back button or Logo */}
@@ -78,11 +78,11 @@ export const AppShell: React.FC<AppShellProps> = ({
                 {showBack ? (
                   <button
                     onClick={handleBack}
-                    className="p-2 -ml-2 rounded-lg hover:bg-bg-inset dark:hover:bg-zinc-800 transition-colors"
+                    className="p-2 -ml-2 rounded-soft hover:bg-bg-inset transition-colors"
                     aria-label="Go back"
                   >
                     <svg
-                      className="w-5 h-5 text-text-primary"
+                      className="w-5 h-5 text-fg"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -104,14 +104,14 @@ export const AppShell: React.FC<AppShellProps> = ({
                       height={24}
                       className="w-6 h-6"
                     />
-                    <span className="font-heading font-semibold text-text-primary hidden sm:inline">
+                    <span className="font-semibold text-fg hidden sm:inline">
                       Flavatix
                     </span>
                   </Link>
                 )}
 
                 {title && (
-                  <h1 className="text-lg font-heading font-semibold text-text-primary truncate">
+                  <h1 className="text-lg font-semibold text-fg truncate">
                     {title}
                   </h1>
                 )}
@@ -168,7 +168,7 @@ export const AppShellSection: React.FC<{
 }> = ({ children, title, className }) => (
   <section className={cn('space-y-3', className)}>
     {title && (
-      <h2 className="text-lg font-heading font-semibold text-text-primary">
+      <h2 className="text-lg font-semibold text-fg">
         {title}
       </h2>
     )}

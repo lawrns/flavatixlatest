@@ -31,7 +31,7 @@ const AlertDialogContent = React.forwardRef<
     <AlertDialogPrimitive.Content
       ref={ref}
       className={
-        'fixed left-[50%] top-[50%] z-[100] grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-pane ' +
+        'fixed left-[50%] top-[50%] z-[100] grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-line dark:border-line bg-white dark:bg-bg-surface p-6 shadow-md duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-pane ' +
         (className || '')
       }
       {...props}
@@ -70,7 +70,7 @@ const AlertDialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Title
     ref={ref}
-    className={'text-lg font-semibold text-gray-900 dark:text-zinc-50 ' + (className || '')}
+    className={'text-lg font-semibold text-fg dark:text-fg ' + (className || '')}
     {...props}
   />
 ));
@@ -82,7 +82,7 @@ const AlertDialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Description
     ref={ref}
-    className={'text-sm text-gray-600 dark:text-fg-subtle ' + (className || '')}
+    className={'text-sm text-fg-muted dark:text-fg-subtle ' + (className || '')}
     {...props}
   />
 ));
@@ -110,7 +110,7 @@ const AlertDialogCancel = React.forwardRef<
   <AlertDialogPrimitive.Cancel
     ref={ref}
     className={
-      'mt-2 inline-flex h-10 items-center justify-center rounded-pane border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-4 py-2 text-sm font-semibold text-gray-700 dark:text-zinc-200 transition-colors hover:bg-gray-50 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:mt-0 ' +
+      'mt-2 inline-flex h-10 items-center justify-center rounded-pane border border-line-strong dark:border-line-strong bg-white dark:bg-bg-surface px-4 py-2 text-sm font-semibold text-fg-muted dark:text-fg-muted transition-colors hover:bg-bg-hover dark:hover:bg-bg-inset focus:outline-none focus:ring-2 focus:ring-line-strong focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:mt-0 ' +
       (className || '')
     }
     {...props}

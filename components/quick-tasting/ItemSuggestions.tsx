@@ -134,10 +134,10 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
     <div className="space-y-6">
       {/* Header */}
       <div className="text-center">
-        <h3 className="text-lg font-heading font-semibold text-text-primary mb-2">
+        <h3 className="text-lg font-semibold text-fg mb-2">
           Item Suggestions
         </h3>
-        <p className="text-sm text-text-secondary">
+        <p className="text-sm text-fg-muted">
           {canModerate
             ? 'Review and moderate participant suggestions'
             : 'Suggest items for the group tasting'}
@@ -146,12 +146,12 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
 
       {/* Add Suggestion Form (for participants) */}
       {canAddItems && !canModerate && (
-        <div className="bg-background-secondary p-4 rounded-lg">
+        <div className="bg-bg-inset p-4 rounded-soft">
           <form onSubmit={handleSubmitSuggestion} className="space-y-3">
             <div>
               <label
                 htmlFor="suggestion"
-                className="block text-sm font-medium text-text-primary mb-1"
+                className="block text-sm font-medium text-fg mb-1"
               >
                 Suggest an Item
               </label>
@@ -161,7 +161,7 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
                 value={newSuggestion}
                 onChange={(e) => setNewSuggestion(e.target.value)}
                 placeholder="e.g., Blue Bottle Coffee, Ethiopian Yirgacheffe"
-                className="w-full px-3 py-2 border border-border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-3 py-2 border border-line rounded-soft focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 disabled={submitting}
                 maxLength={100}
               />
@@ -182,10 +182,10 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
         {loading ? (
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-            <p className="text-text-secondary mt-2">Loading suggestions...</p>
+            <p className="text-fg-muted mt-2">Loading suggestions...</p>
           </div>
         ) : suggestions.length === 0 ? (
-          <div className="text-center py-8 text-text-secondary">
+          <div className="text-center py-8 text-fg-muted">
             <span className="material-symbols-outlined text-4xl text-yellow-500 mb-2 block">
               lightbulb
             </span>
@@ -198,12 +198,12 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
           suggestions.map((suggestion) => (
             <div
               key={suggestion.id}
-              className="bg-white dark:bg-zinc-800 border border-border-primary rounded-lg p-4"
+              className="bg-bg-surface border border-line rounded-pane p-4"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="font-medium text-text-primary">
+                    <span className="font-medium text-fg">
                       {suggestion.suggested_item_name}
                     </span>
                     <span
@@ -213,7 +213,7 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
                     </span>
                   </div>
 
-                  <div className="text-sm text-text-secondary">
+                  <div className="text-sm text-fg-muted">
                     Suggested by{' '}
                     {suggestion.participant?.profiles?.full_name ||
                       suggestion.participant?.profiles?.username ||
@@ -221,7 +221,7 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
                   </div>
 
                   {suggestion.moderated_at && (
-                    <div className="text-xs text-text-secondary mt-1">
+                    <div className="text-xs text-fg-muted mt-1">
                       Moderated {new Date(suggestion.moderated_at).toLocaleDateString()}
                     </div>
                   )}
@@ -252,26 +252,26 @@ export const ItemSuggestions: React.FC<ItemSuggestionsProps> = ({
 
       {/* Moderation Stats (for moderators) */}
       {canModerate && suggestions.length > 0 && (
-        <div className="bg-background-secondary p-4 rounded-lg">
-          <h4 className="font-medium text-text-primary mb-2">Moderation Summary</h4>
+        <div className="bg-bg-inset p-4 rounded-soft">
+          <h4 className="font-medium text-fg mb-2">Moderation Summary</h4>
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <div className="text-2xl font-bold text-yellow-600">
                 {suggestions.filter((s) => s.status === 'pending').length}
               </div>
-              <div className="text-sm text-text-secondary">Pending</div>
+              <div className="text-sm text-fg-muted">Pending</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-green-600">
                 {suggestions.filter((s) => s.status === 'approved').length}
               </div>
-              <div className="text-sm text-text-secondary">Approved</div>
+              <div className="text-sm text-fg-muted">Approved</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-red-600">
                 {suggestions.filter((s) => s.status === 'rejected').length}
               </div>
-              <div className="text-sm text-text-secondary">Rejected</div>
+              <div className="text-sm text-fg-muted">Rejected</div>
             </div>
           </div>
         </div>

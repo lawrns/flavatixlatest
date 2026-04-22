@@ -172,11 +172,11 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
   };
 
   return (
-    <div className={`bg-white dark:bg-zinc-800 rounded-lg shadow-lg ${className}`}>
+    <div className={`bg-white dark:bg-bg-surface rounded-soft shadow-md ${className}`}>
       {/* Header */}
-      <div className="p-4 border-b border-gray-200 dark:border-zinc-700">
+      <div className="p-4 border-b border-line dark:border-line">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-zinc-50">
+          <h2 className="text-xl font-semibold text-fg dark:text-fg">
             {wheelData.wheelType === 'combined'
               ? 'Flavor & Aroma Wheel'
               : wheelData.wheelType === 'metaphor'
@@ -186,7 +186,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
           {onExportPDF && (
             <button
               onClick={onExportPDF}
-              className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-600 text-white rounded-soft hover:bg-blue-700 transition-colors"
             >
               <Download className="w-4 h-4" />
               Export PDF
@@ -195,28 +195,28 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
         </div>
 
         {/* Stats */}
-        <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-fg-subtle">
+        <div className="flex items-center gap-4 text-sm text-fg-muted dark:text-fg-subtle">
           <span>Total Descriptors: {wheelData.totalDescriptors}</span>
           <span>Categories: {filteredCategories.length}</span>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="p-4 border-b border-gray-200 dark:border-zinc-700 space-y-3">
+      <div className="p-4 border-b border-line dark:border-line space-y-3">
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-fg-subtle" />
           <input
             type="text"
             placeholder="Search descriptors..."
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
-            className="w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-gray-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-10 py-2 border border-line-strong dark:border-line-strong rounded-soft bg-white dark:bg-bg-inset text-fg dark:text-fg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {searchQuery && (
             <button
               onClick={() => handleSearch('')}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-fg-subtle hover:text-fg-muted"
             >
               <X className="w-4 h-4" />
             </button>
@@ -228,7 +228,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="flex-1 px-3 py-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-gray-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-3 py-2 border border-line-strong dark:border-line-strong rounded-soft bg-white dark:bg-bg-inset text-fg dark:text-fg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="all">All Types</option>
             <option value="aroma">Aroma</option>
@@ -240,7 +240,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'name' | 'count' | 'percentage')}
-            className="flex-1 px-3 py-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-gray-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-3 py-2 border border-line-strong dark:border-line-strong rounded-soft bg-white dark:bg-bg-inset text-fg dark:text-fg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="count">Sort by Count</option>
             <option value="percentage">Sort by Percentage</option>
@@ -252,12 +252,12 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
       {/* Categories List */}
       <div>
         {filteredCategories.length === 0 ? (
-          <div className="p-8 text-center text-gray-500 dark:text-fg-subtle">
+          <div className="p-8 text-center text-fg-subtle dark:text-fg-subtle">
             <Filter className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>No categories found matching your filters</p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-200 dark:divide-zinc-700">
+          <div className="divide-y divide-line dark:divide-line">
             {filteredCategories.map((category) => {
               const isExpanded = expandedCategories.has(category.name);
               const categoryColor = getCategoryColor(category.name);
@@ -267,14 +267,14 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                   {/* Category Header */}
                   <button
                     onClick={() => toggleCategory(category.name)}
-                    className="w-full flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-zinc-700 rounded-lg p-2 transition-colors"
+                    className="w-full flex items-center justify-between text-left hover:bg-bg-hover dark:hover:bg-bg-inset rounded-soft p-2 transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <div className="flex items-center gap-2">
                         {isExpanded ? (
-                          <ChevronDown className="w-4 h-4 text-gray-400" />
+                          <ChevronDown className="w-4 h-4 text-fg-subtle" />
                         ) : (
-                          <ChevronRight className="w-4 h-4 text-gray-400" />
+                          <ChevronRight className="w-4 h-4 text-fg-subtle" />
                         )}
                         <div
                           className="w-4 h-4 rounded-full"
@@ -282,10 +282,10 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                         />
                       </div>
                       <div>
-                        <h3 className="font-medium text-gray-900 dark:text-zinc-50">
+                        <h3 className="font-medium text-fg dark:text-fg">
                           {category.name}
                         </h3>
-                        <p className="text-sm text-gray-500 dark:text-fg-subtle">
+                        <p className="text-sm text-fg-subtle dark:text-fg-subtle">
                           {category.count} {category.count === 1 ? 'descriptor' : 'descriptors'} (
                           {category.percentage.toFixed(1)}%)
                         </p>
@@ -299,14 +299,14 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                       {/* Direct Descriptors */}
                       {category.descriptors && category.descriptors.length > 0 && (
                         <div className="space-y-2">
-                          <p className="text-sm font-medium text-gray-700 dark:text-zinc-300">
+                          <p className="text-sm font-medium text-fg-muted dark:text-fg-muted">
                             Direct Descriptors
                           </p>
                           <div className="flex flex-wrap gap-2">
                             {category.descriptors.map((descriptor, index) => (
                               <span
                                 key={index}
-                                className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-zinc-700 text-gray-700 dark:text-zinc-300"
+                                className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-bg-inset dark:bg-bg-inset text-fg-muted dark:text-fg-muted"
                                 style={{
                                   borderLeft: `3px solid ${getDescriptorTypeColor(descriptor.type || 'aroma')}`,
                                 }}
@@ -314,7 +314,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                                 <span className="font-medium">
                                   {resolveDescriptorCanonicalText(descriptor.text, descriptorCandidates)}
                                 </span>
-                                <span className="text-gray-500">
+                                <span className="text-fg-subtle">
                                   ({descriptor.count || descriptor.intensity || 1})
                                 </span>
                               </span>
@@ -333,22 +333,22 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                             return (
                               <div
                                 key={subcategory.name}
-                                className="border-l-2 border-gray-200 dark:border-zinc-600 pl-3"
+                                className="border-l-2 border-line dark:border-line-strong pl-3"
                               >
                                 <button
                                   onClick={() => toggleSubcategory(subKey)}
-                                  className="flex items-center gap-2 text-left hover:bg-gray-50 dark:hover:bg-zinc-700 rounded p-1 transition-colors"
+                                  className="flex items-center gap-2 text-left hover:bg-bg-hover dark:hover:bg-bg-inset rounded p-1 transition-colors"
                                 >
                                   {isSubExpanded ? (
-                                    <ChevronDown className="w-3 h-3 text-gray-400" />
+                                    <ChevronDown className="w-3 h-3 text-fg-subtle" />
                                   ) : (
-                                    <ChevronRight className="w-3 h-3 text-gray-400" />
+                                    <ChevronRight className="w-3 h-3 text-fg-subtle" />
                                   )}
                                   <div>
-                                    <p className="text-sm font-medium text-gray-800 dark:text-zinc-200">
+                                    <p className="text-sm font-medium text-fg dark:text-fg-muted">
                                       {subcategory.name}
                                     </p>
-                                    <p className="text-xs text-gray-500 dark:text-fg-subtle">
+                                    <p className="text-xs text-fg-subtle dark:text-fg-subtle">
                                       {subcategory.count}{' '}
                                       {subcategory.count === 1 ? 'descriptor' : 'descriptors'}
                                     </p>
@@ -361,7 +361,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                                       {subcategory.descriptors.map((descriptor, index) => (
                                         <span
                                           key={index}
-                                          className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-gray-50 dark:bg-zinc-800 text-gray-600 dark:text-fg-subtle"
+                                          className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-bg-hover dark:bg-bg-surface text-fg-muted dark:text-fg-subtle"
                                           style={{
                                             borderLeft: `2px solid ${getDescriptorTypeColor(descriptor.type || 'aroma')}`,
                                           }}
@@ -372,7 +372,7 @@ const FlavorWheelListView: React.FC<FlavorWheelListViewProps> = ({
                                               descriptorCandidates
                                             )}
                                           </span>
-                                          <span className="text-gray-400">
+                                          <span className="text-fg-subtle">
                                             ({descriptor.count || descriptor.intensity || 1})
                                           </span>
                                         </span>

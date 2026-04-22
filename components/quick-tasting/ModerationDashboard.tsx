@@ -124,15 +124,15 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
   const stats = getSuggestionsStats();
 
   return (
-    <div className="bg-white dark:bg-zinc-800 border border-border-primary rounded-lg shadow-sm">
+    <div className="bg-bg-surface border border-line rounded-pane shadow-sm">
       {/* Header */}
-      <div className="p-6 border-b border-border-primary">
+      <div className="p-6 border-b border-line">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-heading font-semibold text-text-primary">
+            <h2 className="text-xl font-semibold text-fg">
               Moderation Dashboard
             </h2>
-            <p className="text-sm text-text-secondary mt-1">
+            <p className="text-sm text-fg-muted mt-1">
               Manage participants, suggestions, and session settings
             </p>
           </div>
@@ -140,7 +140,7 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
           {/* Role Toggle */}
           <button
             onClick={toggleUserRole}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`px-4 py-2 rounded-soft font-medium transition-colors ${
               currentUserRole === 'moderating'
                 ? 'bg-purple-100 text-purple-800 hover:bg-purple-200'
                 : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
@@ -154,21 +154,21 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
         <div className="flex gap-6 mt-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
-            <div className="text-sm text-text-secondary">Pending</div>
+            <div className="text-sm text-fg-muted">Pending</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">{stats.approved}</div>
-            <div className="text-sm text-text-secondary">Approved</div>
+            <div className="text-sm text-fg-muted">Approved</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-600">{participants.length}</div>
-            <div className="text-sm text-text-secondary">Participants</div>
+            <div className="text-sm text-fg-muted">Participants</div>
           </div>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-border-primary">
+      <div className="flex border-b border-line">
         {[
           { id: 'suggestions', label: 'Suggestions', count: stats.pending },
           { id: 'participants', label: 'Participants', count: participants.length },
@@ -180,12 +180,12 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
             className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${
               activeView === tab.id
                 ? 'border-primary text-primary'
-                : 'border-transparent text-text-secondary hover:text-text-primary'
+                : 'border-transparent text-fg-muted hover:text-fg'
             }`}
           >
             {tab.label}
             {tab.count !== undefined && (
-              <span className="ml-2 px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
+              <span className="ml-2 px-2 py-0.5 bg-bg-inset text-fg-muted text-xs rounded-full">
                 {tab.count}
               </span>
             )}
@@ -197,10 +197,10 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
       <div className="p-6">
         {activeView === 'suggestions' && (
           <div className="space-y-4">
-            <h3 className="text-lg font-medium text-text-primary">Pending Suggestions</h3>
+            <h3 className="text-lg font-medium text-fg">Pending Suggestions</h3>
 
             {stats.pending === 0 ? (
-              <div className="text-center py-8 text-text-secondary">
+              <div className="text-center py-8 text-fg-muted">
                 <span className="material-symbols-outlined text-4xl text-green-600 mb-2 block">check_circle</span>
                 <p>All caught up! No pending suggestions.</p>
               </div>
@@ -211,13 +211,13 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
                   .map((suggestion) => (
                     <div
                       key={suggestion.id}
-                      className="flex items-center justify-between p-4 bg-background-secondary rounded-lg"
+                      className="flex items-center justify-between p-4 bg-bg-inset rounded-soft"
                     >
                       <div className="flex-1">
-                        <div className="font-medium text-text-primary">
+                        <div className="font-medium text-fg">
                           {suggestion.suggested_item_name}
                         </div>
-                        <div className="text-sm text-text-secondary">
+                        <div className="text-sm text-fg-muted">
                           by {suggestion.participant?.profiles?.full_name ||
                              suggestion.participant?.profiles?.username ||
                              'Anonymous'}
@@ -247,13 +247,13 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
 
         {activeView === 'participants' && (
           <div className="space-y-4">
-            <h3 className="text-lg font-medium text-text-primary">Session Participants</h3>
+            <h3 className="text-lg font-medium text-fg">Session Participants</h3>
 
             <div className="space-y-3">
               {participants.map((participant) => (
                 <div
                   key={participant.id}
-                  className="flex items-center justify-between p-4 bg-background-secondary rounded-lg"
+                  className="flex items-center justify-between p-4 bg-bg-inset rounded-soft"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
@@ -263,7 +263,7 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
                     </div>
 
                     <div>
-                      <div className="font-medium text-text-primary">
+                <div className="font-medium text-fg">
                         {participant.profile?.full_name || participant.profile?.username || 'Anonymous'}
                       </div>
                       <RoleIndicator
@@ -279,7 +279,7 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
                     <select
                       value={participant.role}
                       onChange={(e) => handleRoleChange(participant.id, e.target.value as any)}
-                      className="px-3 py-1 border border-border-primary rounded text-sm"
+                      className="px-3 py-1 border border-line rounded-soft text-sm"
                     >
                       <option value="participant">Participant</option>
                       <option value="both">Host + Participant</option>
@@ -294,10 +294,10 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
 
         {activeView === 'settings' && (
           <div className="space-y-6">
-            <h3 className="text-lg font-medium text-text-primary">Session Settings</h3>
+            <h3 className="text-lg font-medium text-fg">Session Settings</h3>
 
             <div className="space-y-4">
-              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-soft">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="material-symbols-outlined text-yellow-600">warning</span>
                   <h4 className="font-medium text-yellow-800">Host Unresponsiveness</h4>
@@ -311,12 +311,12 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
                 </button>
               </div>
 
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-soft">
                 <h4 className="font-medium text-blue-800 mb-2">Transfer Host Role</h4>
                 <p className="text-sm text-blue-700 mb-3">
                   Transfer moderation responsibilities to another participant.
                 </p>
-                <select className="px-3 py-2 border border-border-primary rounded text-sm mr-2">
+                <select className="px-3 py-2 border border-line rounded-soft text-sm mr-2">
                   <option>Select participant...</option>
                   {participants
                     .filter(p => p.user_id !== userId)

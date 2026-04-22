@@ -7,7 +7,7 @@ const PrivacyPolicy = () => {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-bg-inset dark:bg-zinc-900">
+    <div className="min-h-screen bg-bg-inset dark:bg-bg">
       <Head>
         <title>Privacy Policy - Flavatix</title>
         <meta
@@ -34,8 +34,8 @@ const PrivacyPolicy = () => {
             Back
           </button>
 
-          <div className="bg-white dark:bg-zinc-800 rounded-2xl shadow-lg p-8 md:p-12">
-            <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+          <div className="bg-white dark:bg-bg-surface rounded-pane shadow-md p-8 md:p-12">
+            <h1 className="text-4xl font-bold text-fg dark:text-fg mb-4">
               Privacy Policy
             </h1>
             <p className="text-sm text-fg-muted dark:text-fg-subtle mb-8">
@@ -44,49 +44,49 @@ const PrivacyPolicy = () => {
 
             <div className="prose dark:prose-invert max-w-none space-y-8">
               <section>
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   1. Introduction
                 </h2>
-                <p className="text-fg-muted dark:text-zinc-300 mb-4">
+                <p className="text-fg-muted dark:text-fg-muted mb-4">
                   Welcome to Flavatix (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;). We are
                   committed to protecting your personal data and respecting your privacy. This
                   Privacy Policy explains how we collect, use, disclose, and safeguard your
                   information when you use our tasting platform and services.
                 </p>
-                <p className="text-fg-muted dark:text-zinc-300">
+                <p className="text-fg-muted dark:text-fg-muted">
                   This policy complies with the EU General Data Protection Regulation (GDPR),
                   California Consumer Privacy Act (CCPA), and other applicable data protection laws.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   2. Data Controller
                 </h2>
-                <p className="text-fg-muted dark:text-zinc-300 mb-4">
+                <p className="text-fg-muted dark:text-fg-muted mb-4">
                   Flavatix is the data controller responsible for your personal data. If you have
                   any questions about this privacy policy or our data practices, please contact us
                   at:
                 </p>
-                <div className="bg-bg-inset dark:bg-zinc-700 p-4 rounded-lg">
-                  <p className="text-zinc-900 dark:text-zinc-50 font-medium">
+                <div className="bg-bg-inset dark:bg-bg-inset p-4 rounded-soft">
+                  <p className="text-fg dark:text-fg font-medium">
                     Email: privacy@flavatix.com
                   </p>
-                  <p className="text-zinc-900 dark:text-zinc-50 font-medium">
+                  <p className="text-fg dark:text-fg font-medium">
                     Data Protection Officer: dpo@flavatix.com
                   </p>
                 </div>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   3. Information We Collect
                 </h2>
 
-                <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 mt-6">
+                <h3 className="text-xl font-semibold text-fg dark:text-fg mb-3 mt-6">
                   3.1 Information You Provide
                 </h3>
-                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-zinc-300">
+                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-fg-muted">
                   <li>
                     <strong>Account Information:</strong> Name, email address, password (encrypted),
                     profile picture
@@ -109,10 +109,10 @@ const PrivacyPolicy = () => {
                   </li>
                 </ul>
 
-                <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 mt-6">
+                <h3 className="text-xl font-semibold text-fg dark:text-fg mb-3 mt-6">
                   3.2 Information Collected Automatically
                 </h3>
-                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-zinc-300">
+                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-fg-muted">
                   <li>
                     <strong>Device Information:</strong> IP address, browser type, operating system,
                     device identifiers
@@ -134,10 +134,10 @@ const PrivacyPolicy = () => {
                   </li>
                 </ul>
 
-                <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 mt-6">
+                <h3 className="text-xl font-semibold text-fg dark:text-fg mb-3 mt-6">
                   3.3 Camera and Barcode Scanning
                 </h3>
-                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-zinc-300">
+                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-fg-muted">
                   <li>
                     <strong>Camera Access:</strong> We request camera access solely for barcode
                     scanning functionality. You must explicitly grant permission.
@@ -157,10 +157,10 @@ const PrivacyPolicy = () => {
                   </li>
                 </ul>
 
-                <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 mt-6">
+                <h3 className="text-xl font-semibold text-fg dark:text-fg mb-3 mt-6">
                   3.4 Information from Third Parties
                 </h3>
-                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-zinc-300">
+                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-fg-muted">
                   <li>
                     <strong>Social Login:</strong> Profile information from Google OAuth (if you
                     choose social login)
@@ -177,17 +177,17 @@ const PrivacyPolicy = () => {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   4. How We Use Your Information
                 </h2>
-                <p className="text-fg-muted dark:text-zinc-300 mb-4">
+                <p className="text-fg-muted dark:text-fg-muted mb-4">
                   We process your personal data for the following purposes:
                 </p>
 
-                <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 mt-6">
+                <h3 className="text-xl font-semibold text-fg dark:text-fg mb-3 mt-6">
                   4.1 Service Provision (Legal Basis: Contract Performance)
                 </h3>
-                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-zinc-300">
+                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-fg-muted">
                   <li>Create and manage your account</li>
                   <li>Enable tasting sessions and flavor tracking</li>
                   <li>Store and display your tasting notes and reviews</li>
@@ -195,30 +195,30 @@ const PrivacyPolicy = () => {
                   <li>Provide AI-powered flavor extraction and insights</li>
                 </ul>
 
-                <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 mt-6">
+                <h3 className="text-xl font-semibold text-fg dark:text-fg mb-3 mt-6">
                   4.2 Service Improvement (Legal Basis: Legitimate Interest)
                 </h3>
-                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-zinc-300">
+                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-fg-muted">
                   <li>Analyze usage patterns to improve features</li>
                   <li>Monitor performance and fix bugs</li>
                   <li>Train and improve AI models (anonymized data only)</li>
                   <li>Conduct research and development</li>
                 </ul>
 
-                <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 mt-6">
+                <h3 className="text-xl font-semibold text-fg dark:text-fg mb-3 mt-6">
                   4.3 Communication (Legal Basis: Consent / Legitimate Interest)
                 </h3>
-                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-zinc-300">
+                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-fg-muted">
                   <li>Send service updates and notifications</li>
                   <li>Respond to support requests</li>
                   <li>Send marketing communications (with your consent - you can opt out)</li>
                   <li>Notify you of new features and improvements</li>
                 </ul>
 
-                <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 mt-6">
+                <h3 className="text-xl font-semibold text-fg dark:text-fg mb-3 mt-6">
                   4.4 Security and Compliance (Legal Basis: Legal Obligation)
                 </h3>
-                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-zinc-300">
+                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-fg-muted">
                   <li>Detect and prevent fraud, abuse, and security incidents</li>
                   <li>Enforce our Terms of Service</li>
                   <li>Comply with legal obligations and law enforcement requests</li>
@@ -227,17 +227,17 @@ const PrivacyPolicy = () => {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   5. Data Sharing and Disclosure
                 </h2>
-                <p className="text-fg-muted dark:text-zinc-300 mb-4">
+                <p className="text-fg-muted dark:text-fg-muted mb-4">
                   We do not sell your personal data. We may share your information with:
                 </p>
 
-                <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 mt-6">
+                <h3 className="text-xl font-semibold text-fg dark:text-fg mb-3 mt-6">
                   5.1 Service Providers
                 </h3>
-                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-zinc-300">
+                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-fg-muted">
                   <li>
                     <strong>Supabase:</strong> Database and authentication services (GDPR compliant)
                   </li>
@@ -256,40 +256,40 @@ const PrivacyPolicy = () => {
                   </li>
                 </ul>
 
-                <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 mt-6">
+                <h3 className="text-xl font-semibold text-fg dark:text-fg mb-3 mt-6">
                   5.2 Legal Requirements
                 </h3>
-                <p className="text-fg-muted dark:text-zinc-300">
+                <p className="text-fg-muted dark:text-fg-muted">
                   We may disclose your information if required by law, court order, or government
                   regulation, or to protect our rights, property, or safety.
                 </p>
 
-                <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 mt-6">
+                <h3 className="text-xl font-semibold text-fg dark:text-fg mb-3 mt-6">
                   5.3 Business Transfers
                 </h3>
-                <p className="text-fg-muted dark:text-zinc-300">
+                <p className="text-fg-muted dark:text-fg-muted">
                   In the event of a merger, acquisition, or sale of assets, your personal data may
                   be transferred. We will notify you of any such change.
                 </p>
 
-                <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 mt-6">
+                <h3 className="text-xl font-semibold text-fg dark:text-fg mb-3 mt-6">
                   5.4 With Your Consent
                 </h3>
-                <p className="text-fg-muted dark:text-zinc-300">
+                <p className="text-fg-muted dark:text-fg-muted">
                   We may share your data with third parties when you explicitly consent (e.g.,
                   social sharing features).
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   6. Data Retention
                 </h2>
-                <p className="text-fg-muted dark:text-zinc-300 mb-4">
+                <p className="text-fg-muted dark:text-fg-muted mb-4">
                   We retain your personal data for as long as necessary to provide our services and
                   comply with legal obligations:
                 </p>
-                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-zinc-300">
+                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-fg-muted">
                   <li>
                     <strong>Account Data:</strong> Retained while your account is active, then
                     deleted within 90 days of account deletion request
@@ -314,19 +314,19 @@ const PrivacyPolicy = () => {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   7. Your Rights (GDPR/CCPA)
                 </h2>
-                <p className="text-fg-muted dark:text-zinc-300 mb-4">
+                <p className="text-fg-muted dark:text-fg-muted mb-4">
                   You have the following rights regarding your personal data:
                 </p>
 
                 <div className="space-y-4">
-                  <div className="bg-bg-inset dark:bg-zinc-700 p-4 rounded-lg">
-                    <h4 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                  <div className="bg-bg-inset dark:bg-bg-inset p-4 rounded-soft">
+                    <h4 className="font-semibold text-fg dark:text-fg mb-2">
                       Right to Access
                     </h4>
-                    <p className="text-fg-muted dark:text-zinc-300">
+                    <p className="text-fg-muted dark:text-fg-muted">
                       Request a copy of all personal data we hold about you
                     </p>
                     <button
@@ -337,11 +337,11 @@ const PrivacyPolicy = () => {
                     </button>
                   </div>
 
-                  <div className="bg-bg-inset dark:bg-zinc-700 p-4 rounded-lg">
-                    <h4 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                  <div className="bg-bg-inset dark:bg-bg-inset p-4 rounded-soft">
+                    <h4 className="font-semibold text-fg dark:text-fg mb-2">
                       Right to Rectification
                     </h4>
-                    <p className="text-fg-muted dark:text-zinc-300">
+                    <p className="text-fg-muted dark:text-fg-muted">
                       Correct inaccurate or incomplete personal data
                     </p>
                     <button
@@ -352,11 +352,11 @@ const PrivacyPolicy = () => {
                     </button>
                   </div>
 
-                  <div className="bg-bg-inset dark:bg-zinc-700 p-4 rounded-lg">
-                    <h4 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                  <div className="bg-bg-inset dark:bg-bg-inset p-4 rounded-soft">
+                    <h4 className="font-semibold text-fg dark:text-fg mb-2">
                       Right to Erasure (Right to be Forgotten)
                     </h4>
-                    <p className="text-fg-muted dark:text-zinc-300">
+                    <p className="text-fg-muted dark:text-fg-muted">
                       Request deletion of your personal data
                     </p>
                     <button
@@ -367,44 +367,44 @@ const PrivacyPolicy = () => {
                     </button>
                   </div>
 
-                  <div className="bg-bg-inset dark:bg-zinc-700 p-4 rounded-lg">
-                    <h4 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                  <div className="bg-bg-inset dark:bg-bg-inset p-4 rounded-soft">
+                    <h4 className="font-semibold text-fg dark:text-fg mb-2">
                       Right to Data Portability
                     </h4>
-                    <p className="text-fg-muted dark:text-zinc-300">
+                    <p className="text-fg-muted dark:text-fg-muted">
                       Receive your data in a structured, machine-readable format (JSON)
                     </p>
                   </div>
 
-                  <div className="bg-bg-inset dark:bg-zinc-700 p-4 rounded-lg">
-                    <h4 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                  <div className="bg-bg-inset dark:bg-bg-inset p-4 rounded-soft">
+                    <h4 className="font-semibold text-fg dark:text-fg mb-2">
                       Right to Restriction of Processing
                     </h4>
-                    <p className="text-fg-muted dark:text-zinc-300">
+                    <p className="text-fg-muted dark:text-fg-muted">
                       Request that we limit how we use your data
                     </p>
                   </div>
 
-                  <div className="bg-bg-inset dark:bg-zinc-700 p-4 rounded-lg">
-                    <h4 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                  <div className="bg-bg-inset dark:bg-bg-inset p-4 rounded-soft">
+                    <h4 className="font-semibold text-fg dark:text-fg mb-2">
                       Right to Object
                     </h4>
-                    <p className="text-fg-muted dark:text-zinc-300">
+                    <p className="text-fg-muted dark:text-fg-muted">
                       Object to processing based on legitimate interests or for direct marketing
                     </p>
                   </div>
 
-                  <div className="bg-bg-inset dark:bg-zinc-700 p-4 rounded-lg">
-                    <h4 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                  <div className="bg-bg-inset dark:bg-bg-inset p-4 rounded-soft">
+                    <h4 className="font-semibold text-fg dark:text-fg mb-2">
                       Right to Withdraw Consent
                     </h4>
-                    <p className="text-fg-muted dark:text-zinc-300">
+                    <p className="text-fg-muted dark:text-fg-muted">
                       Withdraw consent at any time (does not affect lawfulness of prior processing)
                     </p>
                   </div>
                 </div>
 
-                <p className="text-fg-muted dark:text-zinc-300 mt-6">
+                <p className="text-fg-muted dark:text-fg-muted mt-6">
                   To exercise any of these rights, contact us at{' '}
                   <a href="mailto:privacy@flavatix.com" className="text-primary hover:underline">
                     privacy@flavatix.com
@@ -414,13 +414,13 @@ const PrivacyPolicy = () => {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   8. Data Security
                 </h2>
-                <p className="text-fg-muted dark:text-zinc-300 mb-4">
+                <p className="text-fg-muted dark:text-fg-muted mb-4">
                   We implement comprehensive security measures to protect your personal data:
                 </p>
-                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-zinc-300">
+                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-fg-muted">
                   <li>
                     <strong>Encryption:</strong> All data encrypted in transit (TLS 1.3) and at rest
                     (AES-256)
@@ -465,14 +465,14 @@ const PrivacyPolicy = () => {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   9. International Data Transfers
                 </h2>
-                <p className="text-fg-muted dark:text-zinc-300 mb-4">
+                <p className="text-fg-muted dark:text-fg-muted mb-4">
                   Your data may be transferred to and processed in countries outside your country of
                   residence. We ensure adequate protection through:
                 </p>
-                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-zinc-300">
+                <ul className="list-disc pl-6 space-y-2 text-fg-muted dark:text-fg-muted">
                   <li>EU Standard Contractual Clauses (SCCs) for transfers outside the EU/EEA</li>
                   <li>GDPR-compliant service providers with appropriate safeguards</li>
                   <li>Data Processing Agreements (DPAs) with all third-party processors</li>
@@ -480,10 +480,10 @@ const PrivacyPolicy = () => {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   10. Children&apos;s Privacy
                 </h2>
-                <p className="text-fg-muted dark:text-zinc-300">
+                <p className="text-fg-muted dark:text-fg-muted">
                   Flavatix is not intended for children under 16 years of age. We do not knowingly
                   collect personal data from children. If you believe we have collected data from a
                   child, please contact us immediately at privacy@flavatix.com, and we will delete
@@ -492,10 +492,10 @@ const PrivacyPolicy = () => {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   11. Cookies and Tracking Technologies
                 </h2>
-                <p className="text-fg-muted dark:text-zinc-300 mb-4">
+                <p className="text-fg-muted dark:text-fg-muted mb-4">
                   We use cookies and similar tracking technologies. You can manage your cookie
                   preferences through our cookie consent banner. For detailed information, see our
                   Cookie Policy.
@@ -509,10 +509,10 @@ const PrivacyPolicy = () => {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   12. Third-Party Links
                 </h2>
-                <p className="text-fg-muted dark:text-zinc-300">
+                <p className="text-fg-muted dark:text-fg-muted">
                   Our service may contain links to third-party websites. We are not responsible for
                   the privacy practices of these sites. We encourage you to review their privacy
                   policies.
@@ -520,10 +520,10 @@ const PrivacyPolicy = () => {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   13. Changes to This Policy
                 </h2>
-                <p className="text-fg-muted dark:text-zinc-300">
+                <p className="text-fg-muted dark:text-fg-muted">
                   We may update this Privacy Policy periodically. We will notify you of material
                   changes via email or prominent notice on our platform. Continued use after changes
                   constitutes acceptance of the updated policy.
@@ -531,15 +531,15 @@ const PrivacyPolicy = () => {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   14. Supervisory Authority
                 </h2>
-                <p className="text-fg-muted dark:text-zinc-300 mb-4">
+                <p className="text-fg-muted dark:text-fg-muted mb-4">
                   If you are located in the EU/EEA, you have the right to lodge a complaint with
                   your local data protection authority if you believe your rights have been
                   violated.
                 </p>
-                <p className="text-fg-muted dark:text-zinc-300">
+                <p className="text-fg-muted dark:text-fg-muted">
                   For a list of EU data protection authorities, visit:{' '}
                   <a
                     href="https://edpb.europa.eu/about-edpb/board/members_en"
@@ -552,28 +552,28 @@ const PrivacyPolicy = () => {
                 </p>
               </section>
 
-              <section className="border-t border-line dark:border-zinc-700 pt-8">
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+              <section className="border-t border-line dark:border-line pt-8">
+                <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">
                   15. Contact Us
                 </h2>
-                <p className="text-fg-muted dark:text-zinc-300 mb-4">
+                <p className="text-fg-muted dark:text-fg-muted mb-4">
                   If you have any questions, concerns, or requests regarding this Privacy Policy or
                   our data practices, please contact us:
                 </p>
-                <div className="bg-bg-inset dark:bg-zinc-700 p-6 rounded-lg">
-                  <p className="text-zinc-900 dark:text-zinc-50 mb-2">
+                <div className="bg-bg-inset dark:bg-bg-inset p-6 rounded-soft">
+                  <p className="text-fg dark:text-fg mb-2">
                     <strong>Email:</strong>{' '}
                     <a href="mailto:privacy@flavatix.com" className="text-primary hover:underline">
                       privacy@flavatix.com
                     </a>
                   </p>
-                  <p className="text-zinc-900 dark:text-zinc-50 mb-2">
+                  <p className="text-fg dark:text-fg mb-2">
                     <strong>Data Protection Officer:</strong>{' '}
                     <a href="mailto:dpo@flavatix.com" className="text-primary hover:underline">
                       dpo@flavatix.com
                     </a>
                   </p>
-                  <p className="text-zinc-900 dark:text-zinc-50">
+                  <p className="text-fg dark:text-fg">
                     <strong>Response Time:</strong> We will respond to all privacy requests within
                     30 days
                   </p>

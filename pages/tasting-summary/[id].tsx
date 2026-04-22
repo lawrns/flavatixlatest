@@ -94,10 +94,10 @@ export default function TastingSummaryPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-text-secondary">Loading tasting summary...</p>
+          <p className="text-fg-muted">Loading tasting summary...</p>
         </div>
       </div>
     );
@@ -105,7 +105,7 @@ export default function TastingSummaryPage() {
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center px-4">
+      <div className="min-h-screen bg-bg flex items-center justify-center px-4">
         <EmptyState
           icon="🧭"
           title="We couldn't find that tasting"
@@ -118,13 +118,13 @@ export default function TastingSummaryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background-light pb-24">
+    <div className="min-h-screen bg-bg pb-24">
       {/* Header */}
-      <div className="bg-white dark:bg-zinc-800 border-b border-line dark:border-zinc-700">
+      <div className="bg-white dark:bg-bg-surface border-b border-line dark:border-line">
         <div className="max-w-xl mx-auto px-4 py-4">
           <button
             onClick={() => router.push('/my-tastings')}
-            className="flex items-center text-fg-muted dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-50 mb-2 transition-colors"
+            className="flex items-center text-fg-muted dark:text-fg-muted hover:text-fg dark:hover:text-fg mb-2 transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -136,7 +136,7 @@ export default function TastingSummaryPage() {
             </svg>
             Back to My Tastings
           </button>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Tasting Summary</h1>
+          <h1 className="text-2xl font-bold text-fg dark:text-fg">Tasting Summary</h1>
         </div>
       </div>
 

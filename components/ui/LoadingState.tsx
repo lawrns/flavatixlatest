@@ -223,7 +223,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
 
     return (
       <div className={cn('flex flex-col items-center justify-center p-8 text-center', className)}>
-        <div className="w-12 h-12 rounded-full bg-bg-inset dark:bg-zinc-800 flex items-center justify-center mb-4">
+        <div className="w-12 h-12 rounded-full bg-bg-inset dark:bg-bg-surface flex items-center justify-center mb-4">
           <svg
             className="w-6 h-6 text-fg-subtle"
             fill="none"

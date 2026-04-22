@@ -45,8 +45,8 @@ export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayPro
   if (!profile) {
     return (
       <div className="card p-md">
-        <div className="text-center text-text-secondary font-body">
-          <div className="w-16 h-16 bg-background-muted rounded-full mx-auto mb-sm animate-pulse"></div>
+        <div className="text-center text-fg-muted">
+          <div className="w-16 h-16 bg-bg-inset rounded-full mx-auto mb-sm animate-pulse"></div>
           <p>Loading profile...</p>
         </div>
       </div>
@@ -102,16 +102,16 @@ export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayPro
         </div>
 
         <div className="flex-1 min-w-0">
-          <h2 className="text-h4 font-heading font-semibold text-text-primary truncate">
+          <h2 className="text-h4 font-semibold text-fg truncate">
             {profile.full_name || 'No name set'}
           </h2>
           {profile.username && (
-            <p className="text-text-secondary text-small font-body mb-xs">@{profile.username}</p>
+            <p className="text-fg-muted text-small mb-xs">@{profile.username}</p>
           )}
-          <p className="text-text-muted text-small font-body">{authEmail}</p>
+          <p className="text-fg-subtle text-small">{authEmail}</p>
           {profile.preferred_category && (
             <span
-              className={`inline-block px-3 py-1 rounded-full text-caption font-body font-medium mt-xs ${getCategoryColor(profile.preferred_category)}`}
+              className={`inline-block px-3 py-1 rounded-full text-caption font-medium mt-xs ${getCategoryColor(profile.preferred_category)}`}
             >
               {profile.preferred_category}
             </span>
@@ -122,81 +122,81 @@ export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayPro
       {/* Bio */}
       {profile.bio && (
         <div className="mb-md">
-          <h3 className="text-small font-body font-medium text-text-secondary mb-xs">About</h3>
-          <p className="text-body font-body text-text-primary leading-relaxed">{profile.bio}</p>
+          <h3 className="text-small font-medium text-fg-muted mb-xs">About</h3>
+          <p className="text-body text-fg leading-relaxed">{profile.bio}</p>
         </div>
       )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-sm mb-md">
-        <div className="bg-[#FEF3E7] rounded-xl p-sm text-center">
-          <div className="text-h2 font-heading font-bold text-[#1F5D4C]">
+        <div className="bg-bg-inset rounded-pane p-sm text-center">
+          <div className="text-h2 font-bold text-primary">
             {isLoadingStats ? (
-              <span className="animate-pulse text-[#1F5D4C]/50">-</span>
+              <span className="animate-pulse text-primary/50">-</span>
             ) : realTimeTastingsCount !== null ? (
               realTimeTastingsCount
             ) : (
               profile.tastings_count
             )}
           </div>
-          <div className="text-small font-body text-text-secondary">Tastings</div>
+          <div className="text-small text-fg-muted">Tastings</div>
         </div>
 
-        <div className="bg-[#FEF3E7] rounded-xl p-sm text-center">
-          <div className="text-h2 font-heading font-bold text-[#1F5D4C]">
+        <div className="bg-bg-inset rounded-pane p-sm text-center">
+          <div className="text-h2 font-bold text-primary">
             {profile.reviews_count}
           </div>
-          <div className="text-small font-body text-text-secondary">Reviews</div>
+          <div className="text-small text-fg-muted">Reviews</div>
         </div>
 
-        <div className="bg-[#F7F3EA] rounded-xl p-sm text-center">
+        <div className="bg-bg-inset rounded-pane p-sm text-center">
           {(profile.followers_count || 0) === 0 ? (
-            <div className="text-small font-body text-text-muted">No followers yet</div>
+            <div className="text-small text-fg-subtle">No followers yet</div>
           ) : (
-            <div className="text-h2 font-heading font-bold text-[#C65A2E]">
+            <div className="text-h2 font-bold text-accent">
               {profile.followers_count}
             </div>
           )}
-          <div className="text-small font-body text-text-secondary">Followers</div>
+          <div className="text-small text-fg-muted">Followers</div>
         </div>
 
-        <div className="bg-[#F7F3EA] rounded-xl p-4 text-center">
+        <div className="bg-bg-inset rounded-pane p-4 text-center">
           {(profile.following_count || 0) === 0 ? (
-            <div className="text-small font-body text-text-muted">Not following anyone</div>
+            <div className="text-small text-fg-subtle">Not following anyone</div>
           ) : (
-            <div className="text-h2 font-heading font-bold text-[#C65A2E]">
+            <div className="text-h2 font-bold text-accent">
               {profile.following_count}
             </div>
           )}
-          <div className="text-small font-body text-text-secondary">Following</div>
+          <div className="text-small text-fg-muted">Following</div>
         </div>
       </div>
 
       {/* Additional Info */}
-      <div className="space-y-3 text-small font-body">
+      <div className="space-y-3 text-small">
         <div className="flex justify-between items-center">
-          <span className="text-text-secondary font-body">Member since</span>
-          <span className="text-text-primary font-body font-medium">
+          <span className="text-fg-muted">Member since</span>
+          <span className="text-fg font-medium">
             {formatDate(profile.created_at)}
           </span>
         </div>
 
         {profile.last_tasted_at && (
           <div className="flex justify-between items-center">
-            <span className="text-text-secondary font-body">Last tasting</span>
-            <span className="text-text-primary font-body font-medium">
+            <span className="text-fg-muted">Last tasting</span>
+            <span className="text-fg font-medium">
               {formatDate(profile.last_tasted_at)}
             </span>
           </div>
         )}
 
         <div className="flex justify-between items-center">
-          <span className="text-text-secondary font-body">Email verified</span>
+          <span className="text-fg-muted">Email verified</span>
           <div className="flex items-center">
             {profile.email_confirmed ? (
               <>
                 <svg
-                  className="w-4 h-4 text-[#22C55E] mr-1"
+                  className="w-4 h-4 text-signal-good mr-1"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -206,12 +206,12 @@ export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayPro
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-success font-body font-medium">Verified</span>
+                <span className="text-signal-good font-medium">Verified</span>
               </>
             ) : (
               <>
                 <svg
-                  className="w-4 h-4 text-[#F59E0B] mr-1"
+                  className="w-4 h-4 text-signal-warn mr-1"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -221,7 +221,7 @@ export default function ProfileDisplay({ profile, authEmail }: ProfileDisplayPro
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-warning font-body font-medium">Pending</span>
+                <span className="text-signal-warn font-medium">Pending</span>
               </>
             )}
           </div>

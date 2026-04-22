@@ -56,7 +56,7 @@ const TemplatesPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
@@ -66,46 +66,46 @@ const TemplatesPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-sans text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
+    <div className="bg-bg dark:bg-bg font-sans text-fg dark:text-fg min-h-screen pb-20">
       <main className="container mx-auto px-md py-lg max-w-xl">
         <div className="mb-lg">
           <button
             onClick={() => router.back()}
-            className="flex items-center text-text-secondary hover:text-text-primary mb-sm transition-colors"
+            className="flex items-center text-fg-muted hover:text-fg mb-sm transition-colors"
           >
             <ChevronLeft size={20} className="mr-2" />
             Back
           </button>
-          <h1 className="text-h1 font-heading font-bold text-text-primary mb-xs">
+          <h1 className="text-h1 font-bold text-fg mb-xs">
             Choose Template
           </h1>
-          <p className="text-body text-text-secondary">Select a preset tasting protocol</p>
+          <p className="text-body text-fg-muted">Select a preset tasting protocol</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
           <button
             onClick={() => router.push('/taste/create/study/new')}
-            className="card p-md text-left hover:shadow-lg transition-all border-2 border-dashed border-primary-200 flex flex-col justify-center items-center text-center min-h-[160px]"
+            className="surface-page p-md text-left hover:shadow-md transition-all border-2 border-dashed border-primary-200 flex flex-col justify-center items-center text-center min-h-[160px] rounded-pane"
           >
             <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mb-3 text-primary-600">
               <Plus size={24} />
             </div>
-            <h3 className="font-heading font-semibold text-lg mb-1 text-primary-600">Create New</h3>
-            <p className="text-sm text-text-secondary">Start from scratch</p>
+            <h3 className="font-semibold text-lg mb-1 text-primary-600">Create New</h3>
+            <p className="text-sm text-fg-muted">Start from scratch</p>
           </button>
 
           {userTemplates.map((template) => (
             <button
               key={template.id}
               onClick={() => handleSelectUserTemplate(template.id)}
-              className="card p-md text-left hover:shadow-lg transition-all relative group"
+              className="surface-page p-md text-left hover:shadow-md transition-all relative group rounded-pane"
             >
               <div className="absolute top-3 right-3 bg-amber-100 text-amber-800 text-[10px] uppercase font-bold px-2 py-1 rounded">
                 Custom
               </div>
-              <h3 className="font-heading font-semibold text-lg mb-2">{template.name}</h3>
-              <p className="text-sm text-text-secondary mb-3">Base: {template.base_category}</p>
-              <span className="text-xs text-text-secondary">
+              <h3 className="font-semibold text-lg mb-2">{template.name}</h3>
+              <p className="text-sm text-fg-muted mb-3">Base: {template.base_category}</p>
+              <span className="text-xs text-fg-muted">
                 Created {new Date(template.created_at).toLocaleDateString()}
               </span>
             </button>
@@ -115,10 +115,10 @@ const TemplatesPage: React.FC = () => {
             <button
               key={template.id}
               onClick={() => handleSelectTemplate(template.id)}
-              className="card p-md text-left hover:shadow-lg transition-all"
+              className="surface-page p-md text-left hover:shadow-md transition-all rounded-pane"
             >
-              <h3 className="font-heading font-semibold text-lg mb-2">{template.name}</h3>
-              <p className="text-sm text-text-secondary mb-2">{template.description}</p>
+              <h3 className="font-semibold text-lg mb-2">{template.name}</h3>
+              <p className="text-sm text-fg-muted mb-2">{template.description}</p>
               <span className="inline-block px-2 py-1 bg-primary/10 text-primary text-xs rounded">
                 {template.baseCategory}
               </span>

@@ -22,11 +22,11 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   if (templates.length === 0) {
     return (
       <div className="card p-lg text-center">
-        <FileText size={48} className="mx-auto mb-md text-text-secondary opacity-50" />
-        <p className="text-body text-text-secondary">
+        <FileText size={48} className="mx-auto mb-md text-fg-muted opacity-50" />
+        <p className="text-body text-fg-muted">
           No templates available for this category yet.
         </p>
-        <p className="text-small text-text-secondary mt-xs">
+        <p className="text-small text-fg-muted mt-xs">
           You can still create a custom tasting session.
         </p>
       </div>
@@ -36,10 +36,10 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   return (
     <div className="space-y-md">
       <div className="flex items-center justify-between mb-md">
-        <h3 className="text-h3 font-heading font-semibold text-text-primary">
+        <h3 className="text-h3 font-semibold text-fg">
           Choose a Template
         </h3>
-        <p className="text-small text-text-secondary">
+        <p className="text-small text-fg-muted">
           {templates.length} template{templates.length !== 1 ? 's' : ''} available
         </p>
       </div>
@@ -55,10 +55,10 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                   onSelectTemplate(template);
                 }
               }}
-              className={`w-full card p-md text-left transition-all hover:shadow-lg ${
+              className={`w-full card p-md text-left transition-all hover:shadow-md ${
                 selectedTemplateId === template.id
                   ? 'border-2 border-primary bg-primary/5'
-                  : 'border border-border-default hover:border-primary/50'
+                  : 'border border-line hover:border-primary/50'
               }`}
             >
               <div className="flex items-start justify-between mb-sm">
@@ -67,13 +67,13 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                     <span className="text-2xl">{template.icon}</span>
                   )}
                   <div>
-                    <h4 className="text-body font-semibold text-text-primary">
+                    <h4 className="text-body font-semibold text-fg">
                       {template.name}
                     </h4>
                     {template.isOfficial && (
                       <div className="flex items-center gap-xs mt-xs">
-                        <Star size={12} className="text-yellow-500 fill-yellow-500" />
-                        <span className="text-xs text-yellow-700 font-medium">Official</span>
+                        <Star size={12} className="text-signal-warn fill-signal-warn" />
+                        <span className="text-xs text-signal-warn font-medium">Official</span>
                       </div>
                     )}
                   </div>
@@ -87,11 +87,11 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                 )}
               </div>
 
-              <p className="text-small text-text-secondary mb-sm">
+              <p className="text-small text-fg-muted mb-sm">
                 {template.description}
               </p>
 
-              <div className="flex items-center justify-between text-xs text-text-secondary">
+              <div className="flex items-center justify-between text-xs text-fg-muted">
                 <span>{template.fields.length} fields</span>
                 {template.maxScore && (
                   <span>Max Score: {template.maxScore}</span>
@@ -117,24 +117,24 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
 
             {/* Template Details */}
             {showDetails === template.id && selectedTemplateId === template.id && (
-              <div className="mt-sm card p-md bg-background-light border border-border-default">
-                <h5 className="text-small font-semibold text-text-primary mb-sm">
+              <div className="mt-sm card p-md bg-bg-inset border border-line">
+                <h5 className="text-small font-semibold text-fg mb-sm">
                   Template Fields
                 </h5>
                 <div className="space-y-xs">
                   {template.fields.map((field) => (
                     <div 
                       key={field.id}
-                      className="flex items-center justify-between text-xs py-xs px-sm bg-white dark:bg-zinc-800 rounded"
+                      className="flex items-center justify-between text-xs py-xs px-sm bg-bg-surface rounded-soft border border-line"
                     >
                       <div className="flex items-center gap-sm">
-                        <span className="text-text-primary font-medium">{field.label}</span>
+                        <span className="text-fg font-medium">{field.label}</span>
                         {field.required && (
-                          <span className="text-error">*</span>
+                          <span className="text-signal-danger">*</span>
                         )}
                       </div>
                       <div className="flex items-center gap-sm">
-                        <span className="text-text-secondary capitalize">{field.type}</span>
+                        <span className="text-fg-muted capitalize">{field.type}</span>
                         {field.category && (
                           <span className="px-xs py-0.5 bg-primary/10 text-primary rounded text-xs">
                             {field.category}
@@ -146,8 +146,8 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                 </div>
 
                 {template.scoringMethod && (
-                  <div className="mt-sm pt-sm border-t border-border-default">
-                    <p className="text-xs text-text-secondary">
+                  <div className="mt-sm pt-sm border-t border-line">
+                    <p className="text-xs text-fg-muted">
                       <span className="font-semibold">Scoring Method:</span>{' '}
                       {template.scoringMethod.charAt(0).toUpperCase() + template.scoringMethod.slice(1)}
                     </p>
@@ -160,7 +160,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
       </div>
 
       {/* Custom Template Option */}
-      <div className="card p-md border-2 border-dashed border-border-default hover:border-primary/50 transition-all">
+      <div className="card p-md border-2 border-dashed border-line hover:border-primary/50 transition-all">
         <button
           onClick={() => onSelectTemplate({
             id: 'custom',
@@ -172,14 +172,14 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
           className="w-full text-left"
         >
           <div className="flex items-center gap-md">
-            <div className="w-12 h-12 rounded-full bg-background-light flex items-center justify-center">
-              <FileText size={24} className="text-text-secondary" />
+            <div className="w-12 h-12 rounded-soft bg-bg-inset flex items-center justify-center">
+              <FileText size={24} className="text-fg-muted" />
             </div>
             <div>
-              <h4 className="text-body font-semibold text-text-primary mb-xs">
+              <h4 className="text-body font-semibold text-fg mb-xs">
                 Custom Template
               </h4>
-              <p className="text-small text-text-secondary">
+              <p className="text-small text-fg-muted">
                 Create your own custom tasting form with your preferred fields
               </p>
             </div>
@@ -189,4 +189,3 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
     </div>
   );
 };
-

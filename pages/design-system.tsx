@@ -76,7 +76,7 @@ const Section: React.FC<SectionProps> = ({ id, title, description, children }) =
     id={id}
     className="scroll-mt-24 py-12 border-b border-line dark:border-line last:border-0"
   >
-    <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">{title}</h2>
+    <h2 className="text-2xl font-bold text-fg dark:text-white mb-2">{title}</h2>
     {description && (
       <p className="text-fg-muted dark:text-fg-subtle mb-8 max-w-2xl">{description}</p>
     )}
@@ -121,15 +121,15 @@ const ColorSwatch: React.FC<ColorSwatchProps> = ({
   <div className="flex flex-col">
     <div
       className={cn(
-        'w-full h-20 rounded-xl flex items-end p-3 shadow-sm',
-        textColor === 'light' ? 'text-white' : 'text-zinc-900'
+        'w-full h-20 rounded-pane flex items-end p-3 shadow-sm',
+        textColor === 'light' ? 'text-white' : 'text-fg'
       )}
       style={{ backgroundColor: value }}
     >
       <span className="text-xs font-mono opacity-90">{value}</span>
     </div>
     <div className="mt-2">
-      <p className="font-medium text-sm text-zinc-900 dark:text-white">{name}</p>
+      <p className="font-medium text-sm text-fg dark:text-white">{name}</p>
       {variable && <p className="text-xs text-fg-subtle font-mono">{variable}</p>}
       {tailwind && <p className="text-xs text-fg-subtle">{tailwind}</p>}
       {usage && <p className="text-xs text-fg-subtle mt-1">{usage}</p>}
@@ -229,7 +229,7 @@ export default function DesignSystemPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center gap-4">
-                <h1 className="text-xl font-bold text-zinc-900 dark:text-white">
+                <h1 className="text-xl font-bold text-fg dark:text-white">
                   Flavatix Design System
                 </h1>
                 <span className="hidden sm:inline-block px-2 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full">
@@ -241,7 +241,7 @@ export default function DesignSystemPage() {
                 {/* Dark mode toggle */}
                 <button
                   onClick={() => setIsDark(!isDark)}
-                  className="p-2 rounded-xl hover:bg-bg-inset dark:hover:bg-bg-hover transition-colors"
+                  className="p-2 rounded-pane hover:bg-bg-inset dark:hover:bg-bg-hover transition-colors"
                   aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
                 >
                   {isDark ? (
@@ -254,7 +254,7 @@ export default function DesignSystemPage() {
                 {/* Mobile nav toggle */}
                 <button
                   onClick={() => setMobileNavOpen(!mobileNavOpen)}
-                  className="lg:hidden p-2 rounded-xl hover:bg-bg-inset dark:hover:bg-bg-hover transition-colors"
+                  className="lg:hidden p-2 rounded-pane hover:bg-bg-inset dark:hover:bg-bg-hover transition-colors"
                   aria-label="Toggle navigation"
                 >
                   <svg
@@ -284,7 +284,7 @@ export default function DesignSystemPage() {
                     <button
                       onClick={() => scrollToSection(id)}
                       className={cn(
-                        'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                        'w-full text-left px-4 py-2 rounded-soft text-sm font-medium transition-colors',
                         activeSection === id
                           ? 'bg-primary/10 text-primary'
                           : 'text-fg-muted dark:text-fg-subtle hover:bg-bg-inset dark:hover:bg-bg-hover'
@@ -310,7 +310,7 @@ export default function DesignSystemPage() {
                       <button
                         onClick={() => scrollToSection(id)}
                         className={cn(
-                          'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                          'w-full text-left px-4 py-2 rounded-soft text-sm font-medium transition-colors',
                           activeSection === id
                             ? 'bg-primary/10 text-primary'
                             : 'text-fg-muted dark:text-fg-subtle hover:bg-bg-inset dark:hover:bg-bg-hover'
@@ -484,21 +484,21 @@ export default function DesignSystemPage() {
                       name="Success"
                       value="#10b981"
                       variable="--color-success"
-                      tailwind="bg-success"
+                      tailwind="bg-signal-good"
                       usage="Confirmations, valid"
                     />
                     <ColorSwatch
                       name="Warning"
                       value="#f59e0b"
                       variable="--color-warning"
-                      tailwind="bg-warning"
+                      tailwind="bg-signal-warn"
                       usage="Caution, attention"
                     />
                     <ColorSwatch
                       name="Error"
                       value="#ef4444"
                       variable="--color-error"
-                      tailwind="bg-error"
+                      tailwind="bg-signal-danger"
                       usage="Errors, destructive"
                     />
                     <ColorSwatch
@@ -590,21 +590,21 @@ export default function DesignSystemPage() {
                 {/* Background & Surface Colors */}
                 <SubSection title="Background & Surface Colors">
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    <div className="p-4 rounded-xl border-2 border-dashed border-line dark:border-line bg-bg-surface dark:bg-bg-surface">
-                      <p className="text-sm font-medium text-zinc-900 dark:text-white">
+                    <div className="p-4 rounded-pane border-2 border-dashed border-line dark:border-line bg-bg-surface dark:bg-bg-surface">
+                      <p className="text-sm font-medium text-fg dark:text-white">
                         App Background
                       </p>
                       <p className="text-xs text-fg-subtle font-mono">--color-background-app</p>
                       <p className="text-xs text-fg-subtle">Light: #FFFFFF / Dark: #18181b</p>
                     </div>
-                    <div className="p-4 rounded-xl bg-bg-surface dark:bg-bg-surface">
+                    <div className="p-4 rounded-pane bg-bg-surface dark:bg-bg-surface">
                       <p className="text-sm font-medium text-fg dark:text-fg">
                         Surface / Card
                       </p>
                       <p className="text-xs text-fg-subtle font-mono">--color-background-surface</p>
                       <p className="text-xs text-fg-subtle">Light: #FFFFFF / Dark: #2E2A25</p>
                     </div>
-                    <div className="p-4 rounded-xl bg-bg-inset dark:bg-bg-inset">
+                    <div className="p-4 rounded-pane bg-bg-inset dark:bg-bg-inset">
                       <p className="text-sm font-medium text-fg dark:text-fg">Muted</p>
                       <p className="text-xs text-fg-subtle font-mono">--color-background-muted</p>
                       <p className="text-xs text-fg-subtle">Subtle backgrounds</p>
@@ -623,7 +623,7 @@ export default function DesignSystemPage() {
               >
                 {/* Heading Scale */}
                 <SubSection title="Heading Scale">
-                  <div className="space-y-6 bg-bg-surface dark:bg-bg-surface rounded-2xl p-6">
+                  <div className="space-y-6 bg-bg-surface dark:bg-bg-surface rounded-pane p-6">
                     <div className="border-b border-line dark:border-line pb-4">
                       <h1 className="text-h1 font-bold text-fg dark:text-fg">
                         Heading 1 - Page Titles
@@ -665,7 +665,7 @@ export default function DesignSystemPage() {
                       </p>
                     </div>
                     <div>
-                      <h6 className="text-h6 font-medium text-zinc-900 dark:text-white">
+                      <h6 className="text-h6 font-medium text-fg dark:text-white">
                         Heading 6 - Small Headers
                       </h6>
                       <p className="text-xs text-fg-subtle font-mono mt-1">
@@ -677,7 +677,7 @@ export default function DesignSystemPage() {
 
                 {/* Body Text */}
                 <SubSection title="Body Text Scale">
-                  <div className="space-y-6 bg-bg-surface dark:bg-bg-surface rounded-2xl p-6">
+                  <div className="space-y-6 bg-bg-surface dark:bg-bg-surface rounded-pane p-6">
                     <div>
                       <p className="text-lg text-fg dark:text-fg">
                         Large body text for hero sections and feature highlights. Used sparingly for
@@ -721,7 +721,7 @@ export default function DesignSystemPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <Card variant="default" padding="md">
                       <p className="text-xs text-fg-subtle mb-1">Tasting ID</p>
-                      <p className="font-mono text-sm text-zinc-900 dark:text-white">
+                      <p className="font-mono text-sm text-fg dark:text-white">
                         TST-2024-001234
                       </p>
                     </Card>
@@ -733,19 +733,19 @@ export default function DesignSystemPage() {
                     </Card>
                     <Card variant="default" padding="md">
                       <p className="text-xs text-fg-subtle mb-1">Spirit Name</p>
-                      <p className="text-lg font-semibold text-zinc-900 dark:text-white">
+                      <p className="text-lg font-semibold text-fg dark:text-white">
                         Casa Noble Añejo
                       </p>
                       <p className="text-sm text-fg-subtle">Jalisco, Mexico</p>
                     </Card>
                     <Card variant="default" padding="md">
                       <p className="text-xs text-fg-subtle mb-1">Date/Time</p>
-                      <p className="text-sm text-zinc-900 dark:text-white">December 9, 2024</p>
+                      <p className="text-sm text-fg dark:text-white">December 9, 2024</p>
                       <p className="text-xs text-fg-subtle">2:30 PM</p>
                     </Card>
                     <Card variant="default" padding="md">
                       <p className="text-xs text-fg-subtle mb-1">Price Display</p>
-                      <p className="text-xl font-semibold text-zinc-900 dark:text-white">
+                      <p className="text-xl font-semibold text-fg dark:text-white">
                         $89<span className="text-sm text-fg-subtle">.99</span>
                       </p>
                     </Card>
@@ -761,23 +761,23 @@ export default function DesignSystemPage() {
                 {/* Font Weights */}
                 <SubSection title="Font Weights">
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-xl">
+                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-pane">
                       <p className="font-light text-2xl text-fg dark:text-fg">Aa</p>
                       <p className="text-xs text-fg-subtle mt-2">Light (300)</p>
                     </div>
-                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-xl">
+                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-pane">
                       <p className="font-normal text-2xl text-fg dark:text-fg">Aa</p>
                       <p className="text-xs text-fg-subtle mt-2">Normal (400)</p>
                     </div>
-                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-xl">
+                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-pane">
                       <p className="font-medium text-2xl text-fg dark:text-fg">Aa</p>
                       <p className="text-xs text-fg-subtle mt-2">Medium (500)</p>
                     </div>
-                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-xl">
+                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-pane">
                       <p className="font-semibold text-2xl text-fg dark:text-fg">Aa</p>
                       <p className="text-xs text-fg-subtle mt-2">Semibold (600)</p>
                     </div>
-                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-xl">
+                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-pane">
                       <p className="font-bold text-2xl text-fg dark:text-fg">Aa</p>
                       <p className="text-xs text-fg-subtle mt-2">Bold (700)</p>
                     </div>
@@ -1097,7 +1097,7 @@ export default function DesignSystemPage() {
                   <Card
                     variant="default"
                     onClick={() => alert('Card clicked!')}
-                    className="cursor-pointer transition hover:shadow-lg"
+                    className="cursor-pointer transition hover:shadow-md"
                   >
                     <CardHeader title="Interactive Card" subtitle="Click me!" />
                     <CardContent>
@@ -1232,7 +1232,7 @@ export default function DesignSystemPage() {
                   </Showcase>
                   <Showcase title="Colors">
                     <LoadingSpinner color="primary" />
-                    <div className="p-4 bg-primary rounded-xl">
+                    <div className="p-4 bg-primary rounded-pane">
                       <LoadingSpinner color="white" />
                     </div>
                     <LoadingSpinner color="zinc" />
@@ -1283,7 +1283,7 @@ export default function DesignSystemPage() {
                 <SubSection title="Alert Variants">
                   <div className="space-y-4 max-w-2xl">
                     {/* Info Alert */}
-                    <div className="flex items-start gap-3 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-start gap-3 p-4 rounded-pane bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
                       <Info className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="font-medium text-blue-900 dark:text-blue-100">Information</p>
@@ -1294,7 +1294,7 @@ export default function DesignSystemPage() {
                     </div>
 
                     {/* Success Alert */}
-                    <div className="flex items-start gap-3 p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+                    <div className="flex items-start gap-3 p-4 rounded-pane bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
                       <Check className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="font-medium text-green-900 dark:text-green-100">Success</p>
@@ -1305,7 +1305,7 @@ export default function DesignSystemPage() {
                     </div>
 
                     {/* Warning Alert */}
-                    <div className="flex items-start gap-3 p-4 rounded-xl bg-signal-warn/10 dark:bg-signal-warn/20 border border-signal-warn/20 dark:border-signal-warn/30">
+                    <div className="flex items-start gap-3 p-4 rounded-pane bg-signal-warn/10 dark:bg-signal-warn/20 border border-signal-warn/20 dark:border-signal-warn/30">
                       <AlertTriangle className="w-5 h-5 text-signal-warn shrink-0 mt-0.5" />
                       <div>
                         <p className="font-medium text-signal-warn dark:text-signal-warn">Warning</p>
@@ -1316,7 +1316,7 @@ export default function DesignSystemPage() {
                     </div>
 
                     {/* Error Alert */}
-                    <div className="flex items-start gap-3 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                    <div className="flex items-start gap-3 p-4 rounded-pane bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
                       <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
                       <div className="flex-1">
                         <p className="font-medium text-red-900 dark:text-red-100">Error</p>
@@ -1480,7 +1480,7 @@ export default function DesignSystemPage() {
                 <SubSection title="Touch Targets">
                   <div className="space-y-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-11 h-11 border-2 border-dashed border-primary rounded-xl flex items-center justify-center text-xs text-primary font-medium">
+                      <div className="w-11 h-11 border-2 border-dashed border-primary rounded-pane flex items-center justify-center text-xs text-primary font-medium">
                         44px
                       </div>
                       <p className="text-sm text-fg-muted dark:text-fg-subtle">
@@ -1488,7 +1488,7 @@ export default function DesignSystemPage() {
                       </p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 border-2 border-dashed border-secondary rounded-xl flex items-center justify-center text-xs text-secondary font-medium">
+                      <div className="w-12 h-12 border-2 border-dashed border-secondary rounded-pane flex items-center justify-center text-xs text-secondary font-medium">
                         48px
                       </div>
                       <p className="text-sm text-fg-muted dark:text-fg-subtle">
@@ -1509,7 +1509,7 @@ export default function DesignSystemPage() {
                     <input
                       type="text"
                       placeholder="Focusable input"
-                      className="px-4 py-2 border-2 border-line dark:border-line rounded-xl focus:border-primary focus:outline-none focus:border-accent outline-none bg-bg-surface dark:bg-bg-surface text-fg dark:text-fg"
+                      className="px-4 py-2 border-2 border-line dark:border-line rounded-pane focus:border-primary focus:outline-none focus:border-accent outline-none bg-bg-surface dark:bg-bg-surface text-fg dark:text-fg"
                     />
                   </div>
                 </SubSection>
@@ -1517,19 +1517,19 @@ export default function DesignSystemPage() {
                 {/* Color Contrast */}
                 <SubSection title="Color Contrast">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
-                    <div className="p-4 bg-bg-surface dark:bg-bg rounded-xl border border-line dark:border-line">
+                    <div className="p-4 bg-bg-surface dark:bg-bg rounded-pane border border-line dark:border-line">
                       <p className="text-fg dark:text-fg font-medium">Primary Text</p>
                       <p className="text-xs text-fg-subtle mt-1">WCAG AAA compliant (7:1+)</p>
                     </div>
-                    <div className="p-4 bg-bg-surface dark:bg-bg rounded-xl border border-line dark:border-line">
+                    <div className="p-4 bg-bg-surface dark:bg-bg rounded-pane border border-line dark:border-line">
                       <p className="text-fg-muted dark:text-fg-subtle">Secondary Text</p>
                       <p className="text-xs text-fg-subtle mt-1">WCAG AA compliant (4.5:1+)</p>
                     </div>
-                    <div className="p-4 bg-primary rounded-xl">
+                    <div className="p-4 bg-primary rounded-pane">
                       <p className="text-white font-medium">White on Primary</p>
                       <p className="text-xs text-white/80 mt-1">WCAG AA compliant</p>
                     </div>
-                    <div className="p-4 bg-zinc-900 dark:bg-white rounded-xl">
+                    <div className="p-4 bg-bg dark:bg-white rounded-pane">
                       <p className="text-fg-inverse dark:text-fg font-medium">Inverse Text</p>
                       <p className="text-xs text-white/80 dark:text-fg-muted mt-1">
                         WCAG AAA compliant

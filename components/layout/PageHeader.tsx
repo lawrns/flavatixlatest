@@ -77,8 +77,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   return (
     <header
       className={cn(
-        'w-full bg-background-app dark:bg-zinc-900',
-        sticky && 'sticky top-0 z-40  bg-background-app/95 dark:bg-zinc-900/95',
+        'w-full bg-bg dark:bg-bg',
+        sticky && 'sticky top-0 z-40  bg-bg/95 dark:bg-bg/95',
         className
       )}
     >
@@ -113,7 +113,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
                       {crumb.label}
                     </a>
                   ) : (
-                    <span className="text-fg-muted dark:text-zinc-300">
+                    <span className="text-fg-muted dark:text-fg-muted">
                       {crumb.label}
                     </span>
                   )}
@@ -132,8 +132,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
                 className={cn(
                   'flex items-center gap-1 text-fg-muted dark:text-fg-subtle',
                   'hover:text-primary transition-colors',
-                  'min-h-[44px] min-w-[44px] -ml-2 px-2 rounded-lg',
-                  'hover:bg-bg-inset dark:hover:bg-zinc-800'
+                  'min-h-[44px] min-w-[44px] -ml-2 px-2 rounded-soft',
+                  'hover:bg-bg-inset dark:hover:bg-bg-surface'
                 )}
                 aria-label={backLabel}
               >
@@ -159,7 +159,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             <div className="min-w-0">
               <h1
                 className={cn(
-                  'font-bold text-zinc-900 dark:text-white truncate',
+                  'font-bold text-fg dark:text-white truncate',
                   titleSizes[size]
                 )}
               >
@@ -220,8 +220,8 @@ export const BackButton: React.FC<BackButtonProps> = ({
       className={cn(
         'inline-flex items-center gap-2 text-fg-muted dark:text-fg-subtle',
         'hover:text-primary transition-colors',
-        'min-h-[44px] px-3 py-2 rounded-lg',
-        'hover:bg-bg-inset dark:hover:bg-zinc-800',
+        'min-h-[44px] px-3 py-2 rounded-soft',
+        'hover:bg-bg-inset dark:hover:bg-bg-surface',
         className
       )}
     >

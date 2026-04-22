@@ -87,7 +87,7 @@ export default function ShareButton({ disabled, onShare, className = '' }: Share
       <button
         onClick={handleShareClick}
         disabled={disabled || loading}
-        className={`flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors ${className}`}
+        className={`flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-fg-subtle disabled:cursor-not-allowed transition-colors ${className}`}
       >
         <Share2 className={`w-4 h-4 ${loading ? 'animate-pulse' : ''}`} />
         Share
@@ -96,19 +96,19 @@ export default function ShareButton({ disabled, onShare, className = '' }: Share
       {/* Share Modal */}
       {showModal && shareData && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 p-4">
-          <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-xl max-w-md w-full p-6 relative">
+          <div className="bg-white dark:bg-bg-surface rounded-soft shadow-md max-w-md w-full p-6 relative">
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+              className="absolute top-4 right-4 text-fg-subtle hover:text-fg-muted"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-zinc-50 mb-4">Share Your Taste Profile</h2>
+            <h2 className="text-2xl font-bold text-fg dark:text-fg mb-4">Share Your Taste Profile</h2>
 
             {/* Preview Image */}
             {shareData.imageUrl && (
-              <div className="mb-4 rounded-lg overflow-hidden border border-gray-200">
+              <div className="mb-4 rounded-soft overflow-hidden border border-line">
                 <Image
                   src={shareData.imageUrl}
                   alt="Flavor Wheel Preview"
@@ -121,7 +121,7 @@ export default function ShareButton({ disabled, onShare, className = '' }: Share
             )}
 
             {/* Share Text */}
-            <p className="text-gray-700 dark:text-zinc-200 mb-4 text-sm bg-gray-50 dark:bg-zinc-700/50 p-3 rounded-md">{shareData.text}</p>
+            <p className="text-fg-muted dark:text-fg-muted mb-4 text-sm bg-bg-hover dark:bg-bg-inset/50 p-3 rounded-md">{shareData.text}</p>
 
             {/* Social Share Buttons */}
             <div className="grid grid-cols-3 gap-2 mb-4">
@@ -162,11 +162,11 @@ export default function ShareButton({ disabled, onShare, className = '' }: Share
                 type="text"
                 value={shareData.url}
                 readOnly
-                className="flex-1 px-3 py-2 border border-gray-300 dark:border-zinc-600 rounded-md bg-gray-50 dark:bg-zinc-700 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-fg-subtle dark:placeholder:text-fg-subtle"
+                className="flex-1 px-3 py-2 border border-line-strong dark:border-line-strong rounded-md bg-bg-hover dark:bg-bg-inset text-sm text-fg dark:text-fg placeholder:text-fg-subtle dark:placeholder:text-fg-subtle"
               />
               <button
                 onClick={copyToClipboard}
-                className="px-4 py-2 bg-gray-100 dark:bg-zinc-700 text-gray-700 dark:text-zinc-200 rounded-md hover:bg-gray-200 dark:hover:bg-zinc-600 transition-colors flex items-center gap-2"
+                className="px-4 py-2 bg-bg-inset dark:bg-bg-inset text-fg-muted dark:text-fg-muted rounded-md hover:bg-line dark:hover:bg-fg-muted transition-colors flex items-center gap-2"
               >
                 {copied ? (
                   <Check className="w-4 h-4 text-green-600" />
@@ -177,7 +177,7 @@ export default function ShareButton({ disabled, onShare, className = '' }: Share
               </button>
             </div>
 
-            <p className="text-xs text-gray-500 mt-4 text-center">
+            <p className="text-xs text-fg-subtle mt-4 text-center">
               Made with Flavatix - Where Tasters Connect
             </p>
           </div>

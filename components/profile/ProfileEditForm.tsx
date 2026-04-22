@@ -140,7 +140,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
 
   return (
     <div className="card p-6">
-      <h3 className="text-h3 font-heading font-semibold text-text-primary dark:text-zinc-100 mb-6">
+      <h3 className="text-h3 font-semibold text-fg dark:text-fg mb-6">
         Edit Profile
       </h3>
 
@@ -149,7 +149,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
         <div>
           <label
             htmlFor="full_name"
-            className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2"
+            className="block text-small font-medium text-fg-muted dark:text-fg-muted mb-2"
           >
             Full Name
           </label>
@@ -158,11 +158,11 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
             id="full_name"
             value={formData.full_name}
             onChange={(e) => handleInputChange('full_name', e.target.value)}
-            className="w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary dark:text-zinc-100 dark:bg-zinc-800 dark:border-zinc-600 border-border focus:border-primary touch-manipulation"
+            className="w-full px-4 py-3 border-2 rounded-pane focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body text-fg dark:text-fg dark:bg-bg-surface dark:border-line-strong border-line focus:border-primary touch-manipulation"
             placeholder="Enter your full name"
             aria-describedby="full_name-help"
           />
-          <p id="full_name-help" className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          <p id="full_name-help" className="text-xs text-fg-subtle dark:text-fg-subtle mt-1">
             This will be displayed on your profile
           </p>
         </div>
@@ -171,7 +171,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
         <div>
           <label
             htmlFor="username"
-            className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2"
+            className="block text-small font-medium text-fg-muted dark:text-fg-muted mb-2"
           >
             Username
           </label>
@@ -181,12 +181,12 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
               id="username"
               value={formData.username}
               onChange={(e) => handleInputChange('username', e.target.value)}
-              className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary dark:text-zinc-100 dark:bg-zinc-800 dark:border-zinc-600 touch-manipulation ${
+              className={`w-full px-4 py-3 border-2 rounded-pane focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body text-fg dark:text-fg dark:bg-bg-surface dark:border-line-strong touch-manipulation ${
                 usernameStatus === 'available'
-                  ? 'border-success focus:border-success'
+                  ? 'border-signal-good focus:border-signal-good'
                   : usernameStatus === 'taken' || usernameStatus === 'too-short'
-                    ? 'border-error focus:border-error'
-                    : 'border-border focus:border-primary'
+                    ? 'border-signal-danger focus:border-signal-danger'
+                    : 'border-line focus:border-primary'
               }`}
               placeholder="Choose a unique username"
               aria-describedby="username-help username-status"
@@ -198,7 +198,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
                   <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
                 )}
                 {usernameStatus === 'available' && (
-                  <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-5 h-5 text-signal-good" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
                       d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -207,7 +207,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
                   </svg>
                 )}
                 {(usernameStatus === 'taken' || usernameStatus === 'too-short') && (
-                  <svg className="w-5 h-5 text-error" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-5 h-5 text-signal-danger" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
                       d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -218,13 +218,13 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
               </div>
             )}
           </div>
-          <p id="username-help" className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          <p id="username-help" className="text-xs text-fg-subtle dark:text-fg-subtle mt-1">
             Choose a unique username for your profile
           </p>
           {usernameStatus === 'too-short' && (
             <p
               id="username-status"
-              className="text-small font-body text-error dark:text-red-400 mt-1"
+              className="text-small text-signal-danger dark:text-signal-danger mt-1"
               role="alert"
             >
               Username must be at least 3 characters
@@ -233,7 +233,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
           {usernameStatus === 'taken' && (
             <p
               id="username-status"
-              className="text-small font-body text-error dark:text-red-400 mt-1"
+              className="text-small text-signal-danger dark:text-signal-danger mt-1"
               role="alert"
             >
               Username is already taken
@@ -242,7 +242,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
           {usernameStatus === 'available' && (
             <p
               id="username-status"
-              className="text-small font-body text-success dark:text-green-400 mt-1"
+              className="text-small text-signal-good dark:text-signal-good mt-1"
             >
               Username is available
             </p>
@@ -251,31 +251,31 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
 
         {/* Bio */}
         <div>
-          <label className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2">
+          <label className="block text-small font-medium text-fg-muted dark:text-fg-muted mb-2">
             Bio
           </label>
           <textarea
             value={formData.bio}
             onChange={(e) => handleInputChange('bio', e.target.value)}
-            className="w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary dark:text-zinc-100 dark:bg-zinc-800 dark:border-zinc-600 border-border focus:border-primary resize-none"
+            className="w-full px-4 py-3 border-2 rounded-pane focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body text-fg dark:text-fg dark:bg-bg-surface dark:border-line-strong border-line focus:border-primary resize-none"
             placeholder="Tell us about yourself..."
             rows={3}
             maxLength={200}
           />
-          <div className="text-right text-small font-body text-text-muted dark:text-fg-subtle mt-1">
+          <div className="text-right text-small text-fg-subtle mt-1">
             {formData.bio?.length || 0}/200
           </div>
         </div>
 
         {/* Preferred Category */}
         <div>
-          <label className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2">
+          <label className="block text-small font-medium text-fg-muted dark:text-fg-muted mb-2">
             Preferred Category
           </label>
           <select
             value={formData.preferred_category}
             onChange={(e) => handleInputChange('preferred_category', e.target.value)}
-            className="w-full px-4 py-3 border-2 rounded-xl focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body font-body text-text-primary dark:text-zinc-100 dark:bg-zinc-800 dark:border-zinc-600 border-border focus:border-primary"
+            className="w-full px-4 py-3 border-2 rounded-pane focus:ring-0 focus:outline-none transition-colors min-h-[44px] text-body text-fg dark:text-fg dark:bg-bg-surface dark:border-line-strong border-line focus:border-primary"
           >
             <option value="">Select a category</option>
             {CATEGORY_OPTIONS.map((category) => (
@@ -288,7 +288,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
 
         {/* Avatar Upload */}
         <div className="relative">
-          <label className="block text-small font-body font-medium text-text-secondary dark:text-zinc-300 mb-2">
+          <label className="block text-small font-medium text-fg-muted dark:text-fg-muted mb-2">
             Profile Picture
           </label>
           <AvatarUpload
@@ -304,7 +304,7 @@ export default function ProfileEditForm({ profile, onProfileUpdate }: ProfileEdi
         <button
           type="submit"
           disabled={isLoading || (!!formData.username && usernameAvailable === false)}
-          className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-lg"
+          className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-md"
         >
           {isLoading ? (
             <div className="flex items-center justify-center">

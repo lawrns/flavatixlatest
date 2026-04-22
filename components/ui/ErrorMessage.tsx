@@ -77,7 +77,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
   return (
     <div
       className={`
-        border rounded-lg p-4 flex gap-4
+        border rounded-soft p-4 flex gap-4
         ${styles.container}
         ${className || ''}
       `}

@@ -54,16 +54,16 @@ const MobileFlavorCategory: React.FC<{
   const selectedCount = category.flavors.filter((flavor) => getFlavorScore(flavor) > 0).length;
 
   return (
-    <div className="border border-border-default rounded-lg overflow-hidden mb-sm">
+    <div className="border border-line rounded-pane overflow-hidden mb-sm">
       {/* Category Header */}
       <button
         onClick={onToggle}
-        className="w-full p-md flex items-center justify-between bg-surface-secondary hover:bg-surface-tertiary transition-colors"
+        className="w-full p-md flex items-center justify-between bg-bg-inset hover:bg-bg-surface transition-colors"
         style={{ backgroundColor: `${category.color}15` }}
       >
         <div className="flex items-center gap-sm">
           <div className="w-4 h-4 rounded-full" style={{ backgroundColor: category.color }} />
-          <span className="font-heading font-semibold text-text-primary">{category.name}</span>
+          <span className="font-semibold text-fg">{category.name}</span>
           {selectedCount > 0 && (
             <span className="bg-primary-100 text-primary-800 px-xs py-xs rounded-full text-xs font-medium">
               {selectedCount}
@@ -81,8 +81,8 @@ const MobileFlavorCategory: React.FC<{
             return (
               <div key={flavor} className="space-y-xs">
                 <div className="flex items-center justify-between">
-                  <span className="text-body font-medium text-text-primary">{flavor}</span>
-                  <span className="text-sm text-text-secondary font-semibold">
+                  <span className="text-body font-medium text-fg">{flavor}</span>
+                  <span className="text-sm text-fg-muted font-semibold">
                     {currentScore}/100
                   </span>
                 </div>
@@ -94,11 +94,11 @@ const MobileFlavorCategory: React.FC<{
                       key={score}
                       onClick={() => updateFlavorScore(flavor, currentScore === score ? 0 : score)}
                       className={`
-                        flex-1 h-12 rounded-lg border-2 font-bold text-sm transition-all duration-200
+                        flex-1 h-12 rounded-soft border-2 font-bold text-sm transition-all duration-200
                         ${
                           currentScore >= score
-                            ? 'border-transparent text-white shadow-lg'
-                            : 'border-border-default text-text-secondary hover:border-primary-400'
+                            ? 'border-transparent text-white shadow-md'
+                            : 'border-line text-fg-muted hover:border-primary-400'
                         }
                       `}
                       style={{
@@ -114,7 +114,7 @@ const MobileFlavorCategory: React.FC<{
 
                 {/* Progress bar */}
                 {currentScore > 0 && (
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-line rounded-full h-2">
                     <div
                       className="h-full rounded-full transition-all duration-300"
                       style={{
@@ -250,7 +250,7 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
     if (isMobile) {
       return (
         <div className="card p-md">
-          <h3 className="text-h4 font-heading font-semibold text-text-primary mb-md">
+          <h3 className="text-h4 font-semibold text-fg mb-md">
             Flavor Profile
           </h3>
 
@@ -270,8 +270,8 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
 
           {/* Selected Flavors Summary */}
           {Object.keys(selectedFlavors).length > 0 && (
-            <div className="mt-lg bg-surface-secondary rounded-lg p-md">
-              <h4 className="text-h5 font-heading font-semibold text-text-primary mb-sm">
+            <div className="mt-lg bg-bg-inset rounded-pane p-md">
+              <h4 className="text-h5 font-semibold text-fg mb-sm">
                 Selected Flavors ({Object.keys(selectedFlavors).length})
               </h4>
               <div className="flex flex-wrap gap-xs">
@@ -296,7 +296,7 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
     // Desktop Layout (Original)
     return (
       <div className="card p-md">
-        <h3 className="text-h4 font-heading font-semibold text-text-primary mb-md">
+        <h3 className="text-h4 font-semibold text-fg mb-md">
           Flavor Profile
         </h3>
 
@@ -316,7 +316,7 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
                 {/* SVG de la Rueda */}
                 <svg
                   viewBox="-150 -150 300 300"
-                  className="w-full h-full drop-shadow-2xl"
+                  className="w-full h-full drop-shadow-md"
                   style={{
                     filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.25))',
                     transform: `rotate(${wheelRotation}deg)`,
@@ -443,7 +443,7 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
                       fill="linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(200,200,200,0.8) 100%)"
                       stroke="rgba(255, 255, 255, 0.6)"
                       strokeWidth="3"
-                      className="drop-shadow-lg"
+                      className="drop-shadow-md"
                     />
 
                     {/* Círculo interior animado */}
@@ -477,16 +477,16 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
               className="absolute inset-0 backface-hidden"
               style={{ transform: 'rotateY(180deg)' }}
             >
-              <div className="w-full h-full bg-gradient-to-br from-surface-secondary to-surface-tertiary rounded-full border-4 border-border-primary flex items-center justify-center">
+              <div className="w-full h-full bg-gradient-to-br from-bg-inset to-bg-surface rounded-full border-4 border-line flex items-center justify-center">
                 <div className="text-center p-lg">
-                  <h4 className="text-h5 font-heading font-semibold text-text-primary mb-sm">
+                  <h4 className="text-h5 font-semibold text-fg mb-sm">
                     Flavor Analysis
                   </h4>
-                  <p className="text-body-sm text-text-secondary">
+                  <p className="text-body-sm text-fg-muted">
                     Total flavors selected: {Object.keys(selectedFlavors).length}
                   </p>
                   <div className="mt-md">
-                    <div className="text-xs text-text-tertiary">
+                    <div className="text-xs text-fg-subtle">
                       Intensity Average:{' '}
                       {Object.keys(selectedFlavors).length > 0
                         ? (
@@ -505,7 +505,7 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
           <button
             onClick={toggleWheel}
             aria-label="Toggle flavor wheel view"
-            className="absolute top-4 right-4 bg-primary-500 hover:bg-primary-600 text-white p-sm rounded-full shadow-lg transition-transform duration-300 hover:scale-110 active:scale-95"
+            className="absolute top-4 right-4 bg-primary-500 hover:bg-primary-600 text-white p-sm rounded-full shadow-md transition-transform duration-300 hover:scale-110 active:scale-95"
             style={{
               background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
               boxShadow: '0 8px 25px rgba(59, 130, 246, 0.3)',
@@ -525,7 +525,7 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
         {/* Sabores de la Categoría Activa */}
         {activeCategory && (
           <div className="mb-lg">
-            <h4 className="text-h5 font-heading font-semibold text-text-primary mb-sm">
+            <h4 className="text-h5 font-semibold text-fg mb-sm">
               {activeCategory} Flavors
             </h4>
             <div className="grid grid-cols-2 gap-sm">
@@ -536,11 +536,11 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
                   return (
                     <div
                       key={flavor}
-                      className="bg-surface-secondary rounded-lg p-sm hover:bg-surface-tertiary transition-colors duration-200"
+                      className="bg-bg-inset rounded-soft p-sm hover:bg-bg-surface transition-colors duration-200"
                     >
                       <div className="flex items-center justify-between mb-xs">
-                        <span className="text-body-sm font-medium text-text-primary">{flavor}</span>
-                        <span className="text-xs text-text-secondary font-semibold">
+                        <span className="text-body-sm font-medium text-fg">{flavor}</span>
+                        <span className="text-xs text-fg-muted font-semibold">
                           {currentScore}/100
                         </span>
                       </div>
@@ -593,7 +593,7 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
                               className={`text-xs font-bold relative z-10 transition-colors duration-300 ${
                                 currentScore >= score
                                   ? 'text-white drop-shadow-sm'
-                                  : 'text-gray-400'
+                                  : 'text-fg-subtle'
                               }`}
                             >
                               {score}
@@ -608,7 +608,7 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
                       {/* Barra de progreso visual */}
                       {currentScore > 0 && (
                         <div className="mt-xs">
-                          <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                          <div className="w-full bg-line rounded-full h-1.5 overflow-hidden">
                             <div
                               className="h-full rounded-full transition-all duration-500 ease-out"
                               style={{
@@ -629,8 +629,8 @@ const Flavatix: React.FC<FlavatixProps> = React.memo(
 
         {/* Resumen de Sabores Seleccionados */}
         {Object.keys(selectedFlavors).length > 0 && (
-          <div className="bg-surface-secondary rounded-lg p-md">
-            <h4 className="text-h5 font-heading font-semibold text-text-primary mb-sm">
+          <div className="bg-bg-inset rounded-pane p-md">
+            <h4 className="text-h5 font-semibold text-fg mb-sm">
               Selected Flavors
             </h4>
             <div className="flex flex-wrap gap-xs">

@@ -44,7 +44,7 @@ const ModeCard: React.FC<ModeCardProps> = ({
       <div className="flex items-start gap-4">
         <div
           className={cn(
-            'flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-line/50',
+            'flex h-11 w-11 shrink-0 items-center justify-center rounded-pane border border-line/50',
             iconBgColor
           )}
         >

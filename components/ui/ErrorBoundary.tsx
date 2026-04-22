@@ -67,7 +67,7 @@ class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center p-4">
+        <div className="min-h-screen bg-bg dark:bg-bg flex items-center justify-center p-4">
           <Card className="max-w-md w-full">
             <CardHeader
               title="Something went wrong"
@@ -77,16 +77,16 @@ class ErrorBoundary extends Component<Props, State> {
             />
             <CardContent>
               <div className="space-y-4">
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-fg-muted dark:text-fg-subtle">
                   We&apos;re sorry, but something unexpected happened. This error has been logged and we&apos;ll look into it.
                 </p>
 
                 {process.env.NODE_ENV === 'development' && this.state.error && (
-                  <details className="text-xs text-gray-500 dark:text-gray-400">
+                  <details className="text-xs text-fg-subtle dark:text-fg-subtle">
                     <summary className="cursor-pointer font-medium mb-2">
                       Error Details (Development Only)
                     </summary>
-                    <pre className="bg-gray-100 dark:bg-gray-800 p-2 rounded text-xs overflow-auto">
+                    <pre className="bg-bg-inset dark:bg-bg-surface p-2 rounded text-xs overflow-auto">
                       {this.state.error.toString()}
                       {this.state.errorInfo?.componentStack}
                     </pre>

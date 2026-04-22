@@ -885,7 +885,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
               {hasItems && (
                 <div className="card p-md">
                   <div className="flex items-center justify-between mb-sm">
-                    <h3 className="text-h4 font-heading font-semibold text-text-primary">Items</h3>
+                    <h3 className="text-h4 font-semibold text-fg">Items</h3>
                   </div>
 
                   <div className="flex flex-wrap gap-xs mb-sm">
@@ -894,13 +894,13 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
                         key={item.id}
                         onClick={() => setCurrentItemIndex(index)}
                         className={`
-                      px-sm py-xs rounded-lg text-small font-body font-medium transition-colors min-h-touch
+                      px-sm py-xs rounded-soft text-small font-medium transition-colors min-h-touch
                       ${
                         currentItemIndex === index
                           ? 'bg-primary text-white'
                           : item.overall_score !== null
-                            ? 'bg-success/10 text-success hover:bg-success/20'
-                            : 'bg-background-surface text-text-secondary hover:bg-border-default'
+                            ? 'bg-signal-good/10 text-signal-good hover:bg-signal-good/20'
+                            : 'bg-bg-surface text-fg-muted hover:bg-bg-inset'
                       }
                     `}
                       >
@@ -936,16 +936,16 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
               ) : (
                 <div className="card p-lg text-center">
                   <div className="flex items-center justify-center mb-sm">
-                    <Utensils size={64} className="text-text-secondary" />
+                    <Utensils size={64} className="text-fg-muted" />
                   </div>
-                  <h3 className="text-h3 font-heading font-semibold text-text-primary mb-2">
+                  <h3 className="text-h3 font-semibold text-fg mb-2">
                     {hasItems
                       ? 'Add Next Item'
                       : session.mode === 'competition'
                         ? 'Waiting for Items'
                         : 'No Items Yet'}
                   </h3>
-                  <p className="text-text-secondary mb-md">
+                  <p className="text-fg-muted mb-md">
                     {hasItems
                       ? 'Add another item to continue your tasting session.'
                       : session.mode === 'competition'
@@ -1014,8 +1014,8 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
           <div className="max-w-4xl mx-auto">
             {/* All Items Grid View - shown when showItemNavigation is true */}
             {showItemNavigation && items.length > 1 && (
-              <div className="mb-6 p-4 bg-bg-inset dark:bg-zinc-800 rounded-xl">
-                <h3 className="text-lg font-semibold mb-4 text-zinc-900 dark:text-zinc-50">
+              <div className="mb-6 p-4 bg-bg-inset dark:bg-bg-surface rounded-pane">
+                <h3 className="text-lg font-semibold mb-4 text-fg dark:text-fg">
                   All Items ({items.length})
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -1026,10 +1026,10 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
                         setCurrentItemIndex(index);
                         setShowItemNavigation(false);
                       }}
-                      className={`p-3 rounded-lg text-left transition-all ${
+                      className={`p-3 rounded-soft text-left transition-all ${
                         index === currentItemIndex
                           ? 'bg-primary text-white ring-2 ring-primary ring-offset-2'
-                          : 'bg-white dark:bg-zinc-700 hover:bg-bg-inset dark:hover:bg-zinc-600 border border-line dark:border-zinc-600'
+                          : 'bg-bg-surface dark:bg-bg-inset hover:bg-bg-inset dark:hover:bg-fg-muted border border-line dark:border-line-strong'
                       }`}
                     >
                       <div className="font-medium text-sm truncate">
@@ -1055,7 +1055,7 @@ const QuickTastingSession: React.FC<QuickTastingSessionProps> = React.memo(
               <div className="flex justify-end mb-3">
                 <button
                   onClick={deleteLastItem}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-error hover:bg-error/10 rounded-lg transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-signal-danger hover:bg-signal-danger/10 rounded-soft transition-colors"
                 >
                   <span className="material-symbols-outlined text-base">delete</span>
                   Delete this item

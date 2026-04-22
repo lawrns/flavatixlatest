@@ -88,7 +88,7 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
           {/* Session Name */}
           {isEditingName ? (
             <div className="mb-2">
-              <div className="p-2 rounded-lg bg-bg-surface dark:bg-bg-inset border border-line dark:border-line-strong">
+              <div className="p-2 rounded-soft bg-bg-surface dark:bg-bg-inset border border-line dark:border-line-strong">
                 <div className="text-xs font-medium text-fg-subtle uppercase tracking-wider mb-1">
                   Editing Session Name
                 </div>
@@ -112,7 +112,7 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
           ) : (
             <div className="mb-2">
               <div
-                className={`flex items-center gap-2 p-2 -m-2 rounded-lg ${
+                className={`flex items-center gap-2 p-2 -m-2 rounded-soft ${
                   canEditName
                     ? 'hover:bg-bg-surface dark:hover:bg-bg-hover/50 cursor-pointer'
                     : 'opacity-60 cursor-not-allowed'
@@ -143,7 +143,7 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
           )}
 
           {/* Category & Mode Info */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-1 sm:space-y-0 text-text-secondary">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-1 sm:space-y-0 text-fg-muted">
             <span className="text-sm font-medium">Category:</span>
             {phase === 'setup' ? (
               <CategoryDropdown
@@ -154,7 +154,7 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
                 disabled={itemsCount > 1}
               />
             ) : (
-              <span className="text-sm font-semibold text-text-primary capitalize">
+              <span className="text-sm font-semibold text-fg capitalize">
                 {session.custom_category_name || session.category.replace(/_/g, ' ')}
               </span>
             )}

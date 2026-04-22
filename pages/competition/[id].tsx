@@ -17,10 +17,10 @@ const CompetitionPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
         <div className="flex flex-col items-center">
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-sm"></div>
-          <div className="text-text-primary text-h4 font-body font-medium">Loading...</div>
+          <div className="text-fg text-h4 font-medium">Loading...</div>
         </div>
       </div>
     );

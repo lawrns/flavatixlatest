@@ -79,8 +79,8 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             <Card key={i}>
               <CardContent>
                 <div className="animate-pulse">
-                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                  <div className="h-8 bg-gray-200 rounded w-1/2"></div>
+                  <div className="h-4 bg-line rounded w-3/4 mb-2"></div>
+                  <div className="h-8 bg-line rounded w-1/2"></div>
                 </div>
               </CardContent>
             </Card>
@@ -99,8 +99,8 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Analytics Dashboard</h2>
-          <p className="text-gray-600 dark:text-gray-400">
+          <h2 className="text-2xl font-bold text-fg dark:text-white">Analytics Dashboard</h2>
+          <p className="text-fg-muted dark:text-fg-subtle">
             {isAdmin ? 'Platform overview and insights' : 'Your tasting insights'}
           </p>
         </div>
@@ -124,10 +124,10 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <p className="text-sm font-medium text-fg-muted dark:text-fg-subtle">
                   Total Tastings
                 </p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                <p className="text-2xl font-bold text-fg dark:text-white">
                   {data.totalTastings}
                 </p>
               </div>
@@ -140,10 +140,10 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <p className="text-sm font-medium text-fg-muted dark:text-fg-subtle">
                   Total Reviews
                 </p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                <p className="text-2xl font-bold text-fg dark:text-white">
                   {data.totalReviews}
                 </p>
               </div>
@@ -156,10 +156,10 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <p className="text-sm font-medium text-fg-muted dark:text-fg-subtle">
                   Average Rating
                 </p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                <p className="text-2xl font-bold text-fg dark:text-white">
                   {data.averageRating.toFixed(1)}
                 </p>
               </div>
@@ -173,10 +173,10 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             <CardContent>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  <p className="text-sm font-medium text-fg-muted dark:text-fg-subtle">
                     Total Users
                   </p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-2xl font-bold text-fg dark:text-white">
                     {data.totalUsers}
                   </p>
                 </div>
@@ -197,13 +197,13 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               {data.topCategories.map((category, index) => (
                 <div key={category.name} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-gray-500 w-6">{index + 1}</span>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">
+                    <span className="text-sm font-medium text-fg-subtle w-6">{index + 1}</span>
+                    <span className="text-sm font-medium text-fg dark:text-white">
                       {category.name}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div className="w-20 bg-line dark:bg-bg-inset rounded-full h-2">
                       <div
                         className="bg-blue-500 h-2 rounded-full"
                         style={{
@@ -211,7 +211,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                         }}
                       />
                     </div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400 w-8 text-right">
+                    <span className="text-sm text-fg-muted dark:text-fg-subtle w-8 text-right">
                       {category.count}
                     </span>
                   </div>
@@ -228,12 +228,12 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             <div className="space-y-3">
               {data.monthlyTrend.map((month) => (
                 <div key={month.month} className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-900 dark:text-white w-8">
+                  <span className="text-sm font-medium text-fg dark:text-white w-8">
                     {month.month}
                   </span>
                   <div className="flex-1 mx-4">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                      <div className="flex-1 bg-line dark:bg-bg-inset rounded-full h-2">
                         <div
                           className="bg-green-500 h-2 rounded-full"
                           style={{
@@ -241,12 +241,12 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                           }}
                         />
                       </div>
-                      <span className="text-xs text-gray-600 dark:text-gray-400 w-8 text-right">
+                      <span className="text-xs text-fg-muted dark:text-fg-subtle w-8 text-right">
                         {month.tastings}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                      <div className="flex-1 bg-line dark:bg-bg-inset rounded-full h-2">
                         <div
                           className="bg-blue-500 h-2 rounded-full"
                           style={{
@@ -254,7 +254,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                           }}
                         />
                       </div>
-                      <span className="text-xs text-gray-600 dark:text-gray-400 w-8 text-right">
+                      <span className="text-xs text-fg-muted dark:text-fg-subtle w-8 text-right">
                         {month.reviews}
                       </span>
                     </div>
@@ -262,7 +262,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                 </div>
               ))}
             </div>
-            <div className="flex items-center gap-4 mt-4 text-xs text-gray-500">
+            <div className="flex items-center gap-4 mt-4 text-xs text-fg-subtle">
               <div className="flex items-center gap-1">
                 <div className="w-3 h-3 bg-green-500 rounded"></div>
                 <span>Tastings</span>

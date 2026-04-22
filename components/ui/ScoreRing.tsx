@@ -100,7 +100,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
           fill="none"
           stroke="currentColor"
           strokeWidth={config.stroke}
-          className="text-zinc-200 dark:text-fg-muted"
+          className="text-fg-muted dark:text-fg-muted"
         />
 
         {/* Gradient definition */}

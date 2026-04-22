@@ -87,7 +87,7 @@ export const HelpTooltip: React.FC<HelpTooltipProps> = ({
         onClick={handleClick}
         className={`
           inline-flex items-center justify-center
-          p-1 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-700
+          p-1 rounded-full hover:bg-bg-inset dark:hover:bg-bg-inset
           transition-colors duration-200
           ${iconClassName || ''}
         `}
@@ -95,7 +95,7 @@ export const HelpTooltip: React.FC<HelpTooltipProps> = ({
         title={short}
         type="button"
       >
-        {icon || <HelpCircle className="w-4 h-4 text-gray-500 dark:text-fg-subtle hover:text-gray-700 dark:hover:text-zinc-200" />}
+        {icon || <HelpCircle className="w-4 h-4 text-fg-subtle dark:text-fg-subtle hover:text-fg-muted dark:hover:text-fg-muted" />}
       </button>
 
       {/* Tooltip content */}
@@ -103,7 +103,7 @@ export const HelpTooltip: React.FC<HelpTooltipProps> = ({
         <div
           className={`
             absolute z-50 ${positionStyles[position]}
-            bg-gray-900 text-white rounded-lg shadow-lg
+            bg-bg text-white rounded-soft shadow-md
             p-3 max-w-xs text-sm
           `}
         >
@@ -111,7 +111,7 @@ export const HelpTooltip: React.FC<HelpTooltipProps> = ({
           <div
             className={`
               absolute w-0 h-0 border-4
-              border-transparent border-gray-900
+              border-transparent border-line
               ${arrowStyles[position]}
             `}
           />
@@ -120,12 +120,12 @@ export const HelpTooltip: React.FC<HelpTooltipProps> = ({
           <div className="font-medium mb-1">{short}</div>
 
           {/* Long explanation */}
-          {long && <div className="text-gray-200 text-xs mb-2">{long}</div>}
+          {long && <div className="text-fg-muted text-xs mb-2">{long}</div>}
 
           {/* Example */}
           {example && (
-            <div className="bg-gray-800 rounded p-2 text-gray-200 text-xs mb-2 italic">
-              <span className="text-gray-400">Example: </span>
+            <div className="bg-bg-surface rounded p-2 text-fg-muted text-xs mb-2 italic">
+              <span className="text-fg-subtle">Example: </span>
               {example}
             </div>
           )}
@@ -146,7 +146,7 @@ export const HelpTooltip: React.FC<HelpTooltipProps> = ({
           {trigger === 'click' && (
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-2 right-2 p-1 hover:bg-gray-800 rounded"
+              className="absolute top-2 right-2 p-1 hover:bg-bg-surface rounded"
               aria-label="Close"
             >
               <X className="w-3 h-3" />

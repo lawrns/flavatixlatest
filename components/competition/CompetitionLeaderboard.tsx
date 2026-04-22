@@ -110,11 +110,11 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
       case 1:
         return <Crown size={24} className="text-yellow-500" />;
       case 2:
-        return <Medal size={24} className="text-gray-400" />;
+        return <Medal size={24} className="text-fg-subtle" />;
       case 3:
         return <Award size={24} className="text-orange-600" />;
       default:
-        return <span className="text-h3 font-bold text-text-secondary">#{rank}</span>;
+        return <span className="text-h3 font-bold text-fg-muted">#{rank}</span>;
     }
   };
 
@@ -127,29 +127,29 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
       case 3:
         return 'bg-signal-warn/10 border-signal-warn dark:bg-signal-warn/20';
       default:
-        return 'bg-background-light border-border-default';
+        return 'bg-bg border-line';
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-sm mx-auto"></div>
-          <p className="text-text-secondary">Loading leaderboard...</p>
+          <p className="text-fg-muted">Loading leaderboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background-light pb-24">
+    <div className="min-h-screen bg-bg pb-24">
       {/* Header */}
-      <div className="bg-white dark:bg-zinc-800 border-b border-border-default p-md">
+      <div className="bg-white dark:bg-bg-surface border-b border-line p-md">
         <div className="max-w-4xl mx-auto">
           <button
             onClick={() => router.push('/my-tastings')}
-            className="flex items-center text-text-secondary hover:text-text-primary mb-sm"
+            className="flex items-center text-fg-muted hover:text-fg mb-sm"
           >
             <ChevronLeft size={20} className="mr-xs" />
             Back to My Tastings
@@ -157,8 +157,8 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
           <div className="flex items-center gap-md">
             <Trophy size={32} className="text-primary" />
             <div>
-              <h1 className="text-h2 font-heading font-bold text-text-primary">Leaderboard</h1>
-              <p className="text-small text-text-secondary">{sessionName}</p>
+              <h1 className="text-h2 font-bold text-fg">Leaderboard</h1>
+              <p className="text-small text-fg-muted">{sessionName}</p>
             </div>
           </div>
         </div>
@@ -168,8 +168,8 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
       <div className="max-w-4xl mx-auto p-md">
         {leaderboard.length === 0 ? (
           <div className="card p-xl text-center">
-            <Trophy size={48} className="mx-auto mb-md text-text-secondary opacity-50" />
-            <p className="text-body text-text-secondary">
+            <Trophy size={48} className="mx-auto mb-md text-fg-muted opacity-50" />
+            <p className="text-body text-fg-muted">
               No participants have completed this competition yet.
             </p>
           </div>
@@ -181,8 +181,8 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
                 {/* 2nd Place */}
                 <div className="flex flex-col items-center pt-8">
                   <div className={`w-full card p-md text-center border-2 ${getRankBadgeColor(2)}`}>
-                    <Medal size={32} className="mx-auto mb-sm text-gray-400" />
-                    <p className="text-small font-semibold text-text-primary truncate">
+                    <Medal size={32} className="mx-auto mb-sm text-fg-subtle" />
+                    <p className="text-small font-semibold text-fg truncate">
                       {leaderboard[1].user_name || leaderboard[1].user_email.split('@')[0]}
                     </p>
                     <p className="text-h2 font-bold text-primary mt-xs">{leaderboard[1].score}%</p>
@@ -193,7 +193,7 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
                 <div className="flex flex-col items-center">
                   <div className={`w-full card p-lg text-center border-2 ${getRankBadgeColor(1)}`}>
                     <Crown size={40} className="mx-auto mb-sm text-yellow-500" />
-                    <p className="text-body font-semibold text-text-primary truncate">
+                    <p className="text-body font-semibold text-fg truncate">
                       {leaderboard[0].user_name || leaderboard[0].user_email.split('@')[0]}
                     </p>
                     <p className="text-h1 font-bold text-primary mt-xs">{leaderboard[0].score}%</p>
@@ -204,7 +204,7 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
                 <div className="flex flex-col items-center pt-8">
                   <div className={`w-full card p-md text-center border-2 ${getRankBadgeColor(3)}`}>
                     <Award size={32} className="mx-auto mb-sm text-orange-600" />
-                    <p className="text-small font-semibold text-text-primary truncate">
+                    <p className="text-small font-semibold text-fg truncate">
                       {leaderboard[2].user_name || leaderboard[2].user_email.split('@')[0]}
                     </p>
                     <p className="text-h2 font-bold text-primary mt-xs">{leaderboard[2].score}%</p>
@@ -215,8 +215,8 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
 
             {/* Full Leaderboard */}
             <div className="card">
-              <div className="p-md border-b border-border-default">
-                <h2 className="text-h3 font-heading font-semibold text-text-primary">
+              <div className="p-md border-b border-line">
+                <h2 className="text-h3 font-semibold text-fg">
                   All Participants
                 </h2>
               </div>
@@ -233,13 +233,13 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
                         {getRankIcon(entry.rank)}
                       </div>
                       <div className="flex-1">
-                        <p className="text-body font-semibold text-text-primary">
+                        <p className="text-body font-semibold text-fg">
                           {entry.user_name || entry.user_email.split('@')[0]}
                           {entry.user_id === user?.id && (
                             <span className="ml-sm text-xs text-primary font-normal">(You)</span>
                           )}
                         </p>
-                        <p className="text-xs text-text-secondary">
+                        <p className="text-xs text-fg-muted">
                           {new Date(entry.created_at).toLocaleDateString()}
                         </p>
                       </div>
@@ -259,8 +259,8 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
                   <div className="flex items-center gap-md">
                     <Trophy size={24} className="text-primary" />
                     <div>
-                      <p className="text-small font-semibold text-text-primary">Your Rank</p>
-                      <p className="text-xs text-text-secondary">
+                      <p className="text-small font-semibold text-fg">Your Rank</p>
+                      <p className="text-xs text-fg-muted">
                         {userRank === 1
                           ? 'Champion!'
                           : userRank <= 3
@@ -271,7 +271,7 @@ export const CompetitionLeaderboard: React.FC<CompetitionLeaderboardProps> = ({ 
                   </div>
                   <div className="text-right">
                     <p className="text-h2 font-bold text-primary">#{userRank}</p>
-                    <p className="text-xs text-text-secondary">of {leaderboard.length}</p>
+                    <p className="text-xs text-fg-muted">of {leaderboard.length}</p>
                   </div>
                 </div>
               </div>

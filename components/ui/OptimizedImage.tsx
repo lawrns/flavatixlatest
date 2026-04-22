@@ -70,12 +70,12 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     return (
       <div 
         className={cn(
-          'bg-gray-200 flex items-center justify-center',
+          'bg-line flex items-center justify-center',
           className
         )}
         style={{ width: props.width, height: props.height }}
       >
-        <span className="text-gray-400 text-sm">No image</span>
+        <span className="text-fg-subtle text-sm">No image</span>
       </div>
     );
   }
@@ -84,7 +84,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     <div className={cn('relative', className)}>
       {showLoadingState && loading && (
         <div 
-          className="absolute inset-0 bg-gray-200 animate-pulse rounded"
+          className="absolute inset-0 bg-line animate-pulse rounded"
           style={{ width: props.width, height: props.height }}
         />
       )}
@@ -136,7 +136,7 @@ export const Thumbnail: React.FC<Omit<OptimizedImageProps, 'variant'>> = ({
   return (
     <OptimizedImage
       variant="thumbnail"
-      className={cn('rounded-lg overflow-hidden', className)}
+      className={cn('rounded-soft overflow-hidden', className)}
       {...props}
     />
   );

@@ -24,13 +24,13 @@ const Card: React.FC<CardProps> = ({
 
   const variantClasses = {
     default: cn(
-      'bg-bg-surface dark:bg-zinc-800/90',
-      'border border-line dark:border-zinc-700',
+      'bg-bg-surface dark:bg-bg-surface/90',
+      'border border-line dark:border-line',
       'shadow-sm'
     ),
     inset: cn(
-      'bg-bg-inset dark:bg-zinc-800/80',
-      'border border-line dark:border-zinc-700'
+      'bg-bg-inset dark:bg-bg-surface/80',
+      'border border-line dark:border-line'
     ),
   };
 
@@ -134,7 +134,7 @@ const CardFooter: React.FC<CardFooterProps> = ({
   ...props
 }) => {
   return (
-    <div className={cn('mt-4 pt-4 border-t border-line dark:border-zinc-700', className)} {...props}>
+    <div className={cn('mt-4 pt-4 border-t border-line dark:border-line', className)} {...props}>
       {children}
     </div>
   );

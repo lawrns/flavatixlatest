@@ -203,7 +203,7 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
                 ? 'bg-primary scale-125'
                 : isStepComplete(index)
                   ? 'bg-primary/60'
-                  : 'bg-zinc-300 dark:bg-zinc-600'
+                  : 'bg-line-strong dark:bg-fg-muted'
             )}
           />
         ))}
@@ -226,7 +226,7 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
                   ? 'bg-primary text-white'
                   : isStepComplete(index)
                     ? 'bg-primary/20 text-primary'
-                    : 'bg-zinc-200 dark:bg-zinc-700 text-fg-subtle dark:text-fg-subtle'
+                    : 'bg-line dark:bg-bg-inset text-fg-subtle dark:text-fg-subtle'
               )}
             >
               {isStepComplete(index) ? (
@@ -246,7 +246,7 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
               <div
                 className={cn(
                   'h-0.5 w-8 transition-colors duration-200',
-                  isStepComplete(index) ? 'bg-primary' : 'bg-zinc-200 dark:bg-zinc-700'
+                  isStepComplete(index) ? 'bg-primary' : 'bg-line dark:bg-bg-inset'
                 )}
               />
             )}
@@ -278,7 +278,7 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
                     ? 'bg-primary text-white border-primary'
                     : isStepComplete(index)
                       ? 'bg-primary/10 text-primary border-primary'
-                      : 'bg-white dark:bg-zinc-800 text-fg-subtle border-line dark:border-zinc-600 group-hover:border-primary/50'
+                      : 'bg-white dark:bg-bg-surface text-fg-subtle border-line dark:border-line-strong group-hover:border-primary/50'
                 )}
               >
                 {isStepComplete(index) ? (
@@ -306,7 +306,7 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
                       index === currentStep
                         ? 'text-primary'
                         : isStepComplete(index)
-                          ? 'text-fg-muted dark:text-zinc-300'
+                          ? 'text-fg-muted dark:text-fg-muted'
                           : 'text-fg-subtle dark:text-fg-subtle'
                     )}
                   >
@@ -329,7 +329,7 @@ export const StepperProgress: React.FC<StepperProgressProps> = ({
               <div
                 className={cn(
                   'absolute top-5 left-1/2 w-full h-0.5 -translate-y-1/2',
-                  isStepComplete(index) ? 'bg-primary' : 'bg-zinc-200 dark:bg-zinc-700'
+                  isStepComplete(index) ? 'bg-primary' : 'bg-line dark:bg-bg-inset'
                 )}
                 aria-hidden="true"
               />
@@ -418,7 +418,7 @@ export const StepperNavigation: React.FC<StepperNavigationProps> = ({
   return (
     <div
       className={cn(
-        'flex items-center justify-between pt-6 border-t border-line dark:border-zinc-700',
+        'flex items-center justify-between pt-6 border-t border-line dark:border-line',
         className
       )}
     >
@@ -426,7 +426,7 @@ export const StepperNavigation: React.FC<StepperNavigationProps> = ({
         <button
           type="button"
           onClick={handlePrev}
-          className="px-4 py-2 text-sm font-medium text-fg-muted dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors"
+          className="px-4 py-2 text-sm font-medium text-fg-muted dark:text-fg-muted hover:text-fg dark:hover:text-white transition-colors"
         >
           ← {prevLabel}
         </button>
@@ -439,7 +439,7 @@ export const StepperNavigation: React.FC<StepperNavigationProps> = ({
         onClick={handleNext}
         disabled={isNextDisabled || isLoading}
         className={cn(
-          'px-6 py-2 text-sm font-medium rounded-lg transition-[color,background-color,opacity] duration-200',
+          'px-6 py-2 text-sm font-medium rounded-soft transition-[color,background-color,opacity] duration-200',
           'bg-primary text-white hover:bg-primary-600 active:bg-primary-700',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           'min-h-[44px] min-w-[100px]'

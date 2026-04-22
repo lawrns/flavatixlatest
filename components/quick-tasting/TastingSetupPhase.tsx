@@ -56,7 +56,7 @@ export const TastingSetupPhase: React.FC<TastingSetupPhaseProps> = ({
         {hasItems && (
           <div className="card p-md">
             <div className="flex items-center justify-between mb-sm">
-              <h3 className="text-h4 font-heading font-semibold text-text-primary">Items</h3>
+              <h3 className="text-h4 font-semibold text-fg">Items</h3>
             </div>
 
             <div className="flex flex-wrap gap-xs mb-sm">
@@ -65,13 +65,13 @@ export const TastingSetupPhase: React.FC<TastingSetupPhaseProps> = ({
                   key={item.id}
                   onClick={() => onItemIndexChange(index)}
                   className={`
-                    px-sm py-xs rounded-lg text-small font-body font-medium transition-colors min-h-touch
+                    px-sm py-xs rounded-soft text-small font-medium transition-colors min-h-touch
                     ${
                       currentItemIndex === index
                         ? 'bg-primary text-white'
                         : item.overall_score !== null
-                          ? 'bg-success/10 text-success hover:bg-success/20'
-                          : 'bg-background-surface text-text-secondary hover:bg-border-default'
+                          ? 'bg-signal-good/10 text-signal-good hover:bg-signal-good/20'
+                          : 'bg-bg-surface text-fg-muted hover:bg-bg-inset'
                     }
                   `}
                 >
@@ -105,16 +105,16 @@ export const TastingSetupPhase: React.FC<TastingSetupPhaseProps> = ({
         ) : (
           <div className="card p-lg text-center">
             <div className="flex items-center justify-center mb-sm">
-              <Utensils size={64} className="text-text-secondary" />
+              <Utensils size={64} className="text-fg-muted" />
             </div>
-            <h3 className="text-h3 font-heading font-semibold text-text-primary mb-2">
+            <h3 className="text-h3 font-semibold text-fg mb-2">
               {hasItems
                 ? 'Add Next Item'
                 : session.mode === 'competition'
                   ? 'Waiting for Items'
                   : 'No Items Yet'}
             </h3>
-            <p className="text-text-secondary mb-md">
+            <p className="text-fg-muted mb-md">
               {hasItems
                 ? 'Add another item to continue your tasting session.'
                 : session.mode === 'competition'

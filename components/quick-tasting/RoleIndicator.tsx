@@ -62,7 +62,7 @@ export const RoleIndicator: React.FC<RoleIndicatorProps> = ({
         return {
           label: 'Unknown',
           icon: '❓',
-          color: 'bg-gray-100 text-gray-800 border-gray-200',
+          color: 'bg-bg-inset text-fg border-line',
           description: 'Role not assigned',
           badge: 'gray',
         };
@@ -93,14 +93,14 @@ export const RoleIndicator: React.FC<RoleIndicatorProps> = ({
 
       {/* Optional Description */}
       {showDescription && (
-        <span className="text-sm text-text-secondary">
+        <span className="text-sm text-fg-muted">
           {config.description}
         </span>
       )}
 
       {/* Current User Indicator */}
       {isCurrentUser && !showDescription && (
-        <span className="text-xs text-text-secondary font-medium">
+        <span className="text-xs text-fg-muted font-medium">
           (You)
         </span>
       )}
@@ -166,7 +166,7 @@ function getRoleConfig(role: ParticipantRole) {
       return {
         label: 'Unknown',
         icon: '❓',
-        color: 'bg-gray-100 text-gray-800 border-gray-200',
+        color: 'bg-bg-inset text-fg border-line',
         description: 'Role not assigned',
         badge: 'gray',
       };

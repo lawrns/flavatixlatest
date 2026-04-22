@@ -85,11 +85,11 @@ export const ValidationFeedback: React.FC<ValidationFeedbackProps> = ({
       )}
 
       {/* Helper text */}
-      {helperText && !error && <p className="text-gray-600 text-sm mt-2">{helperText}</p>}
+      {helperText && !error && <p className="text-fg-muted text-sm mt-2">{helperText}</p>}
 
       {/* Required indicator */}
       {required && !error && !success && (
-        <p className="text-gray-500 text-xs mt-2">
+        <p className="text-fg-subtle text-xs mt-2">
           <span className="text-red-500">*</span> Required field
         </p>
       )}
@@ -107,7 +107,7 @@ export const ValidationFeedback: React.FC<ValidationFeedbackProps> = ({
                   ${
                     segment <= passwordStrength.score
                       ? strengthColors[passwordStrength.score]
-                      : 'bg-gray-200'
+                      : 'bg-line'
                   }
                   transition-colors duration-200
                 `}
@@ -130,7 +130,7 @@ export const ValidationFeedback: React.FC<ValidationFeedbackProps> = ({
 
           {/* Strength tips */}
           {passwordStrength.score < 4 && (
-            <p className="text-gray-600 text-xs mt-2">
+            <p className="text-fg-muted text-xs mt-2">
               Use mix of uppercase, lowercase, numbers, and symbols
             </p>
           )}

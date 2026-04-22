@@ -308,7 +308,7 @@ const AuthSection = () => {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => handleSocialAuth('google')}
-                    className="flex items-center justify-center gap-2 rounded-soft bg-bg-surface dark:bg-zinc-800 px-3 py-2.5 font-medium text-fg ring-1 ring-line transition-colors duration-150 hover:bg-bg-hover"
+                    className="flex items-center justify-center gap-2 rounded-soft bg-bg-surface dark:bg-bg-surface px-3 py-2.5 font-medium text-fg ring-1 ring-line transition-colors duration-150 hover:bg-bg-hover"
                   >
                     <svg
                       className="h-4 w-4"
@@ -325,7 +325,7 @@ const AuthSection = () => {
                   </button>
                   <button
                     onClick={() => handleSocialAuth('apple')}
-                    className="flex items-center justify-center gap-2 rounded-soft bg-bg-surface dark:bg-zinc-800 px-3 py-2.5 font-medium text-fg ring-1 ring-line transition-colors duration-150 hover:bg-bg-hover"
+                    className="flex items-center justify-center gap-2 rounded-soft bg-bg-surface dark:bg-bg-surface px-3 py-2.5 font-medium text-fg ring-1 ring-line transition-colors duration-150 hover:bg-bg-hover"
                   >
                     <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M10 2.5a5.556 5.556 0 0 0-2.327.498 5.485 5.485 0 0 0-1.879 1.344c-1.332 1.306-1.579 3.32-1.579 5.158 0 1.838.247 3.852 1.579 5.158a5.485 5.485 0 0 0 1.879 1.344A5.556 5.556 0 0 0 10 17.5a5.717 5.717 0 0 0 2.215-.47c.563-.223.94-.486 1.393-1.07.453-.585.62-1.32.62-2.189 0-1.637-1.127-2.32-2.33-2.32h-1.488v-2.134h3.76c.118-.002.217-.058.217-.176 0-1.423-.97-2.733-2.5-3.138A5.54 5.54 0 0 0 10 2.5Zm-1.116 1.435a3.111 3.111 0 0 1 2.332 0c.93.308 1.421 1.116 1.421 2.015 0 .9-.508 1.708-1.42 2.015a3.111 3.111 0 0 1-2.332 0c-.913-.307-1.421-1.116-1.421-2.015 0-.9.508-1.708 1.42-2.015Z" />
@@ -347,7 +347,7 @@ const AuthSection = () => {
                       autoComplete="name"
                       value={formData.full_name || ''}
                       onChange={(e) => handleInputChange('full_name', e.target.value)}
-                      className="w-full px-4 py-2.5 border border-line rounded-soft bg-bg-surface dark:bg-zinc-800 text-fg placeholder-fg-muted transition-colors duration-150 focus:border-accent focus:shadow-[0_0_0_3px_var(--accent-weak)] focus:outline-none"
+                      className="w-full px-4 py-2.5 border border-line rounded-soft bg-bg-surface dark:bg-bg-surface text-fg placeholder-fg-muted transition-colors duration-150 focus:border-accent focus:shadow-[0_0_0_3px_var(--accent-weak)] focus:outline-none"
                       placeholder="Enter your full name"
                       required
                     />
@@ -364,7 +364,7 @@ const AuthSection = () => {
                     spellCheck={false}
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    className="w-full px-4 py-2.5 border border-line rounded-soft bg-bg-surface dark:bg-zinc-800 text-fg placeholder-fg-muted transition-colors duration-150 focus:border-accent focus:shadow-[0_0_0_3px_var(--accent-weak)] focus:outline-none"
+                    className="w-full px-4 py-2.5 border border-line rounded-soft bg-bg-surface dark:bg-bg-surface text-fg placeholder-fg-muted transition-colors duration-150 focus:border-accent focus:shadow-[0_0_0_3px_var(--accent-weak)] focus:outline-none"
                     placeholder="your@email.com"
                     required
                   />
@@ -379,7 +379,7 @@ const AuthSection = () => {
                     autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
-                    className="w-full px-4 py-2.5 border border-line rounded-soft bg-bg-surface dark:bg-zinc-800 text-fg placeholder-fg-muted transition-colors duration-150 focus:border-accent focus:shadow-[0_0_0_3px_var(--accent-weak)] focus:outline-none"
+                    className="w-full px-4 py-2.5 border border-line rounded-soft bg-bg-surface dark:bg-bg-surface text-fg placeholder-fg-muted transition-colors duration-150 focus:border-accent focus:shadow-[0_0_0_3px_var(--accent-weak)] focus:outline-none"
                     placeholder="Enter your password"
                     required
                   />

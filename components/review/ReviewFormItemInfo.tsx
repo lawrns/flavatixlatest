@@ -65,14 +65,14 @@ export const ReviewFormItemInfo: React.FC<ReviewFormItemInfoProps> = ({
 
   return (
     <div className="card p-md">
-      <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">
+      <h2 className="text-h3 font-semibold text-fg mb-md">
         Item Information
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
         {/* Item Name/Variety (REQUIRED) */}
         <div className="md:col-span-2">
-          <label className="block text-small font-body font-medium text-text-primary mb-xs">
+          <label className="block text-small font-medium text-fg mb-xs">
             Item Name/Variety *
           </label>
           <input
@@ -87,7 +87,7 @@ export const ReviewFormItemInfo: React.FC<ReviewFormItemInfoProps> = ({
 
         {/* Picture (optional upload) */}
         <div className="md:col-span-2">
-          <label className="block text-small font-body font-medium text-text-primary mb-xs">
+          <label className="block text-small font-medium text-fg mb-xs">
             Picture
           </label>
           {formData.picture_url ? (
@@ -98,11 +98,11 @@ export const ReviewFormItemInfo: React.FC<ReviewFormItemInfoProps> = ({
                 width={0}
                 height={0}
                 sizes="100vw"
-                className="w-full h-48 object-cover rounded-lg"
+                className="w-full h-48 object-cover rounded-soft"
               />
               <button
                 onClick={() => onFieldUpdate('picture_url', undefined)}
-                className="absolute top-2 right-2 w-8 h-8 bg-error text-white rounded-full hover:bg-error/90 transition-colors flex items-center justify-center"
+                className="absolute top-2 right-2 w-8 h-8 bg-signal-danger text-white rounded-full hover:bg-signal-danger/90 transition-colors flex items-center justify-center"
               >
                 <X size={16} />
               </button>
@@ -128,7 +128,7 @@ export const ReviewFormItemInfo: React.FC<ReviewFormItemInfoProps> = ({
 
         {/* Brand */}
         <div>
-          <label className="block text-small font-body font-medium text-text-primary mb-xs">
+          <label className="block text-small font-medium text-fg mb-xs">
             Brand
           </label>
           <input
@@ -142,7 +142,7 @@ export const ReviewFormItemInfo: React.FC<ReviewFormItemInfoProps> = ({
 
         {/* Category (REQUIRED dropdown) */}
         <div>
-          <label className="block text-small font-body font-medium text-text-primary mb-xs">
+          <label className="block text-small font-medium text-fg mb-xs">
             Category *
           </label>
           <select
@@ -162,7 +162,7 @@ export const ReviewFormItemInfo: React.FC<ReviewFormItemInfoProps> = ({
 
         {/* Country (dropdown) */}
         <div>
-          <label className="block text-small font-body font-medium text-text-primary mb-xs">
+          <label className="block text-small font-medium text-fg mb-xs">
             Country
           </label>
           <select
@@ -188,7 +188,7 @@ export const ReviewFormItemInfo: React.FC<ReviewFormItemInfoProps> = ({
         {/* State (dropdown - conditional) */}
         {formData.country && hasStates(formData.country) && (
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               State
             </label>
             <select
@@ -208,7 +208,7 @@ export const ReviewFormItemInfo: React.FC<ReviewFormItemInfoProps> = ({
 
         {/* Region */}
         <div>
-          <label className="block text-small font-body font-medium text-text-primary mb-xs">
+          <label className="block text-small font-medium text-fg mb-xs">
             Region
           </label>
           <input
@@ -222,7 +222,7 @@ export const ReviewFormItemInfo: React.FC<ReviewFormItemInfoProps> = ({
 
         {/* Vintage (4 digit format) */}
         <div>
-          <label className="block text-small font-body font-medium text-text-primary mb-xs">
+          <label className="block text-small font-medium text-fg mb-xs">
             Vintage
           </label>
           <input
@@ -240,7 +240,7 @@ export const ReviewFormItemInfo: React.FC<ReviewFormItemInfoProps> = ({
 
         {/* Batch ID */}
         <div>
-          <label className="block text-small font-body font-medium text-text-primary mb-xs">
+          <label className="block text-small font-medium text-fg mb-xs">
             Batch ID
           </label>
           <input
@@ -254,7 +254,7 @@ export const ReviewFormItemInfo: React.FC<ReviewFormItemInfoProps> = ({
 
         {/* Scan UPC/Barcode */}
         <div>
-          <label className="block text-small font-body font-medium text-text-primary mb-xs">
+          <label className="block text-small font-medium text-fg mb-xs">
             UPC/Barcode
           </label>
           <input

@@ -86,11 +86,11 @@ const CompetitionRanking: React.FC<CompetitionRankingProps> = ({
       case 1:
         return <Trophy className="text-yellow-500" size={20} />;
       case 2:
-        return <Award className="text-gray-400" size={20} />;
+        return <Award className="text-fg-subtle" size={20} />;
       case 3:
         return <Award className="text-amber-600" size={20} />;
       default:
-        return <span className="text-text-secondary font-bold">#{rank || '?'}</span>;
+        return <span className="text-fg-muted font-bold">#{rank || '?'}</span>;
     }
   };
 
@@ -99,11 +99,11 @@ const CompetitionRanking: React.FC<CompetitionRankingProps> = ({
       case 1:
         return 'text-yellow-600';
       case 2:
-        return 'text-gray-500';
+        return 'text-fg-subtle';
       case 3:
         return 'text-amber-600';
       default:
-        return 'text-text-secondary';
+        return 'text-fg-muted';
     }
   };
 
@@ -111,13 +111,13 @@ const CompetitionRanking: React.FC<CompetitionRankingProps> = ({
     <div className="card p-md">
       <div className="flex items-center mb-md">
         <Trophy className="text-primary-600 mr-sm" size={24} />
-        <h3 className="text-h4 font-heading font-semibold text-text-primary">
+        <h3 className="text-h4 font-semibold text-fg">
           Competition Rankings
         </h3>
       </div>
 
       {participants.length === 0 ? (
-        <p className="text-text-secondary text-center py-lg">
+        <p className="text-fg-muted text-center py-lg">
           No participants yet. Rankings will appear once scoring begins.
         </p>
       ) : (
@@ -130,10 +130,10 @@ const CompetitionRanking: React.FC<CompetitionRankingProps> = ({
             return (
               <div
                 key={participant.id}
-                className={`flex items-center justify-between p-sm rounded-lg ${
+                className={`flex items-center justify-between p-sm rounded-soft ${
                   isCurrentUser
                     ? 'bg-primary-50 border border-primary-200'
-                    : 'bg-background-surface'
+                    : 'bg-bg-surface'
                 }`}
               >
                 <div className="flex items-center">
@@ -146,13 +146,13 @@ const CompetitionRanking: React.FC<CompetitionRankingProps> = ({
                     </div>
                     <div>
                       <span
-                        className={`font-body font-medium ${isCurrentUser ? 'text-primary-600' : 'text-text-primary'}`}
+                        className={`font-medium ${isCurrentUser ? 'text-primary-600' : 'text-fg'}`}
                       >
                         {displayName}
                         {isCurrentUser && ' (You)'}
                       </span>
                       {participant.score !== null && (
-                        <div className="text-small text-text-secondary">
+                        <div className="text-small text-fg-muted">
                           Score: {participant.score}
                         </div>
                       )}
@@ -164,7 +164,7 @@ const CompetitionRanking: React.FC<CompetitionRankingProps> = ({
                   {participant.rank ? (
                     <span className="text-body font-bold">#{participant.rank}</span>
                   ) : (
-                    <span className="text-small text-text-secondary">Pending</span>
+                    <span className="text-small text-fg-muted">Pending</span>
                   )}
                 </div>
               </div>
@@ -174,7 +174,7 @@ const CompetitionRanking: React.FC<CompetitionRankingProps> = ({
       )}
 
       <div className="mt-md text-center">
-        <p className="text-small text-text-secondary">
+        <p className="text-small text-fg-muted">
           Rankings update automatically as scores are submitted
         </p>
       </div>

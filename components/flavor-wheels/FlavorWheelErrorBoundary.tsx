@@ -60,11 +60,11 @@ class FlavorWheelErrorBoundary extends Component<Props, State> {
             <AlertCircle className="w-10 h-10 text-orange-500" />
           </div>
 
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 text-center">
+          <h3 className="text-xl font-semibold text-fg dark:text-fg mb-2 text-center">
             We couldn&apos;t draw this flavor wheel
           </h3>
 
-          <p className="text-gray-600 dark:text-gray-400 text-center max-w-md mb-6">
+          <p className="text-fg-muted dark:text-fg-subtle text-center max-w-md mb-6">
             Something went wrong while rendering the visualization.
             Try reloading or editing your tasting notes.
           </p>
@@ -72,7 +72,7 @@ class FlavorWheelErrorBoundary extends Component<Props, State> {
           <div className="flex gap-3">
             <button
               onClick={this.handleRetry}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-orange-600 text-white rounded-xl font-medium hover:bg-orange-700 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-orange-600 text-white rounded-pane font-medium hover:bg-orange-700 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
             >
               <RefreshCw className="w-4 h-4" />
               Try Again
@@ -80,18 +80,18 @@ class FlavorWheelErrorBoundary extends Component<Props, State> {
 
             <button
               onClick={() => window.location.reload()}
-              className="px-5 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              className="px-5 py-2.5 border border-line-strong dark:border-line-strong text-fg-muted dark:text-fg-muted rounded-pane font-medium hover:bg-bg-hover dark:hover:bg-bg-surface transition-colors"
             >
               Reload Page
             </button>
           </div>
 
           {process.env.NODE_ENV === 'development' && this.state.error && (
-            <details className="mt-6 text-xs text-gray-500 dark:text-gray-400 max-w-md">
+            <details className="mt-6 text-xs text-fg-subtle dark:text-fg-subtle max-w-md">
               <summary className="cursor-pointer font-medium mb-2">
                 Error Details (Dev Only)
               </summary>
-              <pre className="bg-gray-100 dark:bg-gray-800 p-3 rounded-lg overflow-auto text-left">
+              <pre className="bg-bg-inset dark:bg-bg-surface p-3 rounded-soft overflow-auto text-left">
                 {this.state.error.toString()}
               </pre>
             </details>

@@ -96,10 +96,10 @@ const StudyTastingPage: React.FC = () => {
 
   if (authLoading || isLoading) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-text-secondary">Loading study session...</p>
+          <p className="text-fg-muted">Loading study session...</p>
         </div>
       </div>
     );
@@ -107,16 +107,16 @@ const StudyTastingPage: React.FC = () => {
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
         <div className="text-center">
-          <p className="text-text-secondary">Session not found</p>
+          <p className="text-fg-muted">Session not found</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background-light pb-20">
+    <div className="min-h-screen bg-bg pb-20">
       <div className="max-w-xl mx-auto px-4 py-8">
         <QuickTastingSession
           session={session}
@@ -127,10 +127,10 @@ const StudyTastingPage: React.FC = () => {
       </div>
 
       {/* Bottom Navigation */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-line dark:border-zinc-700 bg-background-light dark:bg-background-dark">
+      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-line dark:border-line bg-bg dark:bg-bg">
         <nav className="flex justify-around p-2">
           <Link
-            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-zinc-300"
+            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-fg-muted"
             href="/dashboard"
           >
             <span className="material-symbols-outlined">home</span>
@@ -141,14 +141,14 @@ const StudyTastingPage: React.FC = () => {
             <span className="text-xs font-bold">Taste</span>
           </Link>
           <Link
-            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-zinc-300"
+            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-fg-muted"
             href="/review"
           >
             <span className="material-symbols-outlined">reviews</span>
             <span className="text-xs font-medium">Review</span>
           </Link>
           <Link
-            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-zinc-300"
+            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-fg-muted"
             href="/flavor-wheels"
           >
             <span className="material-symbols-outlined">donut_small</span>

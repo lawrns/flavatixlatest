@@ -114,14 +114,14 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
     <div className="space-y-lg">
       {/* ITEM ID Section */}
       <div className="card p-md">
-        <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">
+        <h2 className="text-h3 font-semibold text-fg mb-md">
           Item Information
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
           {/* 1. Item Name/Variety (REQUIRED) */}
           <div className="md:col-span-2">
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Item Name/Variety *
             </label>
             <input
@@ -136,7 +136,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
 
           {/* 2. Picture (optional upload) */}
           <div className="md:col-span-2">
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Picture
             </label>
             {formData.picture_url ? (
@@ -147,11 +147,11 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
                   width={0}
                   height={0}
                   sizes="100vw"
-                  className="w-full h-48 object-cover rounded-lg"
+                  className="w-full h-48 object-cover rounded-soft"
                 />
                 <button
                   onClick={() => updateField('picture_url', undefined)}
-                  className="absolute top-2 right-2 w-8 h-8 bg-error text-white rounded-full hover:bg-error/90 transition-colors flex items-center justify-center"
+                className="absolute top-2 right-2 w-8 h-8 bg-signal-danger text-white rounded-full hover:bg-signal-danger/90 transition-colors flex items-center justify-center"
                 >
                   <X size={16} />
                 </button>
@@ -177,7 +177,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
 
           {/* 3. Brand */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Brand
             </label>
             <input
@@ -191,15 +191,15 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
 
           {/* 10. Category (REQUIRED dropdown) */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
-              Category *
-            </label>
+          <label className="block text-small font-medium text-fg mb-xs">
+            Category *
+          </label>
             <select
               value={formData.category}
               onChange={(e) => updateField('category', e.target.value)}
-              className="form-input w-full"
-              required
-            >
+            className="form-input w-full"
+            required
+          >
               <option value="">Select a category</option>
               {REVIEW_CATEGORIES.map((category) => (
                 <option key={category} value={category}>
@@ -211,7 +211,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
 
           {/* 4. Country (dropdown) */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Country
             </label>
             <select
@@ -236,7 +236,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
           {/* 5. State (dropdown - conditional) */}
           {formData.country && hasStates(formData.country) && (
             <div>
-              <label className="block text-small font-body font-medium text-text-primary mb-xs">
+              <label className="block text-small font-medium text-fg mb-xs">
                 State
               </label>
               <select
@@ -256,7 +256,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
 
           {/* 6. Region */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Region
             </label>
             <input
@@ -270,7 +270,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
 
           {/* 7. Vintage (4 digit format) */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Vintage
             </label>
             <input
@@ -288,7 +288,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
 
           {/* 8. Batch ID */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               Batch ID
             </label>
             <input
@@ -302,7 +302,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
 
           {/* 9. Scan UPC/Barcode */}
           <div>
-            <label className="block text-small font-body font-medium text-text-primary mb-xs">
+            <label className="block text-small font-medium text-fg mb-xs">
               UPC/Barcode
             </label>
             <input
@@ -318,7 +318,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
 
       {/* Review Content Section */}
       <div className="card p-md">
-        <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">
+        <h2 className="text-h3 font-semibold text-fg mb-md">
           Write your review
         </h2>
         <textarea
@@ -328,7 +328,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
           className="form-input w-full h-64 resize-none"
           required
         />
-        <p className="text-xs text-text-secondary mt-2 italic">
+        <p className="text-xs text-fg-muted mt-2 italic">
           Descriptors from your text will be added to your flavor wheels
         </p>
       </div>

@@ -43,7 +43,7 @@ const ReviewSection: React.FC<{
   <section className="rounded-pane border border-line bg-bg-surface p-5 shadow-sm sm:p-6">
     <div className="flex items-center justify-between gap-4">
       <div className="flex items-center gap-3">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-bg-inset text-fg-muted">
+        <div className="flex h-11 w-11 items-center justify-center rounded-pane bg-bg-inset text-fg-muted">
           <Icon className="h-5 w-5" />
         </div>
         <div>
@@ -248,7 +248,7 @@ export default function ReviewHistoryPage() {
 
           <section className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm xl:col-span-2">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-bg-inset text-fg-muted">
+              <div className="flex h-11 w-11 items-center justify-center rounded-pane bg-bg-inset text-fg-muted">
                 <Clock className="h-5 w-5" />
               </div>
               <div>

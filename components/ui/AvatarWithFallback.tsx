@@ -63,7 +63,7 @@ export const AvatarWithFallback: React.FC<AvatarWithFallbackProps> = ({
     <div className={cn('relative', className)} style={sizeStyle}>
       {isLoading && (
         <div
-          className="absolute inset-0 rounded-full bg-zinc-200 dark:bg-zinc-700 animate-pulse"
+          className="absolute inset-0 rounded-full bg-line dark:bg-bg-inset animate-pulse"
           style={sizeStyle}
         />
       )}

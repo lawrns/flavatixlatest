@@ -28,7 +28,7 @@ export const ReviewFormCharacteristics: React.FC<ReviewFormCharacteristicsProps>
 }) => {
   return (
     <div className="card p-md">
-      <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">
+      <h2 className="text-h3 font-semibold text-fg mb-md">
         Characteristics
       </h2>
 
@@ -143,7 +143,7 @@ export const ReviewFormCharacteristics: React.FC<ReviewFormCharacteristicsProps>
 
         {/* 8. Texture: Text input ONLY (NO SLIDER) */}
         <div>
-          <label className="block text-small font-body font-medium text-text-primary mb-xs">
+          <label className="block text-small font-medium text-fg mb-xs">
             Texture
           </label>
           <textarea
@@ -175,7 +175,7 @@ export const ReviewFormCharacteristics: React.FC<ReviewFormCharacteristicsProps>
 
         {/* 11. Other: Text input ONLY (NO SLIDER) */}
         <div>
-          <label className="block text-small font-body font-medium text-text-primary mb-xs">
+          <label className="block text-small font-medium text-fg mb-xs">
             Other
           </label>
           <textarea

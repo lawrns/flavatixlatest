@@ -468,26 +468,26 @@ const NewCompetitionPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
         <LoadingSpinner size="lg" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background-light pb-40">
+    <div className="min-h-screen bg-bg pb-40">
       <div className="max-w-xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-6">
           <button
             onClick={() => router.back()}
-            className="flex items-center text-text-secondary hover:text-text-primary transition-colors mb-4"
+            className="flex items-center text-fg-muted hover:text-fg transition-colors mb-4"
           >
             <ChevronLeft size={20} className="mr-1" />
             Back
           </button>
-          <h1 className="text-3xl font-display font-bold text-text-primary">Create Competition</h1>
-          <p className="text-text-secondary font-body mt-1">
+          <h1 className="text-3xl font-bold text-fg">Create Competition</h1>
+          <p className="text-fg-muted mt-1">
             Design a competition with parameters, items, and scoring
           </p>
         </div>
@@ -495,7 +495,7 @@ const NewCompetitionPage: React.FC = () => {
         {/* Step Indicator */}
         <div className="flex items-center gap-4 mb-8">
           <div
-            className={`flex items-center gap-2 ${currentStep === 'setup' ? 'text-primary' : 'text-text-secondary'}`}
+            className={`flex items-center gap-2 ${currentStep === 'setup' ? 'text-primary' : 'text-fg-muted'}`}
           >
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
@@ -506,13 +506,13 @@ const NewCompetitionPage: React.FC = () => {
             </div>
             <span className="font-medium">Setup & Parameters</span>
           </div>
-          <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-700"></div>
+          <div className="flex-1 h-px bg-bg-inset"></div>
           <div
-            className={`flex items-center gap-2 ${currentStep === 'items' ? 'text-primary' : 'text-text-secondary'}`}
+            className={`flex items-center gap-2 ${currentStep === 'items' ? 'text-primary' : 'text-fg-muted'}`}
           >
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                currentStep === 'items' ? 'bg-primary text-white' : 'bg-zinc-200 dark:bg-zinc-700'
+                currentStep === 'items' ? 'bg-primary text-white' : 'bg-bg-inset'
               }`}
             >
               2
@@ -539,7 +539,7 @@ const NewCompetitionPage: React.FC = () => {
                       placeholder="e.g., Coffee Cupping Competition 2025"
                       maxLength={120}
                     />
-                    <p className="text-xs text-text-secondary mt-1">
+                    <p className="text-xs text-fg-muted mt-1">
                       {form.name.length}/120 characters
                     </p>
                     {errors.name && <p className="text-xs text-red-600 mt-1">{errors.name}</p>}
@@ -590,7 +590,7 @@ const NewCompetitionPage: React.FC = () => {
                       <select
                         value={form.rankingType}
                         onChange={(e) => setForm({ ...form, rankingType: e.target.value as any })}
-                        className="w-full px-3 py-2 border rounded-md dark:bg-zinc-800 dark:border-zinc-700"
+                        className="w-full px-3 py-2 border border-line rounded-md bg-bg"
                       >
                         <option value="points">Total Points</option>
                         <option value="accuracy">Accuracy Percentage</option>
@@ -599,7 +599,7 @@ const NewCompetitionPage: React.FC = () => {
                     </div>
                   )}
 
-                  <div className="pt-4 border-t border-line dark:border-zinc-700">
+                  <div className="pt-4 border-t border-line dark:border-line">
                     <label className="flex items-center gap-3">
                       <input
                         type="checkbox"
@@ -613,7 +613,7 @@ const NewCompetitionPage: React.FC = () => {
                         <span className="text-sm font-medium block">
                           Include Subjective Scoring
                         </span>
-                        <span className="text-xs text-text-secondary">
+                        <span className="text-xs text-fg-muted">
                           Allow participants to enter aroma, flavor notes, and overall score
                         </span>
                       </div>
@@ -629,7 +629,7 @@ const NewCompetitionPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-xl font-semibold">Parameters</h3>
-                    <p className="text-sm text-text-secondary mt-1">
+                    <p className="text-sm text-fg-muted mt-1">
                       Define parameters that will be the same across all items
                     </p>
                   </div>
@@ -637,8 +637,8 @@ const NewCompetitionPage: React.FC = () => {
               </CardHeader>
               <CardContent>
                 {form.parameterTemplates.length === 0 ? (
-                  <div className="text-center py-8 border-2 border-dashed border-line dark:border-zinc-700 rounded-lg">
-                    <p className="text-text-secondary mb-4">
+                  <div className="text-center py-8 border-2 border-dashed border-line rounded-pane">
+                    <p className="text-fg-muted mb-4">
                       No parameters yet. Add parameters that participants will evaluate.
                     </p>
                     <Button onClick={addParameterTemplate} variant="secondary">
@@ -690,19 +690,19 @@ const NewCompetitionPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-xl font-semibold">Competition Items</h3>
-                    <p className="text-sm text-text-secondary mt-1">
+                    <p className="text-sm text-fg-muted mt-1">
                       Add items and set the correct answers for each
                     </p>
                   </div>
-                  <div className="text-sm text-text-secondary">
+                  <div className="text-sm text-fg-muted">
                     {form.parameterTemplates.length} parameters per item
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
                 {form.items.length === 0 ? (
-                  <div className="text-center py-8 border-2 border-dashed border-line dark:border-zinc-700 rounded-lg">
-                    <p className="text-text-secondary mb-4">
+                  <div className="text-center py-8 border-2 border-dashed border-line rounded-pane">
+                    <p className="text-fg-muted mb-4">
                       No items yet. Add items for participants to evaluate.
                     </p>
                     <Button onClick={addItem} variant="secondary">
@@ -813,9 +813,9 @@ const ParameterTemplateCard: React.FC<ParameterTemplateCardProps> = ({
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-zinc-800 p-4 rounded-lg">
+    <div className="surface-inset p-4 rounded-soft">
       <div className="flex items-start justify-between mb-3">
-        <span className="text-sm font-medium text-text-secondary">Parameter {index + 1}</span>
+        <span className="text-sm font-medium text-fg-muted">Parameter {index + 1}</span>
         <button
           onClick={onRemove}
           className="p-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
@@ -844,7 +844,7 @@ const ParameterTemplateCard: React.FC<ParameterTemplateCardProps> = ({
             <select
               value={template.type}
               onChange={(e) => onUpdate({ type: e.target.value as ParameterType })}
-              className="w-full px-2 py-1.5 border rounded-md text-sm dark:bg-zinc-700 dark:border-zinc-600"
+              className="w-full px-2 py-1.5 border border-line rounded-md text-sm bg-bg"
             >
               <option value="multiple_choice">Multiple Choice</option>
               <option value="true_false">True/False</option>
@@ -939,11 +939,11 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
   includeSubjective,
 }) => {
   return (
-    <div className="border rounded-lg p-4 dark:border-zinc-700">
+    <div className="surface-page p-4 rounded-pane">
       <div className="flex items-center justify-between mb-2">
         <button
           onClick={onToggle}
-          className="flex items-center gap-2 text-lg font-display font-semibold hover:text-primary transition-colors"
+          className="flex items-center gap-2 text-lg font-semibold hover:text-primary transition-colors"
         >
           {sessionIsBlind || item.isBlind ? (
             <EyeOff size={20} className="text-amber-600" />
@@ -987,7 +987,7 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
 
           {/* Subjective Inputs */}
           {includeSubjective && (
-            <div className="border-t pt-4 dark:border-zinc-700">
+            <div className="border-t pt-4 dark:border-line">
               <h4 className="font-semibold mb-3 flex items-center gap-2">
                 <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded">
                   Subjective
@@ -1027,7 +1027,7 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
                     }
                     className="w-full"
                   />
-                  <div className="flex justify-between text-xs text-text-secondary">
+                  <div className="flex justify-between text-xs text-fg-muted">
                     <span>Poor (1)</span>
                     <span>Excellent (100)</span>
                   </div>
@@ -1038,7 +1038,7 @@ const CompetitionItemCard: React.FC<CompetitionItemCardProps> = ({
 
           {/* Parameter Answers */}
           {parameterTemplates.length > 0 && (
-            <div className="border-t pt-4 dark:border-zinc-700">
+            <div className="border-t pt-4 dark:border-line">
               <h4 className="font-semibold mb-3">Parameter Answers</h4>
               <div className="space-y-4">
                 {parameterTemplates.map((template) => {
@@ -1082,10 +1082,10 @@ const ParameterAnswerInput: React.FC<ParameterAnswerInputProps> = ({
   const errorKey = `item-${itemIndex}-param-${template.id}`;
 
   return (
-    <div className="bg-gray-50 dark:bg-zinc-800 p-3 rounded-lg">
+    <div className="surface-inset p-3 rounded-soft">
       <div className="flex items-center justify-between mb-2">
         <span className="font-medium text-sm">{template.name}</span>
-        <span className="text-xs text-text-secondary">{template.points} pts</span>
+        <span className="text-xs text-fg-muted">{template.points} pts</span>
       </div>
 
       {template.type === 'multiple_choice' && (
@@ -1109,7 +1109,7 @@ const ParameterAnswerInput: React.FC<ParameterAnswerInputProps> = ({
               <span className="text-sm">{option || `Option ${index + 1}`}</span>
             </label>
           ))}
-          <p className="text-xs text-text-secondary mt-1">Check correct answer(s)</p>
+          <p className="text-xs text-fg-muted mt-1">Check correct answer(s)</p>
         </div>
       )}
 
@@ -1202,7 +1202,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
-        className="bg-white dark:bg-zinc-900 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+        className="surface-page rounded-pane max-w-2xl w-full max-h-[80vh] overflow-y-auto"
         role="dialog"
         aria-modal="true"
         aria-labelledby="preview-modal-title"
@@ -1214,7 +1214,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
             </h3>
             <button
               onClick={onClose}
-              className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+              className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-bg-inset rounded-soft transition-colors"
               aria-label="Close preview"
             >
               <X size={24} />
@@ -1224,12 +1224,12 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
           <div className="space-y-6">
             <div>
               <h4 className="font-semibold text-lg mb-1">Competition Name</h4>
-              <p className="text-text-secondary">{form.name || 'Untitled Competition'}</p>
+              <p className="text-fg-muted">{form.name || 'Untitled Competition'}</p>
             </div>
 
             <div>
               <h4 className="font-semibold text-lg mb-1">Category</h4>
-              <p className="text-text-secondary">{form.baseCategory || 'Not selected'}</p>
+              <p className="text-fg-muted">{form.baseCategory || 'Not selected'}</p>
             </div>
 
             <div>
@@ -1238,9 +1238,9 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
               </h4>
               <div className="space-y-2">
                 {form.parameterTemplates.map((param) => (
-                  <div key={param.id} className="bg-gray-50 dark:bg-zinc-800 p-2 rounded text-sm">
+                  <div key={param.id} className="surface-inset p-2 rounded-soft text-sm">
                     <span className="font-medium">{param.name}</span>
-                    <span className="text-text-secondary ml-2">
+                    <span className="text-fg-muted ml-2">
                       ({param.type} - {param.points} pts)
                     </span>
                   </div>
@@ -1252,7 +1252,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
               <h4 className="font-semibold text-lg mb-2">Items ({form.items.length})</h4>
               <div className="space-y-4">
                 {form.items.map((item) => (
-                  <div key={item.id} className="border dark:border-zinc-700 rounded-lg p-4">
+                  <div key={item.id} className="surface-page rounded-pane p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="font-semibold">
                         {item.number}. {item.name}
@@ -1265,7 +1265,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ form, onClose }) => {
                     </div>
 
                     {form.includeSubjectiveInputs && (
-                      <div className="text-sm text-text-secondary mb-2">
+                      <div className="text-sm text-fg-muted mb-2">
                         <p>Aroma: {item.subjective.correctAroma || 'Not set'}</p>
                         <p>Flavor: {item.subjective.correctFlavor || 'Not set'}</p>
                         <p>Score: {item.subjective.correctOverallScore}</p>

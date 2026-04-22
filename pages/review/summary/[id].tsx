@@ -152,10 +152,10 @@ const ReviewSummaryPage: React.FC = () => {
     >
       <div className="space-y-6">
         {/* Review ID */}
-        <div className="card p-md mb-lg bg-primary/5 border-primary/20">
+        <div className="card p-md mb-lg bg-bg-inset border border-line/60">
           <div className="text-center">
-            <div className="text-sm font-medium text-text-secondary mb-1">Review ID</div>
-            <div className="text-h3 font-heading font-bold text-primary">
+            <div className="text-sm font-medium text-fg-muted mb-1">Review ID</div>
+            <div className="text-h3 font-bold text-primary">
               {review.review_id || 'N/A'}
             </div>
           </div>
@@ -163,7 +163,7 @@ const ReviewSummaryPage: React.FC = () => {
 
         {/* Item Information */}
         <div className="card p-md mb-lg">
-          <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">
+          <h2 className="text-h3 font-semibold text-fg mb-md">
             Item Information
           </h2>
 
@@ -173,7 +173,7 @@ const ReviewSummaryPage: React.FC = () => {
                 src={review.picture_url}
                 alt={review.item_name}
                 fill
-                className="object-cover rounded-lg"
+                className="object-cover rounded-soft"
                 sizes="100vw"
               />
             </div>
@@ -181,53 +181,53 @@ const ReviewSummaryPage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
             <div>
-              <div className="text-sm font-medium text-text-secondary">Item Name</div>
-              <div className="text-base text-text-primary">{review.item_name || 'N/A'}</div>
+              <div className="text-sm font-medium text-fg-muted">Item Name</div>
+              <div className="text-base text-fg">{review.item_name || 'N/A'}</div>
             </div>
             <div>
-              <div className="text-sm font-medium text-text-secondary">Category</div>
-              <div className="text-base text-text-primary">{review.category || 'N/A'}</div>
+              <div className="text-sm font-medium text-fg-muted">Category</div>
+              <div className="text-base text-fg">{review.category || 'N/A'}</div>
             </div>
             {review.brand && (
               <div>
-                <div className="text-sm font-medium text-text-secondary">Brand</div>
-                <div className="text-base text-text-primary">{review.brand}</div>
+                <div className="text-sm font-medium text-fg-muted">Brand</div>
+                <div className="text-base text-fg">{review.brand}</div>
               </div>
             )}
             {review.country && (
               <div>
-                <div className="text-sm font-medium text-text-secondary">Country</div>
-                <div className="text-base text-text-primary">{review.country}</div>
+                <div className="text-sm font-medium text-fg-muted">Country</div>
+                <div className="text-base text-fg">{review.country}</div>
               </div>
             )}
             {review.state && (
               <div>
-                <div className="text-sm font-medium text-text-secondary">State</div>
-                <div className="text-base text-text-primary">{review.state}</div>
+                <div className="text-sm font-medium text-fg-muted">State</div>
+                <div className="text-base text-fg">{review.state}</div>
               </div>
             )}
             {review.region && (
               <div>
-                <div className="text-sm font-medium text-text-secondary">Region</div>
-                <div className="text-base text-text-primary">{review.region}</div>
+                <div className="text-sm font-medium text-fg-muted">Region</div>
+                <div className="text-base text-fg">{review.region}</div>
               </div>
             )}
             {review.vintage && (
               <div>
-                <div className="text-sm font-medium text-text-secondary">Vintage</div>
-                <div className="text-base text-text-primary">{review.vintage}</div>
+                <div className="text-sm font-medium text-fg-muted">Vintage</div>
+                <div className="text-base text-fg">{review.vintage}</div>
               </div>
             )}
             {review.batch_id && (
               <div>
-                <div className="text-sm font-medium text-text-secondary">Batch ID</div>
-                <div className="text-base text-text-primary">{review.batch_id}</div>
+                <div className="text-sm font-medium text-fg-muted">Batch ID</div>
+                <div className="text-base text-fg">{review.batch_id}</div>
               </div>
             )}
             {review.upc_barcode && (
               <div>
-                <div className="text-sm font-medium text-text-secondary">UPC/Barcode</div>
-                <div className="text-base text-text-primary">{review.upc_barcode}</div>
+                <div className="text-sm font-medium text-fg-muted">UPC/Barcode</div>
+                <div className="text-base text-fg">{review.upc_barcode}</div>
               </div>
             )}
           </div>
@@ -237,9 +237,9 @@ const ReviewSummaryPage: React.FC = () => {
         {isProse ? (
           /* Prose Review Content */
           <div className="card p-md mb-lg">
-            <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">Review</h2>
+            <h2 className="text-h3 font-semibold text-fg mb-md">Review</h2>
             <div className="prose max-w-none">
-              <p className="text-base text-text-primary whitespace-pre-wrap">
+              <p className="text-base text-fg whitespace-pre-wrap">
                 {review.review_content || 'N/A'}
               </p>
             </div>
@@ -247,7 +247,7 @@ const ReviewSummaryPage: React.FC = () => {
         ) : (
           /* Structured Review Characteristics */
           <div className="card p-md mb-lg">
-            <h2 className="text-h3 font-heading font-semibold text-text-primary mb-md">
+            <h2 className="text-h3 font-semibold text-fg mb-md">
               Characteristics
             </h2>
 
@@ -256,7 +256,7 @@ const ReviewSummaryPage: React.FC = () => {
               {(review.aroma_notes || review.aroma_intensity) && (
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <div className="text-sm font-medium text-text-secondary">Aroma</div>
+                    <div className="text-sm font-medium text-fg-muted">Aroma</div>
                     {review.aroma_intensity && (
                       <div className="text-sm font-semibold text-primary">
                         {review.aroma_intensity}/100
@@ -264,7 +264,7 @@ const ReviewSummaryPage: React.FC = () => {
                     )}
                   </div>
                   {review.aroma_notes && (
-                    <div className="text-base text-text-primary">{review.aroma_notes}</div>
+                    <div className="text-base text-fg">{review.aroma_notes}</div>
                   )}
                 </div>
               )}
@@ -273,7 +273,7 @@ const ReviewSummaryPage: React.FC = () => {
               {(review.salt_notes || review.salt_score) && (
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <div className="text-sm font-medium text-text-secondary">Saltiness</div>
+                    <div className="text-sm font-medium text-fg-muted">Saltiness</div>
                     {review.salt_score && (
                       <div className="text-sm font-semibold text-primary">
                         {review.salt_score}/100
@@ -281,7 +281,7 @@ const ReviewSummaryPage: React.FC = () => {
                     )}
                   </div>
                   {review.salt_notes && (
-                    <div className="text-base text-text-primary">{review.salt_notes}</div>
+                    <div className="text-base text-fg">{review.salt_notes}</div>
                   )}
                 </div>
               )}
@@ -290,7 +290,7 @@ const ReviewSummaryPage: React.FC = () => {
               {(review.sweetness_notes || review.sweetness_score) && (
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <div className="text-sm font-medium text-text-secondary">Sweetness</div>
+                    <div className="text-sm font-medium text-fg-muted">Sweetness</div>
                     {review.sweetness_score && (
                       <div className="text-sm font-semibold text-primary">
                         {review.sweetness_score}/100
@@ -298,7 +298,7 @@ const ReviewSummaryPage: React.FC = () => {
                     )}
                   </div>
                   {review.sweetness_notes && (
-                    <div className="text-base text-text-primary">{review.sweetness_notes}</div>
+                    <div className="text-base text-fg">{review.sweetness_notes}</div>
                   )}
                 </div>
               )}
@@ -307,7 +307,7 @@ const ReviewSummaryPage: React.FC = () => {
               {(review.acidity_notes || review.acidity_score) && (
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <div className="text-sm font-medium text-text-secondary">Acidity</div>
+                    <div className="text-sm font-medium text-fg-muted">Acidity</div>
                     {review.acidity_score && (
                       <div className="text-sm font-semibold text-primary">
                         {review.acidity_score}/100
@@ -315,7 +315,7 @@ const ReviewSummaryPage: React.FC = () => {
                     )}
                   </div>
                   {review.acidity_notes && (
-                    <div className="text-base text-text-primary">{review.acidity_notes}</div>
+                    <div className="text-base text-fg">{review.acidity_notes}</div>
                   )}
                 </div>
               )}
@@ -324,7 +324,7 @@ const ReviewSummaryPage: React.FC = () => {
               {(review.umami_notes || review.umami_score) && (
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <div className="text-sm font-medium text-text-secondary">Umami</div>
+                    <div className="text-sm font-medium text-fg-muted">Umami</div>
                     {review.umami_score && (
                       <div className="text-sm font-semibold text-primary">
                         {review.umami_score}/100
@@ -332,7 +332,7 @@ const ReviewSummaryPage: React.FC = () => {
                     )}
                   </div>
                   {review.umami_notes && (
-                    <div className="text-base text-text-primary">{review.umami_notes}</div>
+                    <div className="text-base text-fg">{review.umami_notes}</div>
                   )}
                 </div>
               )}
@@ -341,7 +341,7 @@ const ReviewSummaryPage: React.FC = () => {
               {(review.spiciness_notes || review.spiciness_score) && (
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <div className="text-sm font-medium text-text-secondary">Spiciness</div>
+                    <div className="text-sm font-medium text-fg-muted">Spiciness</div>
                     {review.spiciness_score && (
                       <div className="text-sm font-semibold text-primary">
                         {review.spiciness_score}/100
@@ -349,7 +349,7 @@ const ReviewSummaryPage: React.FC = () => {
                     )}
                   </div>
                   {review.spiciness_notes && (
-                    <div className="text-base text-text-primary">{review.spiciness_notes}</div>
+                    <div className="text-base text-fg">{review.spiciness_notes}</div>
                   )}
                 </div>
               )}
@@ -358,7 +358,7 @@ const ReviewSummaryPage: React.FC = () => {
               {(review.flavor_notes || review.flavor_intensity) && (
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <div className="text-sm font-medium text-text-secondary">Flavor</div>
+                    <div className="text-sm font-medium text-fg-muted">Flavor</div>
                     {review.flavor_intensity && (
                       <div className="text-sm font-semibold text-primary">
                         {review.flavor_intensity}/100
@@ -366,7 +366,7 @@ const ReviewSummaryPage: React.FC = () => {
                     )}
                   </div>
                   {review.flavor_notes && (
-                    <div className="text-base text-text-primary">{review.flavor_notes}</div>
+                    <div className="text-base text-fg">{review.flavor_notes}</div>
                   )}
                 </div>
               )}
@@ -374,8 +374,8 @@ const ReviewSummaryPage: React.FC = () => {
               {/* Texture */}
               {review.texture_notes && (
                 <div>
-                  <div className="text-sm font-medium text-text-secondary mb-1">Texture</div>
-                  <div className="text-base text-text-primary">{review.texture_notes}</div>
+                  <div className="text-sm font-medium text-fg-muted mb-1">Texture</div>
+                  <div className="text-base text-fg">{review.texture_notes}</div>
                 </div>
               )}
 
@@ -383,7 +383,7 @@ const ReviewSummaryPage: React.FC = () => {
               {review.typicity_score && (
                 <div>
                   <div className="flex items-center justify-between">
-                    <div className="text-sm font-medium text-text-secondary">Typicity</div>
+                    <div className="text-sm font-medium text-fg-muted">Typicity</div>
                     <div className="text-sm font-semibold text-primary">
                       {review.typicity_score}/100
                     </div>
@@ -395,7 +395,7 @@ const ReviewSummaryPage: React.FC = () => {
               {review.complexity_score && (
                 <div>
                   <div className="flex items-center justify-between">
-                    <div className="text-sm font-medium text-text-secondary">Complexity</div>
+                    <div className="text-sm font-medium text-fg-muted">Complexity</div>
                     <div className="text-sm font-semibold text-primary">
                       {review.complexity_score}/100
                     </div>
@@ -406,17 +406,17 @@ const ReviewSummaryPage: React.FC = () => {
               {/* Other */}
               {review.other_notes && (
                 <div>
-                  <div className="text-sm font-medium text-text-secondary mb-1">Other</div>
-                  <div className="text-base text-text-primary">{review.other_notes}</div>
+                  <div className="text-sm font-medium text-fg-muted mb-1">Other</div>
+                  <div className="text-base text-fg">{review.other_notes}</div>
                 </div>
               )}
 
               {/* Overall */}
               {review.overall_score && (
-                <div className="pt-md border-t border-border-default">
+                <div className="pt-md border-t border-line">
                   <div className="flex items-center justify-between">
-                    <div className="text-base font-semibold text-text-primary">Overall Score</div>
-                    <div className="text-h3 font-heading font-bold text-primary">
+                    <div className="text-base font-semibold text-fg">Overall Score</div>
+                    <div className="text-h3 font-bold text-primary">
                       {review.overall_score}/100
                     </div>
                   </div>

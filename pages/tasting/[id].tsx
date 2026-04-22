@@ -157,10 +157,10 @@ const TastingSessionPage: React.FC = () => {
 
   if (loading || isLoading) {
     return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
         <div className="flex flex-col items-center">
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-sm"></div>
-          <div className="text-text-primary text-h4 font-body font-medium">
+          <div className="text-fg text-h4 font-medium">
             Loading tasting session...
           </div>
         </div>
@@ -170,12 +170,12 @@ const TastingSessionPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background-light dark:bg-background-dark">
+      <div className="min-h-screen bg-bg dark:bg-bg-inset">
         <div className="container mx-auto px-md py-lg max-w-xl">
           <div className="text-center">
-            <div className="w-16 h-16 bg-error/10 rounded-full flex items-center justify-center mx-auto mb-md">
+            <div className="w-16 h-16 bg-signal-danger/10 rounded-full flex items-center justify-center mx-auto mb-md">
               <svg
-                className="w-8 h-8 text-error"
+                className="w-8 h-8 text-signal-danger"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -188,10 +188,10 @@ const TastingSessionPage: React.FC = () => {
                 />
               </svg>
             </div>
-            <h1 className="text-h1 font-heading font-bold text-text-primary mb-sm">
+            <h1 className="text-h1 font-bold text-fg mb-sm">
               Session Not Found
             </h1>
-            <p className="text-body text-text-secondary mb-lg">{error}</p>
+            <p className="text-body text-fg-muted mb-lg">{error}</p>
             <button onClick={() => router.push('/dashboard')} className="btn-primary">
               Go to Dashboard
             </button>
@@ -206,14 +206,14 @@ const TastingSessionPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-sans text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
+    <div className="bg-bg dark:bg-bg-inset text-fg dark:text-fg min-h-screen pb-20">
       <main id="main-content">
         <div className="container mx-auto px-md py-lg max-w-xl">
           {/* Header */}
           <div className="mb-lg">
             <button
               onClick={() => router.back()}
-              className="flex items-center text-text-secondary hover:text-text-primary mb-sm transition-colors font-body"
+              className="flex items-center text-fg-muted hover:text-fg mb-sm transition-colors"
             >
               <ChevronLeft size={20} className="mr-2" />
               Back

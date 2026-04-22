@@ -226,7 +226,7 @@ export function PWAInstallBanner() {
 
   return (
     <div className="fixed bottom-24 left-4 right-4 md:left-auto md:right-8 md:w-96 z-30">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-primary-500">
+      <div className="bg-white dark:bg-bg-surface rounded-soft shadow-md p-4 border border-primary-500">
         <div className="flex items-start space-x-3">
           <div className="flex-shrink-0">
             <svg className="h-8 w-8 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -234,10 +234,10 @@ export function PWAInstallBanner() {
             </svg>
           </div>
           <div className="flex-1">
-            <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+            <h3 className="text-sm font-medium text-fg dark:text-white">
               Install Flavatix
             </h3>
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            <p className="mt-1 text-sm text-fg-subtle dark:text-fg-subtle">
               Install our app for offline access and a native experience
             </p>
             <div className="mt-3 flex space-x-3">
@@ -249,7 +249,7 @@ export function PWAInstallBanner() {
               </button>
               <button
                 onClick={() => {/* Dismiss logic */}}
-                className="text-sm font-medium text-gray-500 hover:text-gray-400"
+                className="text-sm font-medium text-fg-subtle hover:text-fg-subtle"
               >
                 Maybe Later
               </button>

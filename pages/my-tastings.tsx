@@ -207,7 +207,7 @@ export default function MyTastingsPage() {
             <div
               key={tasting.id}
               className={cn(
-                'bg-bg-surface dark:bg-zinc-800 rounded-pane shadow-sm border border-line dark:border-zinc-700 p-5 hover:shadow-md transition-shadow',
+                'bg-bg-surface dark:bg-bg-surface rounded-pane shadow-sm border border-line dark:border-line p-5 hover:shadow-md transition-shadow',
                 selectMode && selectedIds.has(tasting.id) ? 'ring-2 ring-primary' : ''
               )}
               onClick={selectMode ? () => toggleSelection(tasting.id) : undefined}
@@ -226,10 +226,10 @@ export default function MyTastingsPage() {
                     </div>
                   )}
                   <div className="flex-1">
-                    <h3 className="text-h3 font-semibold text-fg dark:text-zinc-50 mb-1">
+                    <h3 className="text-h3 font-semibold text-fg dark:text-fg mb-1">
                       {tasting.session_name || `${tasting.category} Tasting`}
                     </h3>
-                    <p className="text-body-sm text-fg-muted dark:text-zinc-300">
+                    <p className="text-body-sm text-fg-muted dark:text-fg-muted">
                       {new Date(tasting.created_at).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
@@ -248,17 +248,17 @@ export default function MyTastingsPage() {
               <div className="grid grid-cols-3 gap-4 mb-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary">{tasting.total_items}</div>
-                  <div className="text-body-sm text-fg-muted dark:text-zinc-300">Items</div>
+                  <div className="text-body-sm text-fg-muted dark:text-fg-muted">Items</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary">{tasting.completed_items}</div>
-                  <div className="text-body-sm text-fg-muted dark:text-zinc-300">Scored</div>
+                  <div className="text-body-sm text-fg-muted dark:text-fg-muted">Scored</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary">
                     {tasting.average_score ? tasting.average_score.toFixed(1) : '—'}
                   </div>
-                  <div className="text-body-sm text-fg-muted dark:text-zinc-300">Avg Score</div>
+                  <div className="text-body-sm text-fg-muted dark:text-fg-muted">Avg Score</div>
                 </div>
               </div>
 
@@ -321,7 +321,7 @@ export default function MyTastingsPage() {
 
           {/* Pagination Controls */}
           {(page > 1 || hasMore) && (
-            <div className="flex items-center justify-center gap-4 mt-6 pt-4 border-t border-line dark:border-zinc-700">
+            <div className="flex items-center justify-center gap-4 mt-6 pt-4 border-t border-line dark:border-line">
               <Button
                 variant="secondary"
                 size="sm"
@@ -330,7 +330,7 @@ export default function MyTastingsPage() {
               >
                 Previous
               </Button>
-              <span className="text-body-sm text-fg-muted dark:text-zinc-300">Page {page}</span>
+              <span className="text-body-sm text-fg-muted dark:text-fg-muted">Page {page}</span>
               <Button
                 variant="secondary"
                 size="sm"
