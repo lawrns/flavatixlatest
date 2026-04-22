@@ -67,6 +67,7 @@
 
   /* === TYPOGRAPHY === */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'DM Serif Display', Georgia, 'Times New Roman', serif;
 
   /* Type scale — Inter · 1.200 ratio */
   --text-display:  48px;

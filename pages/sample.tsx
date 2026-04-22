@@ -4,11 +4,11 @@ import Image from 'next/image';
 
 export default function SamplePage() {
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
+    <div className="bg-background-light dark:bg-background-dark font-sans text-zinc-900 dark:text-zinc-50 min-h-screen pb-20">
       <div className="flex min-h-screen flex-col">
         {/* Header */}
         <header className="flex items-center border-b border-line dark:border-zinc-700 p-4">
-          <button className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-bg-inset:bg-zinc-800">
+          <button className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-bg-inset dark:hover:bg-zinc-800">
             <span className="material-symbols-outlined">arrow_back</span>
           </button>
           <h1 className="flex-1 text-center text-xl font-bold">Design System Sample</h1>
@@ -22,7 +22,7 @@ export default function SamplePage() {
             {/* Hero Section */}
             <section className="text-center">
               <div className="relative h-64 w-full mb-6">
-                <div className="absolute inset-0 bg-cover bg-center rounded-lg" style={{backgroundImage: "url('https://images.unsplash.com/photo-1558221525-4b07c87c713b?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"}}></div>
+                <div className="absolute inset-0 bg-cover bg-center rounded-lg" style={{backgroundImage: "url('/generated-images/hero/hero-background.webp')"}}></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-background-light from-0% rounded-lg"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <svg className="h-24 w-24 text-white" fill="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -168,7 +168,7 @@ export default function SamplePage() {
                     <Image
                       alt="Profile avatar"
                       className="h-28 w-28 rounded-full object-cover"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSm5L3p6blsbUuAYpXRwOUXiE9ky-AG-Sz02psWS4h2zpw708v3wxwh3vpP_kxSkiZLVPIVbc50Sum9TFvXaGx34RR_d75YveTw6iFE2CLka45Fnl0xDoMmyNF5jFTHB-eCJmuUtzL2cbc7gpDVJEx8twzlWe0CTe5K8PoK1rq2M4oTnueMIIUovn1mLFQ9lokszpggl6N3QhvWXt3E1GS2LLRfFY7VjXZtc9kb7EGzg9JNruX2yADzNn-jHP12ks41kRFQprNbeM"
+                      src="/generated-images/onboarding/onboarding-discover.webp"
                       width={112}
                       height={112}
                     />
@@ -191,7 +191,7 @@ export default function SamplePage() {
                       { label: 'Nationality', value: 'Mexico' },
                       { label: 'Tasting Experience', value: 'Intermediate' }
                     ].map((item, index) => (
-                      <div key={index} className="flex items-center justify-between p-4 transition-colors hover:bg-bg-inset:bg-zinc-700">
+                      <div key={index} className="flex items-center justify-between p-4 transition-colors hover:bg-bg-inset dark:hover:bg-zinc-700">
                         <div>
                           <p className="font-medium">{item.label}</p>
                           <p className="text-sm text-fg-subtle dark:text-zinc-300">{item.value}</p>

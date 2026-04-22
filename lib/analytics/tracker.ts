@@ -117,7 +117,7 @@ class AnalyticsTracker {
 
       if (backendWarning) {
         this.backendTrackingDisabled = true;
-        logger.warn('Analytics', 'Disabling backend analytics for the current session', {
+        logger.debug('Analytics', 'Disabling backend analytics for the current session', {
           context,
           endpoint,
           status: response.status,

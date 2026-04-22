@@ -20,7 +20,7 @@ const CompetitionPage: React.FC = () => {
       containerSize="2xl"
     >
       <div className="space-y-6">
-        <section className="rounded-[2rem] border border-line bg-white/90 p-5 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.2)]">
+        <section className="rounded-pane border border-line bg-bg-surface/90 p-5 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.2)]">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="max-w-2xl space-y-2">
               <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
@@ -38,7 +38,7 @@ const CompetitionPage: React.FC = () => {
             <button
               type="button"
               onClick={() => router.push('/taste')}
-              className="inline-flex items-center gap-2 text-body-sm font-semibold text-fg-muted transition-colors hover:text-fg"
+              className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap text-body-sm font-semibold text-fg-muted transition-colors hover:text-fg"
             >
               Back to Taste
               <PlayCircle className="h-4 w-4" />
@@ -50,8 +50,8 @@ const CompetitionPage: React.FC = () => {
           <div className="grid gap-4">
             <ModeCard
               icon={Users}
-              iconBgColor="bg-emerald-500/10"
-              iconColor="text-emerald-700"
+              iconBgColor="bg-signal-good/10"
+              iconColor="text-signal-good"
               title="Join Competition"
               description="Enter a competition code and jump into an existing scored tasting session."
               href="/join-tasting"
@@ -59,8 +59,8 @@ const CompetitionPage: React.FC = () => {
             />
             <ModeCard
               icon={Trophy}
-              iconBgColor="bg-amber-500/10"
-              iconColor="text-amber-700"
+              iconBgColor="bg-signal-warn/10"
+              iconColor="text-signal-warn"
               title="Create Competition"
               description="Set up a new competition session, define the rules, and invite participants."
               href="/create-tasting"
@@ -68,7 +68,7 @@ const CompetitionPage: React.FC = () => {
             />
           </div>
 
-          <div className="rounded-[2rem] border border-line bg-bg-surface p-5 shadow-sm">
+          <div className="rounded-pane border border-line bg-bg-surface p-5 shadow-sm">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-bg-inset text-fg-muted">
                 <BarChart3 className="h-5 w-5" />
@@ -81,7 +81,7 @@ const CompetitionPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="mt-5 rounded-[1.5rem] border border-dashed border-line bg-white p-5">
+            <div className="mt-5 rounded-soft border border-dashed border-line bg-bg-inset p-5">
               <p className="text-body-sm leading-relaxed text-fg-muted">
                 No competitions yet. Start one from the cards on the left or join a code
                 shared by another host.

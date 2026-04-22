@@ -13,6 +13,7 @@
  *   logger.error('API', 'Failed to fetch', error);
  */
 
+/* eslint-disable no-console -- this module is the central console-backed logging adapter. */
 import * as Sentry from '@sentry/nextjs';
 
 const LOG_LEVELS = {

@@ -593,20 +593,20 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
 
             {/* Overall Score - Show when requested */}
             {showOverallScore && (
-              <div className="mb-6 py-5 px-4 bg-gemini-card dark:bg-zinc-800/60 rounded-pane border border-gemini-border dark:border-zinc-700">
+              <div className="mb-6 py-5 px-4 bg-bg-surface dark:bg-bg-surface/60 rounded-pane border border-line dark:border-line">
                 <div className="text-center">
-                  <div className="inline-flex items-center gap-2 text-xs font-semibold text-gemini-text-gray dark:text-fg-subtle mb-3 tracking-widest uppercase">
+                  <div className="inline-flex items-center gap-2 text-xs font-semibold text-fg-muted dark:text-fg-subtle mb-3 tracking-widest uppercase">
                     <Star size={12} className="fill-current" />
                     Overall Score
                   </div>
                   <div className="flex flex-col items-center space-y-3">
                     {/* Score display */}
                     <div className="relative">
-                      <div className="text-5xl sm:text-6xl font-bold text-gemini-text-dark dark:text-white leading-none tabular-nums">
+                      <div className="text-5xl sm:text-6xl font-bold text-fg dark:text-fg leading-none tabular-nums">
                         {localScore}
                       </div>
                       {scoreTouched && (
-                        <div className="mt-1 text-xs font-medium text-gemini-text-muted dark:text-fg-subtle">
+                        <div className="mt-1 text-xs font-medium text-fg-subtle dark:text-fg-subtle">
                           {getScoreLabel(localScore)}
                         </div>
                       )}
@@ -630,7 +630,7 @@ const TastingItem: React.FC<TastingItemProps> = React.memo(
                           #E6E6E6 100%)`,
                         }}
                       />
-                      <div className="flex justify-between mt-1 text-xs text-gemini-text-muted dark:text-fg-subtle">
+                      <div className="flex justify-between mt-1 text-xs text-fg-subtle dark:text-fg-subtle">
                         <span>0</span>
                         <span>50</span>
                         <span>100</span>

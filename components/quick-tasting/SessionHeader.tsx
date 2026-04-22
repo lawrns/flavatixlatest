@@ -82,14 +82,14 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
   };
 
   return (
-    <div className="rounded-pane bg-gemini-card dark:bg-zinc-800/80 border border-gemini-border dark:border-zinc-700 p-4 mb-6">
+    <div className="rounded-pane bg-bg-surface dark:bg-bg-surface/80 border border-line dark:border-line p-4 mb-6">
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div className="min-w-0 flex-1">
           {/* Session Name */}
           {isEditingName ? (
             <div className="mb-2">
-              <div className="p-2 rounded-lg bg-white dark:bg-zinc-900 border border-gemini-border dark:border-zinc-600">
-                <div className="text-xs font-medium text-gemini-text-muted uppercase tracking-wider mb-1">
+              <div className="p-2 rounded-lg bg-bg-surface dark:bg-bg-inset border border-line dark:border-line-strong">
+                <div className="text-xs font-medium text-fg-subtle uppercase tracking-wider mb-1">
                   Editing Session Name
                 </div>
                 <div className="flex items-center gap-2">
@@ -99,11 +99,11 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
                     onChange={(e) => setEditingName(e.target.value)}
                     onBlur={saveName}
                     onKeyDown={handleKeyPress}
-                    className="text-xl font-semibold text-gemini-text-dark dark:text-white bg-transparent border-none outline-none focus:ring-0 flex-1 min-w-0"
+                    className="text-xl font-semibold text-fg dark:text-fg bg-transparent border-none outline-none focus:ring-0 flex-1 min-w-0"
                     placeholder="Enter session name..."
                     autoFocus
                   />
-                  <span className="text-xs text-gemini-text-muted flex-shrink-0">
+                  <span className="text-xs text-fg-subtle flex-shrink-0">
                     Enter to save
                   </span>
                 </div>
@@ -114,7 +114,7 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
               <div
                 className={`flex items-center gap-2 p-2 -m-2 rounded-lg ${
                   canEditName
-                    ? 'hover:bg-white dark:hover:bg-zinc-700/50 cursor-pointer'
+                    ? 'hover:bg-bg-surface dark:hover:bg-bg-hover/50 cursor-pointer'
                     : 'opacity-60 cursor-not-allowed'
                 } transition-colors group`}
                 onClick={canEditName ? startEditing : undefined}
@@ -123,17 +123,17 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
                 }
               >
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs font-medium text-gemini-text-muted uppercase tracking-wider mb-0.5">
+                  <div className="text-xs font-medium text-fg-subtle uppercase tracking-wider mb-0.5">
                     Session Name
                   </div>
                   <div className="flex items-center gap-2">
-                    <h2 className="text-xl font-bold text-gemini-text-dark dark:text-white truncate">
+                    <h2 className="text-xl font-bold text-fg dark:text-fg truncate">
                       {session.session_name || 'Quick Tasting'}
                     </h2>
                     {canEditName && (
                       <Edit
                         size={14}
-                        className="text-gemini-text-muted opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                        className="text-fg-subtle opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
                       />
                     )}
                   </div>
@@ -186,7 +186,7 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
           {phase === 'setup' && (
             <button
               onClick={onToggleEditDashboard}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-soft text-sm font-medium text-gemini-text-gray hover:bg-white dark:hover:bg-zinc-700 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-soft text-sm font-medium text-fg-muted hover:bg-bg-surface dark:hover:bg-bg-hover transition-colors"
             >
               <Settings size={14} />
               Edit
@@ -202,7 +202,7 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-soft text-sm font-medium transition-colors ${
                   showSuggestions
                     ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300'
-                    : 'text-gemini-text-gray hover:bg-white dark:hover:bg-zinc-700'
+                    : 'text-fg-muted hover:bg-bg-surface dark:hover:bg-bg-hover'
                 }`}
               >
                 <span className="material-symbols-outlined text-base">lightbulb</span>
@@ -211,16 +211,16 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
             )}
 
           {/* Stats */}
-          <div className="flex items-center gap-3 pl-2 border-l border-gemini-border dark:border-zinc-600">
+          <div className="flex items-center gap-3 pl-2 border-l border-line dark:border-line-strong">
             <div className="text-center">
-              <div className="text-2xl font-bold text-gemini-text-dark dark:text-white tabular-nums">
+              <div className="text-2xl font-bold text-fg dark:text-fg tabular-nums">
                 {itemsCount}
               </div>
-              <div className="text-xs text-gemini-text-muted">Total items</div>
+              <div className="text-xs text-fg-subtle">Total items</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary tabular-nums">{completedItems}</div>
-              <div className="text-xs text-gemini-text-muted">Completed</div>
+              <div className="text-xs text-fg-subtle">Completed</div>
             </div>
           </div>
         </div>

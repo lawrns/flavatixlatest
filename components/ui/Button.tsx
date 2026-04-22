@@ -26,10 +26,10 @@ const buttonVariants = cva(
           'focus-visible:ring-primary/50'
         ),
         secondary: cn(
-          'bg-gemini-card text-gemini-text-dark dark:text-white',
-          'border border-gemini-border',
-          'hover:bg-gray-100 dark:hover:bg-zinc-700',
-          'focus-visible:ring-zinc-400'
+          'bg-bg-surface text-fg dark:text-fg',
+          'border border-line',
+          'hover:bg-bg-hover dark:hover:bg-bg-hover',
+          'focus-visible:ring-line-strong'
         ),
         ghost: cn(
           'bg-transparent text-primary',

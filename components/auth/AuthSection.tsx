@@ -219,7 +219,7 @@ const AuthSection = () => {
 
   if (showOnboarding === null) {
     return (
-      <div className="font-display text-fg fixed inset-0 flex items-center justify-center overflow-hidden bg-bg">
+      <div className="font-sans text-fg fixed inset-0 flex items-center justify-center overflow-hidden bg-bg">
         <LoadingSpinner text="Preparing your experience..." />
       </div>
     );
@@ -228,7 +228,7 @@ const AuthSection = () => {
   // Show onboarding carousel first, then form
   if (showOnboarding) {
     return (
-      <div className="font-display text-fg fixed inset-0 overflow-hidden">
+      <div className="font-sans text-fg fixed inset-0 overflow-hidden">
         <Head>
           <meta
             name="viewport"
@@ -241,7 +241,7 @@ const AuthSection = () => {
   }
 
   return (
-    <div className="font-display text-fg">
+    <div className="font-sans text-fg">
       <Head>
         <meta
           name="viewport"

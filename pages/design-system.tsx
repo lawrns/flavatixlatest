@@ -74,7 +74,7 @@ interface SectionProps {
 const Section: React.FC<SectionProps> = ({ id, title, description, children }) => (
   <section
     id={id}
-    className="scroll-mt-24 py-12 border-b border-line dark:border-zinc-800 last:border-0"
+    className="scroll-mt-24 py-12 border-b border-line dark:border-line last:border-0"
   >
     <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">{title}</h2>
     {description && (
@@ -92,7 +92,7 @@ interface SubSectionProps {
 
 const SubSection: React.FC<SubSectionProps> = ({ title, children, className }) => (
   <div className={cn('mb-10', className)}>
-    <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-4">{title}</h3>
+    <h3 className="text-lg font-semibold text-fg-muted dark:text-fg-muted mb-4">{title}</h3>
     {children}
   </div>
 );
@@ -223,9 +223,9 @@ export default function DesignSystemPage() {
         />
       </Head>
 
-      <div className="min-h-screen bg-white dark:bg-zinc-900 transition-colors">
+      <div className="min-h-screen bg-bg-surface dark:bg-bg transition-colors">
         {/* Header */}
-        <header className="sticky top-0 z-50 bg-bg-surface dark:dark:bg-zinc-800  border-b border-line dark:border-zinc-800">
+        <header className="sticky top-0 z-50 bg-bg-surface dark:bg-bg-surface border-b border-line dark:border-line">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center gap-4">
@@ -241,7 +241,7 @@ export default function DesignSystemPage() {
                 {/* Dark mode toggle */}
                 <button
                   onClick={() => setIsDark(!isDark)}
-                  className="p-2 rounded-xl hover:bg-bg-inset dark:hover:bg-zinc-800 transition-colors"
+                  className="p-2 rounded-xl hover:bg-bg-inset dark:hover:bg-bg-hover transition-colors"
                   aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
                 >
                   {isDark ? (
@@ -254,7 +254,7 @@ export default function DesignSystemPage() {
                 {/* Mobile nav toggle */}
                 <button
                   onClick={() => setMobileNavOpen(!mobileNavOpen)}
-                  className="lg:hidden p-2 rounded-xl hover:bg-bg-inset dark:hover:bg-zinc-800 transition-colors"
+                  className="lg:hidden p-2 rounded-xl hover:bg-bg-inset dark:hover:bg-bg-hover transition-colors"
                   aria-label="Toggle navigation"
                 >
                   <svg
@@ -277,7 +277,7 @@ export default function DesignSystemPage() {
 
           {/* Mobile navigation */}
           {mobileNavOpen && (
-            <nav className="lg:hidden border-t border-line dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
+            <nav className="lg:hidden border-t border-line dark:border-line bg-bg-surface dark:bg-bg p-4">
               <ul className="space-y-2">
                 {sections.map(({ id, label }) => (
                   <li key={id}>
@@ -287,7 +287,7 @@ export default function DesignSystemPage() {
                         'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                         activeSection === id
                           ? 'bg-primary/10 text-primary'
-                          : 'text-fg-muted dark:text-fg-subtle hover:bg-bg-inset dark:hover:bg-zinc-800'
+                          : 'text-fg-muted dark:text-fg-subtle hover:bg-bg-inset dark:hover:bg-bg-hover'
                       )}
                     >
                       {label}
@@ -313,7 +313,7 @@ export default function DesignSystemPage() {
                           'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                           activeSection === id
                             ? 'bg-primary/10 text-primary'
-                            : 'text-fg-muted dark:text-fg-subtle hover:bg-bg-inset dark:hover:bg-zinc-800'
+                            : 'text-fg-muted dark:text-fg-subtle hover:bg-bg-inset dark:hover:bg-bg-hover'
                         )}
                       >
                         {label}
@@ -590,22 +590,22 @@ export default function DesignSystemPage() {
                 {/* Background & Surface Colors */}
                 <SubSection title="Background & Surface Colors">
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    <div className="p-4 rounded-xl border-2 border-dashed border-line dark:border-zinc-700 bg-white dark:bg-zinc-900">
+                    <div className="p-4 rounded-xl border-2 border-dashed border-line dark:border-line bg-bg-surface dark:bg-bg-surface">
                       <p className="text-sm font-medium text-zinc-900 dark:text-white">
                         App Background
                       </p>
                       <p className="text-xs text-fg-subtle font-mono">--color-background-app</p>
                       <p className="text-xs text-fg-subtle">Light: #FFFFFF / Dark: #18181b</p>
                     </div>
-                    <div className="p-4 rounded-xl bg-gemini-card dark:bg-zinc-800">
-                      <p className="text-sm font-medium text-zinc-900 dark:text-white">
+                    <div className="p-4 rounded-xl bg-bg-surface dark:bg-bg-surface">
+                      <p className="text-sm font-medium text-fg dark:text-fg">
                         Surface / Card
                       </p>
                       <p className="text-xs text-fg-subtle font-mono">--color-background-surface</p>
-                      <p className="text-xs text-fg-subtle">Light: #F6F6F6 / Dark: #27272a</p>
+                      <p className="text-xs text-fg-subtle">Light: #FFFFFF / Dark: #2E2A25</p>
                     </div>
-                    <div className="p-4 rounded-xl bg-bg-inset dark:bg-zinc-700">
-                      <p className="text-sm font-medium text-zinc-900 dark:text-white">Muted</p>
+                    <div className="p-4 rounded-xl bg-bg-inset dark:bg-bg-inset">
+                      <p className="text-sm font-medium text-fg dark:text-fg">Muted</p>
                       <p className="text-xs text-fg-subtle font-mono">--color-background-muted</p>
                       <p className="text-xs text-fg-subtle">Subtle backgrounds</p>
                     </div>
@@ -623,41 +623,41 @@ export default function DesignSystemPage() {
               >
                 {/* Heading Scale */}
                 <SubSection title="Heading Scale">
-                  <div className="space-y-6 bg-gemini-card dark:bg-zinc-800 rounded-2xl p-6">
-                    <div className="border-b border-line dark:border-zinc-700 pb-4">
-                      <h1 className="text-h1 font-bold text-zinc-900 dark:text-white">
+                  <div className="space-y-6 bg-bg-surface dark:bg-bg-surface rounded-2xl p-6">
+                    <div className="border-b border-line dark:border-line pb-4">
+                      <h1 className="text-h1 font-bold text-fg dark:text-fg">
                         Heading 1 - Page Titles
                       </h1>
                       <p className="text-xs text-fg-subtle font-mono mt-1">
                         text-h1 · clamp(2.25rem, 1.9rem + 1.75vw, 3rem) · font-bold
                       </p>
                     </div>
-                    <div className="border-b border-line dark:border-zinc-700 pb-4">
-                      <h2 className="text-h2 font-semibold text-zinc-900 dark:text-white">
+                    <div className="border-b border-line dark:border-line pb-4">
+                      <h2 className="text-h2 font-semibold text-fg dark:text-fg">
                         Heading 2 - Section Headers
                       </h2>
                       <p className="text-xs text-fg-subtle font-mono mt-1">
                         text-h2 · clamp(1.875rem, 1.6rem + 1.375vw, 2.25rem) · font-semibold
                       </p>
                     </div>
-                    <div className="border-b border-line dark:border-zinc-700 pb-4">
-                      <h3 className="text-h3 font-semibold text-zinc-900 dark:text-white">
+                    <div className="border-b border-line dark:border-line pb-4">
+                      <h3 className="text-h3 font-semibold text-fg dark:text-fg">
                         Heading 3 - Subsections
                       </h3>
                       <p className="text-xs text-fg-subtle font-mono mt-1">
                         text-h3 · clamp(1.5rem, 1.3rem + 1vw, 1.875rem) · font-semibold
                       </p>
                     </div>
-                    <div className="border-b border-line dark:border-zinc-700 pb-4">
-                      <h4 className="text-h4 font-medium text-zinc-900 dark:text-white">
+                    <div className="border-b border-line dark:border-line pb-4">
+                      <h4 className="text-h4 font-medium text-fg dark:text-fg">
                         Heading 4 - Card Titles
                       </h4>
                       <p className="text-xs text-fg-subtle font-mono mt-1">
                         text-h4 · clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem) · font-medium
                       </p>
                     </div>
-                    <div className="border-b border-line dark:border-zinc-700 pb-4">
-                      <h5 className="text-h5 font-medium text-zinc-900 dark:text-white">
+                    <div className="border-b border-line dark:border-line pb-4">
+                      <h5 className="text-h5 font-medium text-fg dark:text-fg">
                         Heading 5 - Labels
                       </h5>
                       <p className="text-xs text-fg-subtle font-mono mt-1">
@@ -677,9 +677,9 @@ export default function DesignSystemPage() {
 
                 {/* Body Text */}
                 <SubSection title="Body Text Scale">
-                  <div className="space-y-6 bg-gemini-card dark:bg-zinc-800 rounded-2xl p-6">
+                  <div className="space-y-6 bg-bg-surface dark:bg-bg-surface rounded-2xl p-6">
                     <div>
-                      <p className="text-lg text-zinc-900 dark:text-white">
+                      <p className="text-lg text-fg dark:text-fg">
                         Large body text for hero sections and feature highlights. Used sparingly for
                         emphasis.
                       </p>
@@ -688,7 +688,7 @@ export default function DesignSystemPage() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-base text-zinc-900 dark:text-white">
+                      <p className="text-base text-fg dark:text-fg">
                         Default body text for paragraphs and descriptions. This is the standard
                         reading size optimized for comfortable reading across all screen sizes.
                       </p>
@@ -751,7 +751,7 @@ export default function DesignSystemPage() {
                     </Card>
                     <Card variant="default" padding="md">
                       <p className="text-xs text-fg-subtle mb-1">Status Label</p>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-signal-good/10 text-signal-good dark:bg-signal-good/20 dark:text-signal-good">
                         Completed
                       </span>
                     </Card>
@@ -761,24 +761,24 @@ export default function DesignSystemPage() {
                 {/* Font Weights */}
                 <SubSection title="Font Weights">
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                    <div className="text-center p-4 bg-gemini-card dark:bg-zinc-800 rounded-xl">
-                      <p className="font-light text-2xl text-zinc-900 dark:text-white">Aa</p>
+                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-xl">
+                      <p className="font-light text-2xl text-fg dark:text-fg">Aa</p>
                       <p className="text-xs text-fg-subtle mt-2">Light (300)</p>
                     </div>
-                    <div className="text-center p-4 bg-gemini-card dark:bg-zinc-800 rounded-xl">
-                      <p className="font-normal text-2xl text-zinc-900 dark:text-white">Aa</p>
+                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-xl">
+                      <p className="font-normal text-2xl text-fg dark:text-fg">Aa</p>
                       <p className="text-xs text-fg-subtle mt-2">Normal (400)</p>
                     </div>
-                    <div className="text-center p-4 bg-gemini-card dark:bg-zinc-800 rounded-xl">
-                      <p className="font-medium text-2xl text-zinc-900 dark:text-white">Aa</p>
+                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-xl">
+                      <p className="font-medium text-2xl text-fg dark:text-fg">Aa</p>
                       <p className="text-xs text-fg-subtle mt-2">Medium (500)</p>
                     </div>
-                    <div className="text-center p-4 bg-gemini-card dark:bg-zinc-800 rounded-xl">
-                      <p className="font-semibold text-2xl text-zinc-900 dark:text-white">Aa</p>
+                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-xl">
+                      <p className="font-semibold text-2xl text-fg dark:text-fg">Aa</p>
                       <p className="text-xs text-fg-subtle mt-2">Semibold (600)</p>
                     </div>
-                    <div className="text-center p-4 bg-gemini-card dark:bg-zinc-800 rounded-xl">
-                      <p className="font-bold text-2xl text-zinc-900 dark:text-white">Aa</p>
+                    <div className="text-center p-4 bg-bg-surface dark:bg-bg-surface rounded-xl">
+                      <p className="font-bold text-2xl text-fg dark:text-fg">Aa</p>
                       <p className="text-xs text-fg-subtle mt-2">Bold (700)</p>
                     </div>
                   </div>
@@ -977,7 +977,7 @@ export default function DesignSystemPage() {
                 <SubSection title="Combobox">
                   <div className="max-w-md space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-fg-muted dark:text-zinc-300 mb-1.5">
+                      <label className="block text-sm font-medium text-fg-muted dark:text-fg-muted mb-1.5">
                         Spirit Type
                       </label>
                       <Combobox
@@ -1305,11 +1305,11 @@ export default function DesignSystemPage() {
                     </div>
 
                     {/* Warning Alert */}
-                    <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-                      <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                    <div className="flex items-start gap-3 p-4 rounded-xl bg-signal-warn/10 dark:bg-signal-warn/20 border border-signal-warn/20 dark:border-signal-warn/30">
+                      <AlertTriangle className="w-5 h-5 text-signal-warn shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-medium text-amber-900 dark:text-amber-100">Warning</p>
-                        <p className="text-sm text-amber-700 dark:text-amber-300">
+                        <p className="font-medium text-signal-warn dark:text-signal-warn">Warning</p>
+                        <p className="text-sm text-signal-warn dark:text-signal-warn">
                           You have unsaved changes that may be lost.
                         </p>
                       </div>
@@ -1454,13 +1454,12 @@ export default function DesignSystemPage() {
                   </Showcase>
                   <Showcase title="With image (will show fallback if image fails)">
                     <AvatarWithFallback
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
+                      src="/generated-images/onboarding/onboarding-discover.webp"
                       alt="User Avatar"
                       fallback="UA"
                       size={48}
                     />
                     <AvatarWithFallback
-                      src="invalid-url.jpg"
                       alt="Fallback Demo"
                       fallback="FB"
                       size={48}
@@ -1510,7 +1509,7 @@ export default function DesignSystemPage() {
                     <input
                       type="text"
                       placeholder="Focusable input"
-                      className="px-4 py-2 border-2 border-line dark:border-zinc-700 rounded-xl focus:border-primary focus:outline-none focus:border-accent outline-none bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white"
+                      className="px-4 py-2 border-2 border-line dark:border-line rounded-xl focus:border-primary focus:outline-none focus:border-accent outline-none bg-bg-surface dark:bg-bg-surface text-fg dark:text-fg"
                     />
                   </div>
                 </SubSection>
@@ -1518,11 +1517,11 @@ export default function DesignSystemPage() {
                 {/* Color Contrast */}
                 <SubSection title="Color Contrast">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
-                    <div className="p-4 bg-white dark:bg-zinc-900 rounded-xl border border-line dark:border-zinc-700">
-                      <p className="text-zinc-900 dark:text-white font-medium">Primary Text</p>
+                    <div className="p-4 bg-bg-surface dark:bg-bg rounded-xl border border-line dark:border-line">
+                      <p className="text-fg dark:text-fg font-medium">Primary Text</p>
                       <p className="text-xs text-fg-subtle mt-1">WCAG AAA compliant (7:1+)</p>
                     </div>
-                    <div className="p-4 bg-white dark:bg-zinc-900 rounded-xl border border-line dark:border-zinc-700">
+                    <div className="p-4 bg-bg-surface dark:bg-bg rounded-xl border border-line dark:border-line">
                       <p className="text-fg-muted dark:text-fg-subtle">Secondary Text</p>
                       <p className="text-xs text-fg-subtle mt-1">WCAG AA compliant (4.5:1+)</p>
                     </div>
@@ -1531,7 +1530,7 @@ export default function DesignSystemPage() {
                       <p className="text-xs text-white/80 mt-1">WCAG AA compliant</p>
                     </div>
                     <div className="p-4 bg-zinc-900 dark:bg-white rounded-xl">
-                      <p className="text-white dark:text-zinc-900 font-medium">Inverse Text</p>
+                      <p className="text-fg-inverse dark:text-fg font-medium">Inverse Text</p>
                       <p className="text-xs text-white/80 dark:text-fg-muted mt-1">
                         WCAG AAA compliant
                       </p>
@@ -1543,7 +1542,7 @@ export default function DesignSystemPage() {
                 <SubSection title="Reduced Motion">
                   <p className="text-sm text-fg-muted dark:text-fg-subtle max-w-2xl">
                     All animations respect the{' '}
-                    <code className="px-1.5 py-0.5 bg-bg-inset dark:bg-zinc-800 rounded text-xs font-mono">
+                    <code className="px-1.5 py-0.5 bg-bg-inset dark:bg-bg-inset rounded text-xs font-mono">
                       prefers-reduced-motion
                     </code>{' '}
                     media query. When enabled, transitions and animations are disabled or minimized
@@ -1555,7 +1554,7 @@ export default function DesignSystemPage() {
                 <SubSection title="Keyboard Navigation">
                   <div className="space-y-3 max-w-2xl">
                     <div className="flex items-center gap-4">
-                      <kbd className="px-2 py-1 bg-bg-inset dark:bg-zinc-800 rounded text-sm font-mono">
+                      <kbd className="px-2 py-1 bg-bg-inset dark:bg-bg-inset rounded text-sm font-mono">
                         Tab
                       </kbd>
                       <p className="text-sm text-fg-muted dark:text-fg-subtle">
@@ -1563,7 +1562,7 @@ export default function DesignSystemPage() {
                       </p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <kbd className="px-2 py-1 bg-bg-inset dark:bg-zinc-800 rounded text-sm font-mono">
+                      <kbd className="px-2 py-1 bg-bg-inset dark:bg-bg-inset rounded text-sm font-mono">
                         Enter / Space
                       </kbd>
                       <p className="text-sm text-fg-muted dark:text-fg-subtle">
@@ -1571,7 +1570,7 @@ export default function DesignSystemPage() {
                       </p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <kbd className="px-2 py-1 bg-bg-inset dark:bg-zinc-800 rounded text-sm font-mono">
+                      <kbd className="px-2 py-1 bg-bg-inset dark:bg-bg-inset rounded text-sm font-mono">
                         Escape
                       </kbd>
                       <p className="text-sm text-fg-muted dark:text-fg-subtle">
@@ -1579,7 +1578,7 @@ export default function DesignSystemPage() {
                       </p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <kbd className="px-2 py-1 bg-bg-inset dark:bg-zinc-800 rounded text-sm font-mono">
+                      <kbd className="px-2 py-1 bg-bg-inset dark:bg-bg-inset rounded text-sm font-mono">
                         Arrow Keys
                       </kbd>
                       <p className="text-sm text-fg-muted dark:text-fg-subtle">

@@ -97,7 +97,7 @@ export default function JoinTastingPage() {
       containerSize="2xl"
     >
       <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
-        <section className="rounded-[2rem] border border-line bg-white/90 p-6 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)] sm:p-8">
+        <section className="rounded-pane border border-line bg-bg-surface/90 p-6 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)] sm:p-8">
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-primary/10 text-primary">
               <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,7 +137,7 @@ export default function JoinTastingPage() {
             <button
               type="submit"
               disabled={isJoining || !tastingCode.trim()}
-              className="inline-flex w-full items-center justify-center rounded-full bg-primary px-4 py-3.5 text-sm font-semibold text-white transition-transform duration-150 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:bg-zinc-300 disabled:text-zinc-500 disabled:transform-none active:scale-[0.99]"
+              className="inline-flex w-full items-center justify-center rounded-soft bg-primary px-4 py-3.5 text-sm font-semibold text-fg-inverse transition-transform duration-150 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:bg-bg-inset disabled:text-fg-subtle disabled:transform-none active:scale-[0.99]"
             >
               {isJoining ? 'Joining...' : 'Join Tasting'}
             </button>
@@ -145,7 +145,7 @@ export default function JoinTastingPage() {
         </section>
 
         <section className="space-y-4">
-          <div className="rounded-[2rem] border border-line bg-bg-surface p-6 shadow-sm">
+          <div className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm">
             <h3 className="text-h3 font-semibold text-fg">How it works</h3>
             <ol className="mt-4 space-y-3 text-body-sm text-fg-muted">
               <li className="flex gap-3">
@@ -163,7 +163,7 @@ export default function JoinTastingPage() {
             </ol>
           </div>
 
-          <div className="rounded-[2rem] border border-dashed border-line bg-[#fbfaf7] p-6">
+          <div className="rounded-pane border border-dashed border-line bg-bg p-6">
             <h3 className="text-h3 font-semibold text-fg">Prefer to host?</h3>
             <p className="mt-3 text-body-sm leading-relaxed text-fg-muted">
               Create your own session if you want to control the category, pacing, and
@@ -172,7 +172,7 @@ export default function JoinTastingPage() {
             <button
               type="button"
               onClick={() => router.push('/create-tasting')}
-              className="mt-5 inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-900 transition-transform duration-150 hover:-translate-y-0.5 hover:border-zinc-400 active:scale-[0.99]"
+              className="mt-5 inline-flex items-center justify-center rounded-soft border border-line-strong bg-bg-surface px-4 py-2.5 text-sm font-semibold text-fg transition-transform duration-150 hover:-translate-y-0.5 hover:border-line-strong active:scale-[0.99]"
             >
               Create a tasting session
             </button>

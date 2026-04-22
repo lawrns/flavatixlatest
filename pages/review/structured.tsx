@@ -11,8 +11,12 @@ export default function StructuredReviewRedirect() {
   useEffect(() => {
     const { id, tastingSessionId, ...rest } = router.query;
     const params = new URLSearchParams();
-    if (id) params.set('id', String(id));
-    if (tastingSessionId) params.set('tastingSessionId', String(tastingSessionId));
+    if (id) {
+      params.set('id', String(id));
+    }
+    if (tastingSessionId) {
+      params.set('tastingSessionId', String(tastingSessionId));
+    }
     Object.entries(rest).forEach(([k, v]) => v && params.set(k, String(v)));
     const qs = params.toString();
     router.replace(`/review/create${qs ? `?${qs}` : ''}`);

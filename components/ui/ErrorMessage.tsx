@@ -40,10 +40,10 @@ const severityStyles = {
     button: 'hover:bg-red-100',
   },
   warning: {
-    container: 'bg-amber-50 border-amber-200 text-amber-900',
-    icon: 'text-amber-600',
-    title: 'text-amber-900 font-semibold',
-    button: 'hover:bg-amber-100',
+    container: 'bg-signal-warn/10 border-signal-warn/20 text-signal-warn',
+    icon: 'text-signal-warn',
+    title: 'text-signal-warn font-semibold',
+    button: 'hover:bg-signal-warn/20',
   },
   info: {
     container: 'bg-blue-50 border-blue-200 text-blue-900',

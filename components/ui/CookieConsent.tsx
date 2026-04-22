@@ -263,7 +263,7 @@ export const CookieConsent: React.FC = () => {
               </div>
 
               {/* Cookie Policy Link */}
-              <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
+              <div className="mb-6 p-4 bg-signal-warn/10 dark:bg-signal-warn/20 rounded-lg">
                 <p className="text-sm text-fg-muted dark:text-zinc-300">
                   For more information about how we use cookies and your choices, please read our{' '}
                   <button

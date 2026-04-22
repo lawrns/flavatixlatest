@@ -116,7 +116,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        display: ['Inter', 'sans-serif'],
+        display: ['"DM Serif Display"', 'serif'],
         sans: ['Inter', 'sans-serif'],
       },
       fontSize: {

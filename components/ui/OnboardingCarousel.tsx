@@ -23,25 +23,6 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const card = cards[currentIndex];
-  const isLastCard = currentIndex === cards.length - 1;
-
-  const goToNext = () => {
-    if (isLastCard) {
-      onComplete?.();
-    } else {
-      const newIndex = currentIndex + 1;
-      setCurrentIndex(newIndex);
-      onCardChange?.(newIndex);
-    }
-  };
-
-  const goToPrevious = () => {
-    if (currentIndex > 0) {
-      const newIndex = currentIndex - 1;
-      setCurrentIndex(newIndex);
-      onCardChange?.(newIndex);
-    }
-  };
 
   const goToCard = (index: number) => {
     setCurrentIndex(index);

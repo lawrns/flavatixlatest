@@ -71,7 +71,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
         className={cn(
           'pointer-events-auto mx-auto mb-3 grid h-[72px] w-full max-w-xl grid-cols-4 items-center',
           'sm:mb-0',
-          'rounded-full border border-line bg-bg-surface px-2 shadow-md'
+          'rounded-soft border border-line bg-bg-surface px-2 shadow-md'
         )}
         role="navigation"
         aria-label="Main navigation"
@@ -84,7 +84,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
               href={item.path}
               onClick={(e) => handleClick(e, item.path)}
               className={cn(
-                'flex h-full flex-col items-center justify-center gap-1 rounded-full group transition-all duration-200',
+                'flex h-full flex-col items-center justify-center gap-1 rounded-soft group transition-all duration-200',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
                 active
                   ? 'bg-primary/10 text-primary'
@@ -95,7 +95,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
             >
               {/* Icon container */}
               <span
-                className="flex items-center justify-center rounded-full px-2.5 py-1"
+                className="flex items-center justify-center rounded-soft px-2.5 py-1"
               >
                 <span
                   className="material-symbols-outlined text-[24px] leading-none"

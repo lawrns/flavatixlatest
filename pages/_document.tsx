@@ -4,6 +4,26 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                var originalError = console.error;
+                console.error = function () {
+                  var args = Array.prototype.slice.call(arguments);
+                  var message = args.map(String).join(' ');
+                  if (
+                    message.indexOf('React does not recognize') !== -1 &&
+                    message.indexOf('fetchPriority') !== -1
+                  ) {
+                    return;
+                  }
+                  return originalError.apply(console, args);
+                };
+              })();
+            `,
+          }}
+        />
         <link rel="icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -12,7 +32,7 @@ export default function Document() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap"
           rel="stylesheet"
         />
         <link

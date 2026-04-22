@@ -63,9 +63,9 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
         tabIndex={-1}
         className={cn(
           'w-full max-w-md',
-          'bg-white dark:bg-zinc-900',
-          'rounded-t-[22px]',
-          'border-t border-gemini-border dark:border-zinc-700/50',
+          'bg-bg-surface dark:bg-bg',
+          'rounded-t-pane',
+          'border-t border-line dark:border-line/50',
           'shadow-[0_-20px_60px_rgba(0,0,0,0.25)]',
           'max-h-[85vh] overflow-hidden',
           'focus:outline-none pb-safe',
@@ -80,14 +80,14 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
         ) : null}
 
         <div className="px-6 pt-3 pb-4">
-          <div className="mx-auto h-1.5 w-10 rounded-full bg-zinc-200 dark:bg-zinc-700" />
+          <div className="mx-auto h-1.5 w-10 rounded-full bg-line dark:bg-line-strong" />
 
           <div className="mt-4 flex items-start justify-between gap-3">
             <div className="min-w-0">
               {title ? (
                 <h2
                   id={titleId}
-                  className="text-lg font-semibold text-gemini-text-dark dark:text-white truncate"
+                  className="text-lg font-semibold text-fg dark:text-fg truncate"
                 >
                   {title}
                 </h2>
@@ -97,10 +97,10 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full hover:bg-gemini-card dark:hover:bg-zinc-800 transition-colors flex items-center justify-center"
+              className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full hover:bg-bg-inset dark:hover:bg-bg-inset transition-colors flex items-center justify-center"
               aria-label="Close"
             >
-              <span className="text-lg leading-none text-gemini-text-gray dark:text-zinc-300">
+              <span className="text-lg leading-none text-fg-muted dark:text-fg-muted">
                 ×
               </span>
             </button>

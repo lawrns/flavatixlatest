@@ -77,14 +77,14 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
     <div
       className={cn(
         'min-h-screen font-sans',
-        'bg-white dark:bg-zinc-900',
-        'text-gemini-text-dark dark:text-zinc-50',
+        'bg-bg-surface dark:bg-bg',
+        'text-fg dark:text-fg',
         wrapperClassName
       )}
     >
       {/* Header */}
       {(title || showBack || headerRight) && (
-        <header className="bg-white dark:bg-zinc-900 border-b border-gemini-border dark:border-zinc-700/50">
+        <header className="bg-bg-surface dark:bg-bg border-b border-line dark:border-line/50">
           <Container size={containerSize} className="py-4">
             {/* Back button */}
             {showBack && (
@@ -92,8 +92,8 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
                 onClick={handleBack}
                 className={cn(
                   'flex items-center gap-1 mb-4',
-                  'text-gemini-text-gray dark:text-fg-subtle',
-                  'hover:text-gemini-text-dark dark:hover:text-zinc-100',
+                  'text-fg-muted dark:text-fg-subtle',
+                  'hover:text-fg dark:hover:text-fg',
                   'transition-colors font-medium text-sm'
                 )}
               >
@@ -106,12 +106,12 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0 flex-1">
                 {title && (
-                  <h1 className="text-3xl font-bold text-gemini-text-dark dark:text-zinc-50 tracking-tight">
+                  <h1 className="text-3xl font-bold text-fg dark:text-fg tracking-tight">
                     {title}
                   </h1>
                 )}
                 {subtitle && (
-                  <p className="text-gemini-text-gray dark:text-fg-subtle mt-1">
+                  <p className="text-fg-muted dark:text-fg-subtle mt-1">
                     {subtitle}
                   </p>
                 )}

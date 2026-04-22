@@ -151,7 +151,7 @@ const CreateTastingPage: React.FC = () => {
       containerSize="2xl"
     >
       <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-        <section className="rounded-[2rem] border border-line bg-white/90 p-5 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)]">
+        <section className="rounded-pane border border-line bg-bg-surface/90 p-5 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)]">
           <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
             Session setup
           </p>
@@ -184,8 +184,8 @@ const CreateTastingPage: React.FC = () => {
           />
           <ModeCard
             icon={Trophy}
-            iconBgColor="bg-amber-500/10 dark:bg-amber-500/20"
-            iconColor="text-amber-600 dark:text-amber-500"
+            iconBgColor="bg-signal-warn/10 dark:bg-signal-warn/20"
+            iconColor="text-signal-warn dark:text-signal-warn"
             title="Competition Mode"
             description="Preload items with correct answers. Enable participant ranking."
             href="/taste/create/competition"

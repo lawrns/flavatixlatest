@@ -63,7 +63,7 @@ const TastePage: React.FC = () => {
             <button
               type="button"
               onClick={() => router.push('/dashboard')}
-              className="inline-flex items-center gap-2 text-body-sm font-medium text-fg-muted hover:text-fg transition-colors"
+              className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap text-body-sm font-medium text-fg-muted hover:text-fg transition-colors"
             >
               Back to Home
               <ArrowRight className="h-4 w-4" />

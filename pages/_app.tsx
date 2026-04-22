@@ -14,6 +14,9 @@ import ErrorBoundary from '../components/ui/ErrorBoundary'
 import { LiveRegionProvider } from '../components/ui/LiveRegion'
 import { analyticsTracker } from '@/lib/analytics/tracker'
 import GoogleAnalytics from '@/components/analytics/GoogleAnalytics'
+import { installKnownConsoleFilters } from '@/lib/consoleWarningFilters'
+
+installKnownConsoleFilters()
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isDark, setIsDark] = useState(false)

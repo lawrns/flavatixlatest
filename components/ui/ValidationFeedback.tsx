@@ -70,7 +70,7 @@ export const ValidationFeedback: React.FC<ValidationFeedbackProps> = ({
 
       {/* Warning message */}
       {warning && !error && (
-        <div className="flex items-start gap-2 mt-2 text-amber-600 text-sm">
+        <div className="flex items-start gap-2 mt-2 text-signal-warn text-sm">
           <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <span>{warning}</span>
         </div>

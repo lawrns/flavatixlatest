@@ -39,14 +39,14 @@ export const Section: React.FC<SectionProps> = ({
         <div className="space-y-1">
           {title && (
             <h2 className={cn(
-              'text-gemini-text-dark dark:text-zinc-50',
+              'text-fg dark:text-fg',
               titleSizeClasses[titleSize]
             )}>
               {title}
             </h2>
           )}
           {subtitle && (
-            <p className="text-sm text-gemini-text-gray dark:text-fg-subtle">
+            <p className="text-sm text-fg-muted dark:text-fg-subtle">
               {subtitle}
             </p>
           )}

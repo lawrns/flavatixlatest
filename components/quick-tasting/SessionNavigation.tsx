@@ -55,18 +55,18 @@ export const SessionNavigation: React.FC<SessionNavigationProps> = ({
         <button
           onClick={onPrevious}
           disabled={isFirstItem}
-          className="px-4 py-2 rounded-soft text-sm font-medium text-gemini-text-gray bg-gemini-card border border-gemini-border hover:bg-white dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="px-4 py-2 rounded-soft text-sm font-medium text-fg-muted bg-bg-surface border border-line hover:bg-bg-surface dark:bg-bg-surface dark:border-line dark:hover:bg-bg-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           Previous
         </button>
 
-        <span className="text-xs text-gemini-text-muted px-2 min-w-[4rem] text-center tabular-nums">
+        <span className="text-xs text-fg-subtle px-2 min-w-[4rem] text-center tabular-nums">
           {currentIndex + 1} / {items.length}
         </span>
 
         <button
           onClick={onNext}
-          className="px-4 py-2 rounded-soft text-sm font-medium text-gemini-text-gray bg-gemini-card border border-gemini-border hover:bg-white dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700 transition-colors"
+          className="px-4 py-2 rounded-soft text-sm font-medium text-fg-muted bg-bg-surface border border-line hover:bg-bg-surface dark:bg-bg-surface dark:border-line dark:hover:bg-bg-hover transition-colors"
         >
           {isLastItem ? 'Add Item' : 'Next'}
         </button>
@@ -76,7 +76,7 @@ export const SessionNavigation: React.FC<SessionNavigationProps> = ({
       {items.length > 1 && (
         <button
           onClick={onToggleShowAll}
-          className="text-xs text-gemini-text-muted hover:text-gemini-text-gray transition-colors"
+          className="text-xs text-fg-subtle hover:text-fg-muted transition-colors"
         >
           {showAllItems ? 'Hide' : 'Show'} All Items
         </button>
