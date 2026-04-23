@@ -8,7 +8,7 @@ import { useAuth } from '../contexts/SimpleAuthContext';
 import { supabase } from '../lib/supabase';
 
 import { FlavorWheelData } from '@/lib/flavorWheelGenerator';
-import { Download, RefreshCw, List, CircleDot } from 'lucide-react';
+import { Download, RefreshCw, List, CircleDot, Sparkles } from 'lucide-react';
 import ShareButton from '../components/sharing/ShareButton';
 import PageLayout from '../components/layout/PageLayout';
 import FlavorWheelListView from '../components/flavor-wheels/FlavorWheelListView';
@@ -43,6 +43,7 @@ const getCategoryColor = (index: number): string => {
 };
 
 import EmptyStateCard from '../components/ui/EmptyStateCard';
+import { AnalyticsStrip, FilterRail, HeroPanel } from '@/components/ui/PremiumPrimitives';
 
 const FlavorWheelVisualization = dynamic(
   () => import('../components/flavor-wheels/FlavorWheelVisualization'),
@@ -605,12 +606,43 @@ export default function FlavorWheelsPage() {
       subtitle="AI-generated visualizations of your tasting notes."
       showBack
       backUrl="/dashboard"
-      containerSize="xl"
+      archetype="visualCanvas"
+      sideRail={
+        <FilterRail title="Wheel controls">
+          {controlsInner}
+          {wheelData && !loading && wheelData.categories.length > 0 && (
+            <div className="rounded-soft border border-line bg-bg p-4">
+              <p className="text-sm font-semibold text-fg">Top notes</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {topDescriptorChips.slice(0, 8).map((chip) => (
+                  <FlavorPill
+                    key={`${chip.category}-${chip.subcategory}-${chip.descriptor}`}
+                    flavor={chip.normalizedDescriptor || chip.descriptor}
+                    size="sm"
+                    onClick={() =>
+                      handleSegmentClick(
+                        chip.category,
+                        chip.subcategory,
+                        chip.normalizedDescriptor || chip.descriptor
+                      )
+                    }
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </FilterRail>
+      }
     >
-      <div className="mt-2 space-y-6">
+      <div className="px-4 sm:px-6 lg:px-8">
+        <HeroPanel
+          eyebrow="Visual canvas"
+          title="Let your flavor wheel take over the workspace."
+          description="Switch between personal and universal wheels, inspect descriptors, and export the patterns built from your tasting notes."
+        />
 
         {/* 1. Controls — collapsible on mobile, always open on sm+ */}
-        <div className="surface-page p-4 sm:p-6">
+        <div className="surface-page p-4 sm:p-6 xl:hidden">
           {/* Mobile: collapsible */}
           <div className="sm:hidden">
             <details>
@@ -626,7 +658,7 @@ export default function FlavorWheelsPage() {
         </div>
 
         {/* 2. Primary view (wheel or list) */}
-        <div className="surface-page p-4 sm:p-8">
+        <div className="surface-page min-h-[62vh] p-4 sm:p-8">
           {user && loading && (
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mb-4"></div>
@@ -680,7 +712,7 @@ export default function FlavorWheelsPage() {
                 />
               ) : (
                 <FlavorWheelErrorBoundary onRetry={() => loadWheel(true)}>
-                  <div className="w-full flex justify-center items-center min-h-[300px]">
+                  <div className="w-full flex justify-center items-center min-h-[460px]">
                     <div className="relative" style={{ width: wheelSize, height: wheelSize }}>
                       <FlavorWheelVisualization
                         wheelData={wheelData}
@@ -738,9 +770,7 @@ export default function FlavorWheelsPage() {
             {/* AI badge */}
             {wheelData.aiMetadata?.hasAIDescriptors && (
               <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent-weak dark:bg-accent/10 border border-line dark:border-line rounded-sharp">
-                <span className="material-symbols-outlined text-lg text-accent dark:text-accent">
-                  auto_awesome
-                </span>
+                <Sparkles className="h-4 w-4 text-accent" />
                 <div>
                   <div className="text-caption font-medium text-fg dark:text-fg">
                     AI-Enhanced
@@ -753,7 +783,15 @@ export default function FlavorWheelsPage() {
             )}
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-3 sm:gap-4">
+            <AnalyticsStrip
+              className="xl:grid-cols-3"
+              items={[
+                { label: 'Categories', value: wheelData.categories.length },
+                { label: 'Unique descriptors', value: wheelData.uniqueDescriptors },
+                { label: 'Total notes', value: wheelData.totalDescriptors },
+              ]}
+            />
+            <div className="hidden">
               {[
                 { label: 'Categories', value: wheelData.categories.length },
                 { label: 'Unique Descriptors', value: wheelData.uniqueDescriptors },

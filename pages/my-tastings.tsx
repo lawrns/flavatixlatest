@@ -9,6 +9,7 @@ import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useTastings, useDeleteTasting, TastingFilters } from '../lib/query/hooks/useTastings';
+import { ArchiveToolbar, HeroPanel } from '@/components/ui/PremiumPrimitives';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -16,6 +17,7 @@ export default function MyTastingsPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   const [filter, setFilter] = useState<'all' | 'completed' | 'in_progress'>('all');
+  const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [selectMode, setSelectMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -41,6 +43,10 @@ export default function MyTastingsPage() {
   const deleteMutation = useDeleteTasting();
 
   const tastings = tastingData?.tastings || [];
+  const visibleTastings = tastings.filter((tasting) => {
+    const text = `${tasting.session_name || ''} ${tasting.category || ''} ${tasting.mode || ''}`.toLowerCase();
+    return text.includes(search.toLowerCase());
+  });
   const hasMore = tastingData?.hasMore || false;
 
   useEffect(() => {
@@ -107,10 +113,10 @@ export default function MyTastingsPage() {
   };
 
   const toggleSelectAll = () => {
-    if (selectedIds.size === tastings.length) {
+    if (selectedIds.size === visibleTastings.length) {
       setSelectedIds(new Set());
     } else {
-      setSelectedIds(new Set(tastings.map((t) => t.id)));
+      setSelectedIds(new Set(visibleTastings.map((t) => t.id)));
     }
   };
 
@@ -127,7 +133,7 @@ export default function MyTastingsPage() {
       title="My Tastings"
       subtitle="View and manage all your tasting sessions"
       showBack
-      containerSize="xl"
+      archetype="workspace"
     >
       <ConfirmDialog
         open={confirmOpen}
@@ -140,34 +146,45 @@ export default function MyTastingsPage() {
         onCancel={() => setConfirmOpen(false)}
       />
 
-      {/* Selection Controls */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Button
-            variant={selectMode ? 'primary' : 'secondary'}
-            size="sm"
-            onClick={() => {
-              setSelectMode(!selectMode);
-              setSelectedIds(new Set());
-            }}
-          >
-            {selectMode ? 'Cancel' : 'Select'}
-          </Button>
-          {selectMode && tastings.length > 0 && (
-            <Button variant="secondary" size="sm" onClick={toggleSelectAll}>
-              {selectedIds.size === tastings.length ? 'Deselect All' : 'Select All'}
-            </Button>
-          )}
-        </div>
-        {selectMode && selectedIds.size > 0 && (
-          <Button variant="danger" size="sm" onClick={handleBulkDelete}>
-            Delete {selectedIds.size}
-          </Button>
-        )}
-      </div>
+      <HeroPanel
+        eyebrow="Archive"
+        title="Manage every tasting session from one timeline."
+        description="Search, filter, resume, compare, or clean up tasting records without losing the distinction between drafts and completed sessions."
+        actions={[
+          { label: 'Start tasting', onClick: () => router.push('/quick-tasting') },
+          { label: 'Create session', onClick: () => router.push('/create-tasting'), variant: 'secondary' },
+        ]}
+      />
 
-      {/* Filters */}
-      <div className="flex gap-2 mb-6">
+      <ArchiveToolbar
+        search={search}
+        onSearchChange={setSearch}
+        searchPlaceholder="Search tastings by name, category, or mode"
+        actions={
+          <>
+            <Button
+              variant={selectMode ? 'primary' : 'secondary'}
+              size="sm"
+              onClick={() => {
+                setSelectMode(!selectMode);
+                setSelectedIds(new Set());
+              }}
+            >
+              {selectMode ? 'Cancel' : 'Select'}
+            </Button>
+            {selectMode && visibleTastings.length > 0 && (
+              <Button variant="secondary" size="sm" onClick={toggleSelectAll}>
+                {selectedIds.size === visibleTastings.length ? 'Deselect All' : 'Select All'}
+              </Button>
+            )}
+            {selectMode && selectedIds.size > 0 && (
+              <Button variant="danger" size="sm" onClick={handleBulkDelete}>
+                Delete {selectedIds.size}
+              </Button>
+            )}
+          </>
+        }
+      >
         {(['all', 'completed', 'in_progress'] as const).map((f) => (
           <Button
             key={f}
@@ -181,14 +198,14 @@ export default function MyTastingsPage() {
             {f === 'in_progress' ? 'In Progress' : f.charAt(0).toUpperCase() + f.slice(1)}
           </Button>
         ))}
-      </div>
+      </ArchiveToolbar>
 
       {/* Tastings List */}
       {loading ? (
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
-      ) : tastings.length === 0 ? (
+      ) : visibleTastings.length === 0 ? (
         <div className="surface-page">
           <EmptyStateCard
             image="/generated-images/empty-tastings.webp"
@@ -203,7 +220,7 @@ export default function MyTastingsPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {tastings.map((tasting) => (
+          {visibleTastings.map((tasting) => (
             <div
               key={tasting.id}
               className={cn(

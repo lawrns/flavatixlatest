@@ -3,6 +3,8 @@ import ProfileEditForm from './ProfileEditForm';
 import ProfileService, { UserProfile } from '@/lib/profileService';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { useRequireAuth } from '@/hooks';
+import { AvatarWithFallback } from '@/components/ui/AvatarWithFallback';
+import { Button, PublicProfileHero, InsightRail } from '@/components/ui';
 
 export default function ProfilePage() {
   const { user, loading } = useRequireAuth();
@@ -25,25 +27,51 @@ export default function ProfilePage() {
   }
 
   return (
-    <PageLayout title="Profile" showBack backUrl="/dashboard" containerSize="2xl">
-      <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
-        <section className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm">
-          <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
-            Profile summary
-          </p>
-          <h2 className="mt-2 text-h2 font-semibold tracking-tight text-fg">
-            Your public face and tasting identity.
-          </h2>
-          <p className="mt-3 text-body-sm leading-relaxed text-fg-muted">
-            Keep your display name, avatar, and bio aligned with the way you want the feed and
-            review surfaces to present you.
-          </p>
-        </section>
+    <PageLayout
+      title="Profile"
+      showBack
+      backUrl="/dashboard"
+      archetype="workspace"
+      sideRail={
+        <InsightRail eyebrow="Taste profile" title="Identity signals">
+          <div className="rounded-soft border border-line bg-bg p-4">
+            <p className="text-sm font-semibold text-fg">Featured category</p>
+            <p className="mt-1 text-sm text-fg-muted">{profile?.preferred_category || 'Not set yet'}</p>
+          </div>
+          <div className="rounded-soft border border-line bg-bg p-4">
+            <p className="text-sm font-semibold text-fg">Public confidence</p>
+            <p className="mt-1 text-sm text-fg-muted">Avatar, name, handle, and bio feed social and review attribution.</p>
+          </div>
+        </InsightRail>
+      }
+    >
+      <PublicProfileHero
+        avatar={
+          <AvatarWithFallback
+            src={profile?.avatar_url}
+            alt={profile?.full_name || user.email || 'Profile'}
+            fallback={(profile?.full_name || user.email || '?')[0].toUpperCase()}
+            size={88}
+          />
+        }
+        name={profile?.full_name || user.email || 'Taster'}
+        handle={profile?.username ? `@${profile.username}` : 'No username yet'}
+        bio={profile?.bio || 'Add a short tasting bio so reviews and social posts feel authored.'}
+        stats={[
+          { label: 'Tastings', value: profile?.tastings_count || 0 },
+          { label: 'Category', value: profile?.preferred_category || '—' },
+          { label: 'Profile', value: profile?.username ? 'Live' : 'Draft' },
+        ]}
+        actions={
+          <Button variant="secondary" onClick={() => window.location.assign('/profile/edit')}>
+            Edit profile
+          </Button>
+        }
+      />
 
-        <section className="rounded-pane border border-line bg-bg-surface p-5 shadow-sm sm:p-6">
-          <ProfileEditForm profile={profile} onProfileUpdate={handleProfileUpdate} />
-        </section>
-      </div>
+      <section className="rounded-pane border border-line bg-bg-surface p-5 shadow-sm sm:p-6">
+        <ProfileEditForm profile={profile} onProfileUpdate={handleProfileUpdate} />
+      </section>
     </PageLayout>
   );
 }

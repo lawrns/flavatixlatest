@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import ProfileService, { UserProfile } from '@/lib/profileService';
 import { getUserPresets, saveUserPresets, ALL_CATEGORIES } from '@/lib/presetService';
 import { CategoryPackId } from '@/lib/categoryPacks';
-import { CategoryStamp } from '@/components/ui';
+import { CategoryStamp, HeroPanel, SettingsSectionCard } from '@/components/ui';
 
 export default function SettingsPage() {
   const { user, loading } = useAuth();
@@ -198,32 +198,43 @@ export default function SettingsPage() {
       title="Settings"
       showBack
       backUrl="/dashboard"
-      containerSize="2xl"
+      archetype="workspace"
       userAvatarUrl={profile?.avatar_url}
       userDisplayName={profile?.full_name || undefined}
     >
+      <HeroPanel
+        eyebrow="Account controls"
+        title="Keep preferences close to the tasting work they affect."
+        description="Dark mode, notifications, privacy, account safety, and dashboard presets are grouped so settings feel trustworthy and practical."
+      />
+
       <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-        <section className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm sm:p-8">
-          <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
-            Account controls
-          </p>
-          <h2 className="mt-2 text-h2 font-semibold tracking-tight text-fg">
-            Keep preferences close to the work they affect.
-          </h2>
-          <p className="mt-3 text-body-sm leading-relaxed text-fg-muted">
-            Dark mode, notifications, privacy, and dashboard presets all live here so the
-            settings page stays practical rather than decorative.
-          </p>
-
-          <div className="mt-6 rounded-soft border border-dashed border-line bg-bg-inset p-4">
-            <p className="text-body-sm font-medium text-fg">Dashboard presets</p>
-            <p className="mt-2 text-caption leading-relaxed text-fg-muted">
-              These chips decide which categories appear first on Home.
-            </p>
+        <SettingsSectionCard
+          title="Dashboard presets"
+          description="These chips decide which categories appear first when you need a fast tasting start."
+        >
+          <div className="flex flex-wrap gap-2">
+            {ALL_CATEGORIES.map((category) => {
+              const isSelected = quickPresets.includes(category);
+              return (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => togglePreset(category)}
+                  className={cn(
+                    'transition-transform duration-150 active:scale-[0.99]',
+                    isSelected
+                      ? 'opacity-100 ring-2 ring-primary ring-offset-2 rounded-full'
+                      : 'opacity-60 hover:opacity-90'
+                  )}
+                >
+                  <CategoryStamp category={category} />
+                </button>
+              );
+            })}
           </div>
-
           <div className="mt-6 text-sm text-fg-muted">Flavatix v1.0.0</div>
-        </section>
+        </SettingsSectionCard>
 
         <section className="space-y-6">
           {settingsSections.map((section) => (
@@ -289,7 +300,7 @@ export default function SettingsPage() {
             </div>
           ))}
 
-          <div className="space-y-3">
+          <div className="hidden space-y-3">
             <h2 className="text-xs font-semibold uppercase tracking-[0.24em] text-fg-muted">
               Quick Presets
             </h2>

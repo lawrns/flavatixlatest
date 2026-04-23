@@ -37,3 +37,20 @@ export { EmptyState, NoTastingsEmpty, NoResultsEmpty, NoPostsEmpty } from './Emp
 
 export { default as CategoryStamp } from './CategoryStamp';
 export { default as BottomSheet } from './BottomSheet';
+export {
+  AnalyticsStrip,
+  ArchiveToolbar,
+  ComparisonCard,
+  ContextHeader,
+  DescriptorChipSet,
+  FilterBar,
+  FilterRail,
+  HeroPanel,
+  InsightRail,
+  PublicProfileHero,
+  ResumeWorkCard,
+  SessionPreviewCard,
+  SettingsSectionCard,
+  SocialComposerCard,
+  StickyActionBar,
+} from './PremiumPrimitives';

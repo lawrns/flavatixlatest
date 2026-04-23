@@ -9,6 +9,7 @@ import { toast } from '@/lib/toast';
 import PageLayout from '@/components/layout/PageLayout';
 import { logger } from '@/lib/logger';
 import { normalizeCategoryId } from '@/lib/categoryPacks';
+import { HeroPanel, StickyActionBar } from '@/components/ui/PremiumPrimitives';
 
 type _QuickTasting = Database['public']['Tables']['quick_tastings']['Row'];
 type QuickTastingWithNull = {
@@ -161,39 +162,65 @@ const QuickTastingPage: React.FC = () => {
       title="New tasting"
       subtitle="Start a quick tasting session to explore flavors and record your impressions"
       showBack
-      containerSize="xl"
+      archetype="workflow"
+      stickyAction={
+        currentStep === 'session' && currentSession ? (
+          <StickyActionBar>
+            <div>
+              <p className="text-sm font-semibold text-fg">
+                {currentSession.session_name || 'Active tasting'}
+              </p>
+              <p className="text-xs text-fg-muted">
+                Autosaves notes and scores as you work
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => router.push('/my-tastings')}
+                className="inline-flex min-h-[40px] items-center justify-center rounded-soft border border-line bg-bg px-3 text-sm font-semibold text-fg-muted hover:text-fg"
+              >
+                Archive
+              </button>
+            </div>
+          </StickyActionBar>
+        ) : null
+      }
     >
-      {/* Minimal header progress */}
-      <div className="mb-6 mt-2">
-        <div className="flex items-center gap-2">
+      <HeroPanel
+        eyebrow="Flagship workflow"
+        title={currentStep === 'category' ? 'Choose a category and start capturing taste.' : 'Stay focused on the item in front of you.'}
+        description="Progress, item context, notes, descriptors, and scoring stay close together so the tasting moves without form fatigue."
+      />
+
+      <div className="rounded-pane border border-line bg-bg-surface p-4 shadow-sm">
+        <div className="flex flex-wrap items-center gap-2">
           {steps.map((step, idx) => (
             <React.Fragment key={step.key}>
               <span
-                className={`text-caption font-medium uppercase tracking-wider ${
+                className={`rounded-full px-3 py-1.5 text-caption font-semibold uppercase tracking-[0.18em] ${
                   idx === currentIdx
-                    ? 'text-primary'
+                    ? 'bg-primary text-white'
                     : idx < currentIdx
-                    ? 'text-fg-muted'
-                    : 'text-fg-subtle'
+                    ? 'bg-primary/10 text-primary'
+                    : 'bg-bg-inset text-fg-subtle'
                 }`}
               >
                 {step.label}
               </span>
-              {idx < steps.length - 1 && (
-                <span className="text-fg-subtle">/</span>
-              )}
+              {idx < steps.length - 1 && <span className="hidden text-fg-subtle sm:inline">/</span>}
             </React.Fragment>
           ))}
         </div>
-        <div className="mt-2 h-1 w-full bg-bg-inset rounded-full overflow-hidden">
+        <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-bg-inset">
           <div
-            className="h-full bg-primary transition-all duration-300 ease-out"
+            className="h-full rounded-full bg-primary transition-all duration-300 ease-out"
             style={{ width: `${((currentIdx + 1) / steps.length) * 100}%` }}
           />
         </div>
       </div>
 
-      <div>
+      <div className="rounded-pane border border-line bg-bg-surface p-4 shadow-sm sm:p-6">
         {currentStep === 'category' && (
           <CategorySelector
             onCategorySelect={handleCategorySelect}

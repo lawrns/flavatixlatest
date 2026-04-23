@@ -6,6 +6,7 @@ import { toast } from '@/lib/toast';
 import { FileText, PenTool, Clock, ArrowRight } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { cn } from '@/lib/utils';
+import { ArchiveToolbar, HeroPanel } from '@/components/ui/PremiumPrimitives';
 
 interface Review {
   id: string;
@@ -112,6 +113,7 @@ export default function ReviewHistoryPage() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [proseReviews, setProseReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState('');
   const supabase = getSupabaseClient() as any;
 
   const loadReviews = useCallback(async () => {
@@ -169,6 +171,13 @@ export default function ReviewHistoryPage() {
     ...inProgressReviews.map((review) => ({ review, type: 'structured' as const })),
     ...inProgressProseReviews.map((review) => ({ review, type: 'prose' as const })),
   ];
+  const matchesSearch = (review: Review) => {
+    const text = `${review.review_id || ''} ${review.item_name || ''} ${review.category || ''}`.toLowerCase();
+    return text.includes(search.toLowerCase());
+  };
+  const visibleStructured = reviews.filter(matchesSearch);
+  const visibleProse = proseReviews.filter(matchesSearch);
+  const visibleInProgress = inProgressItems.filter(({ review }) => matchesSearch(review));
 
   const handleOpenReview = (review: Review, type: 'structured' | 'prose' = 'structured') => {
     if (type === 'prose') {
@@ -205,9 +214,24 @@ export default function ReviewHistoryPage() {
       subtitle="All review history, grouped by format and state."
       showBack
       backUrl="/review"
-      containerSize="2xl"
+      archetype="workspace"
     >
       <div className="grid gap-6">
+        <HeroPanel
+          eyebrow="Review archive"
+          title="Find drafts, completed records, and prose notes without digging."
+          description="Structured and prose reviews stay distinct, while search cuts across both formats for comparison and follow-up."
+          actions={[
+            { label: 'Structured review', onClick: () => router.push('/review/create') },
+            { label: 'Prose review', onClick: () => router.push('/review/prose'), variant: 'secondary' },
+          ]}
+        />
+        <ArchiveToolbar
+          search={search}
+          onSearchChange={setSearch}
+          searchPlaceholder="Search reviews by item, ID, or category"
+        />
+
         <section className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm">
           <div className="grid gap-4 sm:grid-cols-3">
             {[
@@ -233,7 +257,7 @@ export default function ReviewHistoryPage() {
             icon={FileText}
             count={reviews.length}
             emptyLabel="No structured reviews yet. Start one from the Reviews hub."
-            items={reviews}
+            items={visibleStructured}
             onOpen={(review) => handleOpenReview(review, 'structured')}
           />
 
@@ -242,7 +266,7 @@ export default function ReviewHistoryPage() {
             icon={PenTool}
             count={proseReviews.length}
             emptyLabel="No prose reviews yet. Add a short note when you want speed over scoring."
-            items={proseReviews}
+            items={visibleProse}
             onOpen={(review) => handleOpenReview(review, 'prose')}
           />
 
@@ -260,12 +284,12 @@ export default function ReviewHistoryPage() {
             </div>
 
             <div className="mt-5 grid gap-3">
-              {inProgressItems.length === 0 ? (
+              {visibleInProgress.length === 0 ? (
                 <div className="rounded-soft border border-dashed border-line bg-bg-inset p-5 text-center">
                   <p className="text-body-sm text-fg-muted">No reviews in progress.</p>
                 </div>
               ) : (
-                inProgressItems.map(({ review, type }) => (
+                visibleInProgress.map(({ review, type }) => (
                   <button
                     key={review.id}
                     onClick={() => handleOpenReview(review, type)}

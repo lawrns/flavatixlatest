@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
+import { ArrowRight, ChevronLeft, Coffee, MessageCircle, Sparkles, Wine } from 'lucide-react';
 
 interface OnboardingCard {
   id: number;
@@ -23,111 +25,106 @@ export const OnboardingCarousel: React.FC<OnboardingCarouselProps> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const card = cards[currentIndex];
+  const Icon = currentIndex === 0 ? Sparkles : currentIndex === 1 ? Coffee : currentIndex === 2 ? MessageCircle : Wine;
 
   const goToCard = (index: number) => {
     setCurrentIndex(index);
     onCardChange?.(index);
   };
 
-  return (
-    <div className="w-full h-full flex flex-col bg-bg relative overflow-hidden">
-      {/* Header: Progress & Skip Button */}
-      <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-0 mx-auto w-full max-w-md">
-        {/* Progress Indicator */}
-        <span className="text-xs sm:text-sm font-medium text-fg-muted">
-          {currentIndex + 1} of {cards.length}
-        </span>
+  const goNext = () => {
+    if (currentIndex === cards.length - 1) {
+      onComplete?.();
+      return;
+    }
+    goToCard(currentIndex + 1);
+  };
 
-        {/* Skip Button */}
+  return (
+    <div className="relative flex h-full w-full flex-col overflow-hidden bg-[#f7f0e7] text-[#21170f] dark:bg-[#15120f] dark:text-white">
+      <div className="relative z-10 mx-auto flex w-full max-w-md items-center justify-between px-5 pt-[max(1rem,env(safe-area-inset-top))] sm:max-w-lg">
+        <button
+          onClick={() => (currentIndex > 0 ? goToCard(currentIndex - 1) : onComplete?.())}
+          className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-black/10 bg-white/55 text-[#5b493d] backdrop-blur transition-colors hover:bg-white/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b75633]/35 dark:border-white/10 dark:bg-white/[0.06] dark:text-white/80 dark:hover:bg-white/10"
+          aria-label={currentIndex > 0 ? 'Previous slide' : 'Close intro'}
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+        <div className="flex items-center gap-2">
+          {cards.map((_, index) => (
+            <button
+              key={index}
+              role="tab"
+              aria-selected={index === currentIndex}
+              aria-label={`Go to slide ${index + 1} of ${cards.length}`}
+              onClick={() => goToCard(index)}
+              className="flex h-11 min-w-[28px] items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+            >
+              <span
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  index === currentIndex ? 'w-8 bg-[#c66a42]' : 'w-1.5 bg-white/25'
+                }`}
+              />
+            </button>
+          ))}
+        </div>
         <button
           onClick={onComplete}
-          className="text-xs sm:text-sm font-medium text-fg-muted hover:text-primary transition-colors"
+          className="rounded-lg px-3 py-2 text-sm font-semibold text-[#7d6656] transition-colors hover:text-[#21170f] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b75633]/35 dark:text-white/65 dark:hover:text-white"
         >
           Skip
         </button>
       </div>
 
-      {/* Progress Bar */}
-      <div className="w-full h-1 bg-line dark:bg-bg-inset mt-4">
-        <div
-          className="h-full bg-primary transition-[width] duration-300 ease-out"
-          style={{ width: `${((currentIndex + 1) / cards.length) * 100}%` }}
-        />
-      </div>
-
-      {/* Carousel Container */}
-      <div className="relative flex-1 flex items-center justify-center overflow-hidden px-4 sm:px-6 py-8 sm:py-12 mx-auto w-full max-w-md">
-        {/* Card Content */}
-        <div className="w-full">
-          <div className="flex flex-col items-center max-w-lg mx-auto">
-            {/* Image placeholder */}
-            <div className="w-full max-w-xs aspect-[4/5] rounded-pane bg-bg-inset dark:bg-bg-surface flex items-center justify-center mb-8 sm:mb-10">
-              <span className="material-symbols-outlined text-6xl text-fg-subtle">
-                {card.id === 1 ? 'explore' : card.id === 2 ? 'local_dining' : card.id === 3 ? 'group' : 'play_circle'}
-              </span>
+      <main className="relative z-10 mx-auto flex min-h-0 w-full max-w-md flex-1 flex-col justify-between px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 sm:max-w-lg">
+        <section className="min-h-0">
+          <div className="relative mx-auto aspect-[0.86] max-h-[50vh] w-full overflow-hidden rounded-xl border border-black/10 bg-[#efe5d8] shadow-sm dark:border-white/10 dark:bg-[#221d18]">
+            <Image
+              src={card.id === 4 ? '/generated-images/concepts/flavatix-premium-mobile-workspace.png' : card.image}
+              alt=""
+              fill
+              unoptimized
+              priority={currentIndex === 0}
+              sizes="(max-width: 640px) 90vw, 420px"
+              className="object-cover"
+            />
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent p-4">
+              <div className="inline-flex items-center gap-2 rounded-md border border-white/12 bg-black/35 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/80 backdrop-blur">
+                <Icon className="h-3.5 w-3.5 text-[#d18458]" />
+                {currentIndex === 0 ? 'Discover' : currentIndex === 1 ? 'Capture' : currentIndex === 2 ? 'Share' : 'Begin'}
+              </div>
             </div>
+          </div>
 
-            {/* Heading */}
-            <h2 className="text-2xl sm:text-3xl font-bold text-fg text-center mb-4">
+          <div className="pt-7">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#a55233] dark:text-[#d18458]">
+              Flavatix mobile
+            </p>
+            <h2 className="mt-3 text-4xl font-semibold leading-[1.02] tracking-normal text-[#21170f] dark:text-white sm:text-5xl">
               {card.headline}
             </h2>
-
-            {/* Body Text */}
-            <p className="text-base sm:text-lg text-fg-muted text-center leading-relaxed mb-8 sm:mb-12 max-w-md">
+            <p className="mt-4 max-w-sm text-base leading-relaxed text-[#6f5c4d] dark:text-white/66">
               {card.description}
             </p>
-
-            {/* CTA Buttons */}
-            {card.ctaVariant === 'split' ? (
-              <div className="w-full space-y-3">
-                <button
-                  onClick={onComplete}
-                  className="w-full h-12 bg-primary text-white rounded-soft font-semibold hover:opacity-90"
-                >
-                  Sign Up
-                </button>
-                <button
-                  onClick={onComplete}
-                  className="w-full h-12 bg-bg-surface text-primary border-2 border-primary dark:text-fg rounded-soft font-semibold hover:bg-bg-hover"
-                >
-                  Log In
-                </button>
-              </div>
-            ) : card.cta ? (
-              <p className="text-xs sm:text-sm text-fg-muted">
-                {card.cta}
-              </p>
-            ) : null}
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* Dot Navigation with 44px minimum touch targets (WCAG 2.5.5 Level AAA) */}
-      <nav
-        role="tablist"
-        aria-label="Onboarding slides"
-        className="flex items-center justify-center gap-0 pb-6 px-4 sm:px-6 mx-auto w-full max-w-md"
-      >
-        {cards.map((_, index) => (
+        <div className="mt-7 grid gap-3">
           <button
-            key={index}
-            role="tab"
-            aria-selected={index === currentIndex}
-            aria-label={`Go to slide ${index + 1} of ${cards.length}`}
-            onClick={() => goToCard(index)}
-            className="min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-soft"
+            onClick={goNext}
+            className="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-lg bg-[#b75633] px-5 text-base font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b75633]/35"
           >
-            {/* Visual dot indicator */}
-            <span
-              className={`rounded-full transition-all duration-300 ${
-                index === currentIndex
-                  ? 'bg-primary w-8 h-2'
-                  : 'bg-line-strong dark:bg-fg-muted w-2 h-2 hover:bg-fg-subtle dark:hover:bg-bg-inset'
-              }`}
-            />
+            {currentIndex === cards.length - 1 ? 'Continue to sign in' : 'Next'}
+            <ArrowRight className="h-4 w-4" />
           </button>
-        ))}
-      </nav>
+          <button
+            onClick={onComplete}
+            className="min-h-[48px] rounded-lg border border-black/10 bg-white/55 px-5 text-sm font-semibold text-[#6f5c4d] backdrop-blur transition-colors hover:bg-white/80 hover:text-[#21170f] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b75633]/35 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/72 dark:hover:bg-white/[0.07] dark:hover:text-white"
+          >
+            I already have an account
+          </button>
+        </div>
+      </main>
     </div>
   );
 };

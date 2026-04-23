@@ -7,6 +7,7 @@ import { ReviewFormData } from '@/lib/types/review';
 import ReviewForm from '@/components/review/ReviewForm';
 import { generateReviewId } from '@/lib/reviewIdGenerator';
 import { PageLayout } from '@/components/layout/PageLayout';
+import { HeroPanel, InsightRail } from '@/components/ui/PremiumPrimitives';
 
 const CreateReviewPage: React.FC = () => {
   const router = useRouter();
@@ -160,8 +161,25 @@ const CreateReviewPage: React.FC = () => {
       subtitle="In-depth analysis of flavor characteristics"
       showBack
       backUrl="/review"
-      containerSize="2xl"
+      archetype="workspace"
+      sideRail={
+        <InsightRail eyebrow="Worksheet" title="Review progress">
+          <div className="rounded-soft border border-line bg-bg p-4">
+            <p className="text-sm font-semibold text-fg">Required</p>
+            <p className="mt-1 text-sm text-fg-muted">Item name and category are needed before save.</p>
+          </div>
+          <div className="rounded-soft border border-line bg-bg p-4">
+            <p className="text-sm font-semibold text-fg">Scores</p>
+            <p className="mt-1 text-sm text-fg-muted">Dense rubric fields are optional until you complete the review.</p>
+          </div>
+        </InsightRail>
+      }
     >
+      <HeroPanel
+        eyebrow="Expert worksheet"
+        title="Score the tasting with structure, then save it as a durable record."
+        description="Metadata, media, sensory notes, and rubric scores stay grouped so the form feels like a review bench rather than a long checklist."
+      />
       <ReviewForm
         onSubmit={handleSubmit}
         onPhotoUpload={handlePhotoUpload}
