@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
 import {
-  ChevronLeft,
   Trophy,
   Users,
   Target,
@@ -13,7 +12,8 @@ import {
   Smartphone,
 } from 'lucide-react';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import BottomNavigation from '@/components/navigation/BottomNavigation';
+import PageLayout from '@/components/layout/PageLayout';
+import { HeroPanel } from '@/components/ui/PremiumPrimitives';
 
 const CompetitionIndexPage: React.FC = () => {
   const router = useRouter();
@@ -38,27 +38,21 @@ const CompetitionIndexPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-bg pb-40">
-      <div className="max-w-xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center text-fg-muted hover:text-fg mb-4 transition-colors"
-          >
-            <ChevronLeft size={20} className="mr-1" />
-            Back
-          </button>
-          <h1 className="text-4xl font-bold text-fg mb-2">
-            Competition Mode
-          </h1>
-          <p className="text-lg text-fg-muted ">
-            Create competitions with answer keys and participant rankings
-          </p>
-        </div>
+    <PageLayout
+      title="Competition Mode"
+      subtitle="Create competitions with answer keys and participant rankings"
+      showBack
+      backUrl="/create-tasting"
+      archetype="workspace"
+    >
+      <HeroPanel
+        eyebrow="Event setup"
+        title="Create a scored tasting event or join with a code."
+        description="Competition mode supports answer keys, ranking, blind tasting, and shared sessions without mixing them into normal tasting."
+      />
 
         {/* Options */}
-        <div className="grid gap-6">
+        <div className="grid gap-6 lg:grid-cols-2">
           {/* Create New Competition */}
           <button
             onClick={() => router.push('/taste/create/competition/new')}
@@ -220,10 +214,7 @@ const CompetitionIndexPage: React.FC = () => {
             </li>
           </ul>
         </div>
-      </div>
-
-      <BottomNavigation />
-    </div>
+    </PageLayout>
   );
 };
 

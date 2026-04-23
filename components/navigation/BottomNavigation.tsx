@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Home, Plus, Sparkles, Star, Wine } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface BottomNavigationProps {
@@ -16,29 +17,31 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
     {
       path: '/dashboard',
       label: 'Home',
-      icon: 'home',
-      activeIcon: 'home',
+      icon: Home,
       testId: 'nav-home'
     },
     {
       path: '/taste',
       label: 'Taste',
-      icon: 'restaurant',
-      activeIcon: 'restaurant',
+      icon: Wine,
       testId: 'nav-taste'
+    },
+    {
+      path: '/quick-tasting',
+      label: 'Start',
+      icon: Plus,
+      testId: 'nav-start'
     },
     {
       path: '/review',
       label: 'Review',
-      icon: 'rate_review',
-      activeIcon: 'rate_review',
+      icon: Star,
       testId: 'nav-review'
     },
     {
       path: '/flavor-wheels',
       label: 'Wheels',
-      icon: 'donut_small',
-      activeIcon: 'donut_small',
+      icon: Sparkles,
       testId: 'nav-wheels'
     }
   ];
@@ -69,15 +72,16 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
     >
       <nav
         className={cn(
-          'pointer-events-auto mx-auto mb-3 grid h-[72px] w-full max-w-xl grid-cols-4 items-center',
+          'pointer-events-auto mx-auto mb-3 grid h-[76px] w-full max-w-xl grid-cols-5 items-center',
           'sm:mb-0',
-          'rounded-soft border border-line bg-bg-surface px-2 shadow-md'
+          'rounded-pane border border-line bg-bg-surface px-2 shadow-md'
         )}
         role="navigation"
         aria-label="Main navigation"
       >
         {navigationItems.map((item) => {
           const active = isActive(item.path);
+          const Icon = item.icon;
           return (
             <Link
               key={item.path}
@@ -87,25 +91,16 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath, onNavi
                 'flex h-full flex-col items-center justify-center gap-1 rounded-soft group transition-all duration-200',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
                 active
-                  ? 'bg-primary/10 text-primary'
+                  ? item.path === '/quick-tasting'
+                    ? 'bg-primary text-white'
+                    : 'bg-primary/10 text-primary'
                   : 'text-fg-subtle hover:bg-bg-inset hover:text-fg-muted'
               )}
               aria-current={active ? 'page' : undefined}
               data-testid={item.testId}
             >
-              {/* Icon container */}
-              <span
-                className="flex items-center justify-center rounded-soft px-2.5 py-1"
-              >
-                <span
-                  className="material-symbols-outlined text-[24px] leading-none"
-                  style={{
-                    fontVariationSettings: active ? '"FILL" 1, "wght" 500' : '"FILL" 0, "wght" 400'
-                  }}
-                  aria-hidden="true"
-                >
-                  {active ? item.activeIcon : item.icon}
-                </span>
+              <span className="flex items-center justify-center rounded-soft px-2.5 py-1">
+                <Icon className="h-5 w-5" aria-hidden="true" />
               </span>
 
               {/* Label */}

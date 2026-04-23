@@ -15,6 +15,7 @@ import {
   useFollowUser,
   useShareTasting,
 } from '../../lib/query/hooks/useFeed';
+import { HeroPanel, InsightRail } from '@/components/ui/PremiumPrimitives';
 
 const SkeletonPost = () => (
   <div className="rounded-pane border border-line bg-bg-surface p-4 animate-pulse">
@@ -29,7 +30,7 @@ const SkeletonPost = () => (
     <div className="mb-2 h-4 w-2/3 rounded bg-bg-inset" />
     <div className="mb-2 h-3 w-full rounded bg-bg-inset" />
     <div className="mb-3 h-3 w-4/5 rounded bg-bg-inset" />
-    <div className="mb-3 h-48 rounded-[1.25rem] bg-bg-inset" />
+    <div className="mb-3 h-48 rounded-lg bg-bg-inset" />
     <div className="flex gap-4 border-t border-line pt-2">
       <div className="h-8 flex-1 rounded bg-bg-inset" />
       <div className="h-8 flex-1 rounded bg-bg-inset" />
@@ -244,7 +245,7 @@ const SocialFeedPage: React.FC = () => {
         subtitle="A feed of recent tastings, reactions, and conversations."
         showBack
         backUrl="/dashboard"
-        containerSize="2xl"
+        archetype="workspace"
       >
         <div className="grid gap-6">
           <section className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm">
@@ -252,7 +253,7 @@ const SocialFeedPage: React.FC = () => {
               {['Feed', 'Following', 'Categories'].map((label) => (
                 <div
                   key={label}
-                  className="h-16 rounded-[1.25rem] border border-line bg-bg-surface animate-pulse"
+                  className="h-16 rounded-lg border border-line bg-bg-surface animate-pulse"
                 />
               ))}
             </div>
@@ -275,7 +276,19 @@ const SocialFeedPage: React.FC = () => {
         subtitle="See what the community is tasting and jump into a conversation."
         showBack
         backUrl="/dashboard"
-        containerSize="2xl"
+        archetype="workspace"
+        sideRail={
+          <InsightRail eyebrow="Community" title="Discovery cues">
+            <div className="rounded-soft border border-line bg-bg p-4">
+              <p className="text-sm font-semibold text-fg">Follow tasters</p>
+              <p className="mt-1 text-sm text-fg-muted">Build a more relevant feed by following people with similar categories.</p>
+            </div>
+            <div className="rounded-soft border border-line bg-bg p-4">
+              <p className="text-sm font-semibold text-fg">Share a session</p>
+              <p className="mt-1 text-sm text-fg-muted">Completed tastings become richer community posts.</p>
+            </div>
+          </InsightRail>
+        }
         headerRight={
           <button
             onClick={() => router.push('/quick-tasting')}
@@ -287,6 +300,14 @@ const SocialFeedPage: React.FC = () => {
         }
       >
         <div className="grid gap-6">
+          <HeroPanel
+            eyebrow="Social discovery"
+            title="See what the community is tasting without losing the seriousness of the work."
+            description="Filter by category, follow tasters, and use the feed as a curated window into recent sensory records."
+            actions={[
+              { label: 'Start tasting', onClick: () => router.push('/quick-tasting') },
+            ]}
+          />
           <section className="rounded-pane border border-line bg-bg-surface p-5 shadow-sm sm:p-6">
             <div className="max-w-4xl">
               <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">

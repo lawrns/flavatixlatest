@@ -7,6 +7,7 @@ import ProfileEditForm from './ProfileEditForm';
 import ProfileService, { UserProfile } from '@/lib/profileService';
 import UserAvatarMenu from '@/components/navigation/UserAvatarMenu';
 import NotificationSystem from '@/components/notifications/NotificationSystem';
+import { HeroPanel, InsightRail } from '@/components/ui/PremiumPrimitives';
 
 export default function ProfileEditPage() {
   const { user, loading } = useAuth();
@@ -39,7 +40,15 @@ export default function ProfileEditPage() {
       title="Edit Profile"
       showBack
       backUrl="/dashboard"
-      containerSize="2xl"
+      archetype="workspace"
+      sideRail={
+        <InsightRail eyebrow="Live preview" title="Public identity">
+          <div className="rounded-soft border border-line bg-bg p-4">
+            <p className="text-sm font-semibold text-fg">{profile?.full_name || user.email}</p>
+            <p className="mt-1 text-sm text-fg-muted">{profile?.username ? `@${profile.username}` : 'Choose a username'}</p>
+          </div>
+        </InsightRail>
+      }
       headerRight={
         <div className="flex items-center gap-3">
           <NotificationSystem userId={user.id} />
@@ -52,24 +61,15 @@ export default function ProfileEditPage() {
         </div>
       }
     >
-      <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <section className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm">
-          <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
-            Edit surface
-          </p>
-          <h2 className="mt-2 text-h2 font-semibold tracking-tight text-fg">
-            Adjust the details people see first.
-          </h2>
-          <p className="mt-3 text-body-sm leading-relaxed text-fg-muted">
-            Keep the account identity clean and current. These fields feed the avatar menu,
-            social surfaces, and review attribution.
-          </p>
-        </section>
+      <HeroPanel
+        eyebrow="Edit surface"
+        title="Adjust the details people see first."
+        description="Keep account identity clean and current. These fields feed the avatar menu, social surfaces, and review attribution."
+      />
 
-        <section className="rounded-pane border border-line bg-bg-surface p-5 shadow-sm sm:p-6">
-          <ProfileEditForm profile={profile} onProfileUpdate={handleProfileUpdate} />
-        </section>
-      </div>
+      <section className="rounded-pane border border-line bg-bg-surface p-5 shadow-sm sm:p-6">
+        <ProfileEditForm profile={profile} onProfileUpdate={handleProfileUpdate} />
+      </section>
     </PageLayout>
   );
 }

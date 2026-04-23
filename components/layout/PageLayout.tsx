@@ -1,18 +1,30 @@
 /**
  * PageLayout Component
- * 
+ *
  * Standard page wrapper that provides:
  * - Consistent background color
  * - Bottom navigation with safe area padding
  * - Optional sticky header
  * - Consistent container width via Container component
- * 
+ *
  * Use this as the root wrapper for all authenticated app pages.
  */
 
 import React from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { ChevronLeft } from 'lucide-react';
+import {
+  ChevronLeft,
+  Compass,
+  Home,
+  MessageCircle,
+  Plus,
+  Settings,
+  Sparkles,
+  Star,
+  User,
+  Wine,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import BottomNavigation from '../navigation/BottomNavigation';
 import Container, { ContainerSize } from './Container';
@@ -35,6 +47,8 @@ interface PageLayoutProps {
   showBottomNav?: boolean;
   /** Container size for content. Default: 'xl' */
   containerSize?: ContainerSize;
+  /** Page archetype controls width, shell density, and desktop composition. */
+  archetype?: 'workflow' | 'workspace' | 'visualCanvas';
   /** Additional className for main content area */
   className?: string;
   /** Additional className for the page wrapper */
@@ -45,7 +59,42 @@ interface PageLayoutProps {
   userAvatarUrl?: string | null;
   /** User display name (optional) */
   userDisplayName?: string;
+  /** Optional side rail shown to the right on desktop. */
+  sideRail?: React.ReactNode;
+  /** Optional sticky action surface rendered after content. */
+  stickyAction?: React.ReactNode;
 }
+
+const archetypeConfig: Record<
+  NonNullable<PageLayoutProps['archetype']>,
+  { container: ContainerSize; main: string; content: string }
+> = {
+  workflow: {
+    container: '4xl',
+    main: 'py-4 sm:py-6',
+    content: 'space-y-5',
+  },
+  workspace: {
+    container: '7xl',
+    main: 'py-4 sm:py-6',
+    content: 'space-y-5',
+  },
+  visualCanvas: {
+    container: 'full',
+    main: 'py-4 sm:py-6',
+    content: 'space-y-6',
+  },
+};
+
+const desktopNavItems = [
+  { href: '/dashboard', label: 'Home', icon: Home },
+  { href: '/taste', label: 'Taste', icon: Wine },
+  { href: '/review', label: 'Review', icon: Star },
+  { href: '/flavor-wheels', label: 'Wheels', icon: Sparkles },
+  { href: '/social', label: 'Social', icon: MessageCircle },
+  { href: '/profile', label: 'Profile', icon: User },
+  { href: '/settings', label: 'Settings', icon: Settings },
+];
 
 export const PageLayout: React.FC<PageLayoutProps> = ({
   children,
@@ -56,14 +105,19 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
   headerRight,
   showBottomNav = true,
   containerSize = 'xl',
+  archetype = 'workflow',
   className,
   wrapperClassName,
   showUserMenu = true,
   userAvatarUrl,
   userDisplayName,
+  sideRail,
+  stickyAction,
 }) => {
   const router = useRouter();
   const { user } = useAuth();
+  const shell = archetypeConfig[archetype];
+  const resolvedContainerSize = containerSize === 'xl' ? shell.container : containerSize;
 
   const handleBack = () => {
     if (backUrl) {
@@ -71,6 +125,13 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
     } else {
       router.back();
     }
+  };
+
+  const isNavActive = (href: string) => {
+    if (href === '/dashboard') {
+      return router.pathname === '/dashboard' || router.pathname === '/';
+    }
+    return router.pathname.startsWith(href);
   };
 
   return (
@@ -82,10 +143,58 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
         wrapperClassName
       )}
     >
+      {showBottomNav && user && (
+        <aside className="fixed inset-y-0 left-0 z-40 hidden w-[220px] border-r border-line bg-bg-surface/95 px-3 py-4 shadow-sm backdrop-blur xl:flex xl:flex-col">
+          <Link href="/dashboard" className="mb-5 flex items-center gap-3 rounded-soft px-2">
+            <span className="flex h-9 w-9 items-center justify-center rounded-soft bg-primary text-white">
+              <Compass className="h-5 w-5" />
+            </span>
+            <span className="text-base font-semibold tracking-normal text-fg">Flavatix</span>
+          </Link>
+
+          <Link
+            href="/quick-tasting"
+            className="mb-4 inline-flex min-h-[40px] items-center justify-center gap-2 rounded-soft bg-primary px-3 text-sm font-semibold text-white transition-colors hover:bg-primary/90 active:scale-[0.99]"
+          >
+            <Plus className="h-4 w-4" />
+            Start tasting
+          </Link>
+
+          <nav className="flex flex-1 flex-col gap-1" aria-label="Main navigation">
+            {desktopNavItems.map((item) => {
+              const Icon = item.icon;
+              const active = isNavActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    'flex min-h-[40px] items-center gap-3 rounded-soft px-3 text-sm font-medium transition-colors',
+                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
+                    active
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-fg-muted hover:bg-bg-inset hover:text-fg'
+                  )}
+                  aria-current={active ? 'page' : undefined}
+                >
+                  <Icon className="h-4 w-4" />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </aside>
+      )}
+
       {/* Header */}
       {(title || showBack || headerRight) && (
-        <header className="bg-bg-surface dark:bg-bg border-b border-line dark:border-line/50">
-          <Container size={containerSize} className="py-4">
+        <header
+          className={cn(
+            'bg-bg-surface/95 border-b border-line backdrop-blur',
+            showBottomNav && user && 'xl:pl-[220px]'
+          )}
+        >
+          <Container size={resolvedContainerSize} className="py-3">
             {/* Back button */}
             {showBack && (
               <button
@@ -106,14 +215,12 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0 flex-1">
                 {title && (
-                  <h1 className="text-3xl font-bold text-fg dark:text-fg tracking-tight">
+                  <h1 className="text-2xl font-semibold leading-tight tracking-normal text-fg sm:text-3xl">
                     {title}
                   </h1>
                 )}
                 {subtitle && (
-                  <p className="text-fg-muted dark:text-fg-subtle mt-1">
-                    {subtitle}
-                  </p>
+                  <p className="mt-1 text-sm text-fg-muted dark:text-fg-subtle">{subtitle}</p>
                 )}
               </div>
 
@@ -138,17 +245,26 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
       )}
 
       {/* Main content */}
-      <main
+      <div
         className={cn(
-          'py-6',
+          shell.main,
           showBottomNav && 'pb-28 sm:pb-6', // Fixed on mobile, in-flow on larger viewports.
+          showBottomNav && user && 'xl:pl-[220px]',
           className
         )}
       >
-        <Container size={containerSize}>
-          {children}
+        <Container size={resolvedContainerSize} padding={archetype !== 'visualCanvas'}>
+          {sideRail ? (
+            <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_300px]">
+              <div className={cn('page-stack', shell.content)}>{children}</div>
+              <div className="hidden xl:block">{sideRail}</div>
+            </div>
+          ) : (
+            <div className={cn('page-stack', shell.content)}>{children}</div>
+          )}
+          {stickyAction}
         </Container>
-      </main>
+      </div>
 
       {/* Bottom Navigation */}
       {showBottomNav && <BottomNavigation />}

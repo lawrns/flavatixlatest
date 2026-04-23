@@ -1,8 +1,9 @@
 import React from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/SimpleAuthContext';
-import { ChevronLeft, BookOpen, FileText, ArrowLeft } from 'lucide-react';
+import { BookOpen, FileText, ArrowLeft } from 'lucide-react';
+import PageLayout from '@/components/layout/PageLayout';
+import { HeroPanel } from '@/components/ui/PremiumPrimitives';
 
 const StudyModeLanding: React.FC = () => {
   const router = useRouter();
@@ -27,24 +28,20 @@ const StudyModeLanding: React.FC = () => {
   }
 
   return (
-    <div className="bg-bg dark:bg-bg font-sans text-fg dark:text-fg min-h-screen">
-      <main id="main-content" className="pb-20">
-        <div className="container mx-auto px-md py-lg max-w-xl">
-          <div className="mb-lg">
-            <button
-              onClick={() => router.push('/create-tasting')}
-              className="flex items-center text-fg-muted hover:text-fg mb-sm transition-colors "
-            >
-              <ChevronLeft size={20} className="mr-2" />
-              Back
-            </button>
-            <h1 className="text-h1 font-bold text-fg mb-xs">Study Mode</h1>
-            <p className="text-body text-fg-muted">
-              Create a structured tasting session for learning and evaluation
-            </p>
-          </div>
+    <PageLayout
+      title="Study Mode"
+      subtitle="Create a structured tasting session for learning and evaluation"
+      showBack
+      backUrl="/create-tasting"
+      archetype="workspace"
+    >
+      <HeroPanel
+        eyebrow="Study setup"
+        title="Build a guided tasting from scratch or start with a protocol."
+        description="Study mode is for repeatable sensory work, templates, and collaborative learning."
+      />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <button
               onClick={() => router.push('/taste/create/study/new')}
               className="surface-page p-xl text-center hover:shadow-md transition-all duration-200 group rounded-pane"
@@ -102,39 +99,7 @@ const StudyModeLanding: React.FC = () => {
               </div>
             </button>
           </div>
-        </div>
-      </main>
-
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-line dark:border-line bg-bg dark:bg-bg">
-        <nav className="flex justify-around p-2">
-          <Link
-            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-fg-muted"
-            href="/dashboard"
-          >
-            <span className="material-symbols-outlined">home</span>
-            <span className="text-xs font-medium">Home</span>
-          </Link>
-          <Link className="flex flex-col items-center gap-1 p-2 text-primary" href="/taste">
-            <span className="material-symbols-outlined">restaurant</span>
-            <span className="text-xs font-bold">Taste</span>
-          </Link>
-          <Link
-            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-fg-muted"
-            href="/review"
-          >
-            <span className="material-symbols-outlined">reviews</span>
-            <span className="text-xs font-medium">Review</span>
-          </Link>
-          <Link
-            className="flex flex-col items-center gap-1 p-2 text-fg-subtle dark:text-fg-muted"
-            href="/flavor-wheels"
-          >
-            <span className="material-symbols-outlined">donut_small</span>
-            <span className="text-xs font-medium">Wheels</span>
-          </Link>
-        </nav>
-      </footer>
-    </div>
+    </PageLayout>
   );
 };
 

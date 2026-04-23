@@ -1,9 +1,10 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { BarChart3, Trophy, Users, PlayCircle } from 'lucide-react';
+import { BarChart3, Trophy, Users } from 'lucide-react';
 import { useRequireAuth } from '@/hooks';
 import PageLayout from '@/components/layout/PageLayout';
 import ModeCard from '@/components/ui/ModeCard';
+import { AnalyticsStrip, HeroPanel, InsightRail } from '@/components/ui/PremiumPrimitives';
 
 const CompetitionPage: React.FC = () => {
   const { user, loading } = useRequireAuth();
@@ -17,34 +18,39 @@ const CompetitionPage: React.FC = () => {
     <PageLayout
       title="Competition"
       subtitle="Join a session, create a new bracket, or review how your tasting runs are stacking up."
-      containerSize="2xl"
+      archetype="workspace"
+      sideRail={
+        <InsightRail eyebrow="Event mode" title="Designed for the room">
+          <div className="rounded-soft border border-line bg-bg p-4">
+            <p className="text-sm font-semibold text-fg">Answer keys</p>
+            <p className="mt-1 text-sm text-fg-muted">Score identification and rubric accuracy.</p>
+          </div>
+          <div className="rounded-soft border border-line bg-bg p-4">
+            <p className="text-sm font-semibold text-fg">Leaderboards</p>
+            <p className="mt-1 text-sm text-fg-muted">Keep the competitive state distinct from normal tasting.</p>
+          </div>
+        </InsightRail>
+      }
     >
       <div className="space-y-6">
-        <section className="rounded-pane border border-line bg-bg-surface/90 p-5 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.2)]">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div className="max-w-2xl space-y-2">
-              <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
-                Competition hub
-              </p>
-              <h2 className="text-h2 font-semibold tracking-tight text-fg">
-                Keep competition flows separate from everyday tasting.
-              </h2>
-              <p className="text-body-sm leading-relaxed text-fg-muted">
-                This page groups the actions that matter when you are running or joining
-                a scored tasting session.
-              </p>
-            </div>
+        <HeroPanel
+          eyebrow="Competition hub"
+          title="Run tasting events with scoring, answer keys, and clear momentum."
+          description="Competition mode keeps event-oriented tasting separate from normal note capture, with join and create actions front and center."
+          actions={[
+            { label: 'Create competition', onClick: () => router.push('/taste/create/competition/new') },
+            { label: 'Join competition', onClick: () => router.push('/join-tasting'), variant: 'secondary' },
+          ]}
+        />
 
-            <button
-              type="button"
-              onClick={() => router.push('/taste')}
-              className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap text-body-sm font-semibold text-fg-muted transition-colors hover:text-fg"
-            >
-              Back to Taste
-              <PlayCircle className="h-4 w-4" />
-            </button>
-          </div>
-        </section>
+        <AnalyticsStrip
+          items={[
+            { label: 'Live', value: 0, hint: 'Active competitions' },
+            { label: 'Upcoming', value: 0, hint: 'Scheduled sessions' },
+            { label: 'Completed', value: 0, hint: 'Past scored events' },
+          ]}
+          className="xl:grid-cols-3"
+        />
 
         <section className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="grid gap-4">

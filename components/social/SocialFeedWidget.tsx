@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { useVirtualizer } from '@tanstack/react-virtual';
 import { getSupabaseClient } from '../../lib/supabase';
 import { Heart, MessageCircle, Share2, User } from 'lucide-react';
 import { Card, CardContent } from '../ui/Card';
@@ -41,9 +40,6 @@ const SocialFeedWidget = React.memo(
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
-    // Virtualization ref
-    const parentRef = useRef<HTMLDivElement>(null);
-
     const loadRecentPosts = useCallback(async () => {
       try {
         const supabase = getSupabaseClient();
@@ -81,39 +77,40 @@ const SocialFeedWidget = React.memo(
         const userIds = Array.from(new Set(tastings.map((t: any) => t.user_id)));
 
         // Fetch all stats AND profiles in parallel with aggregated queries (no N+1)
-        const [likesData, commentsData, userLikesData, photosData, profilesData] = await Promise.all([
-          // Get all likes counts in one query
-          supabase
-            .from('tasting_likes')
-            .select('tasting_id', { count: 'exact' })
-            .in('tasting_id', tastingIds),
+        const [likesData, commentsData, userLikesData, photosData, profilesData] =
+          await Promise.all([
+            // Get all likes counts in one query
+            supabase
+              .from('tasting_likes')
+              .select('tasting_id', { count: 'exact' })
+              .in('tasting_id', tastingIds),
 
-          // Get all comments counts in one query
-          supabase
-            .from('tasting_comments')
-            .select('tasting_id', { count: 'exact' })
-            .in('tasting_id', tastingIds),
+            // Get all comments counts in one query
+            supabase
+              .from('tasting_comments')
+              .select('tasting_id', { count: 'exact' })
+              .in('tasting_id', tastingIds),
 
-          // Get all user likes in one query
-          supabase
-            .from('tasting_likes')
-            .select('tasting_id')
-            .in('tasting_id', tastingIds)
-            .eq('user_id', userId),
+            // Get all user likes in one query
+            supabase
+              .from('tasting_likes')
+              .select('tasting_id')
+              .in('tasting_id', tastingIds)
+              .eq('user_id', userId),
 
-          // Get first photo for each tasting in one query
-          supabase
-            .from('quick_tasting_items')
-            .select('tasting_id, photo_url')
-            .in('tasting_id', tastingIds)
-            .not('photo_url', 'is', null),
+            // Get first photo for each tasting in one query
+            supabase
+              .from('quick_tasting_items')
+              .select('tasting_id, photo_url')
+              .in('tasting_id', tastingIds)
+              .not('photo_url', 'is', null),
 
-          // Get all user profiles in one query
-          supabase
-            .from('profiles')
-            .select('user_id, full_name, username, avatar_url')
-            .in('user_id', userIds),
-        ]);
+            // Get all user profiles in one query
+            supabase
+              .from('profiles')
+              .select('user_id, full_name, username, avatar_url')
+              .in('user_id', userIds),
+          ]);
 
         // Create lookup maps for O(1) access
         const likesMap = new Map<string, number>();
@@ -243,21 +240,11 @@ const SocialFeedWidget = React.memo(
       }
     };
 
-    // Virtualizer setup - estimated row height of 100px for feed items
-    const virtualizer = useVirtualizer({
-      count: posts.length,
-      getScrollElement: () => parentRef.current,
-      estimateSize: () => 100,
-      overscan: 3,
-    });
-
     if (loading) {
       return (
-        <Card>
-          <CardContent>
-            <h3 className="text-lg font-bold text-fg dark:text-fg mb-4">
-              Recent Activity
-            </h3>
+        <Card hover={false} className="rounded-soft">
+          <CardContent className="mt-0">
+            <h3 className="mb-4 text-lg font-semibold text-fg">Recent Activity</h3>
             <LoadingSpinner text="Loading recent activity..." />
           </CardContent>
         </Card>
@@ -266,14 +253,14 @@ const SocialFeedWidget = React.memo(
 
     if (posts.length === 0) {
       return (
-        <Card>
-          <CardContent>
-            <h3 className="text-h3 font-semibold text-fg dark:text-fg mb-4">
-              Recent Activity
-            </h3>
+        <Card hover={false} className="rounded-soft">
+          <CardContent className="mt-0">
+            <h3 className="mb-4 text-lg font-semibold text-fg">Recent Activity</h3>
             <div className="text-center py-8">
               <User className="w-12 h-12 text-fg-subtle mx-auto mb-3" />
-              <p className="text-body-sm text-fg-muted mb-4">No activity yet — start your first flight</p>
+              <p className="text-body-sm text-fg-muted mb-4">
+                No activity yet — start your first flight
+              </p>
               <Button variant="primary" size="sm" onClick={() => router.push('/quick-tasting')}>
                 Start a Tasting
               </Button>
@@ -284,144 +271,121 @@ const SocialFeedWidget = React.memo(
     }
 
     return (
-      <Card>
-        <CardContent>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-fg dark:text-fg">Recent Activity</h3>
+      <Card hover={false} className="overflow-hidden rounded-soft" padding="none">
+        <CardContent className="mt-0">
+          <div className="flex items-center justify-between border-b border-line px-4 py-3">
+            <h3 className="text-lg font-semibold text-fg">Recent Activity</h3>
             <Button variant="ghost" size="sm" onClick={() => router.push('/social')}>
               View All
             </Button>
           </div>
 
-          <div
-            ref={parentRef}
-            className="overflow-auto"
-            style={{ height: '400px', maxHeight: 'calc(100vh - 300px)' }}
-          >
-            <div
-              style={{
-                height: `${virtualizer.getTotalSize()}px`,
-                width: '100%',
-                position: 'relative',
-              }}
-            >
-              {virtualizer.getVirtualItems().map((virtualRow) => {
-                const post = posts[virtualRow.index];
-                return (
+          <div className="divide-y divide-line">
+            {posts.map((post) => {
+              return (
+                <div key={post.id}>
                   <div
-                    key={virtualRow.key}
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      transform: `translateY(${virtualRow.start}px)`,
-                    }}
+                    onClick={() => router.push('/social')}
+                    className="cursor-pointer bg-bg-surface px-4 py-3 transition-colors hover:bg-bg-inset"
                   >
-                    <div className="pb-3">
-                      <div
-                        onClick={() => router.push('/social')}
-                        className="bg-bg-inset dark:bg-bg-inset p-3 rounded-soft cursor-pointer hover:bg-bg-inset dark:hover:bg-fg-muted transition-colors"
-                      >
-                        <div className="flex items-start gap-2 mb-2">
-                          {/* Avatar */}
-                          <div className="flex-shrink-0">
-                            {post.user.avatar_url ? (
-                              <Image
-                                src={post.user.avatar_url}
-                                alt={post.user.full_name || 'User'}
-                                width={32}
-                                height={32}
-                                className="w-8 h-8 rounded-full object-cover"
-                                loading="lazy"
-                              />
-                            ) : (
-                              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-semibold">
-                                {(post.user.full_name || post.user.username || '?')[0].toUpperCase()}
-                              </div>
-                            )}
+                    <div className="flex items-start gap-2 mb-2">
+                      {/* Avatar */}
+                      <div className="flex-shrink-0">
+                        {post.user.avatar_url ? (
+                          <Image
+                            src={post.user.avatar_url}
+                            alt={post.user.full_name || 'User'}
+                            width={32}
+                            height={32}
+                            className="h-8 w-8 rounded-soft object-cover"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="flex h-8 w-8 items-center justify-center rounded-soft bg-primary/10 text-xs font-semibold text-primary">
+                            {(post.user.full_name || post.user.username || '?')[0].toUpperCase()}
                           </div>
-
-                          {/* Content */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-baseline gap-2">
-                              <span className="font-medium text-fg dark:text-fg text-sm truncate">
-                                {post.user.full_name || post.user.username || 'Anonymous'}
-                              </span>
-                              <span className="text-xs text-fg-subtle dark:text-fg-subtle">
-                                {new Date(post.created_at).toLocaleDateString()}
-                              </span>
-                            </div>
-                            <p className="text-sm text-fg-muted dark:text-fg-muted truncate">
-                              {post.session_name || `${post.category} tasting`} • {post.total_items} items
-                              {post.average_score && (
-                                <>
-                                  {' '}
-                                  • {post.average_score.toFixed(1)}
-                                  <span className="material-symbols-outlined text-xs align-middle ml-0.5">
-                                    star
-                                  </span>
-                                </>
-                              )}
-                            </p>
-                          </div>
-
-                          {/* Photo thumbnail */}
-                          {post.photos && post.photos.length > 0 && (
-                            <Image
-                              src={post.photos[0]}
-                              alt="Tasting"
-                              width={48}
-                              height={48}
-                              className="w-12 h-12 rounded object-cover flex-shrink-0"
-                              loading="lazy"
-                            />
-                          )}
-                        </div>
-
-                        {/* Stats */}
-                        <div className="flex items-center gap-4 text-xs text-fg-subtle dark:text-fg-subtle ml-10">
-                          <button
-                            onClick={(e) => handleLike(post.id, e)}
-                            className={`flex items-center gap-1 touch-manipulation min-h-[44px] min-w-[44px] justify-center ${post.isLiked ? 'text-red-500' : 'hover:text-red-500'} transition-colors`}
-                            aria-label={`${post.isLiked ? 'Unlike' : 'Like'} this tasting`}
-                          >
-                            <Heart size={16} fill={post.isLiked ? 'currentColor' : 'none'} />
-                            <span className="ml-1">{post.stats.likes}</span>
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              // TODO(social): Implement comments modal. Requires:
-                              // 1. CommentModal component with input, list, and submit
-                              // 2. API route POST /api/social/comments for CRUD
-                              // 3. Real-time subscription for new comments
-                              // 4. Notification to post owner via notificationService.notifyComment()
-                            }}
-                            className="flex items-center gap-1 hover:text-primary transition-colors touch-manipulation min-h-[44px] min-w-[44px] justify-center"
-                            aria-label="View comments"
-                          >
-                            <MessageCircle size={16} />
-                            <span className="ml-1">{post.stats.comments}</span>
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              // TODO(social): Implement sharing. Use useSocialFeed.handleShare() which already
-                              // supports Web Share API with clipboard fallback. Wire up postId parameter.
-                            }}
-                            className="flex items-center gap-1 hover:text-primary transition-colors touch-manipulation min-h-[44px] min-w-[44px] justify-center"
-                            aria-label="Share this tasting"
-                          >
-                            <Share2 size={16} />
-                          </button>
-                        </div>
+                        )}
                       </div>
+
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-baseline gap-2">
+                          <span className="truncate text-sm font-semibold text-fg">
+                            {post.user.full_name || post.user.username || 'Anonymous'}
+                          </span>
+                          <span className="text-xs text-fg-subtle">
+                            {new Date(post.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <p className="truncate text-sm text-fg-muted">
+                          {post.session_name || `${post.category} tasting`} • {post.total_items}{' '}
+                          items
+                          {post.average_score && (
+                            <>
+                              {' '}
+                              • {post.average_score.toFixed(1)}
+                              <span className="material-symbols-outlined text-xs align-middle ml-0.5">
+                                star
+                              </span>
+                            </>
+                          )}
+                        </p>
+                      </div>
+
+                      {/* Photo thumbnail */}
+                      {post.photos && post.photos.length > 0 && (
+                        <Image
+                          src={post.photos[0]}
+                          alt="Tasting"
+                          width={48}
+                          height={48}
+                          className="h-12 w-12 flex-shrink-0 rounded-soft object-cover"
+                          loading="lazy"
+                        />
+                      )}
+                    </div>
+
+                    {/* Stats */}
+                    <div className="ml-10 flex items-center gap-3 text-xs text-fg-subtle">
+                      <button
+                        onClick={(e) => handleLike(post.id, e)}
+                        className={`flex min-h-[36px] min-w-[36px] touch-manipulation items-center justify-center gap-1 rounded-sharp transition-colors ${post.isLiked ? 'text-red-500' : 'hover:text-red-500'}`}
+                        aria-label={`${post.isLiked ? 'Unlike' : 'Like'} this tasting`}
+                      >
+                        <Heart size={16} fill={post.isLiked ? 'currentColor' : 'none'} />
+                        <span className="ml-1">{post.stats.likes}</span>
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // TODO(social): Implement comments modal. Requires:
+                          // 1. CommentModal component with input, list, and submit
+                          // 2. API route POST /api/social/comments for CRUD
+                          // 3. Real-time subscription for new comments
+                          // 4. Notification to post owner via notificationService.notifyComment()
+                        }}
+                        className="flex min-h-[36px] min-w-[36px] touch-manipulation items-center justify-center gap-1 rounded-sharp transition-colors hover:text-primary"
+                        aria-label="View comments"
+                      >
+                        <MessageCircle size={16} />
+                        <span className="ml-1">{post.stats.comments}</span>
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // TODO(social): Implement sharing. Use useSocialFeed.handleShare() which already
+                          // supports Web Share API with clipboard fallback. Wire up postId parameter.
+                        }}
+                        className="flex min-h-[36px] min-w-[36px] touch-manipulation items-center justify-center gap-1 rounded-sharp transition-colors hover:text-primary"
+                        aria-label="Share this tasting"
+                      >
+                        <Share2 size={16} />
+                      </button>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
           </div>
         </CardContent>
       </Card>

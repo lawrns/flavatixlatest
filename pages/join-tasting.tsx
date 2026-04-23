@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/SimpleAuthContext';
 import { getSupabaseClient } from '../lib/supabase';
 import { toast } from '../lib/toast';
 import PageLayout from '../components/layout/PageLayout';
+import { HeroPanel, SessionPreviewCard } from '@/components/ui/PremiumPrimitives';
 
 export default function JoinTastingPage() {
   const router = useRouter();
@@ -94,12 +95,18 @@ export default function JoinTastingPage() {
       title="Join a Tasting"
       subtitle="Enter the tasting code to join a collaborative session"
       showBack
-      containerSize="2xl"
+      archetype="workspace"
     >
+      <HeroPanel
+        eyebrow="Join session"
+        title="Paste a code and arrive in the right tasting room."
+        description="Join is intentionally single-purpose: one code, one preview, then the session."
+      />
+
       <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
         <section className="rounded-pane border border-line bg-bg-surface/90 p-6 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)] sm:p-8">
           <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-primary/10 text-primary">
+            <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
@@ -124,9 +131,16 @@ export default function JoinTastingPage() {
                 type="text"
                 autoComplete="off"
                 value={tastingCode}
-                onChange={(e) => setTastingCode(e.target.value)}
+                onChange={(e) => setTastingCode(e.target.value.trim())}
+                onPaste={(e) => {
+                  const text = e.clipboardData.getData('text');
+                  if (text) {
+                    e.preventDefault();
+                    setTastingCode(text.trim());
+                  }
+                }}
                 placeholder="Paste the code shared by the host"
-                className="w-full rounded-[1rem] border border-line bg-bg-surface px-4 py-3 text-body text-fg transition-colors placeholder:text-fg-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
+                className="w-full rounded-soft border border-line bg-bg px-4 py-4 text-lg font-semibold tracking-normal text-fg transition-colors placeholder:text-base placeholder:font-normal placeholder:text-fg-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
                 disabled={isJoining}
               />
               <p className="text-sm text-fg-muted">
@@ -145,6 +159,11 @@ export default function JoinTastingPage() {
         </section>
 
         <section className="space-y-4">
+          <SessionPreviewCard
+            title={tastingCode ? 'Ready to preview session' : 'Session preview appears here'}
+            subtitle={tastingCode ? 'The app will validate this code and take you to the tasting.' : 'Paste a host code to make joining feel deliberate before you enter.'}
+          />
+
           <div className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm">
             <h3 className="text-h3 font-semibold text-fg">How it works</h3>
             <ol className="mt-4 space-y-3 text-body-sm text-fg-muted">

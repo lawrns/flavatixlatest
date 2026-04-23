@@ -89,6 +89,19 @@ export default function Home() {
                   Capture a session, compare what changed, and see the shape of your palate.
                 </motion.p>
 
+                <motion.div variants={fadeIn} className="grid max-w-xl grid-cols-3 gap-3">
+                  {[
+                    ['6', 'tasting modes'],
+                    ['AI', 'flavor wheels'],
+                    ['1', 'shared palate record'],
+                  ].map(([value, label]) => (
+                    <div key={label} className="rounded-soft border border-line bg-bg-surface/80 p-3">
+                      <p className="text-2xl font-semibold text-fg">{value}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-fg-muted">{label}</p>
+                    </div>
+                  ))}
+                </motion.div>
+
                 <motion.div variants={fadeIn} className="flex flex-col gap-3 sm:flex-row">
                   <Link
                     href="/auth"
@@ -133,14 +146,14 @@ export default function Home() {
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 className="relative"
               >
-                <div className="rounded-pane border border-line/80 bg-bg-surface/90 p-4 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:p-5">
+                <div className="mx-auto max-w-sm rounded-xl border border-line/80 bg-bg-surface/90 p-3 shadow-[0_18px_46px_-32px_rgba(0,0,0,0.42)] backdrop-blur-sm sm:p-4 lg:max-w-md">
                   <div className="flex items-center justify-between border-b border-line pb-4">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-fg-subtle">
-                        Live wheel
+                        Mobile workspace
                       </p>
                       <h2 className="mt-1 text-lg font-semibold tracking-tight text-fg">
-                        Notes in motion
+                        Taste in hand
                       </h2>
                     </div>
                     <div className="rounded-full bg-signal-good/10 px-3 py-1 text-xs font-semibold text-signal-good">
@@ -149,13 +162,13 @@ export default function Home() {
                   </div>
 
                   <div className="mt-5 grid gap-4">
-                    <div className="overflow-hidden rounded-soft border border-line bg-bg">
+                    <div className="overflow-hidden rounded-lg border border-line bg-bg">
                       <Image
-                        src="/generated-images/empty-flavor-wheel.webp"
-                        alt="Flavatix flavor wheel preview"
+                        src="/generated-images/concepts/flavatix-premium-mobile-workspace.png"
+                        alt="Flavatix premium mobile tasting workspace preview"
                         width={1200}
-                        height={700}
-                        className="aspect-[12/7] w-full object-cover"
+                        height={1600}
+                        className="aspect-[3/4] w-full object-cover object-top"
                         priority
                       />
                     </div>
@@ -236,6 +249,26 @@ export default function Home() {
                   )
                 })}
               </div>
+            </div>
+          </Container>
+        </section>
+
+        <section className="border-b border-line/70 bg-bg">
+          <Container size="7xl" className="py-14 sm:py-16">
+            <div className="grid gap-5 lg:grid-cols-4">
+              {[
+                ['Taste', 'Capture notes, photos, descriptors, and scores in the moment.'],
+                ['Review', 'Turn impressions into structured or prose records.'],
+                ['Wheel', 'See recurring flavor language become a visual profile.'],
+                ['Share', 'Bring finished tastings into a focused social feed.'],
+              ].map(([title, body]) => (
+                <div key={title} className="rounded-pane border border-line bg-bg-surface p-5 shadow-sm">
+                  <p className="text-caption font-semibold uppercase tracking-[0.24em] text-fg-subtle">
+                    {title}
+                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-fg-muted">{body}</p>
+                </div>
+              ))}
             </div>
           </Container>
         </section>

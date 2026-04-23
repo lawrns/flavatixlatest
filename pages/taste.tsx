@@ -1,15 +1,10 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { ArrowRight, BarChart3, FileText, PlayCircle, UserPlus, Users } from 'lucide-react';
+import { ArrowRight, BarChart3, FileText, PlayCircle, Trophy, UserPlus, Users } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
+import { HeroPanel, InsightRail } from '@/components/ui/PremiumPrimitives';
 
 const tasteActions = [
-  {
-    title: 'Quick Tasting',
-    description: 'Start a guided session and capture notes fast.',
-    href: '/quick-tasting',
-    icon: PlayCircle,
-  },
   {
     title: 'Create Session',
     description: 'Set up a tasting for a group or a private run.',
@@ -29,6 +24,12 @@ const tasteActions = [
     icon: FileText,
   },
   {
+    title: 'Competition',
+    description: 'Run or join a scored event with participant ranking.',
+    href: '/competition',
+    icon: Trophy,
+  },
+  {
     title: 'Flavor Wheels',
     description: 'See the patterns your sessions have built over time.',
     href: '/flavor-wheels',
@@ -43,36 +44,68 @@ const TastePage: React.FC = () => {
     <PageLayout
       title="Taste"
       subtitle="The action hub for starting, joining, and shaping tasting work."
-      containerSize="xl"
-    >
-      <div className="space-y-6 animate-fade-in">
-        <section className="surface-inset p-4 sm:p-5">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div className="max-w-xl space-y-2">
-              <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
-                Tasting hub
-              </p>
-              <h2 className="text-h3 font-semibold text-fg">
-                One place for everything that starts a tasting.
-              </h2>
-              <p className="text-body-sm text-fg-muted">
-                Use this page for the active paths. Home stays on overview and recent activity.
-              </p>
+      archetype="workspace"
+      sideRail={
+        <InsightRail eyebrow="Mode guide" title="Pick the right path">
+          {[
+            ['Quick tasting', 'Fast solo capture with notes, photos, and scores.'],
+            ['Study', 'Templates and repeatable protocols.'],
+            ['Competition', 'Answer keys, rankings, and event energy.'],
+            ['Review', 'Turn notes into a finished record.'],
+          ].map(([label, body]) => (
+            <div key={label} className="rounded-soft border border-line bg-bg px-3 py-3">
+              <p className="text-sm font-semibold text-fg">{label}</p>
+              <p className="mt-1 text-sm leading-relaxed text-fg-muted">{body}</p>
             </div>
+          ))}
+        </InsightRail>
+      }
+    >
+      <div className="animate-fade-in">
+        <HeroPanel
+          eyebrow="Tasting launchpad"
+          title="Choose the fastest useful path."
+          description="Start a solo capture, join a room, or set up a structured tasting without making every option compete for attention."
+          actions={[
+            { label: 'Quick tasting', onClick: () => router.push('/quick-tasting') },
+            {
+              label: 'Join code',
+              onClick: () => router.push('/join-tasting'),
+              variant: 'secondary',
+            },
+          ]}
+          media={
+            <div className="grid gap-3 rounded-soft border border-line bg-bg px-3 py-3">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-soft bg-primary/10 text-primary">
+                  <PlayCircle className="h-5 w-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-fg">Quick tasting</p>
+                  <p className="text-xs text-fg-muted">Notes, score, photo, done.</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-center text-xs text-fg-muted">
+                {['Coffee', 'Wine', 'Tea'].map((label) => (
+                  <span
+                    key={label}
+                    className="rounded-sharp border border-line bg-bg-surface px-2 py-2"
+                  >
+                    {label}
+                  </span>
+                ))}
+              </div>
+            </div>
+          }
+        />
 
-            <button
-              type="button"
-              onClick={() => router.push('/dashboard')}
-              className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap text-body-sm font-medium text-fg-muted hover:text-fg transition-colors"
-            >
-              Back to Home
-              <ArrowRight className="h-4 w-4" />
-            </button>
+        <section className="rounded-soft border border-line bg-bg-surface shadow-sm">
+          <div className="border-b border-line px-4 py-3 sm:px-5">
+            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-fg-subtle">
+              More ways to work
+            </p>
           </div>
-        </section>
-
-        <section>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 divide-y divide-line md:grid-cols-2 md:divide-x md:divide-y-0 xl:grid-cols-3">
             {tasteActions.map((action) => {
               const Icon = action.icon;
 
@@ -81,16 +114,19 @@ const TastePage: React.FC = () => {
                   key={action.href}
                   type="button"
                   onClick={() => router.push(action.href)}
-                  className="group rounded-pane border border-line bg-bg-surface p-4 text-left transition-all hover:-translate-y-0.5 hover:border-fg-muted/40 hover:shadow-sm active:scale-[0.99]"
+                  className="group flex min-h-[108px] items-start gap-3 bg-bg-surface p-4 text-left transition-colors hover:bg-bg-inset active:bg-bg-inset sm:p-5"
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-bg-inset text-fg-muted transition-colors group-hover:text-fg">
-                      <Icon className="h-5 w-5" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-soft border border-line bg-bg text-primary">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="text-base font-semibold tracking-normal text-fg">
+                        {action.title}
+                      </h3>
+                      <ArrowRight className="h-4 w-4 shrink-0 text-fg-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-fg" />
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-body font-medium text-fg">{action.title}</h3>
-                      <p className="mt-1 text-body-sm text-fg-muted">{action.description}</p>
-                    </div>
+                    <p className="mt-1 text-body-sm text-fg-muted">{action.description}</p>
                   </div>
                 </button>
               );

@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/SimpleAuthContext';
-import { ClipboardList, Edit3, Clock, Share2, HelpCircle, X } from 'lucide-react';
+import { ClipboardList, Edit3, Clock, Share2, HelpCircle, X, ArrowRight } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import ModeCard from '@/components/ui/ModeCard';
+import { HeroPanel, InsightRail } from '@/components/ui/PremiumPrimitives';
 
 const primaryOptions = [
   {
@@ -138,27 +139,54 @@ export default function ReviewHubPage() {
       showBack
       backUrl="/dashboard"
       headerRight={helpButton}
-      containerSize="2xl"
+      archetype="workspace"
+      sideRail={
+        <InsightRail eyebrow="Review system" title="From notes to record">
+          <div className="rounded-soft border border-line bg-bg p-4">
+            <p className="text-sm font-semibold text-fg">Structured reviews</p>
+            <p className="mt-1 text-sm leading-relaxed text-fg-muted">
+              Best for repeatable scoring, comparison, and archive quality.
+            </p>
+          </div>
+          <div className="rounded-soft border border-line bg-bg p-4">
+            <p className="text-sm font-semibold text-fg">Prose reviews</p>
+            <p className="mt-1 text-sm leading-relaxed text-fg-muted">
+              Best when the story, context, or impression matters most.
+            </p>
+          </div>
+        </InsightRail>
+      }
     >
-      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <section className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm sm:p-8">
-          <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">Main actions</p>
-          <h2 className="mt-2 text-h2 font-semibold tracking-tight text-fg">
-            Start with structure, or just write what landed.
-          </h2>
-          <p className="mt-3 max-w-2xl text-body-sm leading-relaxed text-fg-muted">
-            Use the structured form when you want consistency. Use quick note mode when the
-            session needs less friction.
-          </p>
+      <div>
+        <HeroPanel
+          eyebrow="Review studio"
+          title="Shape a tasting into something you can compare, share, and revisit."
+          description="Start with an expert rubric when consistency matters, or open the writing studio when the tasting needs a more editorial record."
+          actions={[
+            { label: 'Structured review', onClick: () => window.location.assign('/review/create') },
+            { label: 'Prose review', onClick: () => window.location.assign('/review/prose'), variant: 'secondary' },
+          ]}
+        />
 
-          <div className="mt-6 grid gap-4">
+        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <section className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm sm:p-8">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">Main actions</p>
+                <h2 className="mt-2 text-h2 font-semibold tracking-normal text-fg">
+                  Choose the level of structure.
+                </h2>
+              </div>
+              <ArrowRight className="hidden h-5 w-5 text-fg-subtle sm:block" />
+            </div>
+            <div className="mt-6 grid gap-4">
             {primaryOptions.map((opt, index) => (
               <ModeCard key={opt.href} {...opt} delay={index * 0.06} />
             ))}
-          </div>
-        </section>
+            </div>
+          </section>
 
-        <aside className="space-y-4">
+          <aside className="space-y-4">
           <div className="rounded-pane border border-line bg-bg-surface p-6 shadow-sm">
             <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
               More options
@@ -179,7 +207,8 @@ export default function ReviewHubPage() {
               to compare notes.
             </p>
           </div>
-        </aside>
+          </aside>
+        </div>
       </div>
 
       <HelpModal isOpen={showHelp} onClose={() => setShowHelp(false)} />

@@ -6,6 +6,7 @@ import { toast } from '@/lib/toast';
 import ProseReviewForm, { ProseReviewFormData } from '@/components/review/ProseReviewForm';
 import { generateReviewId } from '@/lib/reviewIdGenerator';
 import { PageLayout } from '@/components/layout/PageLayout';
+import { HeroPanel, InsightRail } from '@/components/ui/PremiumPrimitives';
 
 const ProseReviewPage: React.FC = () => {
   const router = useRouter();
@@ -239,8 +240,22 @@ const ProseReviewPage: React.FC = () => {
       subtitle="Write your review in your own words"
       showBack
       backUrl="/review"
-      containerSize="2xl"
+      archetype="workspace"
+      sideRail={
+        <InsightRail eyebrow="Writing context" title="Prompt ideas">
+          {['What changed from aroma to finish?', 'What would you compare it against?', 'What descriptor keeps returning?'].map((prompt) => (
+            <div key={prompt} className="rounded-soft border border-line bg-bg p-4 text-sm leading-relaxed text-fg-muted">
+              {prompt}
+            </div>
+          ))}
+        </InsightRail>
+      }
     >
+      <HeroPanel
+        eyebrow="Writing studio"
+        title="Write the tasting as an editorial note, not a form."
+        description="Keep item details nearby, then use the larger writing canvas for the impression, context, and descriptors that matter."
+      />
       <ProseReviewForm
         initialData={existingReview || undefined}
         onSubmit={handleSubmit}

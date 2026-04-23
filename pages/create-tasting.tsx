@@ -6,6 +6,7 @@ import { Trophy, BookOpen } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import ModeCard from '@/components/ui/ModeCard';
 import { StudyApproach } from '@/components/quick-tasting/StudyModeSelector';
+import { HeroPanel, InsightRail } from '@/components/ui/PremiumPrimitives';
 
 type TastingMode = 'study' | 'competition' | 'quick';
 
@@ -148,31 +149,36 @@ const CreateTastingPage: React.FC = () => {
       title="Create Tasting Session"
       subtitle="Set up a new tasting session with your preferred mode and settings"
       showBack
-      containerSize="2xl"
-    >
-      <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-        <section className="rounded-pane border border-line bg-bg-surface/90 p-5 shadow-[0_20px_40px_-28px_rgba(0,0,0,0.18)]">
-          <p className="text-caption uppercase tracking-[0.24em] text-fg-muted">
-            Session setup
-          </p>
-          <h2 className="mt-2 text-h2 font-semibold tracking-tight text-fg">
-            Choose the structure before you collect the notes.
-          </h2>
-          <p className="mt-3 text-body-sm leading-relaxed text-fg-muted">
-            Study mode favors guided exploration. Competition mode is built for scored
-            sessions and preloaded answers.
-          </p>
-
-          <div className="mt-6 rounded-[1.5rem] border border-dashed border-line bg-bg-inset p-4">
-            <p className="text-body-sm font-medium text-fg">Use the right mode for the room.</p>
-            <p className="mt-2 text-caption leading-relaxed text-fg-muted">
-              Study sessions are better for discovery. Competition sessions are better
-              when everyone needs the same rubric.
+      archetype="workspace"
+      sideRail={
+        <InsightRail eyebrow="Host preview" title="What participants see">
+          <div className="rounded-soft border border-line bg-bg p-4">
+            <p className="text-sm font-semibold text-fg">A simple join code</p>
+            <p className="mt-1 text-sm leading-relaxed text-fg-muted">
+              Participants enter one code, then land in the right guided session.
             </p>
           </div>
-        </section>
+          <div className="rounded-soft border border-line bg-bg p-4">
+            <p className="text-sm font-semibold text-fg">Clear session rules</p>
+            <p className="mt-1 text-sm leading-relaxed text-fg-muted">
+              Blind items, rankings, and study structure stay visible before tasting begins.
+            </p>
+          </div>
+        </InsightRail>
+      }
+    >
+      <div>
+        <HeroPanel
+          eyebrow="Session setup"
+          title="Choose the structure before you collect the notes."
+          description="Study mode favors guided exploration and repeatable templates. Competition mode is built for answer keys, scored sessions, and participant ranking."
+          actions={[
+            { label: 'Create study', onClick: () => router.push('/taste/create/study') },
+            { label: 'Create competition', onClick: () => router.push('/taste/create/competition'), variant: 'secondary' },
+          ]}
+        />
 
-        <section className="flex flex-col gap-3">
+        <section className="grid gap-4 lg:grid-cols-2">
           <ModeCard
             icon={BookOpen}
             iconBgColor="bg-blue-500/10 dark:bg-blue-500/20"

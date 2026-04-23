@@ -111,9 +111,9 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
   const availableStates = formData.country ? getStatesForCountry(formData.country) : [];
 
   return (
-    <div className="space-y-lg">
+    <div className="grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
       {/* ITEM ID Section */}
-      <div className="card p-md">
+      <div className="card p-md xl:sticky xl:top-24 xl:self-start">
         <h2 className="text-h3 font-semibold text-fg mb-md">
           Item Information
         </h2>
@@ -325,7 +325,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
           value={formData.review_content}
           onChange={(e) => updateField('review_content', e.target.value)}
           placeholder="Write your detailed review here..."
-          className="form-input w-full h-64 resize-none"
+          className="form-input w-full min-h-[420px] resize-y text-base leading-relaxed"
           required
         />
         <p className="text-xs text-fg-muted mt-2 italic">
@@ -334,7 +334,7 @@ const ProseReviewForm: React.FC<ProseReviewFormProps> = ({
       </div>
 
       {/* Bottom Buttons */}
-      <div className="flex flex-col sm:flex-row gap-md justify-center pb-8">
+      <div className="flex flex-col sm:flex-row gap-md justify-center pb-8 xl:col-span-2">
         <button
           onClick={() => handleSubmit('done')}
           disabled={isSubmitting}
