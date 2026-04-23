@@ -1,66 +1,76 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # Dependencies
-/node_modules
+node_modules/
+jspm_packages/
 /.pnp
 .pnp.js
 .yarn/install-state.gz
+.yarn-integrity
 
-# Testing
-/coverage
+# Next.js and production builds
+.next/
+out/
+build/
+dist/
+.nuxt/
+.turbo/
+.swc/
+
+# Test, coverage, and browser automation output
+coverage/
+.nyc_output/
+*.lcov
 playwright-report/
 test-results/
+output/playwright/
+.playwright-mcp/
 e2e_test_log.txt
 e2e_test_report.html
 
-# Next.js
-/.next/
-/out/
-
-# Production
-/build
-
-# Misc
-.DS_Store
-*.pem
-
-# Debug
+# Logs and runtime files
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+pids/
+*.pid
+*.seed
+*.pid.lock
 
-# Local env files
-.env*.local
+# Local environment and secrets
 .env
-.env.development
-.env.production
+.env.*
+!.env.example
+!.env*.example
+*.pem
 
-# Vercel
-.vercel
+# Local platform folders
+.vercel/
+.netlify/
+.kluster/
+.claude/
+.codex/
 
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
-
-# IDE
+# Editors and local agent/tool state
 .vscode/
+!.vscode/extensions.json
 .idea/
 .cursor/
 .kiro/
-.codex/
-.turbo/
-.playwright-mcp/
 .specify/
-.swc/
 .vscode-test/
 *.swp
 *.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 *~
-.claude/
-*.orig
-*.rej
 
-# OS
+# OS metadata
 .DS_Store
 .DS_Store?
 ._*
@@ -69,136 +79,43 @@ next-env.d.ts
 ehthumbs.db
 Thumbs.db
 
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-.pnpm-debug.log*
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# Coverage directory used by tools like istanbul
-coverage
-*.lcov
-
-# nyc test coverage
-.nyc_output
-
-# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
-
-# Bower dependency directory (https://bower.io/)
-bower_components
-
-# node-waf configuration
-.lock-wscript
-
-# Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
-
-# Dependency directories
-node_modules/
-jspm_packages/
-
-# Snowpack dependency directory (https://snowpack.dev/)
-web_modules/
-
-# TypeScript cache
-*.tsbuildinfo
-
-# Optional npm cache directory
-.npm
-
-# Optional eslint cache
+# Caches and package artifacts
+.cache/
+.parcel-cache/
+.npm/
 .eslintcache
-
-# Optional stylelint cache
 .stylelintcache
-
-# Microbundle cache
+.grunt/
 .rpt2_cache/
 .rts2_cache_cjs/
 .rts2_cache_es/
 .rts2_cache_umd/
-
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
 *.tgz
+web_modules/
+bower_components/
 
-# Yarn Integrity file
-.yarn-integrity
+# Generated TypeScript / framework files
+*.tsbuildinfo
+next-env.d.ts
 
-# parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
-
-# Next.js build output
-.next
-out
-
-# Local reference app folder
-/flavatix_new/
-
-# Nuxt.js build / generate output
-.nuxt
-dist
-
-# Gatsby files
-.cache/
-# Note: 'public' removed - Next.js uses /public for static assets including i18n locales
-
-# Storybook build outputs
-.out
-.storybook-out
-storybook-static
-
-# Temporary folders
-tmp/
-temp/
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Local database files
+# Local data and uploads
+uploads/
+public/uploads/
+data/
 *.db
 *.sqlite
 *.sqlite3
-
-# Backup files
-*.bak
-*.backup
-
-# FlavorWheel specific
-/uploads
-/public/uploads
-/data
 *.csv
 *.json.backup
 
-# Ignore kluster.ai Verify Code rules
-.cursor/rules/kluster-code-verify.mdc
+# Merge and backup artifacts
+*.bak
+*.backup
+*.orig
+*.rej
 
+# Local reference / legacy app copies
+flavatix_new/
 
-.kluster
-
-# Local Netlify folder
-.netlify
-
-# Git worktrees
+# Git worktrees and detached experiments
 .worktrees/
